@@ -1,0 +1,18 @@
+vulnerabilities:
+  - cve_id: "CVE-2024-1234"
+    cvss_base: 9.1
+    epss_score: 0.84
+    component: "com.example:auth-lib:2.1.0"
+    reachable: true
+
+  - cve_id: "CVE-2024-5678"
+    cvss_base: 7.5
+    epss_score: 0.12
+    component: "org.example:util-lib:1.0.3"
+    reachable: false
+
+  - cve_id: "CVE-2024-9999"
+    cvss_base: 5.3
+    epss_score: 0.03
+    component: "org.example:log-lib:3.2.1"
+    reachable: true
