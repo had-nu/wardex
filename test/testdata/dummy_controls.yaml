@@ -1,0 +1,79 @@
+controls:
+  - id: "CTRL-IDAM-01"
+    name: "Identity and Access Management Policy"
+    description: "Multi-factor authentication mandatory for all production systems and VPN access."
+    maturity: 4
+    domains: ["organizational", "people"]
+    evidences:
+      - type: "policy"
+        ref: "confluence:sec-001"
+      - type: "log"
+        ref: "okta:mfa_enrolment_rate"
+    context_weight: 1.8
+    weight_justification: "Critical gatekeeper for all internal access. High business impact if breached."
+
+  - id: "CTRL-NET-02"
+    name: "Cloud Network Segmentation (VPC)"
+    description: "Strict isolation of production, staging and development environments via AWS Security Groups."
+    maturity: 5
+    domains: ["technological"]
+    evidences:
+      - type: "architecture"
+        ref: "aws:vpc_topology"
+    context_weight: 1.5
+    weight_justification: "Reduces lateral movement risk significantly."
+
+  - id: "CTRL-APP-03"
+    name: "SAST / DAST Pipeline Integration"
+    description: "Static and Dynamic analysis running on every PR on the main repository."
+    maturity: 3
+    domains: ["technological"]
+    evidences:
+      - type: "pipeline_logs"
+        ref: "github_actions:security_workflow"
+    context_weight: 1.1
+    weight_justification: "Standard AppSec posture, moderate impact."
+
+  - id: "CTRL-HR-04"
+    name: "Employee Security Onboarding"
+    description: "Security awareness training during the first week of hire and annually."
+    maturity: 2
+    domains: ["people", "organizational"]
+    evidences:
+      - type: "training_certificate"
+        ref: "hr_portal:completion_rates"
+    context_weight: 0.8
+    weight_justification: "Important but historical data shows low correlation to preventing advanced technical breaches."
+
+  - id: "CTRL-PHY-05"
+    name: "Data Center Biometric Access"
+    description: "Fingerprint and badge access required for physical server rooms."
+    maturity: 4
+    domains: ["physical"]
+    evidences:
+      - type: "audit_log"
+        ref: "facilities:access_logs"
+    context_weight: 1.2
+    weight_justification: "Protects physical hardware, relevant for compliance."
+
+  - id: "CTRL-INC-06"
+    name: "Automated Incident Response Playbooks"
+    description: "PagerDuty workflows integrated with Slack for critical infrastructure alerts."
+    maturity: 3
+    domains: ["organizational", "technological"]
+    evidences:
+      - type: "process"
+        ref: "pagerduty:playbooks"
+    context_weight: 1.4
+    weight_justification: "Reduces MTTR directly impacting service availability."
+
+  - id: "CTRL-END-07"
+    name: "Endpoint Detection and Response (EDR)"
+    description: "EDR agents installed on 95% of corporate fleet laptops."
+    maturity: 3
+    domains: ["technological"]
+    evidences:
+      - type: "dashboard"
+        ref: "crowdstrike:coverage_report"
+    context_weight: 1.6
+    weight_justification: "Primary defense against ransomware and endpoint compromises."
