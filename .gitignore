@@ -1,0 +1,32 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+wardex
+
+# Test artifacts
+*.test
+*.out
+coverage.out
+coverage.html
+.wardex_snapshot.json
+
+# Build cache
+/vendor/
+
+# Config
+lazygo.yml.bak
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

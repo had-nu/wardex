@@ -1,0 +1,1771 @@
+- id: A.5.1
+  name: Control A.5.1
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.1
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.1.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.2
+  name: Control A.5.2
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.2
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.2.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.3
+  name: Control A.5.3
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.3
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.3.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.4
+  name: Control A.5.4
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.4
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.4.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.5
+  name: Control A.5.5
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.5
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.5.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.6
+  name: Control A.5.6
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.6
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.6.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.7
+  name: Threat intelligence
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.7
+    - threat
+    - intelligence
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 7
+- id: A.5.8
+  name: Control A.5.8
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.8
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.8.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.9
+  name: Control A.5.9
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.9
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.9.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.10
+  name: Control A.5.10
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.10
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.10.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.11
+  name: Control A.5.11
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.11
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.11.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.12
+  name: Control A.5.12
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.12
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.12.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.13
+  name: Control A.5.13
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.13
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.13.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.14
+  name: Control A.5.14
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.14
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.14.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.15
+  name: Control A.5.15
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.15
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.15.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.16
+  name: Control A.5.16
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.16
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.16.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.17
+  name: Control A.5.17
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.17
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.17.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.18
+  name: Control A.5.18
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.18
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.18.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.19
+  name: Control A.5.19
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.19
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.19.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.20
+  name: Control A.5.20
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.20
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.20.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.21
+  name: Control A.5.21
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.21
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.21.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.22
+  name: Control A.5.22
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.22
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.22.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.23
+  name: Security of cloud services
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.23
+    - cloud
+    - aws
+    - gcp
+    - azure
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 7.5
+- id: A.5.24
+  name: Control A.5.24
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.24
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.24.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.25
+  name: Control A.5.25
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.25
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.25.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.26
+  name: Control A.5.26
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.26
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.26.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.27
+  name: Control A.5.27
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.27
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.27.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.28
+  name: Control A.5.28
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.28
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.28.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.29
+  name: Control A.5.29
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.29
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.29.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.30
+  name: Control A.5.30
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.30
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.30.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.31
+  name: Control A.5.31
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.31
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.31.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.32
+  name: Control A.5.32
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.32
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.32.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.33
+  name: Control A.5.33
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.33
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.33.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.34
+  name: Control A.5.34
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.34
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.34.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.35
+  name: Control A.5.35
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.35
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.35.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.36
+  name: Control A.5.36
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.36
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.36.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.5.37
+  name: Control A.5.37
+  domain: organizational
+  domains:
+    - organizational
+    - general
+  keywords:
+    - security
+    - control
+    - A.5.37
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.5.37.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.6.1
+  name: Control A.6.1
+  domain: people
+  domains:
+    - people
+    - general
+  keywords:
+    - security
+    - control
+    - A.6.1
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.6.1.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.6.2
+  name: Control A.6.2
+  domain: people
+  domains:
+    - people
+    - general
+  keywords:
+    - security
+    - control
+    - A.6.2
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.6.2.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.6.3
+  name: Control A.6.3
+  domain: people
+  domains:
+    - people
+    - general
+  keywords:
+    - security
+    - control
+    - A.6.3
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.6.3.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.6.4
+  name: Control A.6.4
+  domain: people
+  domains:
+    - people
+    - general
+  keywords:
+    - security
+    - control
+    - A.6.4
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.6.4.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.6.5
+  name: Control A.6.5
+  domain: people
+  domains:
+    - people
+    - general
+  keywords:
+    - security
+    - control
+    - A.6.5
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.6.5.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.6.6
+  name: Control A.6.6
+  domain: people
+  domains:
+    - people
+    - general
+  keywords:
+    - security
+    - control
+    - A.6.6
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.6.6.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.6.7
+  name: Control A.6.7
+  domain: people
+  domains:
+    - people
+    - general
+  keywords:
+    - security
+    - control
+    - A.6.7
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.6.7.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.6.8
+  name: Control A.6.8
+  domain: people
+  domains:
+    - people
+    - general
+  keywords:
+    - security
+    - control
+    - A.6.8
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.6.8.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.1
+  name: Control A.7.1
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.1
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.1.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.2
+  name: Control A.7.2
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.2
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.2.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.3
+  name: Control A.7.3
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.3
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.3.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.4
+  name: Control A.7.4
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.4
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.4.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.5
+  name: Control A.7.5
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.5
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.5.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.6
+  name: Control A.7.6
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.6
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.6.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.7
+  name: Control A.7.7
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.7
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.7.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.8
+  name: Control A.7.8
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.8
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.8.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.9
+  name: Control A.7.9
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.9
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.9.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.10
+  name: Control A.7.10
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.10
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.10.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.11
+  name: Control A.7.11
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.11
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.11.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.12
+  name: Control A.7.12
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.12
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.12.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.13
+  name: Control A.7.13
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.13
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.13.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.7.14
+  name: Control A.7.14
+  domain: physical
+  domains:
+    - physical
+    - general
+  keywords:
+    - security
+    - control
+    - A.7.14
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.7.14.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.1
+  name: Control A.8.1
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.1
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.1.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.2
+  name: Control A.8.2
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.2
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.2.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.3
+  name: Control A.8.3
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.3
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.3.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.4
+  name: Control A.8.4
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.4
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.4.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.5
+  name: Control A.8.5
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.5
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.5.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.6
+  name: Control A.8.6
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.6
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.6.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.7
+  name: Control A.8.7
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.7
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.7.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.8
+  name: Management of technical vulnerabilities
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.8
+    - vulnerability
+    - patch
+    - cve
+  evidence_types:
+    - policy
+    - procedure
+    - scan_report
+    - test_result
+  base_score: 8
+  practices:
+    - id: P.8.8.1
+      name: SCA scanner
+      min_maturity: 3
+      gate_relevant: false
+    - id: P.8.8.2
+      name: Release gate policy
+      min_maturity: 4
+      gate_relevant: true
+    - id: P.8.8.3
+      name: SBOM generation
+      min_maturity: 5
+      gate_relevant: false
+- id: A.8.9
+  name: Control A.8.9
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.9
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.9.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.10
+  name: Control A.8.10
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.10
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.10.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.11
+  name: Control A.8.11
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.11
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.11.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.12
+  name: Data leakage prevention
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.12
+    - dlp
+    - leakage
+    - data
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 6.5
+- id: A.8.13
+  name: Control A.8.13
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.13
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.13.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.14
+  name: Control A.8.14
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.14
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.14.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.15
+  name: Control A.8.15
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.15
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.15.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.16
+  name: Monitoring activities
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.16
+    - monitoring
+    - log
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 7.5
+- id: A.8.17
+  name: Control A.8.17
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.17
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.17.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.18
+  name: Control A.8.18
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.18
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.18.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.19
+  name: Control A.8.19
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.19
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.19.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.20
+  name: Control A.8.20
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.20
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.20.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.21
+  name: Control A.8.21
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.21
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.21.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.22
+  name: Control A.8.22
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.22
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.22.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.23
+  name: Control A.8.23
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.23
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.23.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.24
+  name: Control A.8.24
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.24
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.24.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.25
+  name: Control A.8.25
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.25
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.25.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.26
+  name: Control A.8.26
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.26
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.26.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.27
+  name: Control A.8.27
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.27
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.27.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.28
+  name: Control A.8.28
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.28
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.28.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.29
+  name: Control A.8.29
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.29
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.29.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.30
+  name: Control A.8.30
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.30
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.30.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.31
+  name: Control A.8.31
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.31
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.31.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.32
+  name: Control A.8.32
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.32
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.32.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.33
+  name: Control A.8.33
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.33
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.33.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
+- id: A.8.34
+  name: Control A.8.34
+  domain: technological
+  domains:
+    - technological
+    - general
+  keywords:
+    - security
+    - control
+    - A.8.34
+  evidence_types:
+    - policy
+    - procedure
+  base_score: 5
+  practices:
+    - id: P.A.8.34.1
+      name: Basic implementation
+      min_maturity: 3
+      gate_relevant: false
