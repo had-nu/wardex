@@ -33,12 +33,25 @@ type Thresholds struct {
 	WarnAbove float64 `yaml:"warn_above"`
 }
 
+type Limits struct {
+	MaxAcceptanceDays     int `yaml:"max_acceptance_days"`
+	MinJustificationChars int `yaml:"min_justification_chars"`
+	MaxReportAgeHours     int `yaml:"max_report_age_hours"`
+}
+
+type AcceptanceConfig struct {
+	SigningSecretFile          string   `yaml:"signing_secret_file"`
+	Limits                     Limits   `yaml:"limits"`
+	BannedJustificationPhrases []string `yaml:"banned_justification_phrases"`
+}
+
 type Config struct {
-	Organization   Organization             `yaml:"organization"`
-	DomainWeights  map[string]float64       `yaml:"domain_weights"`
-	ControlWeights map[string]ControlWeight `yaml:"control_weights"`
-	ReleaseGate    ReleaseGate              `yaml:"release_gate"`
-	Thresholds     Thresholds               `yaml:"thresholds"`
+	Organization     Organization             `yaml:"organization"`
+	DomainWeights    map[string]float64       `yaml:"domain_weights"`
+	ControlWeights   map[string]ControlWeight `yaml:"control_weights"`
+	ReleaseGate      ReleaseGate              `yaml:"release_gate"`
+	Thresholds       Thresholds               `yaml:"thresholds"`
+	AcceptanceConfig AcceptanceConfig         `yaml:"acceptance"`
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
