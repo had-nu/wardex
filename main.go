@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/config"
+	"github.com/had-nu/wardex/pkg/accept/cli"
 	"github.com/had-nu/wardex/pkg/analyzer"
 	"github.com/had-nu/wardex/pkg/catalog"
 	"github.com/had-nu/wardex/pkg/correlator"
@@ -47,6 +48,8 @@ func init() {
 	rootCmd.Flags().BoolVar(&noSnapshot, "no-snapshot", false, "Do not read or write snapshot")
 	rootCmd.Flags().StringVar(&minConfidence, "min-confidence", "low", "Minimum matching confidence: high|low")
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
+
+	cli.AddCommands(rootCmd)
 }
 
 func main() {
