@@ -44,3 +44,32 @@ Para suportar exceções justificadas ao *Release Gate*, o Wardex integra um sub
 * **Integridade Criptográfica (`pkg/accept/signer`)**: Recusa o uso de segredos na base de código, exigindo variáveis de ambiente restritas para injetar as chaves na assinatura HMAC-SHA256 gerada para cada payload excecional (`id|cve|owner|timestamp|...`).
 * **Validação por Design (`pkg/accept/verifier`)**: Todas as exceções passam obrigatoriamente pelas rotinas de carga de memória estritas de `store.Load()`. O sistema implementa o padrão "Fail-Closed" e aborta com Exit Codes rigorosos (`3` para adulterações/tampering ou configurações obsoletas pós-*drift*, `4` em casos de logs truncados).
 * **Auditoria Imutável e Forwarding (`pkg/accept/audit` & `pkg/accept/forwarder`)**: Mantém compatibilidade SIEM instantânea. Todos os passos ("created", "revoked", "expired") escrevem matrizes `JSONL` locais com timestamps assinalados para a zona global UTC antes de efetuar *Log Forwarding* simultâneo por *Multiplexer* para Syslog, Webhooks HTTP, ou sub-sistemas em Cloud (AWS CloudWatch, GCP Logging ativáveis via *build tags* nativas sem aumentar o peso estático dos binários base).
+
+### 7. Testando o Módulo de Aceitação Localmente
+
+Para validar em profundidade o comportamento criptográfico da aceitação de risco num laboratório local, a arquitetura permite-lhe injetar chaves e submeter a rotina end-to-end usando os dados de ambiente incluídos no repositório:
+
+1. **Geração do *Dummy Report* Base**: O *Gate* avalia vulnerabilidades passadas como argumento (ex. via Grype) com a matriz de políticas YAML da sua empresa. Execute primeiro a validação primária:
+   ```bash
+   wardex --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml --output=json --out-file=report.json
+   ```
+
+2. **Injetar Segredo de Assinatura via Config e EnvVars**: O mecanismo obriga à verificação do `hmac_secret_env` contido na policy original da organização para proibir *bypasses* estáticos:
+   ```bash
+   echo "accept:" >> test/testdata/wardex-config.yaml
+   echo "  hmac_secret_env: WARDEX_ACCEPT_SECRET" >> test/testdata/wardex-config.yaml
+   export WARDEX_ACCEPT_SECRET="wardex_local_test_key_123"
+   ```
+
+3. **Invocação de *Risk Acceptance* sobre um Bloqueio Explícito**:
+   Solicitação manual de uma anulação temporária para um CVE em particular, submetido debaixo do nome e rasto verificável de um utilizador:
+   ```bash
+   wardex accept request --report report.json --cve CVE-2024-1234 --accepted-by tester@auth.com --justification "Local Testing Override" --yes
+   ```
+   *(Esta rotina cria o binário imutável em `wardex-acceptances.yaml` e adiciona as matrizes `JSONL` a `wardex-accept-audit.log`)*.
+
+4. **Operações de Teste do Trimming de Validação Secundária**: Corrompa intencionalmente o payload das aceitações editando um byte ou re-arranjando IDs no `wardex-acceptances.yaml`. Valide o acionamento fulminante das flags anti-tampering (Exit Code **3**) recorrendo a:
+   ```bash
+   wardex accept list --active
+   wardex accept verify
+   ```
