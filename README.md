@@ -20,6 +20,17 @@ Consulte a documentação em `/doc` para compreender a visão arquitetónica e o
 
 Assegure que tem o [Go (>= 1.21)](https://go.dev/doc/install) instalado.
 
+### Opção 1: Instalação Global (Recomendado)
+Pode instalar o Wardex diretamente no seu sistema, permitindo executar o comando `wardex` em qualquer lugar:
+
+```bash
+go install github.com/had-nu/wardex@latest
+```
+*(Certifique-se que o diretório `$(go env GOPATH)/bin` está incluído no seu `$PATH` ou ambiente)*
+
+### Opção 2: Compilação Local a partir do Código-Fonte
+Se preferir clonar o repositório para testar ou desenvolver localmente:
+
 ```bash
 git clone https://github.com/had-nu/wardex.git
 cd wardex
@@ -76,3 +87,17 @@ func main() {
 	fmt.Printf("A decisão do Gate para este lançamento foi: %s\n", report.OverallDecision)
 }
 ```
+
+## Gestão de Exceções e Aceitação de Risco
+
+Quando o Wardex bloqueia um lançamento por exceder o apetite de risco admissível, as organizações podem gerir exceções de forma formal e auditável através do subcomando `wardex accept`:
+
+```bash
+# Solicitar a aceitação de risco para uma vulnerabilidade bloqueada
+wardex accept request --report report.json --cve CVE-2024-1234 --accepted-by sec-lead@company.com --justification "Risco mitigado por controlos externos" --expires 30d
+
+# Verificar a integridade criptográfica de todas as aceitações ativas
+wardex accept verify
+```
+
+O Wardex garante a integridade destas exceções utilizando assinaturas HMAC-SHA256, logs de auditoria append-only (`JSONL`) e deteção de alterações indesejadas na configuração (drift).
