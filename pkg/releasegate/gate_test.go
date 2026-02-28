@@ -12,7 +12,7 @@ func TestRiskBasedGateVsBinaryThreshold(t *testing.T) {
 		CVEID: "CVE-2024-1234", CVSSBase: 9.1, EPSSScore: 0.84, Reachable: true,
 	}
 
-	// Contexto de baixo risco: ferramenta interna, air-gapped, controles fortes
+	// Contexto de baixo risco: ferramenta interna, air-gapped, controls fortes
 	lowRiskGate := releasegate.Gate{
 		AssetContext: model.AssetContext{
 			Criticality: 0.2, InternetFacing: false, RequiresAuth: true, Environment: "development",
