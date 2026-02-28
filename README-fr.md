@@ -6,7 +6,7 @@
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
   <br>
-  <a href="README-en.md">🇬🇧 English</a> | <a href="README-fr.md">🇫🇷 Français</a> | <a href="README-es.md">🇪🇸 Castellano</a> | <a href="README.md">🇵🇹 Português</a>
+  <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
   <br><br>
 
   <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
@@ -107,3 +107,8 @@ wardex accept verify
 ```
 
 Wardex garantit l'intégrité de ces exceptions en utilisant des signatures HMAC-SHA256, des journaux d'audit à ajout seul (`JSONL`) et une détection de dérive de configuration (drift).
+
+---
+<div align="center">
+  <i>Powered by <a href="https://github.com/had-nu/lazy.go">lazy.go</a></i>
+</div>
