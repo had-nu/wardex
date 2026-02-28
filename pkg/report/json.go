@@ -19,5 +19,5 @@ func generateJSON(report model.GapReport, outFile string) error {
 		return nil
 	}
 
-	return os.WriteFile(outFile, data, 0644)
+	return os.WriteFile(outFile, data, 0600)
 }

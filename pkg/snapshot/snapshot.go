@@ -17,7 +17,7 @@ func Save(report model.GapReport) error {
 		return fmt.Errorf("failed to marshal snapshot: %w", err)
 	}
 
-	if err := os.WriteFile(SnapshotFile, data, 0644); err != nil {
+	if err := os.WriteFile(SnapshotFile, data, 0600); err != nil {
 		return fmt.Errorf("failed to write snapshot: %w", err)
 	}
 
