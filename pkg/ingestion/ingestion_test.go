@@ -15,7 +15,10 @@ controls:
     domains: ["access"]
 `
 	file := filepath.Join(t.TempDir(), "test.yaml")
-	os.WriteFile(file, []byte(content), 0644)
+	err := os.WriteFile(file, []byte(content), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write mock file: %v", err)
+	}
 
 	controls, err := LoadMany([]string{file})
 	if err != nil {
@@ -34,9 +37,12 @@ controls:
     maturity: 3
 `
 	file := filepath.Join(t.TempDir(), "test.yaml")
-	os.WriteFile(file, []byte(content), 0644)
+	err := os.WriteFile(file, []byte(content), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write mock file: %v", err)
+	}
 
-	_, err := LoadMany([]string{file})
+	_, err = LoadMany([]string{file})
 	if err == nil {
 		t.Fatalf("expected error due to missing mandatory field")
 	}
@@ -62,8 +68,14 @@ controls:
 	f1 := filepath.Join(d, "f1.yaml")
 	f2 := filepath.Join(d, "f2.yaml")
 
-	os.WriteFile(f1, []byte(content1), 0644)
-	os.WriteFile(f2, []byte(content2), 0644)
+	err := os.WriteFile(f1, []byte(content1), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write mock file f1: %v", err)
+	}
+	err = os.WriteFile(f2, []byte(content2), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write mock file f2: %v", err)
+	}
 
 	controls, err := LoadMany([]string{f1, f2})
 	if err != nil {
