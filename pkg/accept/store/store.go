@@ -63,7 +63,7 @@ func Load(path string, key []byte, auditPath string, currentReportHash string, c
 // Append atomagically writes a new Acceptance to the store
 func Append(path string, a model.Acceptance) error {
 	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0750); err != nil {
 		return err
 	}
 
@@ -71,7 +71,9 @@ func Append(path string, a model.Acceptance) error {
 	data, err := os.ReadFile(path)
 	var store model.AcceptanceStore
 	if err == nil {
-		yaml.Unmarshal(data, &store)
+		if err := yaml.Unmarshal(data, &store); err != nil {
+			return err
+		}
 	}
 	store.Acceptances = append(store.Acceptances, a)
 
@@ -81,7 +83,7 @@ func Append(path string, a model.Acceptance) error {
 	}
 
 	tempFile := path + ".tmp"
-	if err := os.WriteFile(tempFile, out, 0644); err != nil {
+	if err := os.WriteFile(tempFile, out, 0600); err != nil {
 		return err
 	}
 
@@ -135,7 +137,7 @@ func UpdateStatus(path string, id string, status string, revocation *model.Revoc
 	}
 
 	tempFile := path + ".tmp"
-	if err := os.WriteFile(tempFile, out, 0644); err != nil {
+	if err := os.WriteFile(tempFile, out, 0600); err != nil {
 		return err
 	}
 
