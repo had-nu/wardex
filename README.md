@@ -107,3 +107,8 @@ wardex accept verify
 ```
 
 O Wardex garante a integridade destas exceções utilizando assinaturas HMAC-SHA256, logs de auditoria append-only (`JSONL`) e deteção de alterações indesejadas na configuração (drift).
+
+---
+<div align="center">
+  <i>Powered by <a href="https://github.com/had-nu/lazy.go">lazy.go</a></i>
+</div>
