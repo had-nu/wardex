@@ -15,6 +15,7 @@ import (
 	"github.com/had-nu/wardex/pkg/releasegate"
 	"github.com/had-nu/wardex/pkg/report"
 	"github.com/had-nu/wardex/pkg/snapshot"
+	"github.com/had-nu/wardex/pkg/ui"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -53,6 +54,7 @@ func init() {
 }
 
 func main() {
+	ui.PrintBanner()
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -60,6 +62,7 @@ func main() {
 }
 
 func runWardex(cmd *cobra.Command, args []string) {
+
 	cfg, err := config.Load(configPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: failed to load config from %s: %v\n", configPath, err)

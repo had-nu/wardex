@@ -31,3 +31,5 @@ release_gate:
     - type: "runtime_protection"
       effectiveness: 0.20
       justification: "Falco com políticas customizadas"
+accept:
+  hmac_secret_env: WARDEX_ACCEPT_SECRET
