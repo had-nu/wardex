@@ -1,0 +1,6944 @@
+{
+  "Summary": {
+    "GeneratedAt": "2026-02-27T18:00:30.015111648Z",
+    "TotalControls": 93,
+    "CoveredCount": 93,
+    "PartialCount": 0,
+    "GapCount": 0,
+    "GlobalCoverage": 100,
+    "DomainSummaries": [
+      {
+        "Domain": "people",
+        "TotalControls": 8,
+        "CoveredCount": 8,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 9,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "physical",
+        "TotalControls": 14,
+        "CoveredCount": 14,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 7.5,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "technological",
+        "TotalControls": 34,
+        "CoveredCount": 34,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 8.329411764705881,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "organizational",
+        "TotalControls": 37,
+        "CoveredCount": 37,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 9.21891891891892,
+        "CoveragePercent": 0
+      }
+    ],
+    "TopCriticalGaps": null,
+    "GateSummary": null
+  },
+  "Findings": [
+    {
+      "Control": {
+        "ID": "A.5.1",
+        "Name": "Control A.5.1",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.1"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.1.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.1",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.2",
+        "Name": "Control A.5.2",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.2"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.2.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.2",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.3",
+        "Name": "Control A.5.3",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.3"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.3.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.4",
+        "Name": "Control A.5.4",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.4"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.4.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.4",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.5",
+        "Name": "Control A.5.5",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.5"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.5.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.5",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.6",
+        "Name": "Control A.5.6",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.6"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.6.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.6",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.7",
+        "Name": "Threat intelligence",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.7",
+          "threat",
+          "intelligence"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 12.6,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.7",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.8",
+        "Name": "Control A.5.8",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.8"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.8.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.8",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.9",
+        "Name": "Control A.5.9",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.9"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.9.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.9",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.10",
+        "Name": "Control A.5.10",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.10"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.10.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.10",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.11",
+        "Name": "Control A.5.11",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.11"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.11.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.11",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.11",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.11",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.11",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.12",
+        "Name": "Control A.5.12",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.12"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.12.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.12",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.12",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.12",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.12",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.13",
+        "Name": "Control A.5.13",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.13"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.13.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.13",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.13",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.13",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.13",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.14",
+        "Name": "Control A.5.14",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.14"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.14.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.14",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.14",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.14",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.14",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.15",
+        "Name": "Control A.5.15",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.15"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.15.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.15",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.15",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.15",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.15",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.16",
+        "Name": "Control A.5.16",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.16"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.16.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.16",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.16",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.16",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.16",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.17",
+        "Name": "Control A.5.17",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.17"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.17.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.17",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.17",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.17",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.17",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.18",
+        "Name": "Control A.5.18",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.18"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.18.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.18",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.18",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.18",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.18",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.19",
+        "Name": "Control A.5.19",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.19"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.19.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.19",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.19",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.19",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.19",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.20",
+        "Name": "Control A.5.20",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.20"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.20.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.20",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.21",
+        "Name": "Control A.5.21",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.21"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.21.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.21",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.21",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.21",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.21",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.22",
+        "Name": "Control A.5.22",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.22"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.22.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.22",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.22",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.22",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.22",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.23",
+        "Name": "Security of cloud services",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.23",
+          "cloud",
+          "aws",
+          "gcp",
+          "azure"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 13.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.23",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.23",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security",
+            "cloud",
+            "aws"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.23",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.23",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.24",
+        "Name": "Control A.5.24",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.24"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.24.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.24",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.25",
+        "Name": "Control A.5.25",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.25"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.25.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.25",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.26",
+        "Name": "Control A.5.26",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.26"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.26.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.26",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.26",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.26",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.26",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.27",
+        "Name": "Control A.5.27",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.27"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.27.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.27",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.27",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.27",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.27",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.28",
+        "Name": "Control A.5.28",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.28"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.28.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.28",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.28",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.28",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.28",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.29",
+        "Name": "Control A.5.29",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.29"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.29.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.29",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.29",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.29",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.29",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.30",
+        "Name": "Control A.5.30",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.30"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.30.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.30",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.31",
+        "Name": "Control A.5.31",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.31"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.31.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.31",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.31",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.31",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.31",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.32",
+        "Name": "Control A.5.32",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.32"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.32.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.32",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.33",
+        "Name": "Control A.5.33",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.33"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.33.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.33",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.33",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.33",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.33",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.34",
+        "Name": "Control A.5.34",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.34"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.34.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.34",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.34",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.34",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.34",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.35",
+        "Name": "Control A.5.35",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.35"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.35.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.35",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.35",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.35",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.35",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.36",
+        "Name": "Control A.5.36",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.36"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.36.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.36",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.36",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.36",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.36",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.5.37",
+        "Name": "Control A.5.37",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.5.37"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.5.37.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.5.37",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.5.37",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.5.37",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.5.37",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.6.1",
+        "Name": "Control A.6.1",
+        "Domain": "people",
+        "Domains": [
+          "people",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.6.1"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.6.1.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.6.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.6.1",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.6.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.6.2",
+        "Name": "Control A.6.2",
+        "Domain": "people",
+        "Domains": [
+          "people",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.6.2"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.6.2.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.6.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.6.2",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.6.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.6.3",
+        "Name": "Control A.6.3",
+        "Domain": "people",
+        "Domains": [
+          "people",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.6.3"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.6.3.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.6.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.6.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.6.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.6.4",
+        "Name": "Control A.6.4",
+        "Domain": "people",
+        "Domains": [
+          "people",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.6.4"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.6.4.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.6.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.6.4",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.6.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.6.5",
+        "Name": "Control A.6.5",
+        "Domain": "people",
+        "Domains": [
+          "people",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.6.5"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.6.5.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.6.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.6.5",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.6.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.6.6",
+        "Name": "Control A.6.6",
+        "Domain": "people",
+        "Domains": [
+          "people",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.6.6"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.6.6.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.6.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.6.6",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.6.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.6.7",
+        "Name": "Control A.6.7",
+        "Domain": "people",
+        "Domains": [
+          "people",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.6.7"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.6.7.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.6.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.6.7",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.6.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.6.8",
+        "Name": "Control A.6.8",
+        "Domain": "people",
+        "Domains": [
+          "people",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.6.8"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.6.8.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 9,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-IDAM-01",
+          "AnnexAControlID": "A.6.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.6.8",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.6.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "people"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.1",
+        "Name": "Control A.7.1",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.1"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.1.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.1",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.1",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.2",
+        "Name": "Control A.7.2",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.2"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.2.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.2",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.2",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.3",
+        "Name": "Control A.7.3",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.3"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.3.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.4",
+        "Name": "Control A.7.4",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.4"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.4.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.4",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.4",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.5",
+        "Name": "Control A.7.5",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.5"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.5.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.5",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.5",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.6",
+        "Name": "Control A.7.6",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.6"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.6.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.6",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.6",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.7",
+        "Name": "Control A.7.7",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.7"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.7.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.7",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.7",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.8",
+        "Name": "Control A.7.8",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.8"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.8.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.8",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.8",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.9",
+        "Name": "Control A.7.9",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.9"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.9.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.9",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.9",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.10",
+        "Name": "Control A.7.10",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.10"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.10.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.10",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.10",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.11",
+        "Name": "Control A.7.11",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.11"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.11.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.11",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.11",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.11",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.12",
+        "Name": "Control A.7.12",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.12"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.12.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.12",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.12",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.12",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.13",
+        "Name": "Control A.7.13",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.13"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.13.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.13",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.13",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.13",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.7.14",
+        "Name": "Control A.7.14",
+        "Domain": "physical",
+        "Domains": [
+          "physical",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.7.14"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.7.14.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 7.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.7.14",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.7.14",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.7.14",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "physical"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.1",
+        "Name": "Control A.8.1",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.1"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.1.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.1",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.2",
+        "Name": "Control A.8.2",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.2"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.2.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.2",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.3",
+        "Name": "Control A.8.3",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.3"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.3.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.3",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.4",
+        "Name": "Control A.8.4",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.4"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.4.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.4",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.4",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.5",
+        "Name": "Control A.8.5",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.5"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.5.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.5",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.6",
+        "Name": "Control A.8.6",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.6"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.6.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.6",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.7",
+        "Name": "Control A.8.7",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.7"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.7.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.7",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.8",
+        "Name": "Management of technical vulnerabilities",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.8",
+          "vulnerability",
+          "patch",
+          "cve"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure",
+          "scan_report",
+          "test_result"
+        ],
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "P.8.8.1",
+            "Name": "SCA scanner",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "P.8.8.2",
+            "Name": "Release gate policy",
+            "MinMaturity": 4,
+            "GateRelevant": true
+          },
+          {
+            "ID": "P.8.8.3",
+            "Name": "SBOM generation",
+            "MinMaturity": 5,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 12.8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.8",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.9",
+        "Name": "Control A.8.9",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.9"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.9.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.9",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.10",
+        "Name": "Control A.8.10",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.10"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.10.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.10",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.11",
+        "Name": "Control A.8.11",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.11"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.11.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.11",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.11",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.11",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.11",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.11",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.12",
+        "Name": "Data leakage prevention",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.12",
+          "dlp",
+          "leakage",
+          "data"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 6.5,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 10.4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.12",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.12",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.12",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-PHY-05",
+          "AnnexAControlID": "A.8.12",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "data"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.12",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.12",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.13",
+        "Name": "Control A.8.13",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.13"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.13.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.13",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.13",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.13",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.13",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.13",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.14",
+        "Name": "Control A.8.14",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.14"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.14.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.14",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.14",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.14",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.14",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.14",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.15",
+        "Name": "Control A.8.15",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.15"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.15.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.15",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.15",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.15",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.15",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.15",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.16",
+        "Name": "Monitoring activities",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.16",
+          "monitoring",
+          "log"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 12,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.16",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.16",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.16",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.16",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.16",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.17",
+        "Name": "Control A.8.17",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.17"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.17.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.17",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.17",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.17",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.17",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.17",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.18",
+        "Name": "Control A.8.18",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.18"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.18.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.18",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.18",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.18",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.18",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.18",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.19",
+        "Name": "Control A.8.19",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.19"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.19.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.19",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.19",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.19",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.19",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.19",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.20",
+        "Name": "Control A.8.20",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.20"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.20.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.20",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.21",
+        "Name": "Control A.8.21",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.21"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.21.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.21",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.21",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.21",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.21",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.21",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.22",
+        "Name": "Control A.8.22",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.22"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.22.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.22",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.22",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.22",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.22",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.22",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.23",
+        "Name": "Control A.8.23",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.23"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.23.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.23",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.23",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.23",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.23",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.23",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.24",
+        "Name": "Control A.8.24",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.24"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.24.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.24",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.25",
+        "Name": "Control A.8.25",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.25"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.25.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.25",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.26",
+        "Name": "Control A.8.26",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.26"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.26.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.26",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.26",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.26",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.26",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.26",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.27",
+        "Name": "Control A.8.27",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.27"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.27.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.27",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.27",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.27",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.27",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.27",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.28",
+        "Name": "Control A.8.28",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.28"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.28.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.28",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.28",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.28",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.28",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.28",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.29",
+        "Name": "Control A.8.29",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.29"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.29.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.29",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.29",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.29",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.29",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.29",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.30",
+        "Name": "Control A.8.30",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.30"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.30.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.30",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.31",
+        "Name": "Control A.8.31",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.31"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.31.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.31",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.31",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.31",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.31",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.31",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.32",
+        "Name": "Control A.8.32",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.32"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.32.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.32",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.33",
+        "Name": "Control A.8.33",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.33"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.33.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.33",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.33",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.33",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.33",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.33",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "A.8.34",
+        "Name": "Control A.8.34",
+        "Domain": "technological",
+        "Domains": [
+          "technological",
+          "general"
+        ],
+        "Keywords": [
+          "security",
+          "control",
+          "A.8.34"
+        ],
+        "EvidenceTypes": [
+          "policy",
+          "procedure"
+        ],
+        "BaseScore": 5,
+        "Practices": [
+          {
+            "ID": "P.A.8.34.1",
+            "Name": "Basic implementation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 8,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "CTRL-NET-02",
+          "AnnexAControlID": "A.8.34",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-APP-03",
+          "AnnexAControlID": "A.8.34",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-HR-04",
+          "AnnexAControlID": "A.8.34",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "security"
+          ]
+        },
+        {
+          "ExistingControlID": "CTRL-INC-06",
+          "AnnexAControlID": "A.8.34",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "CTRL-END-07",
+          "AnnexAControlID": "A.8.34",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Roadmap": null,
+  "Gate": {
+    "OverallDecision": "allow",
+    "GateMaturityLevel": 2,
+    "Decisions": [
+      {
+        "Vulnerability": {
+          "CVEID": "CVE-2024-1234",
+          "CVSSBase": 9.1,
+          "EPSSScore": 0.84,
+          "Component": "com.example:auth-lib:2.1.0",
+          "Reachable": true
+        },
+        "ReleaseRisk": 0.8255519999999997,
+        "RiskAppetite": 6,
+        "Decision": "allow",
+        "Breakdown": {
+          "CVSSBase": 9.1,
+          "EPSSFactor": 0.84,
+          "AdjustedScore": 7.643999999999999,
+          "AssetCriticality": 0.9,
+          "ExposureFactor": 0.6,
+          "CompensatingEffect": 0.8,
+          "FinalReleaseRisk": 0.8255519999999997
+        },
+        "AuditTrail": "[allow] CVE-2024-1234 — release_risk: 0.8, cvss_adjusted: 7.6, exposure: 0.60"
+      },
+      {
+        "Vulnerability": {
+          "CVEID": "CVE-2024-5678",
+          "CVSSBase": 7.5,
+          "EPSSScore": 0.12,
+          "Component": "org.example:util-lib:1.0.3",
+          "Reachable": false
+        },
+        "ReleaseRisk": 0.048599999999999983,
+        "RiskAppetite": 6,
+        "Decision": "allow",
+        "Breakdown": {
+          "CVSSBase": 7.5,
+          "EPSSFactor": 0.12,
+          "AdjustedScore": 0.8999999999999999,
+          "AssetCriticality": 0.9,
+          "ExposureFactor": 0.3,
+          "CompensatingEffect": 0.8,
+          "FinalReleaseRisk": 0.048599999999999983
+        },
+        "AuditTrail": "[allow] CVE-2024-5678 — release_risk: 0.0, cvss_adjusted: 0.9, exposure: 0.30"
+      },
+      {
+        "Vulnerability": {
+          "CVEID": "CVE-2024-9999",
+          "CVSSBase": 5.3,
+          "EPSSScore": 0.03,
+          "Component": "org.example:log-lib:3.2.1",
+          "Reachable": true
+        },
+        "ReleaseRisk": 0.017171999999999996,
+        "RiskAppetite": 6,
+        "Decision": "allow",
+        "Breakdown": {
+          "CVSSBase": 5.3,
+          "EPSSFactor": 0.03,
+          "AdjustedScore": 0.159,
+          "AssetCriticality": 0.9,
+          "ExposureFactor": 0.6,
+          "CompensatingEffect": 0.8,
+          "FinalReleaseRisk": 0.017171999999999996
+        },
+        "AuditTrail": "[allow] CVE-2024-9999 — release_risk: 0.0, cvss_adjusted: 0.2, exposure: 0.60"
+      }
+    ],
+    "BlockedCount": 0,
+    "AllowedCount": 3,
+    "HighestRisk": 0.8255519999999997
+  },
+  "Delta": null
+}
