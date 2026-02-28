@@ -71,7 +71,9 @@ func Append(path string, a model.Acceptance) error {
 	data, err := os.ReadFile(path)
 	var store model.AcceptanceStore
 	if err == nil {
-		yaml.Unmarshal(data, &store)
+		if err := yaml.Unmarshal(data, &store); err != nil {
+			return err
+		}
 	}
 	store.Acceptances = append(store.Acceptances, a)
 
