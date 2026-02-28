@@ -83,7 +83,7 @@ func PrintBanner() {
 		leftBgRaw := fmt.Sprintf("%-35s", bgContexts[i])
 		leftBgHtml := smoothGradient(leftBgRaw, 0.0, 0.35)
 
-		rightBgRaw := fmt.Sprintf("%s", bgContextsRight[i])
+		rightBgRaw := bgContextsRight[i]
 		rightBgHtml := smoothGradient(rightBgRaw, 0.75, 1.0)
 
 		// Colorize the logo elegantly

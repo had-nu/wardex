@@ -83,7 +83,7 @@ func Append(path string, a model.Acceptance) error {
 	}
 
 	tempFile := path + ".tmp"
-	if err := os.WriteFile(tempFile, out, 0644); err != nil {
+	if err := os.WriteFile(tempFile, out, 0600); err != nil {
 		return err
 	}
 
@@ -137,7 +137,7 @@ func UpdateStatus(path string, id string, status string, revocation *model.Revoc
 	}
 
 	tempFile := path + ".tmp"
-	if err := os.WriteFile(tempFile, out, 0644); err != nil {
+	if err := os.WriteFile(tempFile, out, 0600); err != nil {
 		return err
 	}
 
