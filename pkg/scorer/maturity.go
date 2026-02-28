@@ -45,7 +45,7 @@ func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 		// In a real scenario, finding maturity is max(maturity of all mapping controls)
 		// For now we aggregate if covered.
 		// If gate practice exists, we could use GateMaturity.
-		// The exact formula for MaturityScore: média ponderada da maturidade dos controles cobertos / total do domínio
+		// The exact formula for MaturityScore: média ponderada da maturidade dos controls cobertos / total do domínio
 		// For this implementation, let's defer exact computation or do a simple version based on findings if we pass maturity in finding.
 	}
 
