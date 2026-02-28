@@ -63,7 +63,7 @@ func Load(path string, key []byte, auditPath string, currentReportHash string, c
 // Append atomagically writes a new Acceptance to the store
 func Append(path string, a model.Acceptance) error {
 	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0750); err != nil {
 		return err
 	}
 
