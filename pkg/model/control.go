@@ -5,7 +5,7 @@ type ExistingControl struct {
 	ID                  string
 	Name                string
 	Description         string   // Usado no matching inferido
-	Framework           string   // Informativo
+	Framework           string   // Informative
 	Domains             []string // Temas semânticos declarados
 	Maturity            int      // 1 (inicial) a 5 (otimizado)
 	Evidences           []Evidence
