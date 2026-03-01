@@ -50,7 +50,7 @@ func init() {
 	rootCmd.Flags().StringVar(&minConfidence, "min-confidence", "low", "Minimum matching confidence: high|low")
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
 
-	cli.AddCommands(rootCmd)
+	cli.AddCommands(rootCmd, &configPath)
 }
 
 func main() {
