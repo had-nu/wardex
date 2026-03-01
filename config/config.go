@@ -52,6 +52,11 @@ type ReportingConfig struct {
 	Verbose bool   `yaml:"verbose"`
 }
 
+type ConfigProfile struct {
+	RiskAppetite float64 `yaml:"risk_appetite"`
+	WarnAbove    float64 `yaml:"warn_above"`
+}
+
 type Config struct {
 	Organization     Organization             `yaml:"organization"`
 	DomainWeights    map[string]float64       `yaml:"domain_weights"`
@@ -60,6 +65,7 @@ type Config struct {
 	Thresholds       Thresholds               `yaml:"thresholds"`
 	AcceptanceConfig AcceptanceConfig         `yaml:"acceptance"`
 	Reporting        ReportingConfig          `yaml:"reporting"`
+	Profiles         map[string]ConfigProfile `yaml:"profiles"`
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
