@@ -23,6 +23,7 @@ type ReleaseGate struct {
 	Enabled              bool                        `yaml:"enabled"`
 	Mode                 string                      `yaml:"mode"` // "any" | "aggregate"
 	RiskAppetite         float64                     `yaml:"risk_appetite"`
+	WarnAbove            float64                     `yaml:"warn_above"`
 	AggregateLimit       float64                     `yaml:"aggregate_limit"`
 	AssetContext         model.AssetContext          `yaml:"asset_context"`
 	CompensatingControls []model.CompensatingControl `yaml:"compensating_controls"`

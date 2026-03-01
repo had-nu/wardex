@@ -54,5 +54,6 @@ type GateReport struct {
 	Decisions         []ReleaseDecision
 	BlockedCount      int
 	AllowedCount      int
+	WarnCount         int
 	HighestRisk       float64
 }
