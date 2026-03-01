@@ -13,6 +13,7 @@ import (
 	"github.com/had-nu/wardex/pkg/accept/signer"
 	"github.com/had-nu/wardex/pkg/accept/store"
 	"github.com/had-nu/wardex/pkg/accept/validator"
+	"github.com/had-nu/wardex/pkg/duration"
 	"github.com/had-nu/wardex/pkg/model"
 	"github.com/spf13/cobra"
 )
@@ -87,14 +88,12 @@ func AddCommands(rootCmd *cobra.Command) {
 			// Calculate expirations
 			var expiresAt time.Time
 			if reqExpires != "" {
-				// Naive parsing logic for 30d relative offsets or direct timestamps. Using simple logic for now.
-				dur, err := time.ParseDuration(reqExpires)
-				if err == nil {
-					expiresAt = time.Now().Add(dur)
-				} else {
-					fmt.Fprintf(os.Stderr, "Invalid expiration format %s\n", reqExpires)
+				dur, err := duration.ParseExtended(reqExpires)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Invalid expiration format %q: %v\n", reqExpires, err)
 					os.Exit(1)
 				}
+				expiresAt = time.Now().Add(dur)
 			}
 
 			id := fmt.Sprintf("acc-%s-%d", time.Now().Format("20060102"), time.Now().Unix())
@@ -314,9 +313,9 @@ func AddCommands(rootCmd *cobra.Command) {
 				os.Exit(1)
 			}
 
-			dur, err := time.ParseDuration(expiryWarnBefore)
+			dur, err := duration.ParseExtended(expiryWarnBefore)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Invalid duration format: %v\n", err)
+				fmt.Fprintf(os.Stderr, "Invalid duration format %q: %v\n", expiryWarnBefore, err)
 				os.Exit(1)
 			}
 
@@ -338,7 +337,7 @@ func AddCommands(rootCmd *cobra.Command) {
 			os.Exit(0)
 		},
 	}
-	checkExpiryCmd.Flags().StringVar(&expiryWarnBefore, "warn-before", "3d", "Período de aviso: ex. 3d, 72h")
+	checkExpiryCmd.Flags().StringVar(&expiryWarnBefore, "warn-before", "72h", "Período de aviso: ex. 3d, 72h")
 
 	acceptCmd.AddCommand(requestCmd, listCmd, verifyCmd, verifyFwdCmd, revokeCmd, checkExpiryCmd)
 	rootCmd.AddCommand(acceptCmd)
