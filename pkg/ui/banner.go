@@ -57,7 +57,7 @@ func PrintBanner() {
 
 	// --- Top Section: Compact Code & Logs ---
 	fmt.Printf("\n%s\n", smoothGradient("func (g *Gate) Evaluate(ctx context.Context) (*Decision, error) {", 0.0, 0.4))
-	fmt.Printf("%s %sSYSTEM_INIT%s   Ω :: W A R D E X v2.1.0\n", tStamp, cyan, reset)
+	fmt.Printf("%s %sSYSTEM_INIT%s   Ω :: W A R D E X v1.1.0\n", tStamp, cyan, reset)
 	fmt.Printf("%s\n", lineSep)
 
 	// --- Middle Section: Elegant Simple Logo over Dim Code ---
