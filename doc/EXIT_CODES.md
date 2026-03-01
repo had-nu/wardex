@@ -23,15 +23,15 @@ Exemplo de interpretação do output do processo principal numa pipeline:
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -eq 0 ]; then
-  echo "✅ Release Gate Aprovado."
+  echo "[PASS] Release Gate Aprovado."
 elif [ $EXIT_CODE -eq 10 ]; then
   echo "🚫 Release Bloqueada (Gate Fallback). Por favor peça uma Risk Acceptance para as falhas."
   exit 1
 elif [ $EXIT_CODE -eq 11 ]; then
-  echo "⚠️ Compliance Ratio Insuficiente. Reveja a postura de controlos ISO 27001."
+  echo "[WARN] Compliance Ratio Insuficiente. Reveja a postura de controlos ISO 27001."
   exit 1
 else
-  echo "❌ Erro Fatal de Validação / Integridade (Code: $EXIT_CODE)."
+  echo "[FAIL] Erro Fatal de Validação / Integridade (Code: $EXIT_CODE)."
   exit 1
 fi
 ```

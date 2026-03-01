@@ -10,7 +10,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// GrypeReport represents the minimal JSON structure we care about from a Grype scan.
 type GrypeReport struct {
 	Matches []struct {
 		Vulnerability struct {
@@ -57,7 +56,6 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	// Transform to Wardex Vulnerabilities
 	type WardexOutput struct {
 		Vulnerabilities []model.Vulnerability `yaml:"vulnerabilities"`
 	}
@@ -66,7 +64,6 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 		Vulnerabilities: make([]model.Vulnerability, 0, len(report.Matches)),
 	}
 
-	// deduplicate by CVE+Component to keep config simple
 	seen := make(map[string]bool)
 
 	for _, match := range report.Matches {
@@ -79,16 +76,13 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 		}
 		seen[key] = true
 
-		// Find best CVSS
 		var bestScore float64
-		// Grype often has multiple CVSS blocks (NVD, GitHub, etc.)
 		for _, cvss := range match.Vulnerability.CVSS {
 			if cvss.Metrics.BaseScore > bestScore {
 				bestScore = cvss.Metrics.BaseScore
 			}
 		}
 
-		// Fallback for severity logic if no CVSS found
 		if bestScore == 0 {
 			switch match.Vulnerability.Severity {
 			case "Critical":
@@ -107,9 +101,9 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 		out.Vulnerabilities = append(out.Vulnerabilities, model.Vulnerability{
 			CVEID:     vulnID,
 			CVSSBase:  bestScore,
-			EPSSScore: defaultEpss, // Wardex needs EPSS; if Grype doesn't have it, we use the default fallback (5%)
+			EPSSScore: defaultEpss,
 			Component: comp,
-			Reachable: true, // Default to true unless we have deep reachability info (Grype usually doesn't)
+			Reachable: true,
 		})
 	}
 
