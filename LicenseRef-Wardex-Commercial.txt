@@ -1,0 +1,12 @@
+Wardex Commercial Software License
+========================================
+
+The file containing this LicenseRef points to the proprietary Wardex Commercial Software License Agreement. 
+
+This repository operates under a dual-licensing structure:
+1. **AGPL-3.0**: Free for internal enterprise use and standard open-source distribution.
+2. **Commercial**: Required only if embedding Wardex into a deployed Commercial Network Service or SaaS product.
+
+The full terms of the Commercial License can be found in `doc/COMMERCIAL_LICENSE.md`.
+
+To acquire a commercial embedding license pricing plan or a free use-case assessment, please contact `commercial@wardex.dev`.

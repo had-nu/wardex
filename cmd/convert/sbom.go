@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/had-nu/wardex/pkg/model"
 	"github.com/had-nu/wardex/pkg/sboms"
@@ -50,6 +51,13 @@ func peekSbomFormat(filepath string) (string, error) {
 		return "spdx", nil
 	}
 
+	if ctxRaw, ok := generic["@context"]; ok {
+		ctxStr := fmt.Sprintf("%v", ctxRaw)
+		if strings.Contains(ctxStr, "openvex.dev") {
+			return "openvex", nil
+		}
+	}
+
 	return "unknown", nil
 }
 
@@ -69,8 +77,10 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 		vulns, err = sboms.ParseCycloneDX(inFile)
 	case "spdx":
 		vulns, err = sboms.ParseSPDX(inFile)
+	case "openvex":
+		vulns, err = sboms.ParseOpenVEX(inFile)
 	default:
-		fmt.Fprintf(os.Stderr, "Error: Unknown or unsupported SBOM format in %s. Supported formats: CycloneDX 1.5 JSON.\n", inFile)
+		fmt.Fprintf(os.Stderr, "Error: Unknown or unsupported format in %s. Supported formats: CycloneDX 1.5 JSON, SPDX, OpenVEX.\n", inFile)
 		os.Exit(1)
 	}
 

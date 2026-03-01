@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-03-01
+
+### Added
+- **OpenVEX Native Suppressions**: Ingests standalone JSON-LD OpenVEX documents mapping `not_affected` and `false_positive` into suppression outcomes (N-05).
+- **SIEM Telemetry Date Filters**: The `verify-forwarding` CLI command now actually parses JSONL audit trails, enforcing the `--since` flag to quantify exact events queued for dispatch (N-03).
+- **Code Coverage CI Guarding**: Re-enabled strict pipeline protections to block any PR dipping below 70% unit test coverage thresholds. Visible README badges enabled (N-06).
+
+### Changed
+- **Legal Compliance Documentation**: Filled out final `[JURISDICTION]` and `[domain]` boilerplate in `COMMERCIAL_LICENSE.md`. Documented the cryptographic bypass limitations of the `--profile` flag acting on local environments (N-01, N-02).
+- **SPDX Scans Recognition**: Registered `LicenseRef-Wardex-Commercial` across the repository to properly tag the proprietary split of the repo during Enterprise SBOM ingestion (N-04).
+
 ## [1.6.0] - 2026-03-01
 
 ### Added

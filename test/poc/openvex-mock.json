@@ -1,0 +1,19 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://openvex.dev/docs/public/vex-9a3b8cd2c3.json",
+  "author": "Security Team",
+  "timestamp": "2026-03-01T21:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": "CVE-2023-45288",
+      "status": "not_affected",
+      "products": ["pkg:golang/golang.org/x/net@v0.22.0"]
+    },
+    {
+      "vulnerability": "CVE-2024-12345",
+      "status": "affected",
+      "products": ["pkg:golang/github.com/gin-gonic/gin@v1.9.1"]
+    }
+  ]
+}

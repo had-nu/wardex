@@ -26,7 +26,7 @@ To prevent unauthorized profile assumption, Wardex v1.6.0 introduces **True RBAC
 *   Upon execution, Wardex interrogates the environment variables (preferring `WARDEX_ACTOR`, falling back to `GITHUB_ACTOR` or `USER`).
 *   If the executing identity is not cryptographically matched to the `allowed_actors` array, Wardex generates an `[RBAC VIOLATION]` log, rejects the `--profile` override, and evaluates the software against the strictest baseline policy.
 
-*Auditor Proof:* This creates an enforced "Least Privilege" execution model for the Release Gate itself, ensuring developers cannot circumvent organizational risk constraints.
+*Auditor Proof:* This creates an enforced "Least Privilege" execution model for the Release Gate itself, ensuring developers cannot circumvent organizational risk constraints. **Note limiting scope**: The RBAC matching identity relies on the environment (`GITHUB_ACTOR` or `WARDEX_ACTOR`). While these variables are strictly controlled within GitHub Actions or CI runners, local developers can manually override them in their own terminal sessions. Therefore, the architectural non-repudiation of RBAC is legally and technically bound exclusively to automated deployment environments.
 
 ## 3. Configuration Drift Protection (Config-Audit Hashing)
 When a risk is accepted, the acceptance is cryptographically locked not just to the CVE, but to the **hash of the `wardex-config.yaml` at the exact time of signing**. 
