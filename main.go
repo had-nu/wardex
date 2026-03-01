@@ -39,6 +39,7 @@ var (
 	verbose       bool
 	roadmapLimit  int
 	profileName   string
+	snapshotFile  string
 )
 
 var convertCmd = &cobra.Command{
@@ -62,6 +63,7 @@ func init() {
 	rootCmd.Flags().StringVar(&gateMode, "gate-mode", "any", "Gate mode: any|aggregate")
 	rootCmd.Flags().Float64Var(&failAbove, "fail-above", 0.0, "Exit code 1 if gap with final_score above this value")
 	rootCmd.Flags().BoolVar(&noSnapshot, "no-snapshot", false, "Do not read or write snapshot")
+	rootCmd.Flags().StringVar(&snapshotFile, "snapshot-file", ".wardex_snapshot.json", "Path to snapshot file")
 	rootCmd.Flags().StringVar(&minConfidence, "min-confidence", "low", "Minimum matching confidence: high|low")
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
 	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
@@ -249,12 +251,12 @@ func runWardex(cmd *cobra.Command, args []string) {
 	}
 
 	if !noSnapshot {
-		prev, _ := snapshot.Load()
+		prev, _ := snapshot.Load(snapshotFile)
 		if prev != nil {
 			delta := snapshot.Diff(rep, *prev)
 			rep.Delta = &delta
 		}
-		_ = snapshot.Save(rep)
+		_ = snapshot.Save(rep, snapshotFile)
 	}
 
 	finalFormat := outputFormat
