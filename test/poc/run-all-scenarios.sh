@@ -226,6 +226,34 @@ else
   PASS=$((PASS + 1))
 fi
 
+# ── Scenario 08: RBAC Profile Overrides ──────────────────────────────────────
+header "Scenario 08 · RBAC Profile Overrides (Strict vs Lenient)"
+
+# Baseline run (strict config) -> Expect BLOCK
+if ${WARDEX} \
+    --config="${POC_DIR}/config-s08.yaml" \
+    --gate="${POC_DIR}/scenario-07-converted.yaml" \
+    "${POC_DIR}/scenario-07-nocontrols.yaml"; then
+  fail "Gate returned ALLOW on baseline — expected BLOCK"
+  FAIL=$((FAIL + 1))
+else
+  ok "Gate correctly returned BLOCK on strict baseline"
+  PASS=$((PASS + 1))
+fi
+
+# Override run (lenient profile) -> Expect ALLOW
+if ${WARDEX} \
+    --config="${POC_DIR}/config-s08.yaml" \
+    --profile="lenient-team" \
+    --gate="${POC_DIR}/scenario-07-converted.yaml" \
+    "${POC_DIR}/scenario-07-nocontrols.yaml"; then
+  ok "Gate correctly returned ALLOW when using --profile lenient-team"
+  PASS=$((PASS + 1))
+else
+  fail "Gate returned BLOCK even with lenient profile — override failed"
+  FAIL=$((FAIL + 1))
+fi
+
 # ── Summary ──────────────────────────────────────────────────────────────────
 header "Summary"
 echo -e "Tests Passed: ${GREEN}${PASS}${NC}"

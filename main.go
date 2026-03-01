@@ -38,6 +38,7 @@ var (
 	minConfidence string
 	verbose       bool
 	roadmapLimit  int
+	profileName   string
 )
 
 var convertCmd = &cobra.Command{
@@ -64,6 +65,7 @@ func init() {
 	rootCmd.Flags().StringVar(&minConfidence, "min-confidence", "low", "Minimum matching confidence: high|low")
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
 	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
+	rootCmd.Flags().StringVar(&profileName, "profile", "", "Team or profile name for RBAC threshold overrides")
 
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
 	rootCmd.AddCommand(convertCmd)
@@ -85,6 +87,16 @@ func runWardex(cmd *cobra.Command, args []string) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: failed to load config from %s: %v\n", configPath, err)
 		cfg = &config.Config{}
+	}
+
+	if profileName != "" {
+		if p, ok := cfg.Profiles[profileName]; ok {
+			cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
+			cfg.ReleaseGate.WarnAbove = p.WarnAbove
+			fmt.Fprintf(os.Stderr, "[INFO] Loaded RBAC profile '%s' (RiskAppetite: %.2f, WarnAbove: %.2f)\n", profileName, p.RiskAppetite, p.WarnAbove)
+		} else {
+			fmt.Fprintf(os.Stderr, "Warning: Profile '%s' not found in config. Using defaults.\n", profileName)
+		}
 	}
 
 	extControls, err := ingestion.LoadMany(args)
