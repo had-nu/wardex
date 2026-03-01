@@ -10,6 +10,7 @@ import (
 	"github.com/had-nu/wardex/pkg/analyzer"
 	"github.com/had-nu/wardex/pkg/catalog"
 	"github.com/had-nu/wardex/pkg/correlator"
+	"github.com/had-nu/wardex/pkg/exitcodes"
 	"github.com/had-nu/wardex/pkg/ingestion"
 	"github.com/had-nu/wardex/pkg/model"
 	"github.com/had-nu/wardex/pkg/releasegate"
@@ -217,7 +218,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 	// 7. Exit checks
 	if gateFailed {
-		os.Exit(2)
+		os.Exit(exitcodes.GateBlocked)
 	}
 
 	compFail := false
@@ -231,7 +232,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 	}
 
 	if compFail {
-		os.Exit(1)
+		os.Exit(exitcodes.ComplianceFail)
 	}
-	os.Exit(0)
+	os.Exit(exitcodes.OK)
 }
