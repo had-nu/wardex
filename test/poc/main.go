@@ -1,13 +1,3 @@
-// sdk-poc/main.go
-//
-// Wardex SDK Integration PoC
-// Exercises all four validation scenarios directly via the pkg/ API,
-// without the CLI. Useful for unit testing the library in isolation
-// or embedding wardex in a larger Go service.
-//
-// Run: go run ./sdk-poc/
-// Expected output: 4 scenario results printed; exit 0 if all pass.
-
 package main
 
 import (
@@ -30,9 +20,6 @@ func main() {
 		vulns     []model.Vulnerability
 		wantAllow bool
 	}{
-		// ── Scenario 01: Happy Path ─────────────────────────────────────────
-		// Low CVSS, low EPSS, not reachable, low-criticality internal service.
-		// Composite risk << 6.0 → ALLOW expected.
 		{
 			name: "01 · Happy Path → ALLOW",
 			gate: releasegate.Gate{
@@ -51,9 +38,6 @@ func main() {
 			wantAllow: true,
 		},
 
-		// ── Scenario 02: Block Path ─────────────────────────────────────────
-		// Critical RCE, high EPSS, reachable from internet, no controls.
-		// Composite risk >> 6.0 → BLOCK expected.
 		{
 			name: "02 · Critical CVE → BLOCK",
 			gate: releasegate.Gate{
@@ -72,9 +56,6 @@ func main() {
 			wantAllow: false,
 		},
 
-		// ── Scenario 03: Compensating Controls ─────────────────────────────
-		// High CVSS would block, but WAF + auth + segmentation dampen the
-		// composite score below the 6.0 appetite threshold → ALLOW expected.
 		{
 			name: "03 · Compensating Controls → ALLOW",
 			gate: releasegate.Gate{
@@ -97,11 +78,6 @@ func main() {
 			wantAllow: true,
 		},
 
-		// ── Scenario 04: Risk Acceptance ────────────────────────────────────
-		// Without an active acceptance record this would BLOCK (CVE-2025-0042,
-		// CVSS 9.1). The CLI scenario registers an exception; here we validate
-		// the raw gate behaviour (pre-acceptance) returns BLOCK as expected,
-		// which is the correct baseline for the acceptance flow to act on.
 		{
 			name: "04 · Risk Acceptance baseline → BLOCK (pre-exception)",
 			gate: releasegate.Gate{
@@ -135,18 +111,17 @@ func main() {
 		var status, icon string
 		if gotAllow == s.wantAllow {
 			status = "PASS"
-			icon = "✅"
+			icon = "[PASS]"
 			passed++
 		} else {
 			status = "FAIL"
-			icon = "❌"
+			icon = "[FAIL]"
 			failed++
 		}
 
 		fmt.Printf("%s [%s] %s\n", icon, status, s.name)
 		fmt.Printf("      Gate decision : %s\n", report.OverallDecision)
 
-		// Log individual vulnerability scores for traceability.
 		for _, vr := range report.Decisions {
 			logger.Info("vuln evaluated",
 				"cve", vr.Vulnerability.CVEID,
@@ -161,8 +136,8 @@ func main() {
 	fmt.Printf("Results: %d passed / %d failed\n", passed, failed)
 
 	if failed > 0 {
-		fmt.Println("❌ PoC validation FAILED — review scenario output above.")
+		fmt.Println("[FAIL] PoC validation FAILED — review scenario output above.")
 		os.Exit(1)
 	}
-	fmt.Println("✅ All scenarios passed — wardex library behaves as expected.")
+	fmt.Println("[PASS] All scenarios passed — wardex library behaves as expected.")
 }

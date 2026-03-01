@@ -1,21 +1,12 @@
 {
   "Summary": {
-    "GeneratedAt": "2026-03-01T14:58:04.068880401Z",
+    "GeneratedAt": "2026-03-01T14:58:03.875108442Z",
     "TotalControls": 93,
     "CoveredCount": 0,
     "PartialCount": 93,
     "GapCount": 0,
     "GlobalCoverage": 0,
     "DomainSummaries": [
-      {
-        "Domain": "organizational",
-        "TotalControls": 37,
-        "CoveredCount": 0,
-        "PartialCount": 37,
-        "GapCount": 0,
-        "MaturityScore": 5.121621621621622,
-        "CoveragePercent": 0
-      },
       {
         "Domain": "people",
         "TotalControls": 8,
@@ -41,6 +32,15 @@
         "PartialCount": 34,
         "GapCount": 0,
         "MaturityScore": 5.205882352941177,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "organizational",
+        "TotalControls": 37,
+        "CoveredCount": 0,
+        "PartialCount": 37,
+        "GapCount": 0,
+        "MaturityScore": 5.121621621621622,
         "CoveragePercent": 0
       }
     ],
@@ -6982,7 +6982,7 @@
           "MatchedDomains": null,
           "MatchedKeywords": [
             "security"
-    0     ]
+          ]
         },
         {
           "ExistingControlID": "A.6.8",
@@ -21823,34 +21823,56 @@
     "Decisions": [
       {
         "Vulnerability": {
-          "CVEID": "CVE-2023-9999",
+          "CVEID": "CVE-2024-1234",
           "CVSSBase": 9.8,
-          "EPSSScore": 1,
-          "Component": "log4j-core",
+          "EPSSScore": 0.91,
+          "Component": "",
           "Reachable": true
         },
-        "ReleaseRisk": 9.31,
-        "RiskAppetite": 4,
+        "ReleaseRisk": 8.472100000000001,
+        "RiskAppetite": 6,
         "Decision": "block",
         "Breakdown": {
           "CVSSBase": 9.8,
-          "EPSSFactor": 1,
-          "AdjustedScore": 9.8,
+          "EPSSFactor": 0.91,
+          "AdjustedScore": 8.918000000000001,
           "AssetCriticality": 0.95,
           "ExposureFactor": 1,
           "CompensatingEffect": 0,
-          "FinalReleaseRisk": 9.31
+          "FinalReleaseRisk": 8.472100000000001
         },
-        "AuditTrail": "[block] CVE-2023-9999 — release_risk: 9.3, cvss_adjusted: 9.8, exposure: 1.00"
+        "AuditTrail": "[block] CVE-2024-1234 — release_risk: 8.5, cvss_adjusted: 8.9, exposure: 1.00"
+      },
+      {
+        "Vulnerability": {
+          "CVEID": "CVE-2024-5566",
+          "CVSSBase": 8.6,
+          "EPSSScore": 0.73,
+          "Component": "",
+          "Reachable": true
+        },
+        "ReleaseRisk": 5.964099999999999,
+        "RiskAppetite": 6,
+        "Decision": "warn",
+        "Breakdown": {
+          "CVSSBase": 8.6,
+          "EPSSFactor": 0.73,
+          "AdjustedScore": 6.278,
+          "AssetCriticality": 0.95,
+          "ExposureFactor": 1,
+          "CompensatingEffect": 0,
+          "FinalReleaseRisk": 5.964099999999999
+        },
+        "AuditTrail": "[warn] CVE-2024-5566 — release_risk: 6.0, cvss_adjusted: 6.3, exposure: 1.00"
       }
     ],
     "BlockedCount": 1,
     "AllowedCount": 0,
-    "WarnCount": 0,
-    "HighestRisk": 9.31
+    "WarnCount": 1,
+    "HighestRisk": 8.472100000000001
   },
   "Delta": {
-    "SnapshotDate": "2026-03-01T14:58:04.028130578Z",
+    "SnapshotDate": "2026-03-01T14:58:03.846126299Z",
     "CoverageChange": 0,
     "NewlyCovered": null,
     "NewGaps": null,

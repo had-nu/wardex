@@ -1,6 +1,6 @@
 {
   "Summary": {
-    "GeneratedAt": "2026-03-01T14:58:04.068880401Z",
+    "GeneratedAt": "2026-03-01T14:58:04.028130578Z",
     "TotalControls": 93,
     "CoveredCount": 0,
     "PartialCount": 93,
@@ -6982,7 +6982,7 @@
           "MatchedDomains": null,
           "MatchedKeywords": [
             "security"
-    0     ]
+          ]
         },
         {
           "ExistingControlID": "A.6.8",
@@ -21818,43 +21818,43 @@
     }
   ],
   "Gate": {
-    "OverallDecision": "block",
-    "GateMaturityLevel": 2,
+    "OverallDecision": "warn",
+    "GateMaturityLevel": 3,
     "Decisions": [
       {
         "Vulnerability": {
-          "CVEID": "CVE-2023-9999",
-          "CVSSBase": 9.8,
-          "EPSSScore": 1,
-          "Component": "log4j-core",
+          "CVEID": "CVE-2025-0043",
+          "CVSSBase": 5.5,
+          "EPSSScore": 0.8,
+          "Component": "lib-legacy",
           "Reachable": true
         },
-        "ReleaseRisk": 9.31,
-        "RiskAppetite": 4,
-        "Decision": "block",
+        "ReleaseRisk": 2.8160000000000007,
+        "RiskAppetite": 6,
+        "Decision": "warn",
         "Breakdown": {
-          "CVSSBase": 9.8,
-          "EPSSFactor": 1,
-          "AdjustedScore": 9.8,
-          "AssetCriticality": 0.95,
-          "ExposureFactor": 1,
+          "CVSSBase": 5.5,
+          "EPSSFactor": 0.8,
+          "AdjustedScore": 4.4,
+          "AssetCriticality": 0.8,
+          "ExposureFactor": 0.8,
           "CompensatingEffect": 0,
-          "FinalReleaseRisk": 9.31
+          "FinalReleaseRisk": 2.8160000000000007
         },
-        "AuditTrail": "[block] CVE-2023-9999 — release_risk: 9.3, cvss_adjusted: 9.8, exposure: 1.00"
+        "AuditTrail": "[warn] CVE-2025-0043 — release_risk: 2.8, cvss_adjusted: 4.4, exposure: 0.80"
       }
     ],
-    "BlockedCount": 1,
+    "BlockedCount": 0,
     "AllowedCount": 0,
-    "WarnCount": 0,
-    "HighestRisk": 9.31
+    "WarnCount": 1,
+    "HighestRisk": 2.8160000000000007
   },
   "Delta": {
-    "SnapshotDate": "2026-03-01T14:58:04.028130578Z",
+    "SnapshotDate": "2026-03-01T14:58:03.9936131Z",
     "CoverageChange": 0,
     "NewlyCovered": null,
     "NewGaps": null,
     "Unchanged": 93,
-    "GateMaturityChange": -1
+    "GateMaturityChange": 1
   }
 }

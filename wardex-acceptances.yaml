@@ -1,0 +1,9 @@
+acceptances:
+    - id: acc-20260301-1772377083
+      cve: CVE-2025-0042
+      accepted_by: sec-lead@company.com
+      justification: No upstream patch available at this time. WAF virtual patch rules were deployed 2025-02-28. Accepted for 14 days pending vendor update.
+      created_at: 0001-01-01T00:00:00Z
+      expires_at: 2026-03-15T14:58:03.985428243Z
+      signature: sha256:4bddd1c890712f4704907b6543b36365f0a748b6308e073cab44c566051f84cc
+      report_hash: sha256:8f6ea8f53a30b12c986b4f79256ad646b6420d597429d0115a3c4a399a5f2029

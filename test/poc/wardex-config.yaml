@@ -17,6 +17,7 @@ release_gate:
   enabled: true
   mode: "any"              # "any" = block if any single vuln exceeds appetite
   risk_appetite: 6.0       # Threshold: composite score above this → BLOCK
+  warn_above: 4.5          # Threshold: composite score above this → WARN
 
   asset_context:
     criticality: 0.9
