@@ -47,6 +47,21 @@ cd wardex
 go build -o wardex .
 ```
 
+### Upgrading to Latest Release
+When a new patch or minor version is released (e.g., `v1.1.1`), you can upgrade by fetching the latest code or tag and rebuilding:
+
+```bash
+# For global installations
+go install github.com/had-nu/wardex@latest
+
+# For local builds (e.g., targeting a specific tag)
+git fetch --tags
+git checkout v1.1.1
+go build -o wardex .
+```
+
+Please refer to the [CHANGELOG.md](CHANGELOG.md) for detailed release notes and patch information.
+
 ## Usage
 
 Wardex allows you to ingest policies in a simple YAML or JSON format, cross-reference vulnerabilities (e.g., Grype output) in a target file, and validate the gate:
