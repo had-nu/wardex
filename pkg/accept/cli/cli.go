@@ -4,6 +4,7 @@
 package cli
 
 import (
+	"bufio"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -335,9 +336,45 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 
 			fmt.Printf("[PASS] Found audit log: %s (%d bytes)\n", logPath, info.Size())
 
-			// Optional: We could parse the JSONL and filter by `verifySince`
-			// For now, proving the file is accessible and formatted is the goal of this gap closure.
-			fmt.Println("[PASS] SIEM Forwarding Verification Complete. Audit trail is healthy.")
+			file, err := os.Open(logPath)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "[FAIL] Cannot open audit log for parsing: %v\n", err)
+				os.Exit(1)
+			}
+			defer file.Close()
+
+			var cutoff time.Time
+			if verifySince != "" {
+				dur, err := duration.ParseExtended(verifySince)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "[FAIL] Invalid --since format: %v\n", err)
+					os.Exit(1)
+				}
+				cutoff = time.Now().Add(-dur)
+				fmt.Printf("[INFO] Filtering events since: %s\n", cutoff.Format(time.RFC3339))
+			}
+
+			validEvents := 0
+			scanner := bufio.NewScanner(file)
+			for scanner.Scan() {
+				line := scanner.Bytes()
+				if len(line) == 0 {
+					continue
+				}
+				var rec model.Acceptance
+				if err := json.Unmarshal(line, &rec); err == nil {
+					if verifySince == "" || rec.CreatedAt.After(cutoff) {
+						validEvents++
+					}
+				}
+			}
+
+			if err := scanner.Err(); err != nil {
+				fmt.Fprintf(os.Stderr, "[FAIL] Error reading audit log: %v\n", err)
+				os.Exit(1)
+			}
+
+			fmt.Printf("[PASS] SIEM Forwarding Verification Complete. %d events found ready for telemetry.\n", validEvents)
 			os.Exit(exitcodes.OK)
 		},
 	}

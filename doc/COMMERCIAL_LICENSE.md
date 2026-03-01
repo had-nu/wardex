@@ -1,6 +1,6 @@
 # Wardex Commercial Licence Agreement
 
-**Version 1.0 — Effective Date: [DATE]**
+**Version 1.0 — Effective Date: 2026-03-01**
 
 > **IMPORTANT — READ CAREFULLY BEFORE USING WARDEX UNDER THIS LICENCE.**
 >
@@ -321,10 +321,9 @@ or sale of all or substantially all of Licensor's assets. Any purported assignme
 of this section is void.
 
 **10.5 Governing Law and Dispute Resolution.** This Agreement shall be governed by and
-construed in accordance with the laws of **[JURISDICTION — e.g., Portugal / England and Wales /
-State of Delaware, USA]**, without regard to its conflict of law provisions. Any dispute
+construed in accordance with the laws of **Portugal**, without regard to its conflict of law provisions. Any dispute
 arising out of or relating to this Agreement shall be submitted to the exclusive jurisdiction
-of the courts of **[JURISDICTION]**. The parties waive any objection to the exercise of
+of the courts of **Portugal**. The parties waive any objection to the exercise of
 jurisdiction over them by such courts.
 
   *[Note to Licensor: Choose a jurisdiction where you are resident and have access to legal
@@ -391,7 +390,7 @@ in the Order Form.
 
 | Parameter | Value |
 |---|---|
-| **Annual Fee** | Custom — contact commercial@[domain] |
+| **Annual Fee** | Custom — contact commercial@wardex.dev |
 | **Authorised Developers** | Unlimited |
 | **Production Services** | Unlimited |
 | **Commercial Use Rights** | All Scale rights + white-label option (negotiated separately) |
@@ -408,21 +407,21 @@ as part of a commercial service, are operating under AGPL-3.0 Internal Use and d
 this Commercial Licence.
 
 If you are uncertain whether your use case requires a commercial licence, contact
-**commercial@[domain]** for a free written use-case assessment.
+**commercial@wardex.dev** for a free written use-case assessment.
 
 ---
 
 ## Contact and Commercial Enquiries
 
 **Licensor:** Gustavo Leão Melo (had-nu)
-**Email:** commercial@[domain]
+**Email:** commercial@wardex.dev
 **Repository:** https://github.com/had-nu/wardex
-**Registered Address:** [TO BE COMPLETED BEFORE PUBLICATION]
+**Registered Address:** Remote Organisation (Portugal)
 
 To purchase a commercial licence, initiate a use-case enquiry, or request an Order Form:
 
 ```
-commercial@[domain]
+commercial@wardex.dev
 Subject: Wardex Commercial Licence — [Tier] — [Company Name]
 ```
 

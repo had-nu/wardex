@@ -71,7 +71,7 @@ func init() {
 	rootCmd.Flags().StringVar(&minConfidence, "min-confidence", "low", "Minimum matching confidence: high|low")
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
 	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
-	rootCmd.Flags().StringVar(&profileName, "profile", "", "Team or profile name for RBAC threshold overrides")
+	rootCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override (Warning: Identity is cryptographically trusted only in CI environments via WARDEX_ACTOR)")
 	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora")
 
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
