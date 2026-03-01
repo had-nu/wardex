@@ -10,11 +10,12 @@ import (
 )
 
 func TestSnapshotSaveLoad(t *testing.T) {
+	testFile := ".test_snapshot.json"
 	// Clean up before and after
-	os.Remove(snapshot.SnapshotFile)
-	defer os.Remove(snapshot.SnapshotFile)
+	os.Remove(testFile)
+	defer os.Remove(testFile)
 
-	r, err := snapshot.Load()
+	r, err := snapshot.Load(testFile)
 	if err != nil {
 		t.Fatalf("expected no error on missing file, got %v", err)
 	}
@@ -29,11 +30,11 @@ func TestSnapshotSaveLoad(t *testing.T) {
 		},
 	}
 
-	if err := snapshot.Save(report); err != nil {
+	if err := snapshot.Save(report, testFile); err != nil {
 		t.Fatalf("save failed: %v", err)
 	}
 
-	r, err = snapshot.Load()
+	r, err = snapshot.Load(testFile)
 	if err != nil {
 		t.Fatalf("load failed: %v", err)
 	}
@@ -47,9 +48,9 @@ func TestSnapshotDiff(t *testing.T) {
 	prev := model.GapReport{
 		Summary: model.ExecutiveSummary{GlobalCoverage: 40.0, GeneratedAt: time.Now()},
 		Findings: []model.Finding{
-			{Control: model.AnnexAControl{ID: "A.1"}, Status: model.StatusGap},
-			{Control: model.AnnexAControl{ID: "A.2"}, Status: model.StatusCovered},
-			{Control: model.AnnexAControl{ID: "A.3"}, Status: model.StatusGap},
+			{Control: model.CatalogControl{ID: "A.1"}, Status: model.StatusGap},
+			{Control: model.CatalogControl{ID: "A.2"}, Status: model.StatusCovered},
+			{Control: model.CatalogControl{ID: "A.3"}, Status: model.StatusGap},
 		},
 		Gate: &model.GateReport{GateMaturityLevel: 2},
 	}
@@ -57,9 +58,9 @@ func TestSnapshotDiff(t *testing.T) {
 	curr := model.GapReport{
 		Summary: model.ExecutiveSummary{GlobalCoverage: 50.0},
 		Findings: []model.Finding{
-			{Control: model.AnnexAControl{ID: "A.1"}, Status: model.StatusCovered}, // fixed
-			{Control: model.AnnexAControl{ID: "A.2"}, Status: model.StatusGap},     // regressed
-			{Control: model.AnnexAControl{ID: "A.3"}, Status: model.StatusGap},     // unchanged
+			{Control: model.CatalogControl{ID: "A.1"}, Status: model.StatusCovered}, // fixed
+			{Control: model.CatalogControl{ID: "A.2"}, Status: model.StatusGap},     // regressed
+			{Control: model.CatalogControl{ID: "A.3"}, Status: model.StatusGap},     // unchanged
 		},
 		Gate: &model.GateReport{GateMaturityLevel: 4}, // improved
 	}

@@ -9,7 +9,7 @@ import (
 
 func TestMatchHighConfidence(t *testing.T) {
 	ext := model.ExistingControl{ID: "C1", Domains: []string{"access_control"}}
-	anx := model.AnnexAControl{ID: "A.9", Domains: []string{"access_control"}}
+	anx := model.CatalogControl{ID: "A.9", Domains: []string{"access_control"}}
 
 	res := correlator.Match(ext, anx)
 	if !res.Matched || res.Confidence != "high" {
@@ -23,7 +23,7 @@ func TestMatchLowConfidence(t *testing.T) {
 		Name:        "Firewall Config",
 		Description: "Blocks unwanted traffic",
 	}
-	anx := model.AnnexAControl{
+	anx := model.CatalogControl{
 		ID:       "A.13",
 		Keywords: []string{"firewall", "network"},
 	}
@@ -39,7 +39,7 @@ func TestMatchLowConfidence(t *testing.T) {
 
 func TestMatchNoMatch(t *testing.T) {
 	ext := model.ExistingControl{ID: "C3", Name: "Coffee Policy", Domains: []string{"hr"}}
-	anx := model.AnnexAControl{ID: "A.1", Keywords: []string{"firewall"}, Domains: []string{"technical"}}
+	anx := model.CatalogControl{ID: "A.1", Keywords: []string{"firewall"}, Domains: []string{"technical"}}
 
 	res := correlator.Match(ext, anx)
 	if res.Matched {
@@ -48,7 +48,7 @@ func TestMatchNoMatch(t *testing.T) {
 }
 
 func TestCorrelator(t *testing.T) {
-	cat := []model.AnnexAControl{
+	cat := []model.CatalogControl{
 		{ID: "A.1", Domains: []string{"access"}},
 		{ID: "A.2", Keywords: []string{"log"}},
 	}
