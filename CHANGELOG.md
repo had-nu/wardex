@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-03-01
+
+### Added
+- **Real SIEM Telemetry Verification**: Upgraded `verify-forwarding` to use verified TCP/HTTP connection checks with real drop statuses (`exit 1`) to ensure SLA observability for Splunk/Datadog forwarders (G-07).
+- **True RBAC Context Enforcement**: `--profile` usage is now verified against an `AllowedActors` array evaluated directly from continuous integration identity (`WARDEX_ACTOR` or `GITHUB_ACTOR`). Any profile mismatches block overrides and enforce the strictest baselines (G-15).
+- **Audit-Ready Architecture Strategy**: Added comprehensive documentation on Risk Gate cryptographic non-repudiation and non-repudiation controls. Essential for SOC 2 Type II and ISO 27001 readiness. Wardex now legally protects commercial integration via an enhanced AGPL-3.0 and Commercial dual-license strategy protected by automated CLA rules (G-20, G-21).
+
 ## [1.5.0] - 2026-03-01
 
 ### Added
