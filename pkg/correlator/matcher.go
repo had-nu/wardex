@@ -15,7 +15,7 @@ type MatchResult struct {
 }
 
 // matchDomains checks if explicitly declared domains match the AnnexA control
-func matchDomains(existing model.ExistingControl, annexA model.AnnexAControl) ([]string, bool) {
+func matchDomains(existing model.ExistingControl, annexA model.CatalogControl) ([]string, bool) {
 	var matched []string
 	annexMap := make(map[string]bool)
 	for _, d := range annexA.Domains {
@@ -31,7 +31,7 @@ func matchDomains(existing model.ExistingControl, annexA model.AnnexAControl) ([
 }
 
 // matchKeywords checks for keyword occurrences in Name and Description
-func matchKeywords(existing model.ExistingControl, annexA model.AnnexAControl) ([]string, bool) {
+func matchKeywords(existing model.ExistingControl, annexA model.CatalogControl) ([]string, bool) {
 	var matched []string
 	content := strings.ToLower(existing.Name + " " + existing.Description)
 
@@ -44,7 +44,7 @@ func matchKeywords(existing model.ExistingControl, annexA model.AnnexAControl) (
 }
 
 // Match evaluates whether an existing control addresses an AnnexA control
-func Match(existing model.ExistingControl, annexA model.AnnexAControl) MatchResult {
+func Match(existing model.ExistingControl, annexA model.CatalogControl) MatchResult {
 	// 1. Declarative match (high confidence)
 	if matchedDomains, ok := matchDomains(existing, annexA); ok {
 		return MatchResult{
