@@ -1,0 +1,279 @@
+name: Wardex — Risk-Based Release Gate PoC
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:        # allow manual runs from the Actions tab
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Environment shared by all jobs
+# ─────────────────────────────────────────────────────────────────────────────
+env:
+  GO_VERSION: "1.22"
+  WARDEX_VERSION: "latest"
+  # WARDEX_HMAC_SECRET must be set as a GitHub Actions secret.
+  # It is used by wardex to sign and verify risk-acceptance records.
+  WARDEX_HMAC_SECRET: ${{ secrets.WARDEX_HMAC_SECRET }}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SETUP JOB — install wardex once, cache the binary
+# ─────────────────────────────────────────────────────────────────────────────
+jobs:
+  setup:
+    name: Install wardex
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Install wardex CLI
+        run: go install github.com/had-nu/wardex@${{ env.WARDEX_VERSION }}
+
+      - name: Verify installation
+        run: wardex --version
+
+      - name: Cache wardex binary
+        uses: actions/cache@v4
+        with:
+          path: ~/go/bin/wardex
+          key: wardex-${{ env.WARDEX_VERSION }}-${{ runner.os }}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCENARIO 01 — Happy Path: low-risk vulns → ALLOW
+# ─────────────────────────────────────────────────────────────────────────────
+  scenario-01-happy-path:
+    name: "Scenario 01 · Happy Path → ALLOW"
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout PoC repository
+        uses: actions/checkout@v4
+
+      - name: Restore wardex binary
+        uses: actions/cache@v4
+        with:
+          path: ~/go/bin/wardex
+          key: wardex-${{ env.WARDEX_VERSION }}-${{ runner.os }}
+
+      - name: Run wardex gate (expect ALLOW)
+        run: |
+          wardex \
+            --config=wardex/config/wardex-config.yaml \
+            --gate=wardex/fixtures/scenario-01-happy-path.yaml \
+            wardex/fixtures/controls.yaml
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-scenario-01
+          path: report.json
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCENARIO 02 — Block Path: critical CVE → BLOCK
+# The gate exit code is non-zero; we mark the step as expected-failure and
+# capture the report for inspection.
+# ─────────────────────────────────────────────────────────────────────────────
+  scenario-02-block-critical:
+    name: "Scenario 02 · Critical CVE → BLOCK"
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout PoC repository
+        uses: actions/checkout@v4
+
+      - name: Restore wardex binary
+        uses: actions/cache@v4
+        with:
+          path: ~/go/bin/wardex
+          key: wardex-${{ env.WARDEX_VERSION }}-${{ runner.os }}
+
+      - name: Run wardex gate (expect BLOCK — exit code 1)
+        # continue-on-error lets us capture the report even on BLOCK.
+        # The subsequent assertion step enforces the expected outcome.
+        continue-on-error: true
+        id: gate
+        run: |
+          wardex \
+            --config=wardex/config/wardex-config.yaml \
+            --gate=wardex/fixtures/scenario-02-block-critical.yaml \
+            wardex/fixtures/controls.yaml
+
+      - name: Assert that the gate blocked as expected
+        run: |
+          if [ "${{ steps.gate.outcome }}" != "failure" ]; then
+            echo "❌ Gate should have returned BLOCK but returned ALLOW — test failed"
+            exit 1
+          fi
+          echo "✅ Gate correctly blocked the release (critical CVE, no mitigations)"
+
+      - name: Print BLOCK report summary
+        if: always()
+        run: |
+          echo "=== BLOCK Report ==="
+          cat report.json | python3 -m json.tool || cat report.json
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-scenario-02
+          path: report.json
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCENARIO 03 — Compensating Controls: high CVSS + controls → ALLOW
+# ─────────────────────────────────────────────────────────────────────────────
+  scenario-03-compensating-controls:
+    name: "Scenario 03 · Compensating Controls → ALLOW"
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout PoC repository
+        uses: actions/checkout@v4
+
+      - name: Restore wardex binary
+        uses: actions/cache@v4
+        with:
+          path: ~/go/bin/wardex
+          key: wardex-${{ env.WARDEX_VERSION }}-${{ runner.os }}
+
+      - name: Run wardex gate (WAF + auth controls dampen risk → expect ALLOW)
+        run: |
+          wardex \
+            --config=wardex/config/wardex-config.yaml \
+            --gate=wardex/fixtures/scenario-03-compensating-controls.yaml \
+            wardex/fixtures/controls.yaml
+
+      - name: Print ALLOW report summary
+        if: always()
+        run: |
+          echo "=== ALLOW Report (with compensating controls) ==="
+          cat report.json | python3 -m json.tool || cat report.json
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-scenario-03
+          path: report.json
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCENARIO 04 — Risk Acceptance Exception Flow
+# 1. Gate runs → BLOCK (no patch available)
+# 2. Security lead registers a formal risk-acceptance exception
+# 3. Gate re-evaluates → ALLOW (exception honoured)
+# 4. Integrity of exception record is verified (HMAC)
+# ─────────────────────────────────────────────────────────────────────────────
+  scenario-04-risk-acceptance:
+    name: "Scenario 04 · Risk Acceptance Exception Flow"
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout PoC repository
+        uses: actions/checkout@v4
+
+      - name: Restore wardex binary
+        uses: actions/cache@v4
+        with:
+          path: ~/go/bin/wardex
+          key: wardex-${{ env.WARDEX_VERSION }}-${{ runner.os }}
+
+      # ── Step 1: Initial gate evaluation ──────────────────────────────────
+      - name: "Step 1 · Initial gate run (expect BLOCK — no patch available)"
+        continue-on-error: true
+        id: initial-gate
+        run: |
+          wardex \
+            --config=wardex/config/wardex-config.yaml \
+            --gate=wardex/fixtures/scenario-04-risk-acceptance.yaml \
+            wardex/fixtures/controls.yaml
+
+      - name: Assert initial gate returned BLOCK
+        run: |
+          if [ "${{ steps.initial-gate.outcome }}" != "failure" ]; then
+            echo "❌ Expected initial gate to BLOCK — test setup invalid"
+            exit 1
+          fi
+          echo "✅ Gate correctly blocked — proceeding to register risk acceptance"
+
+      - name: Save initial BLOCK report
+        run: cp report.json report-initial-block.json
+
+      # ── Step 2: Register risk-acceptance exception ────────────────────────
+      - name: "Step 2 · Register formal risk-acceptance exception"
+        run: |
+          wardex accept request \
+            --report report-initial-block.json \
+            --cve CVE-2025-0042 \
+            --accepted-by sec-lead@company.com \
+            --justification "No upstream patch available. Virtual patch deployed in WAF (2025-02-28). Risk accepted for 14 days pending vendor fix." \
+            --expires 14d
+
+      # ── Step 3: Re-evaluate gate with exception active ───────────────────
+      - name: "Step 3 · Re-run gate (expect ALLOW — exception honoured)"
+        run: |
+          wardex \
+            --config=wardex/config/wardex-config.yaml \
+            --gate=wardex/fixtures/scenario-04-risk-acceptance.yaml \
+            wardex/fixtures/controls.yaml
+
+      # ── Step 4: Verify HMAC integrity of all active exceptions ───────────
+      - name: "Step 4 · Verify cryptographic integrity of acceptance records"
+        run: |
+          wardex accept verify
+          echo "✅ All acceptance records passed HMAC-SHA256 integrity check"
+
+      - name: Upload all reports as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-scenario-04
+          path: |
+            report-initial-block.json
+            report.json
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SUMMARY JOB — gates pass before merge is allowed
+# ─────────────────────────────────────────────────────────────────────────────
+  release-decision:
+    name: "Release Decision Gate"
+    runs-on: ubuntu-latest
+    needs:
+      - scenario-01-happy-path
+      - scenario-02-block-critical   # passes because assertion validates BLOCK
+      - scenario-03-compensating-controls
+      - scenario-04-risk-acceptance
+    if: always()
+
+    steps:
+      - name: Evaluate overall pipeline result
+        run: |
+          echo "=================================================="
+          echo "  Wardex PoC — Full Pipeline Simulation Complete"
+          echo "=================================================="
+          echo ""
+          echo "  Scenario 01 (Happy Path)           → ${{ needs.scenario-01-happy-path.result }}"
+          echo "  Scenario 02 (Critical Block)        → ${{ needs.scenario-02-block-critical.result }}"
+          echo "  Scenario 03 (Compensating Controls) → ${{ needs.scenario-03-compensating-controls.result }}"
+          echo "  Scenario 04 (Risk Acceptance)       → ${{ needs.scenario-04-risk-acceptance.result }}"
+          echo ""
+
+          if [[ \
+            "${{ needs.scenario-01-happy-path.result }}"           == "success" && \
+            "${{ needs.scenario-02-block-critical.result }}"       == "success" && \
+            "${{ needs.scenario-03-compensating-controls.result }}" == "success" && \
+            "${{ needs.scenario-04-risk-acceptance.result }}"      == "success" \
+          ]]; then
+            echo "✅ All scenarios validated — wardex library behaves as expected."
+          else
+            echo "❌ One or more scenarios failed — review job logs above."
+            exit 1
+          fi

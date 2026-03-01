@@ -1,0 +1,32 @@
+# scenario-02-block-critical.yaml
+# Expected decision: BLOCK
+#
+# Conditions that drive the BLOCK:
+#   • Critical CVSS (9.8) — RCE-class vulnerability
+#   • High EPSS (0.91) — actively exploited in the wild (PoC public)
+#   • Reachable from unauthenticated HTTP endpoint
+#   • Internet-facing payment service with maximum criticality (0.95)
+#   • No compensating controls active
+#
+# Composite risk far exceeds the 6.0 appetite threshold.
+# The pipeline must halt; a risk-acceptance exception is required to proceed.
+
+asset:
+  criticality: 0.95
+  internet_facing: true
+  requires_auth: false       # Public-facing endpoint — unauthenticated reach
+
+compensating_controls: []    # No mitigations in place — worst-case scenario
+
+vulnerabilities:
+  - cve_id: "CVE-2024-1234"
+    cvss_base: 9.8
+    epss_score: 0.91
+    reachable: true
+    description: "Critical RCE in HTTP request-parsing library (PoC public)"
+
+  - cve_id: "CVE-2024-5566"
+    cvss_base: 8.6
+    epss_score: 0.73
+    reachable: true
+    description: "Privilege escalation via deserialization in auth middleware"

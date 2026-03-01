@@ -1,0 +1,32 @@
+# scenario-04-risk-acceptance.yaml
+# Expected initial decision: BLOCK
+# After wardex accept request → pipeline resumes with auditable exception record
+#
+# This scenario simulates a real operational decision:
+#   A critical dependency vulnerability (log4j-class) has no patch available yet.
+#   The security lead formally accepts the risk for 14 days while the vendor works
+#   on a fix. No compensating controls are active yet — the WAF virtual patch
+#   will be deployed after the exception is registered.
+#
+# Composite = CVSS(9.1) × EPSS(0.84) × criticality(0.85) × exposure(1.0) ≈ 6.50
+# Since 6.50 > 6.0 (appetite) → BLOCK
+#
+# The GitHub Actions job will:
+#   1. Run the gate      → BLOCK (exit 1)
+#   2. Register exception via `wardex accept request`
+#   3. Re-run the gate   → ALLOW (exit 0, exception honoured)
+#   4. Verify integrity  via `wardex accept verify`
+
+asset:
+  criticality: 0.85
+  internet_facing: true
+  requires_auth: false
+
+compensating_controls: []   # No controls active — baseline must BLOCK
+
+vulnerabilities:
+  - cve_id: "CVE-2025-0042"
+    cvss_base: 9.1
+    epss_score: 0.84
+    reachable: true
+    description: "Critical RCE in open-source serialization lib — no upstream patch"

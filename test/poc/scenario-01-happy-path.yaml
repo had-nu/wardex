@@ -1,0 +1,30 @@
+# scenario-01-happy-path.yaml
+# Expected decision: ALLOW
+#
+# Conditions that drive the ALLOW:
+#   • Low CVSS (3.2) — low base severity
+#   • Very low EPSS (0.018) — exploit is theoretical, not observed in the wild
+#   • Vulnerability is NOT reachable from user-controlled input
+#   • Non-internet-facing internal service (criticality 0.3)
+#
+# Composite risk = f(CVSS, EPSS, criticality, reachability) << 6.0 (appetite)
+
+asset:
+  criticality: 0.3
+  internet_facing: false
+  requires_auth: true
+
+compensating_controls: []   # No additional controls needed at this risk level
+
+vulnerabilities:
+  - cve_id: "CVE-2024-9901"
+    cvss_base: 3.2
+    epss_score: 0.018
+    reachable: false
+    description: "Low-severity info-disclosure in internal logging library"
+
+  - cve_id: "CVE-2024-7743"
+    cvss_base: 2.8
+    epss_score: 0.005
+    reachable: false
+    description: "Denial-of-service in YAML parser (requires local access)"
