@@ -37,7 +37,7 @@ func ValidateBusinessRules(a model.Acceptance, cfg config.AcceptanceConfig) erro
 	// 3. Banned phrases check
 	lowerJustification := strings.ToLower(a.Justification)
 	for _, phrase := range cfg.BannedJustificationPhrases {
-		if phrase != "" && lowerJustification == strings.ToLower(phrase) {
+		if phrase != "" && strings.Contains(lowerJustification, strings.ToLower(phrase)) {
 			return fmt.Errorf("%w: '%s'", ErrBannedPhrase, phrase)
 		}
 	}
