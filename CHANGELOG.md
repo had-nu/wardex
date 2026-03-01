@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-03-01
+
+### Added
+
+- **Multi-Framework Governance Engine**: Substantial architectural expansion natively transforming Wardex from an ISO 27001-only tool into a multi-framework engine.
+- **`--framework` Flag**: A new root flag allowing dynamic policy checking. Replaces the hardcoded Annex A library. Supports:
+  - `--framework iso27001` (Default)
+  - `--framework soc2` (COSO / Trust Services Criteria constraints)
+  - `--framework nis2` (EU Directive 2022/2555 cybersecurity objectives)
+  - `--framework dora` (Digital Operational Resilience Act ICT risk management)
+
+### Changed
+- Abstracted `model.AnnexAControl` schema components functionally into `model.CatalogControl` across `pkg/catalog/` and metrics engines to serve generalized mappings. Backward compatibility for generated `JSON` historical reports is robust.
+
 ## [1.4.0] - 2026-03-01
 
 ### Added

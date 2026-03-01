@@ -72,6 +72,11 @@ O Wardex permite ingerir as políticas num formato simples YAML ou JSON, cruzar 
 
 Isto gera relatórios visuais (em Markdown, CSV ou JSON) expondo a Análise de Maturidade das 4 áreas globais da ISO 27001 (Pessoas, Processos, Tecnológico e Físico) e executa as políticas de decisão (ALLOW / BLOCK / WARN) consoante o risco calibrado da organização.
 
+## Novidades (v1.5.0)
+
+- **Motor Multi-Framework Nativo (`--framework`)**: O Wardex agora liberta-se da exclusividade ISO 27001! Inspecione os seus security mappings dinamicamente contra `soc2` (Trust Services Criteria), `nis2` (EU Directive 2022/2555), ou `dora` (Digital Operational Resilience Act) carregados dos nossos catálogos nativos.
+- **`CatalogControl` Architecture**: A refatoração total da base de dados do Wardex para suportar o schema abstrato `CatalogControl` garante o processamento genérico de conformidade mantendo a matemática de Risco original intacta.
+
 ## Novidades (v1.4.0)
 
 - **SIEM Forwarding Verification (`verify-forwarding`)**: Valida o estado de saúde da local audit trail para ingestão SIEM.
