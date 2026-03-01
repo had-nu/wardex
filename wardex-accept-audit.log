@@ -1,1 +1,1 @@
-{"ts":"2026-03-01T14:58:03.985471104Z","event":"acceptance.created","id":"acc-20260301-1772377083","cve_id":"CVE-2025-0042","actor":"sec-lead@company.com","interactive":true,"config_hash":"sha256:af35ba481f60f977562da194b63a47a4a5174e08197ad27ac916475d0c358c5d"}
+{"ts":"2026-03-01T18:14:29.072645481Z","event":"acceptance.created","id":"acc-20260301-1772388869","cve_id":"CVE-2025-0042","actor":"sec-lead@company.com","interactive":true,"config_hash":"sha256:af35ba481f60f977562da194b63a47a4a5174e08197ad27ac916475d0c358c5d"}
