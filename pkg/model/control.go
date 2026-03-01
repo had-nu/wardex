@@ -46,7 +46,7 @@ type Evidence struct {
 // Mapping representa a correlação entre um controle existente e um controle da Annex A.
 type Mapping struct {
 	ExistingControlID string
-	CatalogControlID   string
+	CatalogControlID  string
 	Confidence        string // "high" | "low"
 	MatchedDomains    []string
 	MatchedKeywords   []string

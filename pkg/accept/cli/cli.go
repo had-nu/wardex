@@ -326,7 +326,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 						fmt.Fprintf(os.Stderr, "[FAIL] Failed to dial %s backend at %s: %v\n", strings.ToUpper(network), address, err)
 						os.Exit(1)
 					}
-					conn.Close()
+					_ = conn.Close()
 					fmt.Printf("[PASS] %s Backend '%s' is reachable and accepting connections.\n", strings.ToUpper(network), address)
 				}
 			} else {

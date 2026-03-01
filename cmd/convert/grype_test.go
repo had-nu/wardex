@@ -37,7 +37,7 @@ func TestConvertGrype(t *testing.T) {
 	inFile := filepath.Join(dir, "grype.json")
 	outFile := filepath.Join(dir, "out.yaml")
 
-	os.WriteFile(inFile, []byte(mockJSON), 0644)
+	_ = os.WriteFile(inFile, []byte(mockJSON), 0600)
 
 	grypeOutFile = outFile
 	defaultEpss = 0.05

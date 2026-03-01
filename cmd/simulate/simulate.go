@@ -41,7 +41,7 @@ var SimulateCmd = &cobra.Command{
 </html>`
 
 		filename := "wardex-simulator.html"
-		err := os.WriteFile(filename, []byte(html), 0644)
+		err := os.WriteFile(filename, []byte(html), 0600)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error creating simulator file: %v\n", err)
 			os.Exit(1)

@@ -23,7 +23,7 @@ func (c *Correlator) Correlate(controls []model.ExistingControl) []model.Mapping
 			if res.Matched {
 				mappings = append(mappings, model.Mapping{
 					ExistingControlID: ext.ID,
-					CatalogControlID:   anx.ID,
+					CatalogControlID:  anx.ID,
 					Confidence:        res.Confidence,
 					MatchedDomains:    res.MatchedDomains,
 					MatchedKeywords:   res.MatchedKeywords,
