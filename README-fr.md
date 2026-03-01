@@ -2,8 +2,10 @@
   <h1>Wardex</h1>
   <p><b>Analyse des Écarts, Passerelle de Mise en Production Basée sur les Risques et Impact Commercial — Outil CLI & Moteur en Go</b></p>
 
+  [![Wardex](https://img.shields.io/badge/Wardex-8A2BE2?style=flat-square)](https://github.com/had-nu/wardex)
   [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square)](https://www.gnu.org/licenses/agpl-3.0)
+  [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square)](https://github.com/had-nu/lazy.go)
 
   <br>
   <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
