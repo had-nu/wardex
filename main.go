@@ -5,6 +5,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/had-nu/wardex/cmd/convert"
+	"github.com/had-nu/wardex/cmd/simulate"
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
 	"github.com/had-nu/wardex/pkg/analyzer"
@@ -22,6 +24,7 @@ import (
 )
 
 var (
+	Version       = "dev"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -31,13 +34,20 @@ var (
 	noSnapshot    bool
 	minConfidence string
 	verbose       bool
+	roadmapLimit  int
 )
 
+var convertCmd = &cobra.Command{
+	Use:   "convert",
+	Short: "Convert third-party vulnerability outputs into Wardex format",
+}
+
 var rootCmd = &cobra.Command{
-	Use:   "wardex [flags] <input-file(s)>",
-	Short: "Wardex generates compliance gap analysis from implemented controls.",
-	Args:  cobra.MinimumNArgs(1),
-	Run:   runWardex,
+	Use:     "wardex [flags] <input-file(s)>",
+	Short:   "Wardex generates compliance gap analysis from implemented controls.",
+	Version: Version,
+	Args:    cobra.MinimumNArgs(1),
+	Run:     runWardex,
 }
 
 func init() {
@@ -50,12 +60,16 @@ func init() {
 	rootCmd.Flags().BoolVar(&noSnapshot, "no-snapshot", false, "Do not read or write snapshot")
 	rootCmd.Flags().StringVar(&minConfidence, "min-confidence", "low", "Minimum matching confidence: high|low")
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
+	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
 
+	convertCmd.AddCommand(convert.GrypeCmd)
+	rootCmd.AddCommand(convertCmd)
+	rootCmd.AddCommand(simulate.SimulateCmd)
 	cli.AddCommands(rootCmd, &configPath)
 }
 
 func main() {
-	ui.PrintBanner()
+	ui.PrintBanner(Version)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -176,6 +190,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 			AssetContext:         cfg.ReleaseGate.AssetContext,
 			CompensatingControls: cfg.ReleaseGate.CompensatingControls,
 			RiskAppetite:         cfg.ReleaseGate.RiskAppetite,
+			WarnAbove:            cfg.ReleaseGate.WarnAbove,
 			Mode:                 gateModeVal,
 		}
 
@@ -197,6 +212,8 @@ func runWardex(cmd *cobra.Command, args []string) {
 		rep.Gate = &gateReport
 		if gateReport.OverallDecision == "block" {
 			gateFailed = true
+		} else if gateReport.OverallDecision == "warn" {
+			fmt.Fprintf(os.Stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
 		}
 	}
 
@@ -211,7 +228,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 	}
 
 	// 6. Report export
-	if err := report.Generate(rep, outputFormat, outFile); err != nil {
+	if err := report.Generate(rep, outputFormat, outFile, roadmapLimit); err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to generate report: %v\n", err)
 		os.Exit(1)
 	}
