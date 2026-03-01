@@ -12,18 +12,18 @@ type Vulnerability struct {
 // AssetContext descreve o contexto do asset.
 // Cada campo preenchido aumenta o nível de maturidade do gate inferido.
 type AssetContext struct {
-	Criticality    float64 // 0.0–1.0: impacto de negócio se comprometido
-	InternetFacing bool
-	RequiresAuth   bool   // Reduz exposure em 0.2 quando true
-	DataClass      string // "public" | "internal" | "confidential" | "restricted"
-	Environment    string // "production" | "staging" | "development"
+	Criticality    float64 `yaml:"criticality"` // 0.0–1.0: impacto de negócio se comprometido
+	InternetFacing bool    `yaml:"internet_facing"`
+	RequiresAuth   bool    `yaml:"requires_auth"` // Reduz exposure em 0.2 quando true
+	DataClass      string  `yaml:"data_class"`    // "public" | "internal" | "confidential" | "restricted"
+	Environment    string  `yaml:"environment"`   // "production" | "staging" | "development"
 }
 
 // CompensatingControl representa um controle que reduz exploitabilidade.
 type CompensatingControl struct {
-	Type          string  // "waf" | "network_segmentation" | "runtime_protection" | "ids"
-	Effectiveness float64 // 0.0–0.8: fração de redução de risco aplicada
-	Justification string
+	Type          string  `yaml:"type"`          // "waf" | "network_segmentation" | "runtime_protection" | "ids"
+	Effectiveness float64 `yaml:"effectiveness"` // 0.0–0.8: fração de redução de risco aplicada
+	Justification string  `yaml:"justification"`
 }
 
 // RiskBreakdown expõe cada componente do cálculo para rastreabilidade.
