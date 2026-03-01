@@ -56,8 +56,9 @@ type ReportingConfig struct {
 }
 
 type ConfigProfile struct {
-	RiskAppetite float64 `yaml:"risk_appetite"`
-	WarnAbove    float64 `yaml:"warn_above"`
+	RiskAppetite  float64  `yaml:"risk_appetite"`
+	WarnAbove     float64  `yaml:"warn_above"`
+	AllowedActors []string `yaml:"allowed_actors"`
 }
 
 type Config struct {

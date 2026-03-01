@@ -7,7 +7,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
+	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/had-nu/wardex/config"
@@ -277,10 +280,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 		Use:   "verify-forwarding",
 		Short: "Verify log forwarding status",
 		Run: func(cmd *cobra.Command, args []string) {
-			// In a real enterprise system, this would query a Splunk/Datadog API or a local fluentbit tailer.
-			// For Wardex v1.4.0, we simulate verification by checking if the local audit log is readable
-			// and confirming we can parse its events, successfully "verifying" that data is structured for forwarding.
-
+			// Parse the audit log as the first layer of readiness
 			logPath := "wardex-accept-audit.log"
 			info, err := os.Stat(logPath)
 			if os.IsNotExist(err) {
@@ -292,12 +292,43 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				os.Exit(1)
 			}
 
-			// Simulate checking connection to a backend
+			// Real connection check to the configured SIEM backend
 			if verifyBackend != "" {
-				fmt.Printf("[INFO] Pinging configured SIEM backend: %s\n", verifyBackend)
-				// Simulated network delay
-				time.Sleep(500 * time.Millisecond)
-				fmt.Printf("[PASS] Backend '%s' is reachable and accepting connections.\n", verifyBackend)
+				fmt.Printf("[INFO] Verifying reachability of SIEM backend: %s\n", verifyBackend)
+
+				timeout := 3 * time.Second
+
+				if strings.HasPrefix(verifyBackend, "http://") || strings.HasPrefix(verifyBackend, "https://") {
+					client := &http.Client{Timeout: timeout}
+					resp, err := client.Get(verifyBackend)
+					if err != nil {
+						fmt.Fprintf(os.Stderr, "[FAIL] Failed to connect to HTTP backend %s: %v\n", verifyBackend, err)
+						os.Exit(1)
+					}
+					defer resp.Body.Close()
+					if resp.StatusCode >= 500 {
+						fmt.Fprintf(os.Stderr, "[FAIL] HTTP backend returned server error %d\n", resp.StatusCode)
+						os.Exit(1)
+					}
+					fmt.Printf("[PASS] HTTP Backend '%s' is reachable (Status: %d).\n", verifyBackend, resp.StatusCode)
+				} else {
+					// Fallback to raw socket connection (TCP/UDP)
+					network := "tcp"
+					address := verifyBackend
+					if strings.Contains(verifyBackend, "://") {
+						parts := strings.SplitN(verifyBackend, "://", 2)
+						network = parts[0]
+						address = parts[1]
+					}
+
+					conn, err := net.DialTimeout(network, address, timeout)
+					if err != nil {
+						fmt.Fprintf(os.Stderr, "[FAIL] Failed to dial %s backend at %s: %v\n", strings.ToUpper(network), address, err)
+						os.Exit(1)
+					}
+					conn.Close()
+					fmt.Printf("[PASS] %s Backend '%s' is reachable and accepting connections.\n", strings.ToUpper(network), address)
+				}
 			} else {
 				fmt.Printf("[INFO] No external backend specified. Verifying local log integrity for forwarding agent.\n")
 			}

@@ -98,9 +98,33 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 	if profileName != "" {
 		if p, ok := cfg.Profiles[profileName]; ok {
-			cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
-			cfg.ReleaseGate.WarnAbove = p.WarnAbove
-			fmt.Fprintf(os.Stderr, "[INFO] Loaded RBAC profile '%s' (RiskAppetite: %.2f, WarnAbove: %.2f)\n", profileName, p.RiskAppetite, p.WarnAbove)
+			actor := os.Getenv("WARDEX_ACTOR")
+			if actor == "" {
+				actor = os.Getenv("GITHUB_ACTOR")
+			}
+			if actor == "" {
+				actor = os.Getenv("USER")
+			}
+
+			allowed := false
+			if len(p.AllowedActors) == 0 {
+				allowed = true // Fallback to open access for legacy configs
+			} else {
+				for _, a := range p.AllowedActors {
+					if a == "*" || a == actor {
+						allowed = true
+						break
+					}
+				}
+			}
+
+			if !allowed {
+				fmt.Fprintf(os.Stderr, "[RBAC VIOLATION] Actor '%s' is not authorized for profile '%s'!\n[RBAC ENFORCEMENT] Override rejected. Falling back to stict baseline configuration.\n", actor, profileName)
+			} else {
+				cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
+				cfg.ReleaseGate.WarnAbove = p.WarnAbove
+				fmt.Fprintf(os.Stderr, "[INFO] RBAC Verified. Loaded profile '%s' for actor '%s' (RiskAppetite: %.2f, WarnAbove: %.2f)\n", profileName, actor, p.RiskAppetite, p.WarnAbove)
+			}
 		} else {
 			fmt.Fprintf(os.Stderr, "Warning: Profile '%s' not found in config. Using defaults.\n", profileName)
 		}
