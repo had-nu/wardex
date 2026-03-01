@@ -70,7 +70,7 @@ Wardex allows you to ingest policies in a simple YAML or JSON format, cross-refe
 ./bin/wardex --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml
 ```
 
-This generates visual reports (in Markdown, CSV, or JSON) exposing the Maturity Analysis of the 4 global areas of ISO 27001 (People, Processes, Technological, and Physical) and executes decision policies (ALLOW / BLOCK) depending on the organization's calibrated risk.
+This generates visual reports (in Markdown, CSV, or JSON) exposing the Maturity Analysis of the 4 global areas of ISO 27001 (People, Processes, Technological, and Physical) and executes decision policies (ALLOW / BLOCK / WARN) depending on the organization's calibrated risk.
 
 ## SDK Usage
 
