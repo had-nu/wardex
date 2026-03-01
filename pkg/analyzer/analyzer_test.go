@@ -9,7 +9,7 @@ import (
 )
 
 func TestAnalyzer_Covered(t *testing.T) {
-	cat := []model.AnnexAControl{{ID: "A.1", BaseScore: 5.0}}
+	cat := []model.CatalogControl{{ID: "A.1", BaseScore: 5.0}}
 
 	controls := []model.ExistingControl{
 		{
@@ -19,7 +19,7 @@ func TestAnalyzer_Covered(t *testing.T) {
 	}
 
 	maps := []model.Mapping{
-		{ExistingControlID: "C1", AnnexAControlID: "A.1", Confidence: "high"},
+		{ExistingControlID: "C1", CatalogControlID: "A.1", Confidence: "high"},
 	}
 
 	a := analyzer.New(cat, maps, controls)
@@ -35,7 +35,7 @@ func TestAnalyzer_Covered(t *testing.T) {
 }
 
 func TestAnalyzer_Partial_LowConfidence(t *testing.T) {
-	cat := []model.AnnexAControl{{ID: "A.1", BaseScore: 5.0}}
+	cat := []model.CatalogControl{{ID: "A.1", BaseScore: 5.0}}
 
 	controls := []model.ExistingControl{
 		{
@@ -45,7 +45,7 @@ func TestAnalyzer_Partial_LowConfidence(t *testing.T) {
 	}
 
 	maps := []model.Mapping{
-		{ExistingControlID: "C1", AnnexAControlID: "A.1", Confidence: "low"},
+		{ExistingControlID: "C1", CatalogControlID: "A.1", Confidence: "low"},
 	}
 
 	a := analyzer.New(cat, maps, controls)
@@ -61,7 +61,7 @@ func TestAnalyzer_Partial_LowConfidence(t *testing.T) {
 }
 
 func TestAnalyzer_Gap(t *testing.T) {
-	cat := []model.AnnexAControl{{ID: "A.1", BaseScore: 5.0}}
+	cat := []model.CatalogControl{{ID: "A.1", BaseScore: 5.0}}
 
 	a := analyzer.New(cat, nil, nil)
 	findings := a.Analyze()

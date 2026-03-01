@@ -1,0 +1,56 @@
+- id: NIS2.21.2.a
+  name: "Policies on Risk Analysis and Information System Security"
+  domain: "organizational"
+  base_score: 9.0
+  keywords:
+    - risk analysis
+    - policy
+    - isms
+- id: NIS2.21.2.b
+  name: "Incident Handling"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - soc
+    - incident response
+    - cert
+    - csirt
+- id: NIS2.21.2.c
+  name: "Business Continuity, Backup Management and Disaster Recovery"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - bcp
+    - drp
+    - backup
+    - recovery
+- id: NIS2.21.2.d
+  name: "Supply Chain Security"
+  domain: "organizational"
+  base_score: 10.0
+  keywords:
+    - supply chain
+    - vendor risk
+    - third party
+    - sbom
+  practices:
+    - id: PR.NIS2.21.2.d.1
+      name: "Enforce SBOM generation and validation"
+      min_maturity: 2
+      gate_relevant: true
+- id: NIS2.21.2.e
+  name: "Security in Network and Information Systems Acquisition"
+  domain: "technological"
+  base_score: 8.0
+  keywords:
+    - vulnerability handling
+    - patching
+    - vulnerability disclosure
+- id: NIS2.21.2.i
+  name: "Basic Computer Hygiene Practices and Cybersecurity Training"
+  domain: "people"
+  base_score: 7.0
+  keywords:
+    - training
+    - phishing
+    - awareness

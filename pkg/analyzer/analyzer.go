@@ -6,12 +6,12 @@ import (
 )
 
 type Analyzer struct {
-	Catalog  []model.AnnexAControl
+	Catalog  []model.CatalogControl
 	Mappings []model.Mapping
 	Controls []model.ExistingControl
 }
 
-func New(catalog []model.AnnexAControl, mappings []model.Mapping, controls []model.ExistingControl) *Analyzer {
+func New(catalog []model.CatalogControl, mappings []model.Mapping, controls []model.ExistingControl) *Analyzer {
 	return &Analyzer{
 		Catalog:  catalog,
 		Mappings: mappings,
@@ -25,7 +25,7 @@ func (a *Analyzer) Analyze() []model.Finding {
 
 	mappingByAnnex := make(map[string][]model.Mapping)
 	for _, m := range a.Mappings {
-		mappingByAnnex[m.AnnexAControlID] = append(mappingByAnnex[m.AnnexAControlID], m)
+		mappingByAnnex[m.CatalogControlID] = append(mappingByAnnex[m.CatalogControlID], m)
 	}
 
 	for _, anx := range a.Catalog {

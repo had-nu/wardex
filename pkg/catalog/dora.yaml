@@ -1,0 +1,53 @@
+- id: DORA.Art5
+  name: "Governance and ICT Risk Management Framework"
+  domain: "organizational"
+  base_score: 10.0
+  keywords:
+    - board accountability
+    - structure
+    - strategy
+- id: DORA.Art9
+  name: "Protection and Prevention"
+  domain: "technological"
+  base_score: 9.5
+  keywords:
+    - encryption
+    - crypto
+    - access control
+    - segmentation
+  practices:
+    - id: PR.DORA.Art9.1
+      name: "Enforce strict zero-trust segmentation"
+      min_maturity: 4
+      gate_relevant: true
+- id: DORA.Art10
+  name: "Detection"
+  domain: "technological"
+  base_score: 8.5
+  keywords:
+    - anomaly detection
+    - siem
+    - monitoring
+- id: DORA.Art11
+  name: "Response and Recovery"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - incident
+    - recovery
+    - bcp
+- id: DORA.Art24
+  name: "Digital Operational Resilience Testing"
+  domain: "technological"
+  base_score: 7.5
+  keywords:
+    - pentest
+    - tlap
+    - purple team
+    - red team
+    - vulnerability scanning
+  practices:
+    - id: PR.DORA.Art24.1
+      name: "Execute continuous DAST and SAST scanning"
+      min_maturity: 3
+      gate_relevant: true

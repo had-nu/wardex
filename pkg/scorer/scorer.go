@@ -6,7 +6,7 @@ import (
 
 // Score calculates the final score for an Annex A control based on
 // its base score and the context weight of the implemented controls that cover it.
-func Score(annexControl model.AnnexAControl, mappings []model.Mapping, controls []model.ExistingControl) float64 {
+func Score(annexControl model.CatalogControl, mappings []model.Mapping, controls []model.ExistingControl) float64 {
 	weight := 1.0 // default multiplier
 
 	// If the control is covered by implemented controls, we evaluate the weights

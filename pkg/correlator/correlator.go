@@ -3,10 +3,10 @@ package correlator
 import "github.com/had-nu/wardex/pkg/model"
 
 type Correlator struct {
-	Catalog []model.AnnexAControl
+	Catalog []model.CatalogControl
 }
 
-func New(catalog []model.AnnexAControl) *Correlator {
+func New(catalog []model.CatalogControl) *Correlator {
 	return &Correlator{Catalog: catalog}
 }
 
@@ -20,7 +20,7 @@ func (c *Correlator) Correlate(controls []model.ExistingControl) []model.Mapping
 			if res.Matched {
 				mappings = append(mappings, model.Mapping{
 					ExistingControlID: ext.ID,
-					AnnexAControlID:   anx.ID,
+					CatalogControlID:   anx.ID,
 					Confidence:        res.Confidence,
 					MatchedDomains:    res.MatchedDomains,
 					MatchedKeywords:   res.MatchedKeywords,

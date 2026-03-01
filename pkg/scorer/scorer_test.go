@@ -8,7 +8,7 @@ import (
 )
 
 func TestScoreWeightClamping(t *testing.T) {
-	annex := model.AnnexAControl{BaseScore: 5.0}
+	annex := model.CatalogControl{BaseScore: 5.0}
 
 	// Test high clamping
 	extHigh := model.ExistingControl{ID: "C1", ContextWeight: 3.0}
@@ -43,9 +43,9 @@ func TestScoreWeightClamping(t *testing.T) {
 
 func TestMaturityByDomain(t *testing.T) {
 	findings := []model.Finding{
-		{Control: model.AnnexAControl{Domain: "technological"}, Status: model.StatusCovered},
-		{Control: model.AnnexAControl{Domain: "technological"}, Status: model.StatusGap},
-		{Control: model.AnnexAControl{Domain: "organizational"}, Status: model.StatusPartial},
+		{Control: model.CatalogControl{Domain: "technological"}, Status: model.StatusCovered},
+		{Control: model.CatalogControl{Domain: "technological"}, Status: model.StatusGap},
+		{Control: model.CatalogControl{Domain: "organizational"}, Status: model.StatusPartial},
 	}
 
 	summaries := scorer.MaturityByDomain(findings)
