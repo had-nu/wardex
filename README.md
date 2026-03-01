@@ -6,7 +6,7 @@
   ![Go](https://img.shields.io/badge/Made_with-Go-00ADD8?style=flat-square&logo=go&logoColor=white)
   [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
   ![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
-  [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
+  [![License: AGPL v3 / Commercial](https://img.shields.io/badge/License-Dual_Licensed-8A2BE2.svg?style=flat-square)](#licenciamento-e-uso-comercial)
   [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
   <br>
   <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
@@ -25,6 +25,15 @@ Mais do que uma simples ferramenta de conformidade, o Wardex atua como um **Risk
 Consulte a documentação em `/doc` para compreender a visão arquitetónica e os problemas de negócio que a ferramenta resolve:
 - [A Visão de Negócio (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Arquitetura e Matemática Técnica (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
+
+## Licenciamento e Uso Comercial
+
+O Wardex opera sob um modelo de **Duplo Licenciamento (Dual-Licensing)** para proteger a inovação open-source enquanto permite integrações proprietárias seguras.
+
+1. **Uso Open-Source & Interno (Gratuito)**: Se utilizar o Wardex estritamente para as suas pipelines CI/CD internas, ou caso incorpore o Wardex num projeto e disponibilize o código desse projeto integralmente open-source, está coberto pela [AGPL-3.0](LICENSE).
+2. **Uso Comercial & Incorporação SaaS (Pago)**: Se pretende embutir o motor do Wardex no backend de um produto comercial, plataforma SaaS corporativa, ou distribuí-lo de forma proprietária (sem abrir o seu código-fonte), **tem de adquirir uma Licença Comercial**. 
+
+Para informações sobre Licenças Comerciais para a sua empresa, por favor leia os [Termos Comerciais Associados](doc/COMMERCIAL_LICENSE.md) ou contacte: **commercial@[domain]**.
 
 ## Compilação e Instalação
 
