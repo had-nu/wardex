@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.2.0] - 2026-03-01
+
+### Added
+
+- **Interactive Risk Simulator**: Added `wardex simulate` to instantly spin up an offline web dashboard.
+
+- **Grype Converter**: Added `wardex convert grype` to natively transform Grype JSON vulnerability scanner output into Wardex natively.
+
+- **`WARN` Risk Band**: Added the `warn_above` configuration threshold.
+
+- **JSON & CSV Export for Acceptances**: The `wardex accept list` command now supports `--output json` and `--output csv`.
+
+- **Configurable Roadmap Limit**: Removed the hardcoded 10-item limit for the maturity roadmap via `--roadmap-limit`.
+
+- **SDK Documentation**: Fully annotated the `pkg/` directories with standard GoDoc API references.
+
+- **Dynamic Versioning**: Added the `--version` flag, and the ASCII banner now prints the dynamically injected build version.
+
+
+### Changed
+
+- Refactored codebase to abolish emojis and use cleaner ASCII tags (`[PASS]`, `[FAIL]`, `[INFO]`, `[WARN]`).
+
+- Cleaned up overly verbose inline tutorial comments from core files.
+
+- Improved validation of banned justification phrases to catch them anywhere within a sentence.
+
+
 
 ## [1.1.1] - 2026-03-01
 ### Fixed
