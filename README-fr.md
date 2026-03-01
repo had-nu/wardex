@@ -2,8 +2,8 @@
   <h1>Wardex</h1>
   <p><b>Analyse des Écarts, Passerelle de Mise en Production Basée sur les Risques et Impact Commercial — Outil CLI & Moteur en Go</b></p>
 
-  [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex)](https://goreportcard.com/report/github.com/had-nu/wardex)
-  [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+  [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
+  [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square)](https://www.gnu.org/licenses/agpl-3.0)
 
   <br>
   <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
@@ -110,5 +110,5 @@ Wardex garantit l'intégrité de ces exceptions en utilisant des signatures HMAC
 
 ---
 <div align="center">
-  <i>Powered by <a href="https://github.com/had-nu/lazy.go">lazy.go</a></i>
+  <a href="https://github.com/had-nu/lazy.go"><img src="https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square" alt="Powered by lazy.go"></a>
 </div>
