@@ -27,6 +27,10 @@ type CycloneDXVulnerability struct {
 	Affects []struct {
 		Ref string `json:"ref"`
 	} `json:"affects"`
+	Analysis *struct {
+		State         string `json:"state"`         // "not_affected", "false_positive", "in_triage", etc.
+		Justification string `json:"justification"` // Explains why
+	} `json:"analysis"`
 }
 
 // ParseCycloneDX reads a CycloneDX 1.5 JSON formatted SBOM and extracts
@@ -51,6 +55,15 @@ func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
 	for _, v := range report.Vulnerabilities {
 		if v.ID == "" {
 			continue
+		}
+
+		// Vulnerability Exploitability eXchange (VEX) Support
+		if v.Analysis != nil {
+			state := strings.ToLower(v.Analysis.State)
+			if state == "not_affected" || state == "false_positive" {
+				fmt.Fprintf(os.Stderr, "[INFO] Ignoring %s due to VEX analysis state: %s\n", v.ID, state)
+				continue
+			}
 		}
 
 		// Find the best CVSS score
