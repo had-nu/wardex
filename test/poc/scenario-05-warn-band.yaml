@@ -1,0 +1,8 @@
+# scenario-05-warn-band.yaml
+# Demonstrates a vulnerability that exceeds warn_above (4.5) but is below risk_appetite (6.0).
+vulnerabilities:
+  - cve_id: "CVE-2025-0043"   # Medium/High vulnerability
+    cvss_base: 5.5            # Base Score
+    epss_score: 0.8           # High probability of exploit
+    component: "lib-legacy"
+    reachable: true
