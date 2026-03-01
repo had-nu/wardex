@@ -119,7 +119,7 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 	if grypeOutFile == "stdout" || grypeOutFile == "-" {
 		fmt.Print(string(yamlData))
 	} else {
-		if err := os.WriteFile(grypeOutFile, yamlData, 0644); err != nil {
+		if err := os.WriteFile(grypeOutFile, yamlData, 0600); err != nil {
 			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
 			os.Exit(1)
 		}

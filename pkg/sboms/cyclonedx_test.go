@@ -111,7 +111,7 @@ func TestParseCycloneDX(t *testing.T) {
 
 func TestParseSPDX(t *testing.T) {
 	tmpFile := "mock-spdx.json"
-	os.WriteFile(tmpFile, []byte("{}"), 0644)
+	_ = os.WriteFile(tmpFile, []byte("{}"), 0600)
 	defer os.Remove(tmpFile)
 
 	_, err := ParseSPDX(tmpFile)

@@ -96,7 +96,7 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 	if sbomOutFile == "stdout" || sbomOutFile == "-" {
 		fmt.Print(string(yamlData))
 	} else {
-		if err := os.WriteFile(sbomOutFile, yamlData, 0644); err != nil {
+		if err := os.WriteFile(sbomOutFile, yamlData, 0600); err != nil {
 			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
 			os.Exit(1)
 		}
