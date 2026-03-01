@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-03-01
+
+### Added
+
+- **SIEM Forwarding Verification**: Added `wardex accept verify-forwarding` command to validate that local audit trails (`wardex-accept-audit.log`) are healthy and formatted correctly for remote SIEM ingestion agents like Splunk or Datadog.
+- **`WARN` Gate Threshold Observable Context**: The gate now explicitly surfaces the `[!] WARN` tag and `exit 0` output naturally when an evaluated pipeline risk falls between the `warn_above` and `risk_appetite` thresholds.
+- **Configurable Snapshot File Path**: Replaced the hardcoded `.wardex_snapshot.json` tracker. Monorepo pipelines can now use the `--snapshot-file` flag to securely isolate their gap analysis states.
+- **VEX Suppressions**: The CycloneDX SBOM importer natively parses the `analysis` object. Components with a state of `false_positive` or `not_affected` are automatically safely bypassed by the engine, preventing false alarms.
+
 ## [1.3.0] - 2026-03-01
 
 ### Added
