@@ -2,7 +2,7 @@
   <h1>Wardex</h1>
   <p><b>Gap Analysis, Risk-Based Release Gate and Business Impact — CLI Tool & Engine in Go</b></p>
 
-  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex-8A2BE2?style=flat-square)](https://github.com/had-nu/wardex)
+  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex v1.1.0-8A2BE2?style=flat-square)](https://github.com/had-nu/wardex)
   [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square)](https://www.gnu.org/licenses/agpl-3.0)
   [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square)](https://github.com/had-nu/lazy.go)
