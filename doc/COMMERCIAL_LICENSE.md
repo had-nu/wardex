@@ -320,16 +320,51 @@ Licensor may assign this Agreement without consent in connection with a merger, 
 or sale of all or substantially all of Licensor's assets. Any purported assignment in violation
 of this section is void.
 
-**10.5 Governing Law and Dispute Resolution.** This Agreement shall be governed by and
-construed in accordance with the laws of **Portugal**, without regard to its conflict of law provisions. Any dispute
-arising out of or relating to this Agreement shall be submitted to the exclusive jurisdiction
-of the courts of **Portugal**. The parties waive any objection to the exercise of
-jurisdiction over them by such courts.
+**10.5 Governing Law and Dispute Resolution.**
 
-  *[Note to Licensor: Choose a jurisdiction where you are resident and have access to legal
-  representation. Portuguese law is appropriate if you are resident in Portugal. English law
-  is widely accepted for international commercial contracts. Delaware (USA) is preferred by
-  US-incorporated entities. Have your attorney confirm the appropriate choice.]*
+(a) **Governing Law.** This Agreement shall be governed by and construed in 
+accordance with the substantive laws of Portugal (excluding its rules on 
+conflict of laws), as supplemented by mandatory provisions of European Union 
+law applicable to the subject matter hereof, including but not limited to 
+data protection regulations and applicable EU directives, which shall prevail 
+to the extent of any inconsistency.
+
+(b) **Negotiation.** In the event of any dispute, controversy, or claim arising 
+out of or relating to this Agreement, or the breach, termination, or validity 
+thereof ("Dispute"), the parties shall first attempt to resolve the Dispute 
+by good-faith negotiation. Either party may initiate this process by delivering 
+written notice to the other party. If the Dispute is not resolved within 
+thirty (30) days of such notice (or such longer period as the parties may 
+agree in writing), either party may proceed to mediation under subsection (c).
+
+(c) **Mediation.** If negotiation fails, the parties shall submit the Dispute 
+to mediation under the rules of the Centro de Arbitragem Comercial da Câmara 
+de Comércio e Indústria Portuguesa (CAC), seated in Lisbon, Portugal. 
+If the Dispute is not resolved within thirty (30) days of the commencement 
+of mediation, either party may initiate arbitration under subsection (d).
+
+(d) **Arbitration.** Any Dispute not resolved by negotiation or mediation shall 
+be finally settled by binding arbitration under the Rules of the CAC 
+(or, for Enterprise Tier disputes exceeding €100,000, optionally the 
+ICC Rules), conducted by one (1) arbitrator for disputes up to €50,000, 
+or three (3) arbitrators for disputes above that amount, appointed in 
+accordance with the applicable rules. The seat of arbitration shall be 
+Lisbon, Portugal. The language of proceedings shall be English (or 
+Portuguese, if both parties agree). The arbitral award shall be final, 
+binding, and enforceable in any jurisdiction pursuant to the New York 
+Convention on the Recognition and Enforcement of Foreign Arbitral Awards 
+(1958), to which Portugal is a signatory.
+
+(e) **Interim Relief.** Notwithstanding the foregoing, either party may seek 
+urgent interim or provisional relief, including injunctions to protect 
+intellectual property rights, from any court of competent jurisdiction 
+without waiving its right to arbitration.
+
+(f) **Mandatory Consumer and B2B Protections.** Nothing in this Section 10.5 
+shall be construed to limit any mandatory rights available to Licensee 
+under the law of Licensee's domicile that cannot be contractually waived, 
+including rights arising under the applicable national implementation of 
+EU Directive 93/13/EEC or equivalent B2B protection statutes.
 
 **10.6 Notices.** All notices required or permitted under this Agreement shall be in writing
 and shall be deemed delivered: (a) when sent by email with confirmation of receipt to the
