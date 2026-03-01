@@ -11,6 +11,7 @@ type Gate struct {
 	AssetContext         model.AssetContext
 	CompensatingControls []model.CompensatingControl
 	RiskAppetite         float64
+	WarnAbove            float64
 	Mode                 string // "any" | "aggregate"
 }
 
@@ -32,6 +33,12 @@ func (g *Gate) Evaluate(vulns []model.Vulnerability) model.GateReport {
 			decisionStr = "block"
 			report.BlockedCount++
 			report.OverallDecision = "block"
+		} else if g.WarnAbove > 0 && brk.FinalReleaseRisk > g.WarnAbove && g.Mode != "aggregate" {
+			decisionStr = "warn"
+			report.WarnCount++
+			if report.OverallDecision != "block" {
+				report.OverallDecision = "warn" // Ensure 'block' overrides 'warn'
+			}
 		} else {
 			report.AllowedCount++
 		}
