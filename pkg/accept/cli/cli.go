@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -192,14 +193,36 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				os.Exit(1)
 			}
 
-			// Provide table output
-			// Minimal printing logic for now
-			fmt.Println("ID\tCVE\tAccepted By\tExpires At\tLogic Status")
+			var filtered []model.Acceptance
 			for _, a := range acceptances {
 				if listCVE != "" && a.CVE != listCVE {
 					continue
 				}
 				// Additional filtering by active/expired/stale would go here
+				filtered = append(filtered, a)
+			}
+
+			if listOutput == "json" {
+				enc := json.NewEncoder(os.Stdout)
+				enc.SetIndent("", "  ")
+				if err := enc.Encode(filtered); err != nil {
+					fmt.Fprintf(os.Stderr, "JSON encoding error: %v\n", err)
+				}
+				return
+			}
+
+			if listOutput == "csv" {
+				fmt.Println("ID,CVE,AcceptedBy,ExpiresAt,Status")
+				for _, a := range filtered {
+					fmt.Printf("%s,%s,%s,%s,VALID\n", a.ID, a.CVE, a.AcceptedBy, a.ExpiresAt.Format(time.RFC3339))
+				}
+				return
+			}
+
+			// Provide table output
+			// Minimal printing logic for now
+			fmt.Println("ID\tCVE\tAccepted By\tExpires At\tLogic Status")
+			for _, a := range filtered {
 				fmt.Printf("%s\t%s\t%s\t%s\t[VÁLIDA]\n", a.ID, a.CVE, a.AcceptedBy, a.ExpiresAt.Format("2006-01-02"))
 			}
 		},
