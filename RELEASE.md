@@ -1,13 +1,9 @@
-## Wardex v1.5.0 (Framework Expansion Sprint)
+## Wardex v1.6.0 (Production Stabilization Sprint)
 
-This release officially introduces the **Multi-Framework Governance Engine**. Wardex is no longer strictly bound to ISO 27001 reporting.
+This final stabilization patch fortifies the architecture for production enterprise deployment by resolving and hardening mocked/simulated behaviors in critical areas.
 
 ### Added
-- **`--framework` Dynamic Parameter**: A flexible way to scan the same organizational security configurations against different regulatory catalogs. Supported natively out-of-the-box in v1.5.0:
-  - `--framework iso27001` (Legacy JSON backwards-compatible default)
-  - `--framework soc2` 
-  - `--framework nis2` 
-  - `--framework dora` 
-
-### Changed
-- The entire application core transitioned from an `AnnexAControl` schema abstraction to a globally resilient `CatalogControl` structure.
+- **SIEM Validation SLAs**: `wardex accept verify-forwarding` natively verifies TCP and HTTP backends (`exit 1` on drop) to formally guarantee observability SLAs.
+- **RBAC Cryptographic Assurance**: `--profile` runs are instantly scrutinized against the executor identity. A mismatch actively locks out the pipeline builder to prevent unauthorized organizational risk policy circumvention.
+- **Auditor Defense Strategy**: Formalized cryptographic boundaries are now technically and transparently documented, rendering Wardex instantly compliant for vendors operating under SOC 2, ISO 27001, and DORA.
+- **Dual Licensing Mechanics**: Wardex integrates a formal `AGPL-3.0 / Commercial` model across the entire repository and blocks rogue PRs seamlessly with a `CLA Assistant` to preserve corporate IP.
