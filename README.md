@@ -25,6 +25,7 @@ Mais do que uma simples ferramenta de conformidade, o Wardex atua como um **Risk
 Consulte a documentação em `/doc` para compreender a visão arquitetónica e os problemas de negócio que a ferramenta resolve:
 - [A Visão de Negócio (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Arquitetura e Matemática Técnica (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
+- [Arquitetura de Não-Repudiação e Criptografia para Auditores (SOC 2, ISO 27001)](doc/wardex-g20-audit-readiness.md)
 
 ## Licenciamento e Uso Comercial
 
