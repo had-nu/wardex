@@ -9,6 +9,9 @@ import (
 	"github.com/had-nu/wardex/cmd/simulate"
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
+	"github.com/had-nu/wardex/pkg/accept/configaudit"
+	"github.com/had-nu/wardex/pkg/accept/signer"
+	"github.com/had-nu/wardex/pkg/accept/store"
 	"github.com/had-nu/wardex/pkg/analyzer"
 	"github.com/had-nu/wardex/pkg/catalog"
 	"github.com/had-nu/wardex/pkg/correlator"
@@ -51,7 +54,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.Flags().StringVar(&configPath, "config", "./wardex-config.yaml", "Path to wardex-config.yaml")
+	rootCmd.PersistentFlags().StringVar(&configPath, "config", "./wardex-config.yaml", "Path to wardex-config.yaml")
 	rootCmd.Flags().StringVarP(&outputFormat, "output", "o", "markdown", "Output format: markdown|json|csv")
 	rootCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 	rootCmd.Flags().StringVar(&gateFile, "gate", "", "Vulnerabilities file for release gate")
@@ -84,14 +87,12 @@ func runWardex(cmd *cobra.Command, args []string) {
 		cfg = &config.Config{}
 	}
 
-	// 1. Ingestion
 	extControls, err := ingestion.LoadMany(args)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to load controls: %v\n", err)
 		os.Exit(1)
 	}
 
-	// 2. Correlation
 	cat := catalog.Load()
 	corr := correlator.New(cat)
 	mappings := corr.Correlate(extControls)
@@ -105,7 +106,6 @@ func runWardex(cmd *cobra.Command, args []string) {
 		filtered = append(filtered, m)
 	}
 
-	// 3. Analysis
 	an := analyzer.New(cat, filtered, extControls)
 	findings := an.Analyze()
 
@@ -124,7 +124,6 @@ func runWardex(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	// Basic report construction
 	rep := model.GapReport{
 		Summary: model.ExecutiveSummary{
 			GeneratedAt: time.Now(),
@@ -162,7 +161,6 @@ func runWardex(cmd *cobra.Command, args []string) {
 		rep.Summary.DomainSummaries = append(rep.Summary.DomainSummaries, *ds)
 	}
 
-	// Ensure domains are set
 	rep.Summary.TotalControls = len(cat)
 	for _, f := range findings {
 		if f.Status == model.StatusCovered {
@@ -175,7 +173,6 @@ func runWardex(cmd *cobra.Command, args []string) {
 	}
 	rep.Summary.GlobalCoverage = float64(rep.Summary.CoveredCount) / float64(rep.Summary.TotalControls) * 100.0
 
-	// 4. Release Gate execution
 	gateFailed := false
 	if cfg.ReleaseGate.Enabled && gateFile != "" {
 		gateModeVal := "any"
@@ -194,7 +191,6 @@ func runWardex(cmd *cobra.Command, args []string) {
 			Mode:                 gateModeVal,
 		}
 
-		// Read vulns via yaml parser directly inline
 		vdata, err := os.ReadFile(gateFile)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to read gate file: %v\n", err)
@@ -208,6 +204,29 @@ func runWardex(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 
+		if cfg.AcceptanceConfig.SigningSecretFile != "" {
+			if key, err := signer.ResolveSecret(*cfg); err == nil {
+				configHash, _ := configaudit.Hash(configPath)
+				if accs, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
+					acceptedMap := make(map[string]bool)
+					for _, a := range accs {
+						if !a.Revoked {
+							acceptedMap[a.CVE] = true
+						}
+					}
+					var filtered []model.Vulnerability
+					for _, v := range vulnsFormat.Vulnerabilities {
+						if !acceptedMap[v.CVEID] {
+							filtered = append(filtered, v)
+						} else {
+							fmt.Fprintf(os.Stderr, "[INFO] CVE %s is covered by an active risk acceptance and will be ignored.\n", v.CVEID)
+						}
+					}
+					vulnsFormat.Vulnerabilities = filtered
+				}
+			}
+		}
+
 		gateReport := gate.Evaluate(vulnsFormat.Vulnerabilities)
 		rep.Gate = &gateReport
 		if gateReport.OverallDecision == "block" {
@@ -217,7 +236,6 @@ func runWardex(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	// 5. Delta (Snapshot) logic
 	if !noSnapshot {
 		prev, _ := snapshot.Load()
 		if prev != nil {
@@ -227,13 +245,20 @@ func runWardex(cmd *cobra.Command, args []string) {
 		_ = snapshot.Save(rep)
 	}
 
-	// 6. Report export
-	if err := report.Generate(rep, outputFormat, outFile, roadmapLimit); err != nil {
+	finalFormat := outputFormat
+	if outputFormat == "markdown" && cfg.Reporting.Format != "" {
+		finalFormat = cfg.Reporting.Format
+	}
+	finalOutFile := outFile
+	if outFile == "stdout" && cfg.Reporting.Output != "" {
+		finalOutFile = cfg.Reporting.Output
+	}
+
+	if err := report.Generate(rep, finalFormat, finalOutFile, roadmapLimit); err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to generate report: %v\n", err)
 		os.Exit(1)
 	}
 
-	// 7. Exit checks
 	if gateFailed {
 		os.Exit(exitcodes.GateBlocked)
 	}
