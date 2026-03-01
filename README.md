@@ -72,6 +72,13 @@ O Wardex permite ingerir as políticas num formato simples YAML ou JSON, cruzar 
 
 Isto gera relatórios visuais (em Markdown, CSV ou JSON) expondo a Análise de Maturidade das 4 áreas globais da ISO 27001 (Pessoas, Processos, Tecnológico e Físico) e executa as políticas de decisão (ALLOW / BLOCK / WARN) consoante o risco calibrado da organização.
 
+## Novidades (v1.4.0)
+
+- **SIEM Forwarding Verification (`verify-forwarding`)**: Valida o estado de saúde da local audit trail para ingestão SIEM.
+- **`WARN` Gate Threshold**: Emissão observável e segura (`exit 0`) de tags `[!] WARN` na análise visual quando o risco excede o intervalo `warn_above`.
+- **Snapshots Configuráveis**: O caminho `.wardex_snapshot.json` foi refatorado; pipelines monorepo podem isolar os estados através da flag `--snapshot-file`.
+- **Supressões VEX Nativas**: O parser nativo CycloneDX agora suporta o objeto `analysis`, ignorando automaticamente componentes sinalizados como `false_positive` ou `not_affected`.
+
 ## Novidades (v1.3.0)
 
 - **Ingestão Nativa de SBOMs (`wardex convert sbom`)**: O Wardex agora ingere e converte faturamentos de software padrão como CycloneDX JSON e SPDX nativamente, lendo o CVSS e componentes de forma agnóstica para análise de segurança na pipeline sem depender de parsers externos.
