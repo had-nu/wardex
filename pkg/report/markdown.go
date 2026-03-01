@@ -7,7 +7,7 @@ import (
 	"github.com/had-nu/wardex/pkg/model"
 )
 
-func generateMarkdown(report model.GapReport, outFile string) error {
+func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 	var f *os.File
 	var err error
 
@@ -76,7 +76,7 @@ func generateMarkdown(report model.GapReport, outFile string) error {
 
 	count := 0
 	for _, fnd := range report.Roadmap {
-		if count >= 10 {
+		if limit > 0 && count >= limit {
 			break
 		}
 		reason := "N/A"

@@ -36,7 +36,7 @@ func TestReportGeneration(t *testing.T) {
 
 	// Test JSON
 	jsonFile := filepath.Join(dir, "report.json")
-	if err := report.Generate(rep, "json", jsonFile); err != nil {
+	if err := report.Generate(rep, "json", jsonFile, 10); err != nil {
 		t.Fatalf("JSON generation failed: %v", err)
 	}
 	if _, err := os.Stat(jsonFile); os.IsNotExist(err) {
@@ -45,7 +45,7 @@ func TestReportGeneration(t *testing.T) {
 
 	// Test CSV
 	csvFile := filepath.Join(dir, "report.csv")
-	if err := report.Generate(rep, "csv", csvFile); err != nil {
+	if err := report.Generate(rep, "csv", csvFile, 10); err != nil {
 		t.Fatalf("CSV generation failed: %v", err)
 	}
 	if _, err := os.Stat(csvFile); os.IsNotExist(err) {
@@ -54,7 +54,7 @@ func TestReportGeneration(t *testing.T) {
 
 	// Test Markdown
 	mdFile := filepath.Join(dir, "report.md")
-	if err := report.Generate(rep, "markdown", mdFile); err != nil {
+	if err := report.Generate(rep, "markdown", mdFile, 10); err != nil {
 		t.Fatalf("Markdown generation failed: %v", err)
 	}
 	if _, err := os.Stat(mdFile); os.IsNotExist(err) {

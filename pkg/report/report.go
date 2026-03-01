@@ -8,12 +8,12 @@ import (
 )
 
 // Generate delegates reporting based on the requested format.
-func Generate(report model.GapReport, format string, outFile string) error {
+func Generate(report model.GapReport, format string, outFile string, limit int) error {
 	format = strings.ToLower(format)
 
 	switch format {
 	case "markdown":
-		return generateMarkdown(report, outFile)
+		return generateMarkdown(report, outFile, limit)
 	case "json":
 		return generateJSON(report, outFile)
 	case "csv":
