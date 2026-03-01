@@ -1,0 +1,36 @@
+# wardex-config.yaml
+# Central risk policy for the PoC pipeline.
+# This file must match the config.Config struct in config/config.go.
+
+organization:
+  name: "Wardex PoC Organisation"
+  sector: "technology"
+  scope: "PoC — Risk-Based Release Gate validation"
+
+domain_weights:
+  technological: 1.8
+  organizational: 1.2
+  people: 1.0
+  physical: 0.7
+
+release_gate:
+  enabled: true
+  mode: "any"              # "any" = block if any single vuln exceeds appetite
+  risk_appetite: 6.0       # Threshold: composite score above this → BLOCK
+
+  asset_context:
+    criticality: 0.9
+    internet_facing: true
+    requires_auth: true
+    data_classification: "confidential"
+    environment: "production"
+
+  compensating_controls:
+    - type: "waf"
+      effectiveness: 0.35
+      justification: "WAF with OWASP CRS ruleset"
+
+reporting:
+  format: json
+  output: report.json
+  verbose: true
