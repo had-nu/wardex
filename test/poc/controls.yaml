@@ -1,79 +1,106 @@
 # controls.yaml
 # Represents the organisation's implemented ISO/IEC 27001:2022 Annex A controls.
 # Wardex maps these against all 93 controls to compute maturity and gap scores.
-# Status values: implemented | partial | planned | not_applicable
 
 controls:
   # ── People (A.6) ──────────────────────────────────────────────────────────
   - id: "A.6.1"
     name: Screening
-    status: implemented
-    evidence: "HR-POL-01 — Background check policy"
+    maturity: 5
+    evidences:
+      - type: "document"
+        ref: "HR-POL-01 — Background check policy"
 
   - id: "A.6.3"
     name: Information security awareness, education and training
-    status: implemented
-    evidence: "Training platform completion rate 94% (Q1-2025)"
+    maturity: 5
+    evidences:
+      - type: "test_result"
+        ref: "Training platform completion rate 94% (Q1-2025)"
 
   - id: "A.6.8"
     name: Information security event reporting
-    status: partial
-    evidence: "SIEM in place; mobile reporting channel pending"
+    maturity: 3
+    evidences:
+      - type: "log"
+        ref: "SIEM in place; mobile reporting channel pending"
 
   # ── Organisational (A.5) ──────────────────────────────────────────────────
   - id: "A.5.1"
     name: Policies for information security
-    status: implemented
-    evidence: "ISP v3.2 approved by CISO — 2024-11-01"
+    maturity: 5
+    evidences:
+      - type: "policy"
+        ref: "ISP v3.2 approved by CISO — 2024-11-01"
 
   - id: "A.5.10"
     name: Acceptable use of information and other associated assets
-    status: implemented
-    evidence: "AUP embedded in employment contracts"
+    maturity: 5
+    evidences:
+      - type: "document"
+        ref: "AUP embedded in employment contracts"
 
   - id: "A.5.23"
     name: Information security for use of cloud services
-    status: partial
-    evidence: "Cloud security policy drafted; not yet ratified"
+    maturity: 3
+    evidences:
+      - type: "policy"
+        ref: "Cloud security policy drafted; not yet ratified"
 
   # ── Technological (A.8) ───────────────────────────────────────────────────
   - id: "A.8.2"
     name: Privileged access rights
-    status: implemented
-    evidence: "PAM solution deployed — CyberArk"
+    maturity: 5
+    evidences:
+      - type: "log"
+        ref: "PAM solution deployed — CyberArk"
 
   - id: "A.8.7"
     name: Protection against malware
-    status: implemented
-    evidence: "EDR on 100% of endpoints — CrowdStrike"
+    maturity: 5
+    evidences:
+      - type: "log"
+        ref: "EDR on 100% of endpoints — CrowdStrike"
 
   - id: "A.8.8"
     name: Management of technical vulnerabilities
-    status: partial
-    evidence: "Grype integrated in CI; manual triage backlog exists"
+    maturity: 3
+    evidences:
+      - type: "document"
+        ref: "Grype integrated in CI; manual triage backlog exists"
 
   - id: "A.8.20"
     name: Networks security
-    status: implemented
-    evidence: "WAF + IDS in prod; network segmentation verified"
+    maturity: 5
+    evidences:
+      - type: "policy"
+        ref: "WAF + IDS in prod; network segmentation verified"
 
   - id: "A.8.29"
     name: Security testing in development and operations
-    status: partial
-    evidence: "SAST (gosec) in CI; DAST not yet scheduled"
+    maturity: 3
+    evidences:
+      - type: "test_result"
+        ref: "SAST (gosec) in CI; DAST not yet scheduled"
 
   - id: "A.8.34"
     name: Protection of information systems during audit testing
-    status: not_applicable
-    evidence: "No audit scheduled in scope period"
+    maturity: 1
+    evidences:
+      - type: "document"
+        ref: "No audit scheduled in scope period"
 
   # ── Physical (A.7) ────────────────────────────────────────────────────────
   - id: "A.7.1"
     name: Physical security perimeters
-    status: implemented
-    evidence: "Data centre ISO 27001-certified (co-lo provider)"
+    maturity: 5
+    evidences:
+      - type: "certificate"
+        ref: "Data centre ISO 27001-certified (co-lo provider)"
 
   - id: "A.7.4"
     name: Physical security monitoring
-    status: implemented
-    evidence: "CCTV + badge-access logs retained 90 days"
+    maturity: 5
+    evidences:
+      - type: "log"
+        ref: "CCTV + badge-access logs retained 90 days"

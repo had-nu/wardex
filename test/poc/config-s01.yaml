@@ -1,0 +1,16 @@
+# config-s01.yaml
+organization:
+  name: "Wardex PoC"
+release_gate:
+  enabled: true
+  risk_appetite: 6.0
+  warn_above: 4.5
+  asset_context:
+    criticality: 0.8
+    internet_facing: true
+    requires_auth: true
+
+reporting:
+  format: json
+  output: report.json
+  verbose: true

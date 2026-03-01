@@ -1,0 +1,20 @@
+# config-s03.yaml
+organization:
+  name: "Wardex PoC"
+release_gate:
+  enabled: true
+  risk_appetite: 6.0
+  warn_above: 4.5
+  asset_context:
+    criticality: 0.95
+    internet_facing: true
+    requires_auth: false
+  compensating_controls:
+    - type: "waf"
+      effectiveness: 0.60
+      justification: "Strict WAF"
+
+reporting:
+  format: json
+  output: report.json
+  verbose: true

@@ -1,0 +1,27 @@
+# config-s04.yaml
+organization:
+  name: "Wardex PoC"
+release_gate:
+  enabled: true
+  risk_appetite: 6.0
+  warn_above: 4.5
+  asset_context:
+    criticality: 0.85
+    internet_facing: true
+    requires_auth: false
+
+reporting:
+  format: json
+  output: report.json
+  verbose: true
+
+acceptance:
+  signing_secret_file: "./test/poc/accept.key"
+  limits:
+    max_acceptance_days: 30
+    min_justification_chars: 80
+    max_report_age_hours: 24
+  banned_justification_phrases:
+    - "risk accepted by management"
+    - "no time to fix"
+    - "business accepted"
