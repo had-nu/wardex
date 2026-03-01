@@ -40,6 +40,7 @@ var (
 	roadmapLimit  int
 	profileName   string
 	snapshotFile  string
+	frameworkName string
 )
 
 var convertCmd = &cobra.Command{
@@ -68,6 +69,7 @@ func init() {
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
 	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
 	rootCmd.Flags().StringVar(&profileName, "profile", "", "Team or profile name for RBAC threshold overrides")
+	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora")
 
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
 	rootCmd.AddCommand(convertCmd)
@@ -107,7 +109,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	cat := catalog.Load()
+	cat := catalog.Load(frameworkName)
 	corr := correlator.New(cat)
 	mappings := corr.Correlate(extControls)
 

@@ -13,8 +13,8 @@ type ExistingControl struct {
 	WeightJustification string  // Justificativa auditável
 }
 
-// AnnexAControl representa um controle da ISO 27001:2022 Annex A.
-type AnnexAControl struct {
+// CatalogControl representa um controle da ISO 27001:2022 Annex A.
+type CatalogControl struct {
 	ID            string     `yaml:"id"`
 	Name          string     `yaml:"name"`
 	Domain        string     `yaml:"domain"` // "organizational" | "people" | "physical" | "technological"
@@ -43,7 +43,7 @@ type Evidence struct {
 // Mapping representa a correlação entre um controle existente e um controle da Annex A.
 type Mapping struct {
 	ExistingControlID string
-	AnnexAControlID   string
+	CatalogControlID   string
 	Confidence        string // "high" | "low"
 	MatchedDomains    []string
 	MatchedKeywords   []string

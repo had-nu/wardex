@@ -28,7 +28,7 @@ func TestReportGeneration(t *testing.T) {
 			},
 		},
 		Roadmap: []model.Finding{
-			{Control: model.AnnexAControl{ID: "A.1"}},
+			{Control: model.CatalogControl{ID: "A.1"}},
 		},
 	}
 

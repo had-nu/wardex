@@ -24,7 +24,7 @@ type GatePracticeStatus struct {
 
 // Finding representa o resultado da análise de um controle da Annex A.
 type Finding struct {
-	Control        AnnexAControl
+	Control        CatalogControl
 	Status         CoverageStatus
 	FinalScore     float64
 	CoveredBy      []Mapping

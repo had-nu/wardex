@@ -1,0 +1,72 @@
+- id: CC1.1
+  name: "COSO Principle 1: Integrity and Ethical Values"
+  domain: "organizational"
+  base_score: 5.0
+  keywords:
+    - ethics
+    - code of conduct
+    - integrity
+- id: CC2.1
+  name: "COSO Principle 6: Specifies Suitable Objectives"
+  domain: "organizational"
+  base_score: 6.0
+  keywords:
+    - objectives
+    - risk assessment
+- id: CC6.1
+  name: "Logical Access Security"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - access control
+    - rbac
+    - mfa
+    - logical access
+    - authentication
+  practices:
+    - id: PR.CC6.1.1
+      name: "Enforce Multi-Factor Authentication"
+      min_maturity: 3
+      gate_relevant: true
+- id: CC6.2
+  name: "User Registration and De-registration"
+  domain: "organizational"
+  base_score: 7.0
+  keywords:
+    - onboarding
+    - offboarding
+    - user lifecycle
+- id: CC6.6
+  name: "External Threat Protection"
+  domain: "technological"
+  base_score: 8.5
+  keywords:
+    - firewall
+    - waf
+    - ips
+    - ids
+    - perimeter
+- id: CC7.1
+  name: "System Operations Monitoring"
+  domain: "technological"
+  base_score: 8.0
+  keywords:
+    - monitoring
+    - logging
+    - alerting
+    - siem
+- id: CC8.1
+  name: "Change Management"
+  domain: "process"
+  base_score: 8.0
+  keywords:
+    - change management
+    - sdlc
+    - ci/cd
+    - pull request
+    - peer review
+  practices:
+    - id: PR.CC8.1.1
+      name: "Automated Release Gateway"
+      min_maturity: 4
+      gate_relevant: true
