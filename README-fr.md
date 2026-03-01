@@ -47,6 +47,21 @@ cd wardex
 go build -o wardex .
 ```
 
+### Mise à jour vers la Dernière Version
+Lorsqu'un nouveau correctif ou une version mineure est publié (par exemple, `v1.1.1`), vous pouvez mettre à jour en récupérant le code ou la balise la plus récente et en recompilant :
+
+```bash
+# Pour les installations globales
+go install github.com/had-nu/wardex@latest
+
+# Pour les builds locaux (ex: cibler une balise spécifique)
+git fetch --tags
+git checkout v1.1.1
+go build -o wardex .
+```
+
+Veuillez consulter le [CHANGELOG.md](CHANGELOG.md) pour obtenir des détails sur les notes de publication et les correctifs.
+
 ## Utilisation
 
 Wardex vous permet d'intégrer des politiques dans un format YAML ou JSON simple, de recouper des vulnérabilités (par ex., sortie de Grype) dans un fichier cible et de valider la passerelle :

@@ -24,7 +24,7 @@ fuzz: elapsed: 4m30s, execs: 1250320 (4630/sec), new interesting: 42 (total: 54)
 PASS
 ok      github.com/had-nu/wardex/pkg/ingestion  270.183s
 ```
-**Zero Panics / Zero Memory Exceptions**: Ao longo de todo este espectro artificial de bombardeamento destrutivo, o Wardex validou a premissa fundamental: sempre que o schema é ilegível ou catastrófico, o motor aborta com um **Erro de Parsing Controlado** (`err != nil`) e invoca instâncias nativas de Exit Codes (`os.Exit(1)`), nunca provocando crashes no *runtime* (Panic) que deixariam a orquestração do CI em estados de erro mortos (zombie states).
+**Zero Panics / Zero Memory Exceptions**: Ao longo de todo este espectro artificial de bombardeamento destrutivo, o Wardex validou a premissa fundamental: sempre que o schema é ilegível ou catastrófico, o motor aborta com um **Erro de Parsing Controlado** (`err != nil`) e invoca instâncias nativas de Exit Codes (`os.Exit(11)`), nunca provocando crashes no *runtime* (Panic) que deixariam a orquestração do CI em estados de erro mortos (zombie states).
 
 ## 2. Integrity Lock: O Padrão Fail-Closed no Risk Acceptance
 
