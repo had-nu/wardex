@@ -1,17 +1,11 @@
-## Wardex v1.2.0 (Developer Adoption Release)
+## Wardex v1.3.0 (Enterprise Compliance Release)
 
-This release focuses on dramatically reducing integration friction, enhancing the developer experience, and introducing the much-requested `WARN` risk band for more flexible CI/CD pipelines.
+This release focuses on enterprise-grade compliance, introducing native SBOM ingestion, dynamic Role-Based Access Control (RBAC) profiling, and a mathematically verifiable cryptographic audit trail for risk exceptions.
 
 ### Added
-- **Interactive Risk Simulator**: Added `wardex simulate` to instantly spin up an offline web dashboard. This allows teams to visually test how CVSS, EPSS, and compensating controls affect their overall risk score in real-time.
-- **Grype Converter**: Added `wardex convert grype` to natively transform Grype JSON vulnerability scanner output into Wardex's native YAML format for seamless pipeline integration.
-- **`WARN` Risk Band**: Added the `warn_above` configuration threshold. The gate now supports an intermediate band where releases can proceed (with strong warnings) if they exceed `warn_above` but haven't breached the fatal `risk_appetite`.
-- **JSON & CSV Export for Acceptances**: The `wardex accept list` command now supports `--output json` and `--output csv` flags for programmatic parsing.
-- **Configurable Roadmap Limit**: Removed the hardcoded 10-item limit for the maturity roadmap. You can now control the report length natively using the `--roadmap-limit` flag.
-- **SDK Documentation**: Fully annotated the `pkg/` directories with standard GoDoc API references, unlocking native programmatic integrations.
-- **Dynamic Versioning**: Added the `--version` flag, and the ASCII banner now prints the dynamically injected build version.
+- **Native SBOM Ingestion**: Wardex now natively ingests and parses Software Bill of Materials. Using `wardex convert sbom`, pipelines can instantly parse `CycloneDX` and `SPDX` JSON files, extracting CVSS vulnerabilities agnostically without relying on third-party security scanners.
+- **RBAC Configuration Profiles (`--profile`)**: Risk thresholds no longer need to be hardcoded globally. The `wardex-config.yaml` now supports a `profiles:` block, allowing different teams (e.g., `frontend`, `backend`, `pci-dss`) to be dynamically invoked at runtime via the `--profile <name>` flag to enforce distinct `risk_appetite` and `warn_above` thresholds.
+- **Cryptographic Acceptances Audit**: The Risk Acceptance subsystem has been fortified with HMAC-SHA256 signatures (`pkg/accept/signer`). Exceptions are now completely tamper-evident, immune to timing side-channel attacks via constant-time verification, and strictly bound to the exact point-in-time compliance report to prevent cross-context replay attacks.
 
 ### Changed
-- Refactored codebase to abolish emojis and use cleaner ASCII tags (`[PASS]`, `[FAIL]`, `[INFO]`, `[WARN]`).
-- Cleaned up overly verbose inline tutorial comments from core files (`main.go`, `grype.go`, `scorer.go`, `test/poc/main.go`) for a more professional, SDK-ready codebase.
-- Improved validation of banned justification phrases to catch them anywhere within a sentence, rather than requiring an exact string match.
+- **Scenario Proof of Concepts**: Expanded `test/poc/run-all-scenarios.sh` to include complex end-to-end integration tests for SBOM conversions and RBAC profile overriding simulations, ensuring zero regressions on the security gate logic.

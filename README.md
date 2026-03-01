@@ -64,13 +64,19 @@ Por favor, consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes sobre as notas 
 
 ## Como Usar
 
-O Wardex permite ingerir as políticas num formato simples YAML ou JSON, cruzar as vulnerabilidades (ex: output do Grype) num ficheiro alvo, e validar o gate:
+O Wardex permite ingerir as políticas num formato simples YAML ou JSON, cruzar as vulnerabilidades (ex: output do Grype ou SBOMs) num ficheiro alvo, e validar o gate:
 
 ```bash
-./bin/wardex --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml
+./bin/wardex --config=test/testdata/wardex-config.yaml --profile=minha-equipa --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml
 ```
 
 Isto gera relatórios visuais (em Markdown, CSV ou JSON) expondo a Análise de Maturidade das 4 áreas globais da ISO 27001 (Pessoas, Processos, Tecnológico e Físico) e executa as políticas de decisão (ALLOW / BLOCK / WARN) consoante o risco calibrado da organização.
+
+## Novidades (v1.3.0)
+
+- **Ingestão Nativa de SBOMs (`wardex convert sbom`)**: O Wardex agora ingere e converte faturamentos de software padrão como CycloneDX JSON e SPDX nativamente, lendo o CVSS e componentes de forma agnóstica para análise de segurança na pipeline sem depender de parsers externos.
+- **Perfis de Controlo de Acesso (RBAC) `--profile`**: Os limites de apetite de risco já não precisam ser hardcoded no ficheiro de configuração raiz. Através dos blocos de `profiles:` globais, é possível executar avaliações baseadas em pipeline invocando uma equipa dinamicamente (`--profile admin`, `--profile frontend`).
+- **Assinaturas e Auditoria Criptográfica HMAC-SHA256**: O subsistema de *Risk Acceptances* agora funciona como um sistema append-only garantido por primitivas criptográficas que defendem contra *tampering*, violações de tempo de expiração e *side-channel attacks*.
 
 ## Novidades (v1.2.0)
 

@@ -2,8 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.3.0] - 2026-03-01
+
+### Added
+
+- **Native SBOM Ingestion**: `wardex convert sbom` directly parses CycloneDX and SPDX JSON files into Wardex's native YAML format.
+- **RBAC Capabilities**: Added the `--profile` flag to dynamically switch Risk Appetite and Warn Above thresholds per-team.
+- **Cryptographic Signatures**: Integrated HMAC-SHA256 signatures to ensure Risk Acceptances are immune to tampering and replay attacks (`pkg/accept/signer`).
+
+### Changed
+
+- Expanded PoC scenarios to include SBOM ingestion and exact threshold blocking simulations.
 ## [1.2.0] - 2026-03-01
 
 ### Added
