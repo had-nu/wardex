@@ -43,7 +43,7 @@ var (
 	expiryWarnBefore string
 )
 
-func AddCommands(rootCmd *cobra.Command) {
+func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	acceptCmd := &cobra.Command{
 		Use:   "accept",
 		Short: "Manage risk acceptances for vulnerabilities blocking the release gate",
@@ -53,7 +53,7 @@ func AddCommands(rootCmd *cobra.Command) {
 		Use:   "request",
 		Short: "Request a new risk acceptance",
 		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load("./wardex-config.yaml") // Need proper config parsing path in real scenario but hardcoded for now due to structure
+			cfg, err := config.Load(*configPathPtr)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 				os.Exit(1)
@@ -113,7 +113,7 @@ func AddCommands(rootCmd *cobra.Command) {
 				os.Exit(1)
 			}
 
-			currentConfigHash, _ := configaudit.Hash("./wardex-config.yaml")
+			currentConfigHash, _ := configaudit.Hash(*configPathPtr)
 
 			_ = audit.Log("wardex-accept-audit.log", model.AuditEntry{
 				Event:       "acceptance.created",
@@ -153,7 +153,7 @@ func AddCommands(rootCmd *cobra.Command) {
 		Use:   "list",
 		Short: "List risk acceptances",
 		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load("./wardex-config.yaml")
+			cfg, err := config.Load(*configPathPtr)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 				os.Exit(1)
@@ -165,7 +165,7 @@ func AddCommands(rootCmd *cobra.Command) {
 				os.Exit(1)
 			}
 
-			currentConfigHash, _ := configaudit.Hash("./wardex-config.yaml")
+			currentConfigHash, _ := configaudit.Hash(*configPathPtr)
 
 			// Load checks validity under the hood
 			acceptances, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
@@ -204,7 +204,7 @@ func AddCommands(rootCmd *cobra.Command) {
 		Use:   "verify",
 		Short: "Verify logic integrity of risk acceptances",
 		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load("./wardex-config.yaml")
+			cfg, err := config.Load(*configPathPtr)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 				os.Exit(1)
@@ -216,7 +216,7 @@ func AddCommands(rootCmd *cobra.Command) {
 				os.Exit(1)
 			}
 
-			currentConfigHash, _ := configaudit.Hash("./wardex-config.yaml")
+			currentConfigHash, _ := configaudit.Hash(*configPathPtr)
 
 			_, err = store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
 			if err != nil {
@@ -251,7 +251,7 @@ func AddCommands(rootCmd *cobra.Command) {
 		Use:   "revoke",
 		Short: "Revoke an existing risk acceptance",
 		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load("./wardex-config.yaml")
+			cfg, err := config.Load(*configPathPtr)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 				os.Exit(1)
@@ -294,7 +294,7 @@ func AddCommands(rootCmd *cobra.Command) {
 		Use:   "check-expiry",
 		Short: "Check for pending expirations",
 		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load("./wardex-config.yaml")
+			cfg, err := config.Load(*configPathPtr)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 				os.Exit(1)
@@ -306,7 +306,7 @@ func AddCommands(rootCmd *cobra.Command) {
 				os.Exit(1)
 			}
 
-			currentConfigHash, _ := configaudit.Hash("./wardex-config.yaml")
+			currentConfigHash, _ := configaudit.Hash(*configPathPtr)
 			acceptances, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Load error: %v\n", err)
