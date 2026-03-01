@@ -1,0 +1,33 @@
+{
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.5",
+    "version": 1,
+    "components": [
+        {
+            "type": "library",
+            "bom-ref": "pkg:npm/lodash@4.17.20",
+            "name": "lodash",
+            "version": "4.17.20"
+        }
+    ],
+    "vulnerabilities": [
+        {
+            "id": "CVE-2021-23337",
+            "ratings": [
+                {
+                    "source": {
+                        "name": "NVD"
+                    },
+                    "score": 9.8,
+                    "severity": "critical",
+                    "method": "CVSSv3"
+                }
+            ],
+            "affects": [
+                {
+                    "ref": "pkg:npm/lodash@4.17.20"
+                }
+            ]
+        }
+    ]
+}

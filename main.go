@@ -65,7 +65,7 @@ func init() {
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
 	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
 
-	convertCmd.AddCommand(convert.GrypeCmd)
+	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
 	rootCmd.AddCommand(convertCmd)
 	rootCmd.AddCommand(simulate.SimulateCmd)
 	cli.AddCommands(rootCmd, &configPath)
