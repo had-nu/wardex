@@ -1,3 +1,6 @@
+// Copyright (c) 2025–2026 André Gustavo Leão de Melo Ataíde (had-nu). All rights reserved.
+// SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Wardex-Commercial
+
 // Package exitcodes defines named exit codes for the Wardex CLI.
 // These avoid magic numbers and prevent collisions with reserved POSIX codes.
 //

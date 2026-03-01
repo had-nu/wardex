@@ -1,3 +1,6 @@
+// Copyright (c) 2025–2026 André Gustavo Leão de Melo Ataíde (had-nu). All rights reserved.
+// SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Wardex-Commercial
+
 package catalog_test
 
 import (
@@ -7,7 +10,7 @@ import (
 )
 
 func TestCatalogLoad(t *testing.T) {
-	controls := catalog.Load()
+	controls := catalog.Load("iso27001")
 
 	if len(controls) != 93 {
 		t.Errorf("expected 93 controls, got %d", len(controls))
