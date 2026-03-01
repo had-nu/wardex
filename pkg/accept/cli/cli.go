@@ -97,43 +97,52 @@ func AddCommands(rootCmd *cobra.Command) {
 				}
 			}
 
-			id := fmt.Sprintf("acc-%s-%d", time.Now().Format("20060102"), time.Now().Unix())
-
-			acceptance := model.Acceptance{
-				ID:            id,
-				CVE:           reqCVEs[0], // Simplified taking just 1
-				AcceptedBy:    reqAcceptBy,
-				Justification: reqJustif,
-				ExpiresAt:     expiresAt,
-				Ticket:        reqTicket,
-				ReportHash:    reportHash,
-			}
-
-			if err := validator.ValidateBusinessRules(acceptance, cfg.AcceptanceConfig); err != nil {
-				fmt.Fprintf(os.Stderr, "Validation error: %v\n", err)
-				os.Exit(1)
-			}
-
 			currentConfigHash, _ := configaudit.Hash("./wardex-config.yaml")
+			baseID := fmt.Sprintf("acc-%s-%d", time.Now().Format("20060102"), time.Now().Unix())
 
-			_ = audit.Log("wardex-accept-audit.log", model.AuditEntry{
-				Event:       "acceptance.created",
-				ID:          id,
-				CVEID:       reqCVEs[0],
-				Actor:       reqAcceptBy,
-				Interactive: !reqYes,
-				ConfigHash:  currentConfigHash,
-			})
+			var createdIDs []string
+			for i, cve := range reqCVEs {
+				id := baseID
+				if len(reqCVEs) > 1 {
+					id = fmt.Sprintf("%s-%d", baseID, i)
+				}
 
-			sig, _ := signer.Sign(acceptance, key)
-			acceptance.Signature = sig
+				acceptance := model.Acceptance{
+					ID:            id,
+					CVE:           cve,
+					AcceptedBy:    reqAcceptBy,
+					Justification: reqJustif,
+					ExpiresAt:     expiresAt,
+					Ticket:        reqTicket,
+					ReportHash:    reportHash,
+				}
 
-			if err := store.Append("wardex-acceptances.yaml", acceptance); err != nil {
-				fmt.Fprintf(os.Stderr, "Storage error: %v\n", err)
-				os.Exit(1)
+				if err := validator.ValidateBusinessRules(acceptance, cfg.AcceptanceConfig); err != nil {
+					fmt.Fprintf(os.Stderr, "Validation error for %s: %v\n", cve, err)
+					os.Exit(1)
+				}
+
+				_ = audit.Log("wardex-accept-audit.log", model.AuditEntry{
+					Event:       "acceptance.created",
+					ID:          id,
+					CVEID:       cve,
+					Actor:       reqAcceptBy,
+					Interactive: !reqYes,
+					ConfigHash:  currentConfigHash,
+				})
+
+				sig, _ := signer.Sign(acceptance, key)
+				acceptance.Signature = sig
+
+				if err := store.Append("wardex-acceptances.yaml", acceptance); err != nil {
+					fmt.Fprintf(os.Stderr, "Storage error for %s: %v\n", cve, err)
+					os.Exit(1)
+				}
+
+				createdIDs = append(createdIDs, id)
+				fmt.Printf("Created acceptance %s for %s\n", id, cve)
 			}
-
-			fmt.Printf("Created acceptance %s for %s\n", id, reqCVEs[0])
+			fmt.Printf("\nTotal: %d acceptance(s) created.\n", len(createdIDs))
 		},
 	}
 	requestCmd.Flags().StringVar(&reqReport, "report", "", "GateReport JSON gerado pelo wardex (obrigatório)")
