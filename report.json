@@ -1,6 +1,6 @@
 {
   "Summary": {
-    "GeneratedAt": "2026-03-01T18:21:11.389569863Z",
+    "GeneratedAt": "2026-03-01T18:44:16.30515686Z",
     "TotalControls": 93,
     "CoveredCount": 0,
     "PartialCount": 93,
@@ -21850,7 +21850,7 @@
     "HighestRisk": 9.31
   },
   "Delta": {
-    "SnapshotDate": "2026-03-01T18:21:11.331453836Z",
+    "SnapshotDate": "2026-03-01T18:44:16.273115784Z",
     "CoverageChange": 0,
     "NewlyCovered": null,
     "NewGaps": null,
