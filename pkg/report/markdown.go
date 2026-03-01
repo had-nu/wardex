@@ -45,6 +45,8 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 		icon := "[OK] ALLOW"
 		if report.Gate.OverallDecision == "block" {
 			icon = "[X] BLOCK"
+		} else if report.Gate.OverallDecision == "warn" {
+			icon = "[!] WARN"
 		}
 		fmt.Fprintf(f, "| Release Gate Decision | %s |\n", icon)
 		fmt.Fprintf(f, "| Gate Maturity Level | %d / 5 |\n", report.Gate.GateMaturityLevel)
@@ -64,6 +66,8 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 			icon := "[OK] ALLOW"
 			if dec.Decision == "block" {
 				icon = "[X] BLOCK"
+			} else if dec.Decision == "warn" {
+				icon = "[!] WARN"
 			}
 			fmt.Fprintf(f, "| %s | %.1f | %.2f | **%.1f** | %s |\n",
 				dec.Vulnerability.CVEID, dec.Breakdown.CVSSBase, dec.Breakdown.EPSSFactor, dec.ReleaseRisk, icon)

@@ -254,6 +254,23 @@ else
   FAIL=$((FAIL + 1))
 fi
 
+# ── Scenario 09: WARN Gate Threshold ─────────────────────────────────────────
+header "Scenario 09 · WARN Gate Threshold"
+
+# Scenario: CVSS 9.8 * EPSS 0.05 * Crit 1.0 = Risk 0.49
+# Config: warn_above = 0.1, risk_appetite = 1.0
+# Expectation: Risk (0.49) > warn_above (0.1), but < risk_appetite (1.0). Gate = WARN, Exit = 0.
+if ${WARDEX} \
+    --config="${POC_DIR}/config-s09.yaml" \
+    --gate="${POC_DIR}/scenario-07-converted.yaml" \
+    "${POC_DIR}/scenario-07-nocontrols.yaml" 2>&1 | grep -q "WARNING: Risk threshold exceeded WarnAbove"; then
+  ok "Gate correctly returned WARN and emitted warning to StdErr"
+  PASS=$((PASS + 1))
+else
+  fail "Gate failed to emit WARN logic or exited with non-zero"
+  FAIL=$((FAIL + 1))
+fi
+
 # ── Summary ──────────────────────────────────────────────────────────────────
 header "Summary"
 echo -e "Tests Passed: ${GREEN}${PASS}${NC}"
