@@ -200,10 +200,36 @@ else
 fi
 cd "${REPO_ROOT}"
 
+cat << 'EOF' > "${POC_DIR}/config-s07.yaml"
+release_gate:
+  enabled: true
+  risk_appetite: 0.1
+  warn_above: 0.05
+  asset_context:
+    criticality: 1.0
+    internet_facing: true
+    requires_auth: false
+EOF
+
+header "Scenario 07 · SBOM Ingestion (CycloneDX) → BLOCK"
+info "Converting mock-sbom.json to Wardex native YAML..."
+${WARDEX} convert sbom "${POC_DIR}/scenario-07-mock-sbom.json" -o "${POC_DIR}/scenario-07-converted.yaml"
+
+if ${WARDEX} \
+    --config="${POC_DIR}/config-s07.yaml" \
+    --gate="${POC_DIR}/scenario-07-converted.yaml" \
+    "${POC_DIR}/scenario-07-nocontrols.yaml"; then
+  fail "Gate returned ALLOW for SBOM — expected BLOCK due to tight config"
+  FAIL=$((FAIL + 1))
+else
+  ok "Gate correctly blocked the vulnerabilities imported from the SBOM"
+  PASS=$((PASS + 1))
+fi
+
 # ── Summary ──────────────────────────────────────────────────────────────────
-echo ""
-echo -e "${BLUE}══════════════════════════════════════════${NC}"
-echo -e "  PoC Summary: ${GREEN}${PASS} passed${NC} / ${RED}${FAIL} failed${NC}"
+header "Summary"
+echo -e "Tests Passed: ${GREEN}${PASS}${NC}"
+echo -e "Tests Failed: ${RED}${FAIL}${NC}"
 echo -e "${BLUE}══════════════════════════════════════════${NC}"
 
 if [[ ${FAIL} -gt 0 ]]; then
