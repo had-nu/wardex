@@ -72,6 +72,12 @@ Wardex le permite integrar políticas en un formato YAML o JSON simple, cruzar v
 
 Esto genera informes visuales (en Markdown, CSV o JSON) que exponen el Análisis de Madurez de las 4 áreas globales de ISO 27001 (Personas, Procesos, Tecnológico y Físico) y ejecuta políticas de decisión (ALLOW / BLOCK) según el riesgo calibrado de la organización.
 
+## Novedades (v1.2.0)
+
+- **Simulador de Riesgo Interactivo (`wardex simulate`)**: Utilice el comando `simulate` para generar y abrir un panel web interactivo sin conexión que le permite probar en tiempo real cómo CVSS, EPSS y los controles de compensación afectan la puntuación de riesgo de su organización.
+- **Conversor Grype (`wardex convert grype`)**: Convierta fácilmente la salida JSON del escáner de vulnerabilidades Grype al formato YAML nativo de Wardex, ideal para la integración inmediata en las canalizaciones de CI/CD.
+- **Banda de Riesgo Moderado (`warn_above`)**: Permite aprobar lanzamientos mientras emite advertencias detalladas cuando el riesgo excede un umbral inferior seguro pero aún no ha violado el apetito de riesgo fatal de la organización.
+
 ## Uso como Biblioteca (SDK)
 
 La arquitectura de **Wardex** fue diseñada con una fuerte separación de responsabilidades (en el directorio `pkg/`). Esto significa que, además de usar la CLI, Wardex puede importarse como un SDK de biblioteca en cualquier otro proyecto de Go, como una API REST, un servicio de orquestación de GRC o un bot.
