@@ -46,6 +46,12 @@ type AcceptanceConfig struct {
 	BannedJustificationPhrases []string `yaml:"banned_justification_phrases"`
 }
 
+type ReportingConfig struct {
+	Format  string `yaml:"format"`
+	Output  string `yaml:"output"`
+	Verbose bool   `yaml:"verbose"`
+}
+
 type Config struct {
 	Organization     Organization             `yaml:"organization"`
 	DomainWeights    map[string]float64       `yaml:"domain_weights"`
@@ -53,6 +59,7 @@ type Config struct {
 	ReleaseGate      ReleaseGate              `yaml:"release_gate"`
 	Thresholds       Thresholds               `yaml:"thresholds"`
 	AcceptanceConfig AcceptanceConfig         `yaml:"acceptance"`
+	Reporting        ReportingConfig          `yaml:"reporting"`
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
