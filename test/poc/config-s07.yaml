@@ -1,0 +1,8 @@
+release_gate:
+  enabled: true
+  risk_appetite: 0.1
+  warn_above: 0.05
+  asset_context:
+    criticality: 1.0
+    internet_facing: true
+    requires_auth: false
