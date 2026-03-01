@@ -1,12 +1,21 @@
 {
   "Summary": {
-    "GeneratedAt": "2026-03-01T14:58:04.068880401Z",
+    "GeneratedAt": "2026-03-01T14:58:03.9936131Z",
     "TotalControls": 93,
     "CoveredCount": 0,
     "PartialCount": 93,
     "GapCount": 0,
     "GlobalCoverage": 0,
     "DomainSummaries": [
+      {
+        "Domain": "technological",
+        "TotalControls": 34,
+        "CoveredCount": 0,
+        "PartialCount": 34,
+        "GapCount": 0,
+        "MaturityScore": 5.205882352941177,
+        "CoveragePercent": 0
+      },
       {
         "Domain": "organizational",
         "TotalControls": 37,
@@ -32,15 +41,6 @@
         "PartialCount": 14,
         "GapCount": 0,
         "MaturityScore": 5,
-        "CoveragePercent": 0
-      },
-      {
-        "Domain": "technological",
-        "TotalControls": 34,
-        "CoveredCount": 0,
-        "PartialCount": 34,
-        "GapCount": 0,
-        "MaturityScore": 5.205882352941177,
         "CoveragePercent": 0
       }
     ],
@@ -6982,7 +6982,7 @@
           "MatchedDomains": null,
           "MatchedKeywords": [
             "security"
-    0     ]
+          ]
         },
         {
           "ExistingControlID": "A.6.8",
@@ -21818,43 +21818,20 @@
     }
   ],
   "Gate": {
-    "OverallDecision": "block",
+    "OverallDecision": "allow",
     "GateMaturityLevel": 2,
-    "Decisions": [
-      {
-        "Vulnerability": {
-          "CVEID": "CVE-2023-9999",
-          "CVSSBase": 9.8,
-          "EPSSScore": 1,
-          "Component": "log4j-core",
-          "Reachable": true
-        },
-        "ReleaseRisk": 9.31,
-        "RiskAppetite": 4,
-        "Decision": "block",
-        "Breakdown": {
-          "CVSSBase": 9.8,
-          "EPSSFactor": 1,
-          "AdjustedScore": 9.8,
-          "AssetCriticality": 0.95,
-          "ExposureFactor": 1,
-          "CompensatingEffect": 0,
-          "FinalReleaseRisk": 9.31
-        },
-        "AuditTrail": "[block] CVE-2023-9999 — release_risk: 9.3, cvss_adjusted: 9.8, exposure: 1.00"
-      }
-    ],
-    "BlockedCount": 1,
+    "Decisions": null,
+    "BlockedCount": 0,
     "AllowedCount": 0,
     "WarnCount": 0,
-    "HighestRisk": 9.31
+    "HighestRisk": 0
   },
   "Delta": {
-    "SnapshotDate": "2026-03-01T14:58:04.028130578Z",
+    "SnapshotDate": "2026-03-01T14:58:03.944434512Z",
     "CoverageChange": 0,
     "NewlyCovered": null,
     "NewGaps": null,
     "Unchanged": 93,
-    "GateMaturityChange": -1
+    "GateMaturityChange": 0
   }
 }

@@ -60,21 +60,21 @@ go run main.go
 ║     Wardex SDK PoC — Scenario Validation         ║
 ╚══════════════════════════════════════════════════╝
 
-✅ [PASS] 01 · Happy Path → ALLOW
+[PASS] [PASS] 01 · Happy Path → ALLOW
       Gate decision : allow
 
-✅ [PASS] 02 · Critical CVE → BLOCK
+[PASS] [PASS] 02 · Critical CVE → BLOCK
       Gate decision : block
 
-✅ [PASS] 03 · Compensating Controls → ALLOW
+[PASS] [PASS] 03 · Compensating Controls → ALLOW
       Gate decision : allow
 
-✅ [PASS] 04 · Risk Acceptance baseline → BLOCK (pre-exception)
+[PASS] [PASS] 04 · Risk Acceptance baseline → BLOCK (pre-exception)
       Gate decision : block
 
 ─────────────────────────────────────────────────────
 Results: 4 passed / 0 failed
-✅ All scenarios passed — wardex library behaves as expected.
+[PASS] All scenarios passed — wardex library behaves as expected.
 ```
 
 ### Option B: Full CLI + SDK End-to-End (with Risk Acceptance)
@@ -142,7 +142,7 @@ exposure     = 0.6 × (1-0.2) × (1-0.5) = 0.24
 compEffect   = 0.0 (no controls)
 finalRisk    = 0.058 × 0.3 × 0.24 ≈ 0.004
 
-0.004 < 6.0 → ALLOW ✅
+0.004 < 6.0 → ALLOW [PASS]
 ```
 
 ### Scenario 02 — Critical CVE → BLOCK
@@ -156,7 +156,7 @@ exposure     = 1.0 × 1.0 × 1.0 = 1.0
 compEffect   = 0.0 (no controls)
 finalRisk    = 8.918 × 0.95 × 1.0 = 8.47
 
-8.47 > 6.0 → BLOCK ✅
+8.47 > 6.0 → BLOCK [PASS]
 ```
 
 ### Scenario 03 — Compensating Controls → ALLOW
@@ -171,7 +171,7 @@ compensated  = 3.645 × (1 - 0.8) = 0.729
 exposure     = 1.0 × (1-0.2) × 1.0 = 0.8
 finalRisk    = 0.729 × 0.75 × 0.8 = 0.437
 
-0.437 < 6.0 → ALLOW ✅
+0.437 < 6.0 → ALLOW [PASS]
 ```
 
 ### Scenario 04 — Risk Acceptance Baseline → BLOCK
@@ -186,7 +186,7 @@ compensated  = 7.644 × 1.0 = 7.644
 exposure     = 1.0 × 1.0 × 1.0 = 1.0
 finalRisk    = 7.644 × 0.85 × 1.0 = 6.50
 
-6.50 > 6.0 → BLOCK ✅ (baseline for acceptance)
+6.50 > 6.0 → BLOCK [PASS] (baseline for acceptance)
 ```
 
 ---
