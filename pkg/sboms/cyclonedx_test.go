@@ -15,8 +15,7 @@ func TestParseCycloneDX(t *testing.T) {
 			{
 				"type": "library",
 				"bom-ref": "pkg:npm/lodash@4.17.20",
-				"name": "lodash",
-				"version": "4.17.20"
+				"name": "lodash"
 			}
 		],
 		"vulnerabilities": [
@@ -50,6 +49,23 @@ func TestParseCycloneDX(t *testing.T) {
 				"affects": [
 					{"ref": "pkg:golang/test@1.0.0"}
 				]
+			},
+			{
+				"id": "CVE-2022-12345",
+				"ratings": [
+					{
+						"score": 9.8,
+						"severity": "critical",
+						"method": "CVSSv3"
+					}
+				],
+				"affects": [
+					{"ref": "pkg:npm/express@4.17.1"}
+				],
+				"analysis": {
+					"state": "false_positive",
+					"justification": "Code is not reachable in our production environment"
+				}
 			}
 		]
 	}`
