@@ -8,13 +8,13 @@
   ![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
   [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
-
   <br>
   <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
   <br><br>
 
   <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
 </div>
+
 
 Wardex é uma ferramenta de linha de comando (CLI) escrita em Go que ingere controlos de segurança já implementados na sua organização e os mapeia contra os 93 controlos da norma ISO/IEC 27001:2022 (Annex A).
 
@@ -70,7 +70,13 @@ O Wardex permite ingerir as políticas num formato simples YAML ou JSON, cruzar 
 ./bin/wardex --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml
 ```
 
-Isto gera relatórios visuais (em Markdown, CSV ou JSON) expondo a Análise de Maturidade das 4 áreas globais da ISO 27001 (Pessoas, Processos, Tecnológico e Físico) e executa as políticas de decisão (ALLOW / BLOCK) consoante o risco calibrado da organização.
+Isto gera relatórios visuais (em Markdown, CSV ou JSON) expondo a Análise de Maturidade das 4 áreas globais da ISO 27001 (Pessoas, Processos, Tecnológico e Físico) e executa as políticas de decisão (ALLOW / BLOCK / WARN) consoante o risco calibrado da organização.
+
+## Novidades (v1.2.0)
+
+- **Simulador de Risco Interativo (`wardex simulate`)**: Utilize o comando `simulate` para gerar e abrir um dashboard web interativo offline que permite testar em tempo real como o CVSS, o EPSS, e os controlos de compensação afetam a pontuação de risco da sua organização.
+- **Conversor Grype (`wardex convert grype`)**: Converta facilmente a saída JSON do verificador de vulnerabilidades Grype para o formato YAML nativo do Wardex, ideal para integração imediata em pipelines CI/CD.
+- **Banda de Risco Moderado (`warn_above`)**: Permite aprovar lançamentos mas emitir avisos detalhados quando o risco excede um limite inferior seguro mas ainda não ultrapassa o apetite de risco fatal da organização.
 
 ## Utilização como Biblioteca (SDK)
 
@@ -128,6 +134,3 @@ wardex accept verify
 O Wardex garante a integridade destas exceções utilizando assinaturas HMAC-SHA256, logs de auditoria append-only (`JSONL`) e deteção de alterações indesejadas na configuração (drift).
 
 ---
-<div align="center">
-  <a href="https://github.com/had-nu/lazy.go"><img src="https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square" alt="Powered by lazy.go"></a>
-</div>
