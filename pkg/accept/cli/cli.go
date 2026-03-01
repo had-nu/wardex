@@ -14,6 +14,7 @@ import (
 	"github.com/had-nu/wardex/pkg/accept/store"
 	"github.com/had-nu/wardex/pkg/accept/validator"
 	"github.com/had-nu/wardex/pkg/duration"
+	"github.com/had-nu/wardex/pkg/exitcodes"
 	"github.com/had-nu/wardex/pkg/model"
 	"github.com/spf13/cobra"
 )
@@ -181,11 +182,11 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 			if err != nil {
 				if errors.Is(err, store.ErrTampered) {
 					fmt.Fprintf(os.Stderr, "Tampered acceptance detected: %v\n", err)
-					os.Exit(3)
+					os.Exit(exitcodes.Tampered)
 				}
 				if errors.Is(err, store.ErrStoreInconsistent) {
 					fmt.Fprintf(os.Stderr, "Store inconsistent: %v\n", err)
-					os.Exit(4)
+					os.Exit(exitcodes.StoreInconsistent)
 				}
 				fmt.Fprintf(os.Stderr, "Failed to load acceptances: %v\n", err)
 				os.Exit(1)
@@ -231,18 +232,18 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 			if err != nil {
 				if errors.Is(err, store.ErrTampered) {
 					fmt.Fprintf(os.Stderr, "Tampered validation check failed: %v\n", err)
-					os.Exit(3)
+					os.Exit(exitcodes.Tampered)
 				}
 				if errors.Is(err, store.ErrStoreInconsistent) {
 					fmt.Fprintf(os.Stderr, "Store trace validation failed: %v\n", err)
-					os.Exit(4)
+					os.Exit(exitcodes.StoreInconsistent)
 				}
 				fmt.Fprintf(os.Stderr, "Standard validation error: %v\n", err)
 				os.Exit(1)
 			}
 
 			fmt.Println("All acceptances passed integrity checks.")
-			os.Exit(0)
+			os.Exit(exitcodes.OK)
 		},
 	}
 
@@ -339,11 +340,11 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 			}
 
 			if expiringCount > 0 {
-				os.Exit(4)
+				os.Exit(exitcodes.ExpiringSoon)
 			}
 
 			fmt.Println("No acceptances expiring soon.")
-			os.Exit(0)
+			os.Exit(exitcodes.OK)
 		},
 	}
 	checkExpiryCmd.Flags().StringVar(&expiryWarnBefore, "warn-before", "72h", "Período de aviso: ex. 3d, 72h")
