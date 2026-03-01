@@ -2,12 +2,16 @@ package model
 
 import "time"
 
+// CoverageStatus represents the evaluation status of an Annex A control.
 type CoverageStatus string
 
 const (
+	// StatusCovered indicates the control is fully met.
 	StatusCovered CoverageStatus = "covered"
+	// StatusPartial indicates the control is partially met but below the gate threshold.
 	StatusPartial CoverageStatus = "partial"
-	StatusGap     CoverageStatus = "gap"
+	// StatusGap indicates the control is completely unmet.
+	StatusGap CoverageStatus = "gap"
 )
 
 // GatePracticeStatus resume o estado da prática de release gate para um controle.
