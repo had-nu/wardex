@@ -27,6 +27,7 @@ type Acceptance struct {
 	Revocation   *RevocationRecord `json:"revocation,omitempty" yaml:"revocation,omitempty"`
 }
 
+// RevocationRecord represents the metadata regarding the revocation of an acceptance.
 type RevocationRecord struct {
 	RevokedBy string    `json:"revoked_by,omitempty" yaml:"revoked_by,omitempty"`
 	RevokedAt time.Time `json:"revoked_at,omitempty" yaml:"revoked_at,omitempty"`
