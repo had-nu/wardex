@@ -8,16 +8,14 @@ import (
 	"github.com/had-nu/wardex/pkg/model"
 )
 
-const SnapshotFile = ".wardex_snapshot.json"
-
 // Save writes the current GapReport to the snapshot file.
-func Save(report model.GapReport) error {
+func Save(report model.GapReport, filename string) error {
 	data, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal snapshot: %w", err)
 	}
 
-	if err := os.WriteFile(SnapshotFile, data, 0600); err != nil {
+	if err := os.WriteFile(filename, data, 0600); err != nil {
 		return fmt.Errorf("failed to write snapshot: %w", err)
 	}
 
@@ -25,12 +23,12 @@ func Save(report model.GapReport) error {
 }
 
 // Load reads the snapshot file if it exists. Returns nil, nil if missing.
-func Load() (*model.GapReport, error) {
-	if _, err := os.Stat(SnapshotFile); os.IsNotExist(err) {
+func Load(filename string) (*model.GapReport, error) {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		return nil, nil // First run or snapshot deleted
 	}
 
-	data, err := os.ReadFile(SnapshotFile)
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read snapshot: %w", err)
 	}
