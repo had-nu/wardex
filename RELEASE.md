@@ -1,9 +1,13 @@
-## Wardex v1.4.0 (System Features Sprint)
+## Wardex v1.5.0 (Framework Expansion Sprint)
 
-This release focuses on hardening enterprise telemetry, improving the observability of risk thresholds, and introducing native false-positive suppression via VEX.
+This release officially introduces the **Multi-Framework Governance Engine**. Wardex is no longer strictly bound to ISO 27001 reporting.
 
 ### Added
-- **SIEM Forwarding Verification**: Added the `wardex accept verify-forwarding` command to validate that local audit trails (`wardex-accept-audit.log`) are healthy and formatted correctly for remote SIEM ingestion agents.
-- **`WARN` Gate Threshold Observable Context**: The release gate now explicitly surfaces the `[!] WARN` tag and exits cleanly (`0`) when an evaluated pipeline risk falls between the `warn_above` and `risk_appetite` boundaries. This provides critical observability without hard-blocking pipelines unnecessarily.
-- **Configurable Snapshot File Path**: Replaced the hardcoded `.wardex_snapshot.json` tracker. Monorepo pipelines can now use the `--snapshot-file` flag to securely isolate their gap analysis states and delta reports.
-- **VEX Suppressions**: The native CycloneDX SBOM importer natively parses the `analysis` object. SBOM Vulnerability components with a VEX state of `false_positive` or `not_affected` are automatically bypassed by the risk engine, instantly reducing noisy false alarms.
+- **`--framework` Dynamic Parameter**: A flexible way to scan the same organizational security configurations against different regulatory catalogs. Supported natively out-of-the-box in v1.5.0:
+  - `--framework iso27001` (Legacy JSON backwards-compatible default)
+  - `--framework soc2` 
+  - `--framework nis2` 
+  - `--framework dora` 
+
+### Changed
+- The entire application core transitioned from an `AnnexAControl` schema abstraction to a globally resilient `CatalogControl` structure.
