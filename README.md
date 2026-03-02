@@ -18,9 +18,9 @@
 </div>
 
 
-Wardex é uma ferramenta de linha de comando (CLI) escrita em Go que ingere controlos de segurança já implementados na sua organização e os mapeia contra os 93 controlos da norma ISO/IEC 27001:2022 (Annex A).
+O Wardex é uma ferramenta de linha de comando (CLI) e Motor robusto escrito em Go que ingere controlos de segurança já implementados na sua organização e os mapeia contra múltiplos frameworks de conformidade global, incluindo os 93 controlos da norma ISO/IEC 27001:2022 (Annex A), SOC 2, NIS 2 e DORA.
 
-Mais do que uma simples ferramenta de conformidade, o Wardex atua como um **Risk-Based Release Gate** nas suas pipelines de CI/CD. Em vez de bloquear lançamentos de software baseando-se em métricas binárias e estáticas (como "CVSS > 7.0"), o Wardex calcula o risco de lançamento real, ajustando a vulnerabilidade técnica ao impacto no negócio, exposição da infraestrutura, e controlos de compensação existentes.
+Desenhado para ser utilizado tanto como uma CLI autónoma como um SDK integrável, o Wardex atua como um **Risk-Based Release Gate** nas suas pipelines de CI/CD. Em vez de bloquear lançamentos de software baseando-se em métricas binárias e estáticas (como "CVSS > 7.0"), o Wardex calcula o risco de lançamento real, ajustando a vulnerabilidade técnica ao impacto no negócio, exposição da infraestrutura, e controlos de compensação existentes.
 
 ## Porquê o Wardex?
 
@@ -28,6 +28,14 @@ Consulte a documentação em `/doc` para compreender a visão arquitetónica e o
 - [A Visão de Negócio (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Arquitetura e Matemática Técnica (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
 - [Arquitetura de Não-Repudiação e Criptografia para Auditores (SOC 2, ISO 27001)](doc/wardex-g20-audit-readiness.md)
+
+## Frameworks Suportados (a partir da v1.5.0)
+
+O Wardex disponibiliza mapeamento nativo para os seguintes standards de conformidade (através da flag `--framework`):
+- **ISO/IEC 27001:2022** (`iso27001` - predefinição)
+- **SOC 2** (`soc2` - Trust Services Criteria)
+- **NIS 2** (`nis2` - EU Directive 2022/2555)
+- **DORA** (`dora` - Digital Operational Resilience Act)
 
 ## Licenciamento e Uso Comercial
 

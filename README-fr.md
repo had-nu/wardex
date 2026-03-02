@@ -16,15 +16,23 @@
   <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
 </div>
 
-Wardex est un outil d'interface en ligne de commande (CLI) écrit en Go qui intègre les contrôles de sécurité déjà mis en œuvre dans votre organisation et les associe aux 93 contrôles de la norme ISO/CEI 27001:2022 (Annexe A).
+Wardex est un outil d'interface en ligne de commande (CLI) robuste et un Moteur écrit en Go qui intègre les contrôles de sécurité déjà mis en œuvre dans votre organisation et les associe à de multiples cadres de conformité mondiaux, y compris les 93 contrôles de la norme ISO/CEI 27001:2022 (Annexe A), SOC 2, NIS 2 et DORA.
 
-Plus qu'un simple outil de conformité, Wardex agit comme une **Passerelle de Mise en Production Basée sur les Risques (Risk-Based Release Gate)** dans vos pipelines CI/CD. Au lieu de bloquer les sorties de logiciels sur la base de métriques binaires et statiques (comme "CVSS > 7.0"), Wardex calcule le risque réel de mise en production en ajustant la vulnérabilité technique à l'impact commercial, à l'exposition de l'infrastructure et aux contrôles compensatoires existants.
+Conçu pour être utilisé à la fois comme une CLI autonome et comme un SDK intégrable, Wardex agit comme une **Passerelle de Mise en Production Basée sur les Risques (Risk-Based Release Gate)** dans vos pipelines CI/CD. Au lieu de bloquer les sorties de logiciels sur la base de métriques binaires et statiques (comme "CVSS > 7.0"), Wardex calcule le risque réel de mise en production en ajustant la vulnérabilité technique à l'impact commercial, à l'exposition de l'infrastructure et aux contrôles compensatoires existants.
 
 ## Pourquoi Wardex ?
 
 Consultez la documentation dans `/doc` pour comprendre la vision architecturale et les problèmes commerciaux résolus par l'outil :
 - [Vision Commerciale (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Architecture Technique et Mathématiques (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
+
+## Frameworks Pris en Charge (à partir de la v1.5.0)
+
+Wardex propose un mappage natif pour les normes de conformité suivantes (via le flag `--framework`) :
+- **ISO/IEC 27001:2022** (`iso27001` - par défaut)
+- **SOC 2** (`soc2` - Trust Services Criteria)
+- **NIS 2** (`nis2` - EU Directive 2022/2555)
+- **DORA** (`dora` - Digital Operational Resilience Act)
 
 ## Compilation et Installation
 

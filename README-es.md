@@ -16,15 +16,23 @@
   <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
 </div>
 
-Wardex es una herramienta de Interfaz de Línea de Comandos (CLI) escrita en Go que procesa controles de seguridad ya implementados en su organización y los mapea contra los 93 controles de la norma ISO/IEC 27001:2022 (Anexo A).
+Wardex es una herramienta robusta de Interfaz de Línea de Comandos (CLI) y un Motor escrito en Go que procesa controles de seguridad ya implementados en su organización y los mapea contra múltiples marcos de cumplimiento global, incluidos los 93 controles de la norma ISO/IEC 27001:2022 (Anexo A), SOC 2, NIS 2 y DORA.
 
-Más que una simple herramienta de cumplimiento, Wardex actúa como una **Puerta de Liberación Basada en Riesgos (Risk-Based Release Gate)** en sus pipelines CI/CD. En lugar de bloquear lanzamientos de software basándose en métricas estáticas binarias (como "CVSS > 7.0"), Wardex calcula el riesgo real de liberación ajustando la vulnerabilidad técnica al impacto comercial, la exposición de la infraestructura y los controles compensatorios existentes.
+Diseñado para ser utilizado tanto como una CLI independiente como un SDK integrable, Wardex actúa como una **Puerta de Liberación Basada en Riesgos (Risk-Based Release Gate)** en sus pipelines CI/CD. En lugar de bloquear lanzamientos de software basándose en métricas estáticas binarias (como "CVSS > 7.0"), Wardex calcula el riesgo real de liberación ajustando la vulnerabilidad técnica al impacto comercial, la exposición de la infraestructura y los controles compensatorios existentes.
 
 ## ¿Por qué Wardex?
 
 Consulte la documentación en `/doc` para comprender la visión arquitectónica y los problemas empresariales que resuelve la herramienta:
 - [Visión de Negocio (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Arquitectura Técnica y Matemáticas (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
+
+## Frameworks Soportados (a partir de v1.5.0)
+
+Wardex proporciona mapeo nativo para los siguientes estándares de cumplimiento (a través del flag `--framework`):
+- **ISO/IEC 27001:2022** (`iso27001` - por defecto)
+- **SOC 2** (`soc2` - Trust Services Criteria)
+- **NIS 2** (`nis2` - EU Directive 2022/2555)
+- **DORA** (`dora` - Digital Operational Resilience Act)
 
 ## Compilación e Instalación
 

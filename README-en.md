@@ -16,15 +16,23 @@
   <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
 </div>
 
-Wardex is a Command Line Interface (CLI) tool written in Go that ingests already implemented security controls in your organization and maps them against the 93 controls of the ISO/IEC 27001:2022 standard (Annex A).
+Wardex is a robust Command Line Interface (CLI) tool and Engine written in Go that ingests already implemented security controls in your organization and maps them against multiple global compliance frameworks, including the 93 controls of the ISO/IEC 27001:2022 standard (Annex A), SOC 2, NIS 2, and DORA.
 
-More than just a simple compliance tool, Wardex acts as a **Risk-Based Release Gate** in your CI/CD pipelines. Instead of blocking software releases based on static binary metrics (like "CVSS > 7.0"), Wardex calculates the real release risk by adjusting technical vulnerability to business impact, infrastructure exposure, and existing compensating controls.
+Designed to be used both as a standalone CLI and as an embeddable SDK, Wardex acts as a **Risk-Based Release Gate** in your CI/CD pipelines. Instead of blocking software releases based on static binary metrics (like "CVSS > 7.0"), Wardex calculates the real release risk by adjusting technical vulnerability to business impact, infrastructure exposure, and existing compensating controls.
 
 ## Why Wardex?
 
 Check the documentation in `/doc` to understand the architectural vision and the business problems the tool solves:
 - [Business Vision (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Technical Architecture and Math (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
+
+## Supported Frameworks (as of v1.5.0)
+
+Wardex provides native mapping for the following compliance standards (via the `--framework` flag):
+- **ISO/IEC 27001:2022** (`iso27001` - default)
+- **SOC 2** (`soc2` - Trust Services Criteria)
+- **NIS 2** (`nis2` - EU Directive 2022/2555)
+- **DORA** (`dora` - Digital Operational Resilience Act)
 
 ## Build and Installation
 
