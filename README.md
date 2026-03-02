@@ -36,7 +36,7 @@ O Wardex opera sob um modelo de **Duplo Licenciamento (Dual-Licensing)** para pr
 1. **Uso Open-Source & Interno (Gratuito)**: Se utilizar o Wardex estritamente para as suas pipelines CI/CD internas, ou caso incorpore o Wardex num projeto e disponibilize o código desse projeto integralmente open-source, está coberto pela [AGPL-3.0](LICENSE).
 2. **Uso Comercial & Incorporação SaaS (Pago)**: Se pretende embutir o motor do Wardex no backend de um produto comercial, plataforma SaaS corporativa, ou distribuí-lo de forma proprietária (sem abrir o seu código-fonte), **tem de adquirir uma Licença Comercial**. 
 
-Para informações sobre Licenças Comerciais para a sua empresa, por favor leia os [Termos Comerciais Associados](doc/COMMERCIAL_LICENSE.md) ou contacte: **commercial@[domain]**.
+Para informações sobre Licenças Comerciais para a sua empresa, por favor leia os [Termos Comerciais Associados](doc/COMMERCIAL_LICENSE.md) ou contacte: **andre_ataide@proton.me**.
 
 ## Compilação e Instalação
 
