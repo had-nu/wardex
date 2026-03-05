@@ -1,0 +1,7 @@
+release_gate:
+  enabled: true
+  risk_appetite: 1.0
+  warn_above: 0.5
+acceptance_workflow:
+  enabled: true
+  signing_secret_env: "WARDEX_SECRET"

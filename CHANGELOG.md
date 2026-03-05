@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - Unreleased
+
+### Added
+- **Human-in-the-Loop EPSS API Enrichment**: Added the `wardex enrich epss` command to securely fetch omitted EPSS scores from `api.first.org` and emit a cryptographically sealed HMAC override record. Injecting `--epss-enrichment record.yaml` supersedes the gate's `1.0` fallback, preventing pipeline brittleness without compromising non-repudiation (G-23).
+
 ## [1.6.1] - 2026-03-01
 
 ### Added

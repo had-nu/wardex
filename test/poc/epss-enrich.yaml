@@ -1,0 +1,5 @@
+enrichments:
+    - cve: CVE-2023-45288
+      score: 0.71463
+signature: sha256:11179ec8733140269d0a45ec8ae63fe79fb0e95f91268f85d197b1a040658436
+generated_at: "2026-03-05T23:37:31Z"
