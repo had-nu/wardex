@@ -18,6 +18,8 @@ import (
 	"github.com/had-nu/wardex/pkg/analyzer"
 	"github.com/had-nu/wardex/pkg/catalog"
 	"github.com/had-nu/wardex/pkg/correlator"
+	enrichCli "github.com/had-nu/wardex/pkg/enrich/cli"
+	"github.com/had-nu/wardex/pkg/epss"
 	"github.com/had-nu/wardex/pkg/exitcodes"
 	"github.com/had-nu/wardex/pkg/ingestion"
 	"github.com/had-nu/wardex/pkg/model"
@@ -44,6 +46,7 @@ var (
 	profileName   string
 	snapshotFile  string
 	frameworkName string
+	epssEnrich    string
 )
 
 var convertCmd = &cobra.Command{
@@ -73,11 +76,13 @@ func init() {
 	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
 	rootCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override (Warning: Identity is cryptographically trusted only in CI environments via WARDEX_ACTOR)")
 	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora")
+	rootCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a cryptographically signed EPSS enrichment file")
 
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
 	rootCmd.AddCommand(convertCmd)
 	rootCmd.AddCommand(simulate.SimulateCmd)
 	cli.AddCommands(rootCmd, &configPath)
+	enrichCli.AddCommands(rootCmd, &configPath)
 }
 
 func main() {
@@ -247,26 +252,51 @@ func runWardex(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 
-		if cfg.AcceptanceConfig.SigningSecretFile != "" {
-			if key, err := signer.ResolveSecret(*cfg); err == nil {
-				configHash, _ := configaudit.Hash(configPath)
-				if accs, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
-					acceptedMap := make(map[string]bool)
-					for _, a := range accs {
-						if !a.Revoked {
-							acceptedMap[a.CVE] = true
-						}
+		if key, err := signer.ResolveSecret(*cfg); err == nil {
+			configHash, _ := configaudit.Hash(configPath)
+			if accs, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
+				acceptedMap := make(map[string]bool)
+				for _, a := range accs {
+					if !a.Revoked {
+						acceptedMap[a.CVE] = true
 					}
-					var filtered []model.Vulnerability
-					for _, v := range vulnsFormat.Vulnerabilities {
-						if !acceptedMap[v.CVEID] {
-							filtered = append(filtered, v)
-						} else {
-							fmt.Fprintf(os.Stderr, "[INFO] CVE %s is covered by an active risk acceptance and will be ignored.\n", v.CVEID)
-						}
-					}
-					vulnsFormat.Vulnerabilities = filtered
 				}
+				var filtered []model.Vulnerability
+				for _, v := range vulnsFormat.Vulnerabilities {
+					if !acceptedMap[v.CVEID] {
+						filtered = append(filtered, v)
+					} else {
+						fmt.Fprintf(os.Stderr, "[INFO] CVE %s is covered by an active risk acceptance and will be ignored.\n", v.CVEID)
+					}
+				}
+				vulnsFormat.Vulnerabilities = filtered
+			}
+		}
+
+		if epssEnrich != "" {
+			if key, err := signer.ResolveSecret(*cfg); err == nil {
+				edata, err := os.ReadFile(epssEnrich)
+				if err == nil {
+					var enrichFormat model.EPSSEnrichmentFile
+					if err := yaml.Unmarshal(edata, &enrichFormat); err == nil {
+						if err := epss.Verify(enrichFormat, key); err == nil {
+							scoreMap := make(map[string]float64)
+							for _, e := range enrichFormat.Enrichments {
+								scoreMap[e.CVE] = e.Score
+							}
+							for i, v := range vulnsFormat.Vulnerabilities {
+								if s, ok := scoreMap[v.CVEID]; ok {
+									vulnsFormat.Vulnerabilities[i].EPSSScore = s
+									fmt.Fprintf(os.Stderr, "[INFO] Applied signed EPSS Enrichment for %s: %.6f\n", v.CVEID, s)
+								}
+							}
+						} else {
+							fmt.Fprintf(os.Stderr, "WARNING: EPSS Enrichment signature invalid: %v\n", err)
+						}
+					}
+				}
+			} else {
+				fmt.Fprintf(os.Stderr, "WARNING: Cannot verify EPSS Enrichment without WARDEX_ACCEPT_SECRET configured.\n")
 			}
 		}
 
@@ -274,6 +304,16 @@ func runWardex(cmd *cobra.Command, args []string) {
 		rep.Gate = &gateReport
 		if gateReport.OverallDecision == "block" {
 			gateFailed = true
+			missingEpss := 0
+			for _, v := range vulnsFormat.Vulnerabilities {
+				if v.EPSSScore == 0.0 {
+					missingEpss++
+				}
+			}
+			if missingEpss > 0 {
+				fmt.Fprintf(os.Stderr, "\n[HINT] %d vulnerabilities lacked EPSS scores and defaulted to worst-case (1.0).\n", missingEpss)
+				fmt.Fprintf(os.Stderr, "       Run 'wardex enrich epss %s' to fetch real probabilities from FIRST.org and sign the enrichment.\n", gateFile)
+			}
 		} else if gateReport.OverallDecision == "warn" {
 			fmt.Fprintf(os.Stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
 		}
