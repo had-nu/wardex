@@ -42,7 +42,7 @@ var GrypeCmd = &cobra.Command{
 
 func init() {
 	GrypeCmd.Flags().StringVarP(&grypeOutFile, "output", "o", "wardex-vulns.yaml", "Output file for Wardex YAML")
-	GrypeCmd.Flags().Float64Var(&defaultEpss, "default-epss", 0.05, "Default EPSS score for mapped vulnerabilities")
+	GrypeCmd.Flags().Float64Var(&defaultEpss, "default-epss", 0.0, "Default EPSS score (0.0 = unknown, gate assumes worst-case 1.0). Use 'wardex enrich epss' to fetch real scores.")
 }
 
 func runConvertGrype(cmd *cobra.Command, args []string) {
