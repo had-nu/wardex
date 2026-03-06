@@ -171,4 +171,42 @@ wardex accept verify
 
 O Wardex garante a integridade destas exceções utilizando assinaturas HMAC-SHA256, logs de auditoria append-only (`JSONL`) e deteção de alterações indesejadas na configuração (drift).
 
+### Enriquecimento EPSS c/ Human-in-the-Loop (HITL)
+
+Quando os seus *scanners* upstream omitem o EPSS, o Wardex **assume o pior caso (EPSS 1.0 = 100%)**, bloqueando a pipeline ate validacao explicita:
+
+```bash
+# Quando a CI bloquear por EPSS em falta:
+wardex enrich epss wardex-vulns.yaml --output epss-enrich.yaml
+
+# Na Pipeline, acople o signed payload:
+wardex --epss-enrichment epss-enrich.yaml --gate vulns.yaml controls.json
+```
+
+O comando consulta a API da FIRST.org (`api.first.org`), obtém as probabilidades reais, e assina o resultado via HMAC-SHA256.
+
+### Risco Contextual -- A Mesma CVE, 4 Decisoes
+
+O Wardex calcula: `FinalRisk = (CVSS x EPSS) x (1 - Compensacoes) x Criticidade x Exposicao`
+
+| CVE | CVSS | EPSS | [BANK] | [SAAS] | [DEV] | [HOSP] |
+|---|---|---|---|---|---|---|
+| **Log4Shell** | 10.0 | 0.94 | **14.2** `BLOCK` | **2.5** `BLOCK` | **0.3** `ALLOW` | **7.9** `BLOCK` |
+| **xz backdoor** | 10.0 | 0.86 | **12.8** `BLOCK` | **2.3** `BLOCK` | **0.2** `ALLOW` | **7.1** `BLOCK` |
+| **curl SOCKS5** | 9.8 | 0.26 | **3.9** `BLOCK` | **0.7** `ALLOW` | **0.1** `ALLOW` | **2.1** `BLOCK` |
+| **minimist** | 9.8 | 0.01 | **0.1** `ALLOW` | **0.0** `ALLOW` | **0.0** `ALLOW` | **0.1** `ALLOW` |
+
+Validado com **237 CVEs reais** e scores EPSS ao vivo da FIRST.org:
+
+| Perfil | Apetite | BLOCK | ALLOW | % Block |
+|---|---|---|---|---|
+| [BANK] Banco Tier-1 (DORA) | 0.5 | **176** | 57 | 74% |
+| [HOSP] Hospital (HIPAA) | 0.8 | **168** | 63 | 71% |
+| [SAAS] Startup SaaS | 2.0 | **111** | 86 | 47% |
+| [DEV] Dev Sandbox | 4.0 | **0** | 238 | 0% |
+
+Relatorio completo: [EPSS Multi-Context Stress Test Report](doc/epss-stress-test-report.md)
+
 ---
+
+Mais detalhes de configuração no [Wardex Wiki: Risk-Based Gate Configurations](https://github.com/had-nu/wardex/wiki).

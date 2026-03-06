@@ -1,0 +1,15 @@
+# PROFILE A: Banco Tier-1 (DORA-regulated) — Payment Gateway
+# Internet-facing, no auth barrier, maximum criticality, zero tolerance
+release_gate:
+  enabled: true
+  risk_appetite: 0.5           # Extremely strict: only negligible risk passes
+  warn_above: 0.3
+  asset_context:
+    internet_facing: true       # Public API
+    requires_auth: false        # Pre-auth attack surface
+    environment: "production"
+    criticality: 1.5            # Critical financial infrastructure
+  compensating_controls: []     # No mitigations claimed
+acceptance_workflow:
+  enabled: true
+  signing_secret_env: "WARDEX_ACCEPT_SECRET"

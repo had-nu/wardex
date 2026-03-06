@@ -1,0 +1,19 @@
+# PROFILE C: Developer Sandbox — Local/CI Environment
+# Not internet-facing, dev environment, low criticality, multiple compensations
+release_gate:
+  enabled: true
+  risk_appetite: 4.0           # Very permissive for dev velocity
+  warn_above: 2.5
+  asset_context:
+    internet_facing: false
+    requires_auth: false
+    environment: "development"  # Triggers 0.3x exposure multiplier
+    criticality: 0.3            # Throwaway environment
+  compensating_controls:
+    - name: "Network Isolation"
+      effectiveness: 0.4
+    - name: "Ephemeral containers"
+      effectiveness: 0.3
+acceptance_workflow:
+  enabled: true
+  signing_secret_env: "WARDEX_ACCEPT_SECRET"

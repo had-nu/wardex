@@ -1,0 +1,17 @@
+# PROFILE B: SaaS Startup — Internal Microservice
+# Behind auth + load balancer, moderate criticality, compensating WAF
+release_gate:
+  enabled: true
+  risk_appetite: 2.0           # Moderate tolerance to ship faster
+  warn_above: 1.0
+  asset_context:
+    internet_facing: false      # Behind internal network
+    requires_auth: true         # Requires service-to-service auth
+    environment: "production"
+    criticality: 0.8            # Non-critical internal service
+  compensating_controls:
+    - name: "WAF + Rate Limiting"
+      effectiveness: 0.3        # 30% risk reduction
+acceptance_workflow:
+  enabled: true
+  signing_secret_env: "WARDEX_ACCEPT_SECRET"

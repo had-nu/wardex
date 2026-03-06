@@ -1,0 +1,17 @@
+# PROFILE D: Hospital IT (HIPAA-regulated) — Patient Records System
+# Internet-facing for patient portal, auth required, maximum criticality, IDS compensation
+release_gate:
+  enabled: true
+  risk_appetite: 0.8           # Strict but slightly more tolerant than banking
+  warn_above: 0.4
+  asset_context:
+    internet_facing: true       # Patient portal is public
+    requires_auth: true         # Requires patient/doctor credentials
+    environment: "production"
+    criticality: 1.3            # Protected health information
+  compensating_controls:
+    - name: "IDS/IPS with behavioral analysis"
+      effectiveness: 0.2        # 20% risk reduction
+acceptance_workflow:
+  enabled: true
+  signing_secret_env: "WARDEX_ACCEPT_SECRET"
