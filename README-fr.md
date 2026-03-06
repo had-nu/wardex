@@ -80,11 +80,10 @@ Wardex vous permet d'intégrer des politiques dans un format YAML ou JSON simple
 
 Cela génère des rapports visuels (en Markdown, CSV ou JSON) exposant l'Analyse de Maturité des 4 domaines mondiaux de la norme ISO 27001 (Personnes, Processus, Technologique et Physique) et exécute des politiques de décision (ALLOW / BLOCK) en fonction du risque étalonné de l'organisation.
 
-## Nouveautés (v1.2.0)
+## Nouveautés (v1.7.0)
 
-- **Simulateur de Risque Interactif (`wardex simulate`)**: Utilisez la commande `simulate` pour générer et ouvrir un tableau de bord web interactif hors ligne qui permet de tester en temps réel comment le CVSS, l'EPSS et les contrôles de compensation affectent le score de risque de votre organisation.
-- **Convertisseur Grype (`wardex convert grype`)**: Convertissez facilement la sortie JSON du scanner de vulnérabilités Grype au format YAML natif de Wardex, idéal pour une intégration immédiate dans les pipelines CI/CD.
-- **Bande de Risque Modéré (`warn_above`)**: Permet d'approuver les versions tout en émettant des avertissements détaillées lorsque le risque dépasse un seuil inférieur sûr mais n'a pas encore enfreint l'appétit pour le risque fatal de l'organisation.
+- **Enrichissement EPSS avec Human-in-the-Loop (HITL)** : Les évaluations échouées en raison de vecteurs EPSS manquants (où Wardex suppose un "fail-close" de 1.0) peuvent désormais être enrichies. La nouvelle commande `wardex enrich epss` extrait des probabilités réelles de l'API FIRST.org et les encapsule sous la forme d'une exception cryptographique autorisée par le pipeline.
+- **Fail-Close Sémantique Strict** : La valeur de repli de `0.05` pour les scores de vulnérabilité inconnus a été révoquée à `0.0`, imposant une friction sécurisée. Sans données concrètes, la vulnérabilité sera invariablement classée avec un risque maximal, déclenchant le pipeline *enrich*.
 
 ## Utilisation en tant que Bibliothèque (SDK)
 

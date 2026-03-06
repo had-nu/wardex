@@ -70,6 +70,11 @@ go build -o wardex .
 
 Please refer to the [CHANGELOG.md](CHANGELOG.md) for detailed release notes and patch information.
 
+## What's New (v1.7.0)
+
+- **Human-in-the-Loop EPSS Enrichment (HITL)**: Failed evaluations due to missing EPSS vectors (where Wardex assumes a "fail-close" 1.0) can now be enriched. The new `wardex enrich epss` command extracts real probabilities from the FIRST.org API and encapsulates them as a pipeline-permitted cryptographic exception.
+- **Strict Semantic Fail-Close**: The `0.05` fallback for unknown vulnerability scores has been revoked to `0.0`, enforcing secure friction. Without concrete data, the vulnerability will invariably be classified with maximum risk, triggering the *enrich* pipeline.
+
 ## Usage
 
 Wardex allows you to ingest policies in a simple YAML or JSON format, cross-reference vulnerabilities (e.g., Grype output) in a target file, and validate the gate:
