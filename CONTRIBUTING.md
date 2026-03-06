@@ -22,12 +22,38 @@ When you open your first Pull Request, the `@cla-assistant` bot will comment wit
 - Include a minimal reproducible example.
 - Describe the expected vs. actual behaviour.
 
-### Submitting Pull Requests
+## Gitflow Strategy (main + dev)
 
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feat/my-feature`
-3. Commit your changes following [Conventional Commits](https://www.conventionalcommits.org/).
-4. Push your branch and open a Pull Request.
+Wardex strictly uses a **Simplified Gitflow** model (`main` + `dev` branches) to maintain project hygiene, historically granulated commits, and high security standards. We do *not* use long-lived `test` or `audit` branches.
+
+### Branch Architecture
+
+1. **`main` (Production / Audit Trail)**
+   - Always pristine, deployable, and cryptographically sound.
+   - Contains only tagged production releases (e.g., `v1.7.0`).
+   - Direct commits are **prohibited**. All code arrives via Pull Requests from `dev`.
+   - Used as the ultimate source of truth for SOC2/ISO 27001 auditors.
+
+2. **`dev` (Integration / Pre-Release)**
+   - The primary working branch.
+   - All feature branches branch off `dev` and merge back into `dev`.
+   - Once `dev` reaches a stable milestone, a Release PR is opened from `dev` into `main`.
+
+3. **Feature Branches (`feat/*`, `fix/*`, `docs/*`, `chore/*`)**
+   - Short-lived, ephemeral branches branched off `dev`.
+   - Deleted immediately after being squashed/merged into `dev`.
+
+### Submission Pipeline (Project Hygiene)
+
+1. Branch off `dev`: `git checkout -b feat/my-feature dev`
+2. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat: implement epss enrichment`).
+3. Run local security and hygiene checks:
+   - `golangci-lint run ./...`
+   - `gosec ./...`
+   - `go test -race ./...`
+4. Push your branch and open a Pull Request targeting the **`dev`** branch (NOT `main`).
+5. GitHub Actions CI will re-run all linting, static analysis, and unit tests. The PR cannot be merged if any check fails or coverage drops.
+6. Once merged, the feature branch must be deleted.
 
 ## Commit Style (Conventional Commits)
 
