@@ -6,7 +6,6 @@ bin/
 *.so
 *.dylib
 wardex
-specs/
 
 # Test artifacts
 *.test
