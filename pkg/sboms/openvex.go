@@ -44,7 +44,7 @@ func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
 	var vulns []model.Vulnerability
 
 	for _, stmt := range vex.Statements {
-		reachable := true
+		var reachable bool
 		if stmt.Status == "not_affected" || stmt.Status == "false_positive" {
 			reachable = false // Suppress in Wardex
 		} else if stmt.Status == "under_investigation" || stmt.Status == "affected" {
