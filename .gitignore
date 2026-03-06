@@ -31,3 +31,13 @@ lazygo.yml.bak
 # OS
 .DS_Store
 Thumbs.db
+
+# Wardex Portal POC (Not in official architecture)
+portal-workspaces/
+cmd/portal/
+
+# Test / Benchmark Data
+test/poc/real-250-enrich.yaml
+test/poc/real-250-vulns.yaml
+stress-enrich.yaml
+stress-vulns.yaml
