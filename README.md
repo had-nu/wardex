@@ -92,29 +92,10 @@ O Wardex permite ingerir as políticas num formato simples YAML ou JSON, cruzar 
 
 Isto gera relatórios visuais (em Markdown, CSV ou JSON) expondo a Análise de Maturidade das 4 áreas globais da ISO 27001 (Pessoas, Processos, Tecnológico e Físico) e executa as políticas de decisão (ALLOW / BLOCK / WARN) consoante o risco calibrado da organização.
 
-## Novidades (v1.5.0)
+## Novidades (v1.7.0)
 
-- **Motor Multi-Framework Nativo (`--framework`)**: O Wardex agora liberta-se da exclusividade ISO 27001! Inspecione os seus security mappings dinamicamente contra `soc2` (Trust Services Criteria), `nis2` (EU Directive 2022/2555), ou `dora` (Digital Operational Resilience Act) carregados dos nossos catálogos nativos.
-- **`CatalogControl` Architecture**: A refatoração total da base de dados do Wardex para suportar o schema abstrato `CatalogControl` garante o processamento genérico de conformidade mantendo a matemática de Risco original intacta.
-
-## Novidades (v1.4.0)
-
-- **SIEM Forwarding Verification (`verify-forwarding`)**: Valida o estado de saúde da local audit trail para ingestão SIEM.
-- **`WARN` Gate Threshold**: Emissão observável e segura (`exit 0`) de tags `[!] WARN` na análise visual quando o risco excede o intervalo `warn_above`.
-- **Snapshots Configuráveis**: O caminho `.wardex_snapshot.json` foi refatorado; pipelines monorepo podem isolar os estados através da flag `--snapshot-file`.
-- **Supressões VEX Nativas**: O parser nativo CycloneDX agora suporta o objeto `analysis`, ignorando automaticamente componentes sinalizados como `false_positive` ou `not_affected`.
-
-## Novidades (v1.3.0)
-
-- **Ingestão Nativa de SBOMs (`wardex convert sbom`)**: O Wardex agora ingere e converte faturamentos de software padrão como CycloneDX JSON e SPDX nativamente, lendo o CVSS e componentes de forma agnóstica para análise de segurança na pipeline sem depender de parsers externos.
-- **Perfis de Controlo de Acesso (RBAC) `--profile`**: Os limites de apetite de risco já não precisam ser hardcoded no ficheiro de configuração raiz. Através dos blocos de `profiles:` globais, é possível executar avaliações baseadas em pipeline invocando uma equipa dinamicamente (`--profile admin`, `--profile frontend`).
-- **Assinaturas e Auditoria Criptográfica HMAC-SHA256**: O subsistema de *Risk Acceptances* agora funciona como um sistema append-only garantido por primitivas criptográficas que defendem contra *tampering*, violações de tempo de expiração e *side-channel attacks*.
-
-## Novidades (v1.2.0)
-
-- **Simulador de Risco Interativo (`wardex simulate`)**: Utilize o comando `simulate` para gerar e abrir um dashboard web interativo offline que permite testar em tempo real como o CVSS, o EPSS, e os controlos de compensação afetam a pontuação de risco da sua organização.
-- **Conversor Grype (`wardex convert grype`)**: Converta facilmente a saída JSON do verificador de vulnerabilidades Grype para o formato YAML nativo do Wardex, ideal para integração imediata em pipelines CI/CD.
-- **Banda de Risco Moderado (`warn_above`)**: Permite aprovar lançamentos mas emitir avisos detalhados quando o risco excede um limite inferior seguro mas ainda não ultrapassa o apetite de risco fatal da organização.
+- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas. O novo comando `wardex enrich epss` extrai probabilidades reais da API FIRST.org e encapsula-as como uma exceção criptográfica permitida pela pipeline.
+- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0` forçando atrito seguro. Sem dados concretos, a vulnerabilidade será invariavelmente classificada com risco máximo, acionando o pipeline *enrich*.
 
 ## Utilização como Biblioteca (SDK)
 
