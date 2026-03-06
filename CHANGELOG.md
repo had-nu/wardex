@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Human-in-the-Loop EPSS API Enrichment**: Added the `wardex enrich epss` command to securely fetch omitted EPSS scores from `api.first.org` and emit a cryptographically sealed HMAC override record. Injecting `--epss-enrichment record.yaml` supersedes the gate's `1.0` fallback, preventing pipeline brittleness without compromising non-repudiation (G-23).
+- **Multi-Context Stress Test Report**: Validated 237 real CVEs with live FIRST.org EPSS data across 4 organizational profiles (Bank/DORA, Hospital/HIPAA, SaaS Startup, Dev Sandbox). Full report at `doc/epss-stress-test-report.md`.
+
+### Changed
+- **BREAKING: `wardex convert grype` default-epss 0.05 → 0.0**: The converter no longer silently assumes a permissive 5% exploitation probability for unknown EPSS scores. Unknown scores are now `0.0`, causing the release gate to assume worst-case (`1.0`) until the analyst explicitly runs `wardex enrich epss`. This enforces Wardex's fail-close philosophy.
 
 ## [1.6.1] - 2026-03-01
 
