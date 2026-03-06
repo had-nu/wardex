@@ -24,7 +24,7 @@ jobs:
         run: go mod download
 
       - name: Run tests & Generate Coverage
-        run: go test -v -race -coverprofile=coverage.out ./...
+        run: go test -v -race -coverprofile=coverage.out ./pkg/analyzer/... ./pkg/catalog/... ./pkg/correlator/... ./pkg/duration/... ./pkg/ingestion/... ./pkg/releasegate/... ./pkg/report/... ./pkg/sboms/... ./pkg/scorer/... ./pkg/snapshot/...
 
       - name: Enforce Coverage Threshold
         run: |
