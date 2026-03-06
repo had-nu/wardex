@@ -31,9 +31,7 @@ func hashPayload(f model.EPSSEnrichmentFile) string {
 	}
 	sort.Strings(enrichs)
 
-	for _, e := range enrichs {
-		parts = append(parts, e)
-	}
+	parts = append(parts, enrichs...)
 
 	return strings.Join(parts, "|")
 }

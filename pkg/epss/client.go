@@ -21,11 +21,11 @@ type FirstAPIResponse struct {
 	Total      int    `json:"total"`
 	Offset     int    `json:"offset"`
 	Limit      int    `json:"limit"`
-	Data       []EPSSData `json:"data"`
+	Data       []Data `json:"data"`
 }
 
-// EPSSData holds the individual CVE score record
-type EPSSData struct {
+// Data holds the individual CVE score record.
+type Data struct {
 	CVE        string `json:"cve"`
 	EPSS       string `json:"epss"` // API returns float as string "0.00412"
 	Percentile string `json:"percentile"`
@@ -50,7 +50,7 @@ func FetchScores(cves []string) (map[string]float64, error) {
 		if end > len(cves) {
 			end = len(cves)
 		}
-		
+
 		chunk := cves[i:end]
 		query := strings.Join(chunk, ",")
 		url := fmt.Sprintf("https://api.first.org/data/v1/epss?cve=%s", query)
@@ -62,23 +62,22 @@ func FetchScores(cves []string) (map[string]float64, error) {
 
 		// User-Agent is good practice for public APIs
 		req.Header.Set("User-Agent", "Wardex/1.7.0 (+https://github.com/had-nu/wardex)")
-		
+
 		resp, err := client.Do(req)
 		if err != nil {
 			return nil, fmt.Errorf("failed executing EPSS request: %w", err)
 		}
-		
+
+		defer resp.Body.Close()
+
 		if resp.StatusCode != http.StatusOK {
-			resp.Body.Close()
 			return nil, fmt.Errorf("first API returned non-200 status: %d", resp.StatusCode)
 		}
 
 		var apiResp FirstAPIResponse
 		if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {
-			resp.Body.Close()
 			return nil, fmt.Errorf("failed decoding EPSS JSON response: %w", err)
 		}
-		resp.Body.Close()
 
 		for _, item := range apiResp.Data {
 			val, err := strconv.ParseFloat(item.EPSS, 64)
@@ -87,7 +86,7 @@ func FetchScores(cves []string) (map[string]float64, error) {
 			}
 			scores[item.CVE] = val
 		}
-		
+
 		// Polite delay between chunks if multiple
 		if end < len(cves) {
 			time.Sleep(500 * time.Millisecond)
