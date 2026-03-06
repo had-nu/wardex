@@ -1,0 +1,334 @@
+:root {
+  --bg-color: #0b0f19;
+  --surface: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-base: #e2e8f0;
+  --text-muted: #94a3b8;
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --neon-glow: rgba(139, 92, 246, 0.4);
+  --success: #10b981;
+  --danger: #ef4444;
+  --warn: #f59e0b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-base);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.glow-bg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--neon-glow) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+  z-index: 10;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.logo-glitch {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -2px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  text-shadow: 0 0 20px var(--primary);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.glass {
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+input[type="url"], select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="url"]:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 1rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 14px 0 var(--neon-glow);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* Terminal Feed */
+.hidden {
+  display: none !important;
+}
+
+.results-panel {
+  margin-top: 2rem;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.terminal {
+  background: #000;
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.terminal-header {
+  background: #1a1b26;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #292e42;
+}
+
+.circles {
+  display: flex;
+  gap: 6px;
+}
+
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.circle.red { background: #ff5f56; }
+.circle.yellow { background: #ffbd2e; }
+.circle.green { background: #27c93f; }
+
+.terminal-title {
+  margin-left: 1rem;
+  color: #7aa2f7;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.terminal-body {
+  padding: 1rem;
+  height: 250px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: #a9b1d6;
+  line-height: 1.6;
+}
+
+.log-line {
+  margin-bottom: 2px;
+}
+
+.log-line.cmd { color: #bb9af7; }
+.log-line.info { color: #7dcfff; }
+.log-line.success { color: #9ece6a; }
+.log-line.warn { color: #e0af68; }
+.log-line.error { color: #f7768e; }
+
+/* Dashboard Metrics */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-card .label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.metric-card .value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.metric-card .value.highlight {
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--neon-glow);
+}
+
+.metric-card .sublabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.cta-box {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+  border: 1px solid var(--primary);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.cta-box h4 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.cta-box p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+/* Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Scrollbar styling for terminal */
+.terminal-body::-webkit-scrollbar {
+  width: 8px;
+}
+.terminal-body::-webkit-scrollbar-track {
+  background: #1a1b26;
+}
+.terminal-body::-webkit-scrollbar-thumb {
+  background: #414868;
+  border-radius: 4px;
+}
+.terminal-body::-webkit-scrollbar-thumb:hover {
+  background: #565f89;
+}

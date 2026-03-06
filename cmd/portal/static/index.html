@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wardex - Risk-Based Release Gate</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    <div class="container">
+        <header>
+            <div class="logo-glitch" data-text="WARDEX">WARDEX</div>
+            <p class="subtitle">See what a contextual release gate looks like on your code.</p>
+        </header>
+
+        <main>
+            <div class="input-card glass">
+                <h2>Scan a public repository</h2>
+                <form id="scan-form">
+                    <div class="input-group">
+                        <label for="repo-url">GitHub Repository URL</label>
+                        <input type="url" id="repo-url" placeholder="https://github.com/had-nu/lazy.go" required autocomplete="off">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="risk-profile">Organization Context</label>
+                        <select id="risk-profile">
+                            <option value="startup">SaaS Startup (Fast Iteration, Medium Risk)</option>
+                            <option value="bank" selected>Fintech / Bank (Regulated, High Risk)</option>
+                            <option value="healthcare">Healthcare (HIPAA, Critical PHI)</option>
+                            <option value="dev">Dev/Sandbox (Lenient)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="btn-scan">
+                        <span class="btn-text">Initialize Scan</span>
+                        <div class="spinner hidden"></div>
+                    </button>
+                    <p class="disclaimer">We will clone the repo, run Grype, and apply your selected risk profile. Maximum depth: 1.</p>
+                </form>
+            </div>
+
+            <div id="results-panel" class="results-panel hidden">
+                <div class="terminal glass">
+                    <div class="terminal-header">
+                        <div class="circles">
+                            <span class="circle red"></span>
+                            <span class="circle yellow"></span>
+                            <span class="circle green"></span>
+                        </div>
+                        <div class="terminal-title">wardex-live-feed</div>
+                    </div>
+                    <div class="terminal-body" id="live-logs">
+                        <!-- SSE logs injected here -->
+                    </div>
+                </div>
+
+                <div class="dashboard hidden" id="insights-dashboard">
+                    <h3>Contextual Insights</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="label">Raw Vulnerabilities</span>
+                            <span class="value" id="val-raw">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="label">Blocked by Wardex</span>
+                            <span class="value highlight" id="val-blocked">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="label">Time Saved</span>
+                            <span class="value" id="val-time">0h</span>
+                            <span class="sublabel">Avoiding false-positive triage</span>
+                        </div>
+                    </div>
+
+                    <div class="cta-box">
+                        <h4>Stop chasing zeroes. Start shipping.</h4>
+                        <p>You have just avoided fixing <span id="val-bypassed">0</span> vulnerabilities that possess zero business risk in your context.</p>
+                        <a href="https://github.com/had-nu/wardex" target="_blank" class="btn-secondary">Install Wardex in your CI/CD</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

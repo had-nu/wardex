@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/cmd/convert"
+	"github.com/had-nu/wardex/cmd/portal"
 	"github.com/had-nu/wardex/cmd/simulate"
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
@@ -81,6 +82,7 @@ func init() {
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
 	rootCmd.AddCommand(convertCmd)
 	rootCmd.AddCommand(simulate.SimulateCmd)
+	rootCmd.AddCommand(portal.PortalCmd)
 	cli.AddCommands(rootCmd, &configPath)
 	enrichCli.AddCommands(rootCmd, &configPath)
 }

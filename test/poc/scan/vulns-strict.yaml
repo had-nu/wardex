@@ -1,0 +1,296 @@
+vulnerabilities:
+    - cve_id: GHSA-3jfq-g458-7qm9
+      cvss_base: 8.2
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-9vvw-cc9w-f27h
+      cvss_base: 7.5
+      epss_score: 0
+      component: debug
+      reachable: true
+    - cve_id: GHSA-qwcr-r2fm-qrc7
+      cvss_base: 8.7
+      epss_score: 0
+      component: body-parser
+      reachable: true
+    - cve_id: GHSA-hrpp-h998-j3pp
+      cvss_base: 7.5
+      epss_score: 0
+      component: qs
+      reachable: true
+    - cve_id: GHSA-fhjf-83wg-r2j9
+      cvss_base: 9.8
+      epss_score: 0
+      component: mixin-deep
+      reachable: true
+    - cve_id: GHSA-cf4h-3jhx-xvhq
+      cvss_base: 9.8
+      epss_score: 0
+      component: underscore
+      reachable: true
+    - cve_id: GHSA-xvch-5gv4-984h
+      cvss_base: 9.8
+      epss_score: 0
+      component: minimist
+      reachable: true
+    - cve_id: GHSA-c9f4-xj24-8jqx
+      cvss_base: 7.5
+      epss_score: 0
+      component: uglify-js
+      reachable: true
+    - cve_id: GHSA-2rq5-699j-x7p6
+      cvss_base: 7.5
+      epss_score: 0
+      component: swig
+      reachable: true
+    - cve_id: GHSA-v8w9-2789-6hhr
+      cvss_base: 9.8
+      epss_score: 0
+      component: bson
+      reachable: true
+    - cve_id: GHSA-4g88-fppr-53pp
+      cvss_base: 9.8
+      epss_score: 0
+      component: set-value
+      reachable: true
+    - cve_id: GHSA-w573-4hg7-7wgq
+      cvss_base: 7.5
+      epss_score: 0
+      component: decode-uri-component
+      reachable: true
+    - cve_id: GHSA-c2qf-rxjj-qqgw
+      cvss_base: 7.5
+      epss_score: 0
+      component: semver
+      reachable: true
+    - cve_id: GHSA-8r6j-v8pm-fqw3
+      cvss_base: 9.8
+      epss_score: 0
+      component: fsevents
+      reachable: true
+    - cve_id: GHSA-rrrm-qjm4-v8hf
+      cvss_base: 7.5
+      epss_score: 0
+      component: marked
+      reachable: true
+    - cve_id: GHSA-5v2h-r2cx-5xgj
+      cvss_base: 7.5
+      epss_score: 0
+      component: marked
+      reachable: true
+    - cve_id: GHSA-6xwr-q98w-rvg7
+      cvss_base: 7.3
+      epss_score: 0
+      component: nconf
+      reachable: true
+    - cve_id: GHSA-c4w7-xm78-47vh
+      cvss_base: 7.3
+      epss_score: 0
+      component: y18n
+      reachable: true
+    - cve_id: GHSA-f8q6-p94x-37v3
+      cvss_base: 7.5
+      epss_score: 0
+      component: minimatch
+      reachable: true
+    - cve_id: GHSA-cm22-4g7w-348p
+      cvss_base: 5
+      epss_score: 0
+      component: serve-static
+      reachable: true
+    - cve_id: GHSA-x5pg-88wf-qq4p
+      cvss_base: 7.5
+      epss_score: 0
+      component: marked
+      reachable: true
+    - cve_id: GHSA-w9mr-4mfr-499f
+      cvss_base: 5.3
+      epss_score: 0
+      component: ms
+      reachable: true
+    - cve_id: GHSA-f5x3-32g6-xq36
+      cvss_base: 6.5
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-5955-9wpr-37jh
+      cvss_base: 8.2
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-qqgx-2p2h-9c37
+      cvss_base: 7.3
+      epss_score: 0
+      component: ini
+      reachable: true
+    - cve_id: GHSA-7px7-7xjx-hxm8
+      cvss_base: 6.1
+      epss_score: 0
+      component: marked
+      reachable: true
+    - cve_id: GHSA-x55w-vjjp-222r
+      cvss_base: 7.5
+      epss_score: 0
+      component: i
+      reachable: true
+    - cve_id: GHSA-4jwp-vfvf-657p
+      cvss_base: 5.4
+      epss_score: 0
+      component: bson
+      reachable: true
+    - cve_id: GHSA-grv7-fg5c-xmjg
+      cvss_base: 7.5
+      epss_score: 0
+      component: braces
+      reachable: true
+    - cve_id: GHSA-p9wx-2529-fp83
+      cvss_base: 6.9
+      epss_score: 0
+      component: marked
+      reachable: true
+    - cve_id: GHSA-vfvf-mqq8-rwqc
+      cvss_base: 6.1
+      epss_score: 0
+      component: marked
+      reachable: true
+    - cve_id: GHSA-6c8f-qphg-qjgp
+      cvss_base: 7.5
+      epss_score: 0
+      component: kind-of
+      reachable: true
+    - cve_id: GHSA-vh95-rmgr-6w4m
+      cvss_base: 5.6
+      epss_score: 0
+      component: minimist
+      reachable: true
+    - cve_id: GHSA-rhx6-c78j-4q9w
+      cvss_base: 7.7
+      epss_score: 0
+      component: path-to-regexp
+      reachable: true
+    - cve_id: GHSA-r628-mhmh-qjhw
+      cvss_base: 8.2
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-6rw7-vpxm-498p
+      cvss_base: 6.3
+      epss_score: 0
+      component: qs
+      reachable: true
+    - cve_id: GHSA-9r2w-394v-53qc
+      cvss_base: 8.2
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-qq89-hq3f-393p
+      cvss_base: 8.2
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-952p-6rrq-rcjv
+      cvss_base: 5.3
+      epss_score: 0
+      component: micromatch
+      reachable: true
+    - cve_id: GHSA-rv95-896h-c2vc
+      cvss_base: 6.1
+      epss_score: 0
+      component: express
+      reachable: true
+    - cve_id: GHSA-pxg6-pf52-xh8x
+      cvss_base: 3
+      epss_score: 0
+      component: cookie
+      reachable: true
+    - cve_id: GHSA-m6fv-jmcg-4jfg
+      cvss_base: 5
+      epss_score: 0
+      component: send
+      reachable: true
+    - cve_id: GHSA-4jqc-8m5r-9rpr
+      cvss_base: 7.3
+      epss_score: 0
+      component: set-value
+      reachable: true
+    - cve_id: GHSA-9wv6-86v2-598j
+      cvss_base: 7.7
+      epss_score: 0
+      component: path-to-regexp
+      reachable: true
+    - cve_id: GHSA-3ppc-4f35-3m26
+      cvss_base: 8.7
+      epss_score: 0
+      component: minimatch
+      reachable: true
+    - cve_id: GHSA-7r86-cg39-jmmj
+      cvss_base: 7.5
+      epss_score: 0
+      component: minimatch
+      reachable: true
+    - cve_id: GHSA-qw6h-vgh9-j6wx
+      cvss_base: 5
+      epss_score: 0
+      component: express
+      reachable: true
+    - cve_id: GHSA-23c5-xmqv-rm74
+      cvss_base: 7.5
+      epss_score: 0
+      component: minimatch
+      reachable: true
+    - cve_id: GHSA-gxpj-cx7g-858c
+      cvss_base: 3.7
+      epss_score: 0
+      component: debug
+      reachable: true
+    - cve_id: GHSA-qpx9-hpmf-5gmw
+      cvss_base: 8.2
+      epss_score: 0
+      component: underscore
+      reachable: true
+    - cve_id: GHSA-34x7-hfp2-rc4v
+      cvss_base: 8.2
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-83g3-92jg-28cx
+      cvss_base: 7.1
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-v6h2-p8h4-qcjw
+      cvss_base: 3.1
+      epss_score: 0
+      component: brace-expansion
+      reachable: true
+    - cve_id: GHSA-r6q2-hw4h-h46w
+      cvss_base: 8.8
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-8qq5-rm4j-mr97
+      cvss_base: 8.2
+      epss_score: 0
+      component: tar
+      reachable: true
+    - cve_id: GHSA-76c9-3jph-rj3q
+      cvss_base: 3.4
+      epss_score: 0
+      component: on-headers
+      reachable: true
+    - cve_id: GHSA-xv2f-5jw4-v95m
+      cvss_base: 9.5
+      epss_score: 0
+      component: fsevents
+      reachable: true
+    - cve_id: GHSA-mh5c-679w-hh4r
+      cvss_base: 7.5
+      epss_score: 0
+      component: mongodb
+      reachable: true
+    - cve_id: GHSA-c3m8-x3cg-qm2c
+      cvss_base: 6.5
+      epss_score: 0
+      component: helmet-csp
+      reachable: true

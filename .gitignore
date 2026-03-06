@@ -31,3 +31,5 @@ lazygo.yml.bak
 # OS
 .DS_Store
 Thumbs.db
+\n# Wardex Portal Isolated Workspaces\nportal-workspaces/\n
+test/poc/scan/NodeGoat/

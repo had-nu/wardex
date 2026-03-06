@@ -1,0 +1,1501 @@
+vulnerabilities:
+  - cve_id: "CVE-2019-00013"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00026"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00039"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00052"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00065"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00078"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00091"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00104"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00117"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00130"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00143"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00156"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00169"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00182"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00195"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00208"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00221"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00234"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00247"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00260"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00273"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00286"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00299"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00312"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00325"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00338"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00351"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00364"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00377"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00390"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00403"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00416"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00429"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00442"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00455"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00468"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00481"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00494"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00507"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00520"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00533"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00546"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00559"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00572"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00585"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00598"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00611"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00624"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00637"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00650"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00663"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00676"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00689"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00702"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00715"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00728"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00741"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00754"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00767"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00780"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00793"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00806"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00819"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00832"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00845"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00858"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00871"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00884"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00897"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00910"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-00923"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-00936"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-00949"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-00962"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-00975"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-00988"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01001"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01014"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01027"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01040"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01053"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01066"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01079"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01092"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01105"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01118"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01131"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01144"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01157"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01170"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01183"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01196"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01209"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01222"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01235"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01248"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01261"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01274"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01287"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01300"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01313"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01326"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01339"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01352"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01365"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01378"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01391"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01404"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01417"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01430"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01443"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01456"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01469"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01482"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01495"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01508"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01521"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01534"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01547"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01560"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01573"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01586"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01599"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01612"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01625"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01638"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01651"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01664"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01677"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01690"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01703"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01716"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01729"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01742"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01755"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01768"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01781"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01794"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01807"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01820"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01833"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01846"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01859"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01872"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01885"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01898"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01911"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-01924"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-01937"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-01950"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-01963"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-01976"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-01989"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02002"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02015"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02028"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02041"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02054"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02067"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02080"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02093"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02106"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02119"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02132"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02145"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02158"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02171"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02184"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02197"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02210"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02223"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02236"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02249"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02262"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02275"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02288"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02301"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02314"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02327"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02340"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02353"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02366"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02379"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02392"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02405"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02418"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02431"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02444"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02457"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02470"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02483"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02496"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02509"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02522"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02535"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02548"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02561"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02574"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02587"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02600"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02613"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02626"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02639"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02652"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02665"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02678"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02691"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02704"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02717"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02730"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02743"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02756"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02769"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02782"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02795"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02808"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02821"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02834"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02847"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02860"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02873"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02886"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02899"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02912"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-02925"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-02938"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-02951"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-02964"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-02977"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-02990"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-03003"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-03016"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-03029"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-03042"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-03055"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-03068"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-03081"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-03094"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-03107"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-03120"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-03133"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-03146"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-03159"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-03172"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2023-03185"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2018-03198"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2019-03211"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2020-03224"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2021-03237"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"
+  - cve_id: "CVE-2022-03250"
+    severity: "CRITICAL"
+    cvss_base: 9.8
+    epss_score: 0.0
+    products:
+      - "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.0"

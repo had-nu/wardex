@@ -1,0 +1,477 @@
+enrichments:
+    - cve: CVE-2022-41723
+      score: 0.00195
+    - cve: CVE-2019-6977
+      score: 0.87335
+    - cve: CVE-2022-41082
+      score: 0.91694
+    - cve: CVE-2023-47246
+      score: 0.94345
+    - cve: CVE-2016-6309
+      score: 0.45071
+    - cve: CVE-2023-22518
+      score: 0.94375
+    - cve: CVE-2023-20887
+      score: 0.94393
+    - cve: CVE-2022-3786
+      score: 0.18363
+    - cve: CVE-2022-0778
+      score: 0.07394
+    - cve: CVE-2023-38546
+      score: 0.00256
+    - cve: CVE-2022-22963
+      score: 0.94462
+    - cve: CVE-2020-25695
+      score: 0.24511
+    - cve: CVE-2020-10199
+      score: 0.94379
+    - cve: CVE-2021-26855
+      score: 0.94318
+    - cve: CVE-2018-11776
+      score: 0.94431
+    - cve: CVE-2019-19781
+      score: 0.94442
+    - cve: CVE-2021-21985
+      score: 0.94412
+    - cve: CVE-2021-44906
+      score: 0.00813
+    - cve: CVE-2017-0144
+      score: 0.94318
+    - cve: CVE-2014-6271
+      score: 0.9422
+    - cve: CVE-2016-10033
+      score: 0.9447
+    - cve: CVE-2023-46805
+      score: 0.94367
+    - cve: CVE-2022-2588
+      score: 0.59895
+    - cve: CVE-2022-0536
+      score: 0.00091
+    - cve: CVE-2021-22205
+      score: 0.94467
+    - cve: CVE-2024-20353
+      score: 0.19536
+    - cve: CVE-2023-40044
+      score: 0.94449
+    - cve: CVE-2023-36845
+      score: 0.94355
+    - cve: CVE-2020-12812
+      score: 0.47037
+    - cve: CVE-2022-0543
+      score: 0.94398
+    - cve: CVE-2023-42793
+      score: 0.92913
+    - cve: CVE-2018-16864
+      score: 0.00146
+    - cve: CVE-2022-36804
+      score: 0.94429
+    - cve: CVE-2021-36260
+      score: 0.94436
+    - cve: CVE-2023-2640
+      score: 0.91742
+    - cve: CVE-2020-7774
+      score: 0.00469
+    - cve: CVE-2019-13720
+      score: 0.88226
+    - cve: CVE-2021-22893
+      score: 0.93607
+    - cve: CVE-2018-18074
+      score: 0.00174
+    - cve: CVE-2022-26809
+      score: 0.92562
+    - cve: CVE-2021-33766
+      score: 0.93483
+    - cve: CVE-2021-22986
+      score: 0.94485
+    - cve: CVE-2023-25157
+      score: 0.94
+    - cve: CVE-2022-47966
+      score: 0.94378
+    - cve: CVE-2019-18935
+      score: 0.93657
+    - cve: CVE-2023-23397
+      score: 0.93658
+    - cve: CVE-2024-23897
+      score: 0.94466
+    - cve: CVE-2021-20090
+      score: 0.94401
+    - cve: CVE-2023-35078
+      score: 0.94468
+    - cve: CVE-2023-25690
+      score: 0.67037
+    - cve: CVE-2018-3721
+      score: 0.00252
+    - cve: CVE-2017-5753
+      score: 0.94332
+    - cve: CVE-2021-22555
+      score: 0.85239
+    - cve: CVE-2020-1350
+      score: 0.93808
+    - cve: CVE-2021-38647
+      score: 0.94392
+    - cve: CVE-2024-3400
+      score: 0.94297
+    - cve: CVE-2022-23648
+      score: 0.08719
+    - cve: CVE-2023-34035
+      score: 0.02176
+    - cve: CVE-2023-20198
+      score: 0.94013
+    - cve: CVE-2021-27852
+      score: 0.25548
+    - cve: CVE-2023-35001
+      score: 0.00207
+    - cve: CVE-2023-32629
+      score: 0.63342
+    - cve: CVE-2021-44228
+      score: 0.94358
+    - cve: CVE-2023-2953
+      score: 0.01466
+    - cve: CVE-2021-35211
+      score: 0.94321
+    - cve: CVE-2023-49103
+      score: 0.94329
+    - cve: CVE-2023-28252
+      score: 0.56501
+    - cve: CVE-2021-39144
+      score: 0.9438
+    - cve: CVE-2021-3711
+      score: 0.02352
+    - cve: CVE-2021-3156
+      score: 0.92309
+    - cve: CVE-2024-21762
+      score: 0.92938
+    - cve: CVE-2019-0211
+      score: 0.89451
+    - cve: CVE-2022-22947
+      score: 0.94461
+    - cve: CVE-2022-40684
+      score: 0.94427
+    - cve: CVE-2023-46218
+      score: 0.00432
+    - cve: CVE-2023-28321
+      score: 0.00297
+    - cve: CVE-2023-20873
+      score: 0.00402
+    - cve: CVE-2022-29526
+      score: 0.00182
+    - cve: CVE-2024-0519
+      score: 0.00448
+    - cve: CVE-2023-52425
+      score: 0.01552
+    - cve: CVE-2019-14287
+      score: 0.85814
+    - cve: CVE-2024-1709
+      score: 0.94322
+    - cve: CVE-2022-0847
+      score: 0.82676
+    - cve: CVE-2023-0669
+      score: 0.94378
+    - cve: CVE-2022-3236
+      score: 0.92884
+    - cve: CVE-2021-23337
+      score: 0.00741
+    - cve: CVE-2020-28469
+      score: 0.00913
+    - cve: CVE-2015-4852
+      score: 0.92721
+    - cve: CVE-2022-25636
+      score: 0.00396
+    - cve: CVE-2021-26858
+      score: 0.53277
+    - cve: CVE-2022-1388
+      score: 0.94456
+    - cve: CVE-2024-4577
+      score: 0.94374
+    - cve: CVE-2014-0160
+      score: 0.94464
+    - cve: CVE-2023-46604
+      score: 0.94436
+    - cve: CVE-2022-0235
+      score: 0.00647
+    - cve: CVE-2023-26136
+      score: 0.06872
+    - cve: CVE-2022-2294
+      score: 0.01165
+    - cve: CVE-2022-29464
+      score: 0.94434
+    - cve: CVE-2022-27518
+      score: 0.22959
+    - cve: CVE-2017-5638
+      score: 0.94267
+    - cve: CVE-2020-1938
+      score: 0.94469
+    - cve: CVE-2021-44832
+      score: 0.53591
+    - cve: CVE-2024-2961
+      score: 0.92772
+    - cve: CVE-2019-11043
+      score: 0.94053
+    - cve: CVE-2022-1096
+      score: 0.47349
+    - cve: CVE-2022-26138
+      score: 0.94319
+    - cve: CVE-2022-25883
+      score: 0.00598
+    - cve: CVE-2016-2107
+      score: 0.82719
+    - cve: CVE-2022-23806
+      score: 0.00024
+    - cve: CVE-2022-41040
+      score: 0.9419
+    - cve: CVE-2023-27350
+      score: 0.94257
+    - cve: CVE-2024-3094
+      score: 0.85567
+    - cve: CVE-2022-3602
+      score: 0.81961
+    - cve: CVE-2019-12900
+      score: 0.01132
+    - cve: CVE-2021-3449
+      score: 0.09576
+    - cve: CVE-2021-3177
+      score: 0.00072
+    - cve: CVE-2023-2825
+      score: 0.9266
+    - cve: CVE-2021-21224
+      score: 0.56027
+    - cve: CVE-2021-21148
+      score: 0.24871
+    - cve: CVE-2022-37042
+      score: 0.94333
+    - cve: CVE-2021-32761
+      score: 0.00633
+    - cve: CVE-2023-21839
+      score: 0.9408
+    - cve: CVE-2020-8617
+      score: 0.89736
+    - cve: CVE-2020-14882
+      score: 0.94454
+    - cve: CVE-2023-32681
+      score: 0.06278
+    - cve: CVE-2021-1675
+      score: 0.94314
+    - cve: CVE-2023-34362
+      score: 0.94254
+    - cve: CVE-2022-21449
+      score: 0.34898
+    - cve: CVE-2020-1971
+      score: 0.00329
+    - cve: CVE-2024-24790
+      score: 0.00082
+    - cve: CVE-2023-5217
+      score: 0.03522
+    - cve: CVE-2021-30551
+      score: 0.77157
+    - cve: CVE-2020-10148
+      score: 0.94304
+    - cve: CVE-2021-35394
+      score: 0.93591
+    - cve: CVE-2021-41773
+      score: 0.94391
+    - cve: CVE-2022-40897
+      score: 0.00515
+    - cve: CVE-2019-5736
+      score: 0.55296
+    - cve: CVE-2019-3462
+      score: 0.06994
+    - cve: CVE-2021-45105
+      score: 0.70431
+    - cve: CVE-2020-9484
+      score: 0.93325
+    - cve: CVE-2021-26084
+      score: 0.9444
+    - cve: CVE-2022-22965
+      score: 0.94428
+    - cve: CVE-2019-17571
+      score: 0.42483
+    - cve: CVE-2021-37973
+      score: 0.12635
+    - cve: CVE-2022-26134
+      score: 0.94408
+    - cve: CVE-2021-34473
+      score: 0.9423
+    - cve: CVE-2023-44207
+      score: 0.0021
+    - cve: CVE-2024-35195
+      score: 0.00046
+    - cve: CVE-2022-30190
+      score: 0.93533
+    - cve: CVE-2016-5195
+      score: 0.94176
+    - cve: CVE-2024-29180
+      score: 0.02533
+    - cve: CVE-2024-0567
+      score: 0.01605
+    - cve: CVE-2022-46169
+      score: 0.94469
+    - cve: CVE-2023-29357
+      score: 0.94356
+    - cve: CVE-2020-6096
+      score: 0.01904
+    - cve: CVE-2020-25213
+      score: 0.94401
+    - cve: CVE-2023-44487
+      score: 0.94399
+    - cve: CVE-2024-21626
+      score: 0.05858
+    - cve: CVE-2023-36884
+      score: 0.9322
+    - cve: CVE-2024-21887
+      score: 0.94412
+    - cve: CVE-2023-22515
+      score: 0.94326
+    - cve: CVE-2022-34918
+      score: 0.3544
+    - cve: CVE-2022-0155
+      score: 0.01302
+    - cve: CVE-2024-24786
+      score: 0.00231
+    - cve: CVE-2023-24532
+      score: 0.00026
+    - cve: CVE-2023-4863
+      score: 0.94117
+    - cve: CVE-2021-25741
+      score: 0.33042
+    - cve: CVE-2023-42115
+      score: 0.72904
+    - cve: CVE-2023-22952
+      score: 0.92822
+    - cve: CVE-2020-7961
+      score: 0.94352
+    - cve: CVE-2023-0386
+      score: 0.59696
+    - cve: CVE-2023-43804
+      score: 0.00867
+    - cve: CVE-2018-1000120
+      score: 0.01886
+    - cve: CVE-2021-40539
+      score: 0.94424
+    - cve: CVE-2024-0204
+      score: 0.93048
+    - cve: CVE-2022-24999
+      score: 0.01543
+    - cve: CVE-2023-38545
+      score: 0.2625
+    - cve: CVE-2022-24769
+      score: 0.00086
+    - cve: CVE-2022-0185
+      score: 0.01733
+    - cve: CVE-2023-27997
+      score: 0.89257
+    - cve: CVE-2018-13379
+      score: 0.94475
+    - cve: CVE-2019-11477
+      score: 0.74552
+    - cve: CVE-2023-26115
+      score: 0.00028
+    - cve: CVE-2023-45853
+      score: 0.01396
+    - cve: CVE-2021-40444
+      score: 0.94332
+    - cve: CVE-2023-3519
+      score: 0.93477
+    - cve: CVE-2022-1040
+      score: 0.94439
+    - cve: CVE-2024-27198
+      score: 0.94579
+    - cve: CVE-2021-34527
+      score: 0.94274
+    - cve: CVE-2023-45288
+      score: 0.71463
+    - cve: CVE-2023-39325
+      score: 0.0015
+    - cve: CVE-2023-36665
+      score: 0.01673
+    - cve: CVE-2022-33987
+      score: 0.00807
+    - cve: CVE-2017-12617
+      score: 0.94356
+    - cve: CVE-2023-39417
+      score: 0.00606
+    - cve: CVE-2020-14812
+      score: 0.01394
+    - cve: CVE-2024-1212
+      score: 0.94326
+    - cve: CVE-2017-1000353
+      score: 0.94508
+    - cve: CVE-2021-42013
+      score: 0.9441
+    - cve: CVE-2020-1472
+      score: 0.9438
+    - cve: CVE-2020-5902
+      score: 0.94426
+    - cve: CVE-2023-44270
+      score: 0.00176
+    - cve: CVE-2023-6345
+      score: 0.00611
+    - cve: CVE-2020-17530
+      score: 0.94376
+    - cve: CVE-2021-34523
+      score: 0.93998
+    - cve: CVE-2019-0708
+      score: 0.94454
+    - cve: CVE-2023-45283
+      score: 0.00097
+    - cve: CVE-2023-3079
+      score: 0.0156
+    - cve: CVE-2023-29499
+      score: 0.0012
+    - cve: CVE-2019-11510
+      score: 0.94462
+    - cve: CVE-2023-21980
+      score: 0.00375
+    - cve: CVE-2021-28363
+      score: 0.00107
+    - cve: CVE-2017-11882
+      score: 0.94384
+    - cve: CVE-2021-27065
+      score: 0.94282
+    - cve: CVE-2018-1002105
+      score: 0.90698
+    - cve: CVE-2021-45046
+      score: 0.9434
+    - cve: CVE-2020-7068
+      score: 0.00799
+    - cve: CVE-2015-7547
+      score: 0.93822
+    - cve: CVE-2023-28771
+      score: 0.94346
+    - cve: CVE-2020-11651
+      score: 0.94421
+    - cve: CVE-2022-42889
+      score: 0.94251
+    - cve: CVE-2019-10744
+      score: 0.02441
+    - cve: CVE-2020-15257
+      score: 0.11997
+    - cve: CVE-2021-4034
+      score: 0.87261
+    - cve: CVE-2023-36824
+      score: 0.90842
+    - cve: CVE-2022-1162
+      score: 0.88796
+    - cve: CVE-2022-0811
+      score: 0.24152
+    - cve: CVE-2022-42475
+      score: 0.93984
+    - cve: CVE-2017-5715
+      score: 0.89521
+    - cve: CVE-2021-2180
+      score: 0.04512
+    - cve: CVE-2023-4966
+      score: 0.94348
+    - cve: CVE-2020-0688
+      score: 0.94396
+    - cve: CVE-2018-3639
+      score: 0.36612
+    - cve: CVE-2018-1000861
+      score: 0.94467
+    - cve: CVE-2023-2033
+      score: 0.24276
+    - cve: CVE-2020-0601
+      score: 0.94093
+    - cve: CVE-2022-0609
+      score: 0.39522
+signature: sha256:33e52876191f7f5de0f9566148a7b9d2d55f0dd1079b5ba4b29b85e0c98de2f6
+generated_at: "2026-03-06T00:15:26Z"
