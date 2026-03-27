@@ -295,17 +295,17 @@ var cves = []struct {
 
 func main() {
 	f, _ := os.Create("test/poc/real-250-vulns.yaml")
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
-	fmt.Fprintln(f, "vulnerabilities:")
+	_, _ = fmt.Fprintf(f, "vulnerabilities:\n")
 	for _, cve := range cves {
-		fmt.Fprintf(f, "  - cve_id: \"%s\"\n", cve.ID)
-		fmt.Fprintf(f, "    severity: \"CRITICAL\"\n")
-		fmt.Fprintf(f, "    cvss_base: %.1f\n", cve.CVSS)
-		fmt.Fprintf(f, "    epss_score: 0.0\n") // ALL missing — gate assumes worst case
-		fmt.Fprintf(f, "    products:\n")
-		fmt.Fprintf(f, "      - \"%s\"\n", cve.Products)
-		fmt.Fprintf(f, "    reachable: true\n")
+		_, _ = fmt.Fprintf(f, "  - cve_id: \"%s\"\n", cve.ID)
+		_, _ = fmt.Fprintf(f, "    severity: \"CRITICAL\"\n")
+		_, _ = fmt.Fprintf(f, "    cvss_base: %.1f\n", cve.CVSS)
+		_, _ = fmt.Fprintf(f, "    epss_score: 0.0\n") // ALL missing — gate assumes worst case
+		_, _ = fmt.Fprintf(f, "    products:\n")
+		_, _ = fmt.Fprintf(f, "      - \"%s\"\n", cve.Products)
+		_, _ = fmt.Fprintf(f, "    reachable: true\n")
 	}
 	fmt.Printf("Generated %d real CVEs into test/poc/real-250-vulns.yaml\n", len(cves))
 }

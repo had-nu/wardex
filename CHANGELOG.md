@@ -4,7 +4,18 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.0] - Unreleased
+## [1.7.1] - Unreleased
+
+### Added
+- **Security Hardening (TeamPCP Response)**: 
+  - Implementation of immutable GitHub Actions pinning via SHA256.
+  - Strict `permissions: read-all` enforcement for `pull_request_target` workflows.
+  - Subresource Integrity (SRI) for all simulation dashboard CDN dependencies.
+  - Enhanced cryptographic provenance and range validation for EPSS enrichment data.
+  - Introduction of `signature_version` in acceptance schemas for safe key rotation.
+  - Integrated `cosign` and artifacts signing in `.goreleaser.yaml`.
+
+## [1.7.0] - 2026-03-27
 
 ### Added
 - **Human-in-the-Loop EPSS API Enrichment**: Added the `wardex enrich epss` command to securely fetch omitted EPSS scores from `api.first.org` and emit a cryptographically sealed HMAC override record. Injecting `--epss-enrichment record.yaml` supersedes the gate's `1.0` fallback, preventing pipeline brittleness without compromising non-repudiation (G-23).
@@ -12,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **BREAKING: `wardex convert grype` default-epss 0.05 → 0.0**: The converter no longer silently assumes a permissive 5% exploitation probability for unknown EPSS scores. Unknown scores are now `0.0`, causing the release gate to assume worst-case (`1.0`) until the analyst explicitly runs `wardex enrich epss`. This enforces Wardex's fail-close philosophy.
+
 
 ## [1.6.1] - 2026-03-01
 

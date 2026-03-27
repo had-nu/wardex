@@ -12,6 +12,7 @@ import (
 	"github.com/had-nu/wardex/pkg/accept/signer"
 	"github.com/had-nu/wardex/pkg/epss"
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -45,7 +46,17 @@ var epssCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		vdata, err := os.ReadFile(inFile)
+		cwd, err := os.Getwd()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to get current working directory: %v\n", err)
+			os.Exit(1)
+		}
+		safePathStr, err := utils.SafePath(cwd, inFile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Invalid input file path: %v\n", err)
+			os.Exit(1)
+		}
+		vdata, err := os.ReadFile(safePathStr) // #nosec G304
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to read vulnerability file: %v\n", err)
 			os.Exit(1)
@@ -76,7 +87,7 @@ var epssCmd = &cobra.Command{
 
 		fmt.Printf("[INFO] Fetching EPSS scores for %d vulnerabilities from api.first.org...\n", len(cvesToFetch))
 
-		scores, err := epss.FetchScores(cvesToFetch)
+		scores, provenance, err := epss.FetchScores(cvesToFetch)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "[FAIL] First.org API query failed: %v\n", err)
 			os.Exit(1)
@@ -94,6 +105,7 @@ var epssCmd = &cobra.Command{
 
 		outFormat := model.EPSSEnrichmentFile{
 			Enrichments: enrichments,
+			Provenance:  provenance,
 			GeneratedAt: time.Now().UTC().Format(time.RFC3339),
 		}
 

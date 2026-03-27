@@ -12,11 +12,17 @@ import (
 
 	"github.com/had-nu/wardex/pkg/accept/audit"
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 // Hash calculates the SHA256 of the configuration file.
 func Hash(configPath string) (string, error) {
-	data, err := os.ReadFile(configPath)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, configPath)
+	if err != nil {
+		return "", err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		if os.IsNotExist(err) {
 			return "", nil // Sem config file, hash vazio

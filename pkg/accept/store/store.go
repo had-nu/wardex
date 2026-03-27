@@ -13,6 +13,7 @@ import (
 	"github.com/had-nu/wardex/pkg/accept/signer"
 	"github.com/had-nu/wardex/pkg/accept/verifier"
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -21,7 +22,12 @@ var ErrStoreInconsistent = errors.New("store inconsistency: yaml entries < audit
 
 // Load reads wardex-acceptances.yaml and sequentially executes verify logic.
 func Load(path string, key []byte, auditPath string, currentReportHash string, currentConfigHash string) ([]model.Acceptance, error) {
-	data, err := os.ReadFile(path)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, path)
+	if err != nil {
+		return nil, err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil, nil // First time
@@ -65,13 +71,18 @@ func Load(path string, key []byte, auditPath string, currentReportHash string, c
 
 // Append atomagically writes a new Acceptance to the store
 func Append(path string, a model.Acceptance) error {
-	dir := filepath.Dir(path)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, path)
+	if err != nil {
+		return err
+	}
+	dir := filepath.Dir(safePathStr)
 	if err := os.MkdirAll(dir, 0750); err != nil {
 		return err
 	}
 
 	// Read existing
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	var store model.AcceptanceStore
 	if err == nil {
 		if err := yaml.Unmarshal(data, &store); err != nil {
@@ -95,7 +106,12 @@ func Append(path string, a model.Acceptance) error {
 
 // UpdateStatus actualiza status e RevocationRecord. Regenera assinatura.
 func UpdateStatus(path string, id string, status string, revocation *model.RevocationRecord, key []byte) error {
-	data, err := os.ReadFile(path)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, path)
+	if err != nil {
+		return err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		return err
 	}
