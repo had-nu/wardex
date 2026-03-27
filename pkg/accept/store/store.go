@@ -8,12 +8,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/had-nu/wardex/pkg/accept/audit"
 	"github.com/had-nu/wardex/pkg/accept/signer"
 	"github.com/had-nu/wardex/pkg/accept/verifier"
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -23,11 +23,11 @@ var ErrStoreInconsistent = errors.New("store inconsistency: yaml entries < audit
 // Load reads wardex-acceptances.yaml and sequentially executes verify logic.
 func Load(path string, key []byte, auditPath string, currentReportHash string, currentConfigHash string) ([]model.Acceptance, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := safePath(cwd, path)
+	safePathStr, err := utils.SafePath(cwd, path)
 	if err != nil {
 		return nil, err
 	}
-	data, err := os.ReadFile(safePathStr)
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil, nil // First time
@@ -72,7 +72,7 @@ func Load(path string, key []byte, auditPath string, currentReportHash string, c
 // Append atomagically writes a new Acceptance to the store
 func Append(path string, a model.Acceptance) error {
 	cwd, _ := os.Getwd()
-	safePathStr, err := safePath(cwd, path)
+	safePathStr, err := utils.SafePath(cwd, path)
 	if err != nil {
 		return err
 	}
@@ -82,7 +82,7 @@ func Append(path string, a model.Acceptance) error {
 	}
 
 	// Read existing
-	data, err := os.ReadFile(safePathStr)
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	var store model.AcceptanceStore
 	if err == nil {
 		if err := yaml.Unmarshal(data, &store); err != nil {
@@ -107,11 +107,11 @@ func Append(path string, a model.Acceptance) error {
 // UpdateStatus actualiza status e RevocationRecord. Regenera assinatura.
 func UpdateStatus(path string, id string, status string, revocation *model.RevocationRecord, key []byte) error {
 	cwd, _ := os.Getwd()
-	safePathStr, err := safePath(cwd, path)
+	safePathStr, err := utils.SafePath(cwd, path)
 	if err != nil {
 		return err
 	}
-	data, err := os.ReadFile(safePathStr)
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		return err
 	}
@@ -161,20 +161,4 @@ func UpdateStatus(path string, id string, status string, revocation *model.Revoc
 	}
 
 	return os.Rename(tempFile, path)
-}
-
-// safePath prevents path traversal outside the base directory.
-func safePath(base, input string) (string, error) {
-	absBase, err := filepath.Abs(base)
-	if err != nil {
-		return "", err
-	}
-	absInput, err := filepath.Abs(input)
-	if err != nil {
-		return "", err
-	}
-	if !strings.HasPrefix(absInput, absBase+string(filepath.Separator)) && absInput != absBase {
-		return "", fmt.Errorf("path %q escapes base dir", input)
-	}
-	return absInput, nil
 }

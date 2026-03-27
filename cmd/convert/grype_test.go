@@ -44,7 +44,7 @@ func TestConvertGrype(t *testing.T) {
 
 	runConvertGrype(nil, []string{inFile})
 
-	outData, err := os.ReadFile(outFile)
+	outData, err := os.ReadFile(outFile) // #nosec G304
 	if err != nil {
 		t.Fatalf("Expected output YAML, got error: %v", err)
 	}

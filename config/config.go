@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -74,15 +75,20 @@ type Config struct {
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
 func Load(path string) (*Config, error) {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		// Return defaults
-		return &Config{
-			ReleaseGate: ReleaseGate{Mode: "any", RiskAppetite: 10.0},
-		}, nil
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, path)
+	if err != nil {
+		return nil, err
 	}
 
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
+		if os.IsNotExist(err) {
+			// Return defaults
+			return &Config{
+				ReleaseGate: ReleaseGate{Mode: "any", RiskAppetite: 10.0},
+			}, nil
+		}
 		return nil, fmt.Errorf("reading config file: %w", err)
 	}
 

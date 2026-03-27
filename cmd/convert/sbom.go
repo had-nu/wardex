@@ -11,6 +11,7 @@ import (
 
 	"github.com/had-nu/wardex/pkg/model"
 	"github.com/had-nu/wardex/pkg/sboms"
+	"github.com/had-nu/wardex/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -31,7 +32,12 @@ func init() {
 // peekSbomFormat attempts a naive peek into the JSON structure to determine
 // if it's CycloneDX or SPDX before invoking the dedicated parsers.
 func peekSbomFormat(filepath string) (string, error) {
-	data, err := os.ReadFile(filepath)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, filepath)
+	if err != nil {
+		return "", err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		return "", err
 	}
