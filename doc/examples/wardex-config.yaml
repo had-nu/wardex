@@ -1,0 +1,20 @@
+# Wardex Configuration Example for CI/CD
+# Best practices for v1.7.1+
+
+# Global Thresholds
+thresholds:
+  critical_vulnerabilities: 0
+  high_vulnerabilities: 2
+  
+# Output Settings
+output:
+  format: "markdown"
+  file: "wardex-report.md"
+  roadmap_limit: 15
+
+# Security Settings
+security:
+  # Enforce cryptographic trust for actors in CI
+  enforce_actor_trust: true
+  # Fallback risk for unknown vectors (Safe-path)
+  fail_close_default: 1.0

@@ -2,9 +2,10 @@
   <h1>Wardex</h1>
   <p><b>Análisis de Brechas, Puerta de Liberación Basada en Riesgos e Impacto de Negocio — Herramienta CLI y Motor en Go</b></p>
 
-  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
-  ![Go](https://img.shields.io/badge/Made_with-Go-00ADD8?style=flat-square&logo=go&logoColor=white)
+  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
+  ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
   [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
+  ![Security Hardened](https://img.shields.io/badge/Security-TeamPCP_Hardened-success?style=flat-square&logo=github-actions&logoColor=white)
   ![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
   [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
@@ -40,7 +41,7 @@ Wardex proporciona mapeo nativo para los siguientes estándares de cumplimiento 
 
 ## Compilación e Instalación
 
-Asegúrese de tener instalado [Go (>= 1.21)](https://go.dev/doc/install).
+Asegúrese de tener instalado [Go (>= 1.26)](https://go.dev/doc/install).
 
 ### Opción 1: Instalación Global (Recomendado)
 Puede instalar Wardex directamente en su sistema, lo que le permite ejecutar el comando `wardex` en cualquier lugar:
@@ -68,7 +69,7 @@ go install github.com/had-nu/wardex@latest
 
 # Para builds locales (ej: elegir una etiqueta específica)
 git fetch --tags
-git checkout v1.1.1
+git checkout v1.7.1
 go build -o wardex .
 ```
 
@@ -83,6 +84,40 @@ Wardex le permite integrar políticas en un formato YAML o JSON simple, cruzar v
 ```
 
 Esto genera informes visuales (en Markdown, CSV o JSON) que exponen el Análisis de Madurez de las 4 áreas globales de ISO 27001 (Personas, Procesos, Tecnológico y Físico) y ejecuta políticas de decisión (ALLOW / BLOCK) según el riesgo calibrado de la organización.
+
+## Integración con GitHub Actions (CI/CD)
+
+Integrar **Wardex** en GitHub Actions permite transformar su pipeline en un proceso de **Gobernanza de Riesgos** real. Wardex actúa como una "Puerta de Liberación" justo después de sus escaneos de seguridad.
+
+Ejemplo práctico:
+
+```yaml
+# .github/workflows/wardex-gate.yml
+jobs:
+  risk-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Instalación Segura (v1.7.1)
+      - name: Install Wardex
+        run: |
+          VERSION="v1.7.1"
+          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
+          sudo mv wardex /usr/local/bin/
+
+      # Evaluación de Riesgos
+      - name: Evaluate Risk Gate
+        run: |
+          wardex --config ./doc/examples/wardex-config.yaml \
+                 --gate ./evidence.json \
+                 ./doc/examples/policy-nis2.yaml \
+                 --fail-above 0.7
+```
+
+Consulte los archivos de ejemplo para configurar su pipeline:
+- [Configuración CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
+- [Ejemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
 
 ## Novedades (v1.7.0)
 
