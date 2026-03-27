@@ -124,7 +124,7 @@ jobs:
           wardex --config ./doc/examples/wardex-config.yaml \
                  --gate ./evidence.json \
                  ./doc/examples/policy-nis2.yaml \
-                 --fail-above 0.7
+                 --fail-above 0.9
 ```
 
 Consulte os ficheiros de exemplo para configurar a sua pipeline:
