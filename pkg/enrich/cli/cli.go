@@ -76,7 +76,7 @@ var epssCmd = &cobra.Command{
 
 		fmt.Printf("[INFO] Fetching EPSS scores for %d vulnerabilities from api.first.org...\n", len(cvesToFetch))
 
-		scores, err := epss.FetchScores(cvesToFetch)
+		scores, provenance, err := epss.FetchScores(cvesToFetch)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "[FAIL] First.org API query failed: %v\n", err)
 			os.Exit(1)
@@ -94,6 +94,7 @@ var epssCmd = &cobra.Command{
 
 		outFormat := model.EPSSEnrichmentFile{
 			Enrichments: enrichments,
+			Provenance:  provenance,
 			GeneratedAt: time.Now().UTC().Format(time.RFC3339),
 		}
 
