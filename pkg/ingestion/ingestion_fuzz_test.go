@@ -18,7 +18,7 @@ func FuzzParseYAML(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, data []byte) {
 		path := filepath.Join(t.TempDir(), "fuzz.yaml")
-		_ = os.WriteFile(path, data, 0644)
+		_ = os.WriteFile(path, data, 0600)
 		_, _ = loadYAML(path)
 	})
 }
@@ -29,7 +29,7 @@ func FuzzParseJSON(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, data []byte) {
 		path := filepath.Join(t.TempDir(), "fuzz.json")
-		_ = os.WriteFile(path, data, 0644)
+		_ = os.WriteFile(path, data, 0600)
 		_, _ = loadJSON(path)
 	})
 }
@@ -40,7 +40,7 @@ func FuzzParseCSV(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, data []byte) {
 		path := filepath.Join(t.TempDir(), "fuzz.csv")
-		_ = os.WriteFile(path, data, 0644)
+		_ = os.WriteFile(path, data, 0600)
 		_, _ = loadCSV(path)
 	})
 }

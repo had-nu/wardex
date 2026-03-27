@@ -74,11 +74,11 @@ func TestParseCycloneDX(t *testing.T) {
 	}`
 
 	tmpFile := "mock-cyclonedx-1.5.json"
-	err := os.WriteFile(tmpFile, []byte(mockJSON), 0644)
+	err := os.WriteFile(tmpFile, []byte(mockJSON), 0600)
 	if err != nil {
 		t.Fatalf("Failed to create mock file: %v", err)
 	}
-	defer os.Remove(tmpFile)
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	vulns, err := ParseCycloneDX(tmpFile)
 	if err != nil {
@@ -112,7 +112,7 @@ func TestParseCycloneDX(t *testing.T) {
 func TestParseSPDX(t *testing.T) {
 	tmpFile := "mock-spdx.json"
 	_ = os.WriteFile(tmpFile, []byte("{}"), 0600)
-	defer os.Remove(tmpFile)
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	_, err := ParseSPDX(tmpFile)
 	if err == nil {

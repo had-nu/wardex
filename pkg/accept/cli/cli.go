@@ -306,7 +306,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 						fmt.Fprintf(os.Stderr, "[FAIL] Failed to connect to HTTP backend %s: %v\n", verifyBackend, err)
 						os.Exit(1)
 					}
-					defer resp.Body.Close()
+					defer func() { _ = resp.Body.Close() }()
 					if resp.StatusCode >= 500 {
 						fmt.Fprintf(os.Stderr, "[FAIL] HTTP backend returned server error %d\n", resp.StatusCode)
 						os.Exit(1)
@@ -341,7 +341,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				fmt.Fprintf(os.Stderr, "[FAIL] Cannot open audit log for parsing: %v\n", err)
 				os.Exit(1)
 			}
-			defer file.Close()
+			defer func() { _ = file.Close() }()
 
 			var cutoff time.Time
 			if verifySince != "" {

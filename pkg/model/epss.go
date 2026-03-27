@@ -11,7 +11,8 @@ type EPSSEnrichment struct {
 
 // EPSSEnrichmentFile is the structured document that the `wardex enrich` command creates.
 type EPSSEnrichmentFile struct {
-	Enrichments []EPSSEnrichment `yaml:"enrichments" json:"enrichments"`
-	Signature   string           `yaml:"signature" json:"signature"`
-	GeneratedAt string           `yaml:"generated_at" json:"generated_at"`
+	Enrichments []EPSSEnrichment  `yaml:"enrichments" json:"enrichments"`
+	Provenance  map[string]string `yaml:"provenance,omitempty" json:"provenance,omitempty"`
+	Signature   string            `yaml:"signature" json:"signature"`
+	GeneratedAt string            `yaml:"generated_at" json:"generated_at"`
 }

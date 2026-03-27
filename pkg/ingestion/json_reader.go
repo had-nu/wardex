@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 type jsonExistingControl struct {
@@ -28,7 +29,12 @@ type jsonFormat struct {
 }
 
 func loadJSON(path string) ([]model.ExistingControl, error) {
-	data, err := os.ReadFile(path)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, path)
+	if err != nil {
+		return nil, fmt.Errorf("safe path validation failed: %w", err)
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		return nil, fmt.Errorf("reading file: %w", err)
 	}

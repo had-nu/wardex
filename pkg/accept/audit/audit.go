@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 var mu sync.Mutex
@@ -32,11 +33,16 @@ func Log(path string, entry model.AuditEntry) error {
 		return err
 	}
 
-	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, path)
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	f, err := os.OpenFile(safePathStr, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600) // #nosec G304
+	if err != nil {
+		return err
+	}
+	defer func() { _ = f.Close() }()
 
 	data, err := json.Marshal(entry)
 	if err != nil {

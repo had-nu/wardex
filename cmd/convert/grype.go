@@ -6,9 +6,11 @@ package convert
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -47,7 +49,27 @@ func init() {
 
 func runConvertGrype(cmd *cobra.Command, args []string) {
 	inFile := args[0]
-	data, err := os.ReadFile(inFile)
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error getting current working directory: %v\n", err)
+		os.Exit(1)
+	}
+
+	safePathStr, err := utils.SafePath(cwd, inFile)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error resolving safe path for input file: %v\n", err)
+		os.Exit(1)
+	}
+
+	f, err := os.Open(safePathStr) // #nosec G304
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error opening Grype JSON file: %v\n", err)
+		os.Exit(1)
+	}
+	defer func() { _ = f.Close() }()
+
+	data, err := io.ReadAll(f)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error reading Grype JSON: %v\n", err)
 		os.Exit(1)

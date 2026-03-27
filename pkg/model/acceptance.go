@@ -16,8 +16,9 @@ type Acceptance struct {
 	Ticket        string    `json:"ticket,omitempty" yaml:"ticket,omitempty"`
 
 	// Integrity field - generated via HMAC-SHA256
-	Signature  string `json:"signature" yaml:"signature"`
-	ReportHash string `json:"report_hash" yaml:"report_hash"`
+	SignatureVersion string `json:"signature_version,omitempty" yaml:"signature_version,omitempty"`
+	Signature        string `json:"signature" yaml:"signature"`
+	ReportHash       string `json:"report_hash" yaml:"report_hash"`
 
 	// Contextual metadata
 	ContextRiskScore float64 `json:"context_risk_score,omitempty" yaml:"context_risk_score,omitempty"`

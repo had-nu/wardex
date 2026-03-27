@@ -1,0 +1,33 @@
+# .goreleaser.yaml
+version: 2
+project_name: wardex
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/wardex
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+
+sboms:
+  - id: cyclonedx
+    artifacts: archive
+    args: ["packages", "${artifact}", "-o", "cyclonedx-json", "--file", "${artifact}.sbom.json"]
+
+signs:
+  - artifacts: checksum
+    cmd: cosign
+    args:
+      - "sign-blob"
+      - "--yes"
+      - "${artifact}"

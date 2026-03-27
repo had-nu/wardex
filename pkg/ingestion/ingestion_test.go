@@ -18,7 +18,7 @@ controls:
     domains: ["access"]
 `
 	file := filepath.Join(t.TempDir(), "test.yaml")
-	err := os.WriteFile(file, []byte(content), 0644)
+	err := os.WriteFile(file, []byte(content), 0600)
 	if err != nil {
 		t.Fatalf("Failed to write mock file: %v", err)
 	}
@@ -40,7 +40,7 @@ controls:
     maturity: 3
 `
 	file := filepath.Join(t.TempDir(), "test.yaml")
-	err := os.WriteFile(file, []byte(content), 0644)
+	err := os.WriteFile(file, []byte(content), 0600)
 	if err != nil {
 		t.Fatalf("Failed to write mock file: %v", err)
 	}
@@ -71,11 +71,11 @@ controls:
 	f1 := filepath.Join(d, "f1.yaml")
 	f2 := filepath.Join(d, "f2.yaml")
 
-	err := os.WriteFile(f1, []byte(content1), 0644)
+	err := os.WriteFile(f1, []byte(content1), 0600)
 	if err != nil {
 		t.Fatalf("Failed to write mock file f1: %v", err)
 	}
-	err = os.WriteFile(f2, []byte(content2), 0644)
+	err = os.WriteFile(f2, []byte(content2), 0600)
 	if err != nil {
 		t.Fatalf("Failed to write mock file f2: %v", err)
 	}

@@ -4,6 +4,7 @@
 package epss
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -35,12 +36,13 @@ type Data struct {
 // FetchScores queries the FIRST.org API for a list of CVE IDs and parses
 // the returned EPSS probabilities. It batches requests natively (the API allows
 // comma-separated CVEs).
-func FetchScores(cves []string) (map[string]float64, error) {
+func FetchScores(cves []string) (map[string]float64, map[string]string, error) {
 	if len(cves) == 0 {
-		return nil, nil // Nothing to fetch
+		return nil, nil, nil // Nothing to fetch
 	}
 
 	scores := make(map[string]float64)
+	provenance := make(map[string]string)
 	chunkSize := 50 // FIRST API accepts multiple CVEs, let's chunk to avoid URI limits
 
 	client := &http.Client{Timeout: 10 * time.Second}
@@ -57,7 +59,7 @@ func FetchScores(cves []string) (map[string]float64, error) {
 
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
-			return nil, fmt.Errorf("failed creating EPSS request: %w", err)
+			return nil, nil, fmt.Errorf("failed creating EPSS request: %w", err)
 		}
 
 		// User-Agent is good practice for public APIs
@@ -65,18 +67,24 @@ func FetchScores(cves []string) (map[string]float64, error) {
 
 		resp, err := client.Do(req)
 		if err != nil {
-			return nil, fmt.Errorf("failed executing EPSS request: %w", err)
+			return nil, nil, fmt.Errorf("failed executing EPSS request: %w", err)
 		}
 
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
+
+		if resp.TLS != nil && len(resp.TLS.PeerCertificates) > 0 {
+			cert := resp.TLS.PeerCertificates[0]
+			provenance["tls_peer_cert_sha256"] = fmt.Sprintf("%x", sha256.Sum256(cert.Raw))
+		}
+		provenance["api_endpoint"] = "api.first.org"
 
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("first API returned non-200 status: %d", resp.StatusCode)
+			return nil, nil, fmt.Errorf("first API returned non-200 status: %d", resp.StatusCode)
 		}
 
 		var apiResp FirstAPIResponse
 		if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {
-			return nil, fmt.Errorf("failed decoding EPSS JSON response: %w", err)
+			return nil, nil, fmt.Errorf("failed decoding EPSS JSON response: %w", err)
 		}
 
 		for _, item := range apiResp.Data {
@@ -84,6 +92,12 @@ func FetchScores(cves []string) (map[string]float64, error) {
 			if err != nil {
 				continue // Skip malformed floats instead of dying
 			}
+
+			// Range validation
+			if val < 0.0 || val > 1.0 {
+				continue
+			}
+
 			scores[item.CVE] = val
 		}
 
@@ -93,5 +107,5 @@ func FetchScores(cves []string) (map[string]float64, error) {
 		}
 	}
 
-	return scores, nil
+	return scores, provenance, nil
 }
