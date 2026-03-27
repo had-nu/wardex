@@ -1,6 +1,6 @@
 module github.com/had-nu/wardex
 
-go 1.24.0
+go 1.26.0
 
 require (
 	cloud.google.com/go/logging v1.13.2
