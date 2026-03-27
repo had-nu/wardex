@@ -6,6 +6,7 @@ bin/
 *.so
 *.dylib
 wardex
+specs/
 
 # Test artifacts
 *.test
@@ -38,5 +39,13 @@ cmd/portal/
 # Test / Benchmark Data
 test/poc/real-250-enrich.yaml
 test/poc/real-250-vulns.yaml
+
+# Security & Runtime Outputs
+test/outputs/
+report.json
+wardex-accept-audit.log
+wardex-acceptances.yaml
+wardex-erd.md.resolved
+wardex-simulator.html
 stress-enrich.yaml
 stress-vulns.yaml

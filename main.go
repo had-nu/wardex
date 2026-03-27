@@ -32,7 +32,7 @@ import (
 )
 
 var (
-	Version       = "dev"
+	Version       = "1.7.1"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -58,7 +58,15 @@ var rootCmd = &cobra.Command{
 	Use:     "wardex [flags] <input-file(s)>",
 	Short:   "Wardex generates compliance gap analysis from implemented controls.",
 	Version: Version,
-	Args:    cobra.MinimumNArgs(1),
+	Args: func(cmd *cobra.Command, args []string) error {
+		if v, _ := cmd.Flags().GetBool("version"); v {
+			return nil
+		}
+		if len(args) < 1 {
+			return fmt.Errorf("requires at least 1 arg(s), only received %d", len(args))
+		}
+		return nil
+	},
 	Run:     runWardex,
 }
 

@@ -36,7 +36,7 @@ func peekSbomFormat(filepath string) (string, error) {
 		return "", err
 	}
 
-	var generic map[string]interface{}
+	var generic map[string]any
 	if err := json.Unmarshal(data, &generic); err != nil {
 		return "", fmt.Errorf("file is not valid JSON")
 	}

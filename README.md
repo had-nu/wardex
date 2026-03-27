@@ -17,6 +17,10 @@
   <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
 </div>
 
+> [!IMPORTANT]
+> **Motivação TeamPCP (Attack Surface):** Após a campanha "TeamPCP", que transformou ferramentas de segurança em vetores de ataque contra pipelines diligentes, o Wardex priorizou e antecipou o seu roadmap de endurecimento defensivo. As atualizações recentes incluem pinning SHA256 de todas as Actions, isolamento rigoroso de permissões em workflows, integridade de CDNs via SRI e proveniência criptográfica para dados de enriquecimento. Uma nota de post-mortem detalhada será publicada em breve.
+
+
 
 O Wardex é uma ferramenta de linha de comando (CLI) e Motor robusto escrito em Go que ingere controlos de segurança já implementados na sua organização e os mapeia contra múltiplos frameworks de conformidade global, incluindo os 93 controlos da norma ISO/IEC 27001:2022 (Annex A), SOC 2, NIS 2 e DORA.
 
