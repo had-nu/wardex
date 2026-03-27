@@ -46,7 +46,7 @@ func (m *Multiplexer) Dispatch(event NotificationEvent) []error {
 }
 
 // templateRenderer is a helper for rendering notification templates
-func templateRenderer(path string, data interface{}) (string, error) {
+func templateRenderer(path string, data any) (string, error) {
 	tmpl, err := template.ParseFiles(path)
 	if err != nil {
 		return "", err

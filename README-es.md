@@ -16,6 +16,10 @@
   <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
 </div>
 
+> [!IMPORTANT]
+> **Motivación TeamPCP (Superficie de Ataque):** Tras la campaña "TeamPCP" que convirtió las herramientas de seguridad en vectores de ataque contra pipelines diligentes, Wardex ha priorizado y acelerado su hoja de ruta de endurecimiento defensivo. Las actualizaciones recientes incluyen el anclaje SHA256 de todas las Actions, aislamiento riguroso de permisos en workflows, integridad de CDNs vía SRI y procedencia criptográfica de todos los datos de enriquecimiento. Próximamente se publicará una nota de post-mortem detallada.
+
+
 Wardex es una herramienta robusta de Interfaz de Línea de Comandos (CLI) y un Motor escrito en Go que procesa controles de seguridad ya implementados en su organización y los mapea contra múltiples marcos de cumplimiento global, incluidos los 93 controles de la norma ISO/IEC 27001:2022 (Anexo A), SOC 2, NIS 2 y DORA.
 
 Diseñado para ser utilizado tanto como una CLI independiente como un SDK integrable, Wardex actúa como una **Puerta de Liberación Basada en Riesgos (Risk-Based Release Gate)** en sus pipelines CI/CD. En lugar de bloquear lanzamientos de software basándose en métricas estáticas binarias (como "CVSS > 7.0"), Wardex calcula el riesgo real de liberación ajustando la vulnerabilidad técnica al impacto comercial, la exposición de la infraestructura y los controles compensatorios existentes.
