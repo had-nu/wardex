@@ -9,20 +9,28 @@ import (
 	"os"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 func generateCSV(report model.GapReport, outFile string) error {
 	var f *os.File
-	var err error
 
 	if outFile == "stdout" || outFile == "" {
 		f = os.Stdout
 	} else {
-		f, err = os.Create(outFile)
+		cwd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		safePathStr, err := utils.SafePath(cwd, outFile)
+		if err != nil {
+			return err
+		}
+		f, err = os.Create(safePathStr) // #nosec G304
 		if err != nil {
 			return fmt.Errorf("failed to create CSV file: %w", err)
 		}
-		defer f.Close()
+		defer func() { _ = f.Close() }()
 	}
 
 	writer := csv.NewWriter(f)

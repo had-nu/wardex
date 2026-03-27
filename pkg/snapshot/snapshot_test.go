@@ -15,8 +15,8 @@ import (
 func TestSnapshotSaveLoad(t *testing.T) {
 	testFile := ".test_snapshot.json"
 	// Clean up before and after
-	os.Remove(testFile)
-	defer os.Remove(testFile)
+	_ = os.Remove(testFile)
+	defer func() { _ = os.Remove(testFile) }()
 
 	r, err := snapshot.Load(testFile)
 	if err != nil {
@@ -33,17 +33,17 @@ func TestSnapshotSaveLoad(t *testing.T) {
 		},
 	}
 
-	if err := snapshot.Save(report, testFile); err != nil {
-		t.Fatalf("save failed: %v", err)
+	if err := snapshot.Save(testFile, &report); err != nil {
+		t.Fatalf("Failed to save snapshot: %v", err)
 	}
 
-	r, err = snapshot.Load(testFile)
+	loaded, err := snapshot.Load(testFile)
 	if err != nil {
 		t.Fatalf("load failed: %v", err)
 	}
 
-	if r.Summary.GlobalCoverage != 45.0 {
-		t.Errorf("expected global coverage 45.0, got %f", r.Summary.GlobalCoverage)
+	if loaded.Summary.GlobalCoverage != 45.0 {
+		t.Errorf("expected global coverage 45.0, got %f", loaded.Summary.GlobalCoverage)
 	}
 }
 

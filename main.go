@@ -27,6 +27,7 @@ import (
 	"github.com/had-nu/wardex/pkg/report"
 	"github.com/had-nu/wardex/pkg/snapshot"
 	"github.com/had-nu/wardex/pkg/ui"
+	"github.com/had-nu/wardex/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -247,7 +248,13 @@ func runWardex(cmd *cobra.Command, args []string) {
 			Mode:                 gateModeVal,
 		}
 
-		vdata, err := os.ReadFile(gateFile)
+		cwd, _ := os.Getwd()
+		safePathStr, err := utils.SafePath(cwd, gateFile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
+		vdata, err := os.ReadFile(safePathStr) // #nosec G304
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to read gate file: %v\n", err)
 			os.Exit(1)
@@ -283,7 +290,13 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 		if epssEnrich != "" {
 			if key, err := signer.ResolveSecret(*cfg); err == nil {
-				edata, err := os.ReadFile(epssEnrich)
+				cwd, _ := os.Getwd()
+				safePathStr, err := utils.SafePath(cwd, epssEnrich)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+					os.Exit(1)
+				}
+				edata, err := os.ReadFile(safePathStr) // #nosec G304
 				if err == nil {
 					var enrichFormat model.EPSSEnrichmentFile
 					if err := yaml.Unmarshal(edata, &enrichFormat); err == nil {
@@ -333,7 +346,9 @@ func runWardex(cmd *cobra.Command, args []string) {
 			delta := snapshot.Diff(rep, *prev)
 			rep.Delta = &delta
 		}
-		_ = snapshot.Save(rep, snapshotFile)
+		if err := snapshot.Save(snapshotFile, &rep); err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to save snapshot: %v\n", err)
+		}
 	}
 
 	finalFormat := outputFormat

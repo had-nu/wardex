@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 // CycloneDXReport represents the minimal structure of a CycloneDX 1.5 SBOM
@@ -39,7 +40,12 @@ type CycloneDXVulnerability struct {
 // ParseCycloneDX reads a CycloneDX 1.5 JSON formatted SBOM and extracts
 // the embedded vulnerabilities into the Wardex model.
 func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
-	data, err := os.ReadFile(filepath)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, filepath)
+	if err != nil {
+		return nil, err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		if _, ok := err.(*fs.PathError); ok {
 			return nil, fmt.Errorf("file not found: %s", filepath)

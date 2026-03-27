@@ -7,10 +7,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 type jsonExistingControl struct {
@@ -31,11 +30,11 @@ type jsonFormat struct {
 
 func loadJSON(path string) ([]model.ExistingControl, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := safePath(cwd, path)
+	safePathStr, err := utils.SafePath(cwd, path)
 	if err != nil {
 		return nil, fmt.Errorf("safe path validation failed: %w", err)
 	}
-	data, err := os.ReadFile(safePathStr)
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		return nil, fmt.Errorf("reading file: %w", err)
 	}
@@ -71,20 +70,4 @@ func loadJSON(path string) ([]model.ExistingControl, error) {
 	}
 
 	return controls, nil
-}
-
-// safePath prevents path traversal outside the base directory.
-func safePath(base, input string) (string, error) {
-	absBase, err := filepath.Abs(base)
-	if err != nil {
-		return "", err
-	}
-	absInput, err := filepath.Abs(input)
-	if err != nil {
-		return "", err
-	}
-	if !strings.HasPrefix(absInput, absBase+string(filepath.Separator)) && absInput != absBase {
-		return "", fmt.Errorf("path %q escapes base dir", input)
-	}
-	return absInput, nil
 }

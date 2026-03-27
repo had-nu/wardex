@@ -11,16 +11,22 @@ import (
 	"strings"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 func loadCSV(path string) ([]model.ExistingControl, error) {
-	f, err := os.Open(path)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, path)
+	if err != nil {
+		return nil, fmt.Errorf("safe path validation failed: %w", err)
+	}
+	file, err := os.Open(safePathStr) // #nosec G304
 	if err != nil {
 		return nil, fmt.Errorf("opening file: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = file.Close() }()
 
-	reader := csv.NewReader(f)
+	reader := csv.NewReader(file)
 	records, err := reader.ReadAll()
 	if err != nil {
 		return nil, fmt.Errorf("parsing CSV: %w", err)

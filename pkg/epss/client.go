@@ -70,7 +70,7 @@ func FetchScores(cves []string) (map[string]float64, map[string]string, error) {
 			return nil, nil, fmt.Errorf("failed executing EPSS request: %w", err)
 		}
 
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 
 		if resp.TLS != nil && len(resp.TLS.PeerCertificates) > 0 {
 			cert := resp.TLS.PeerCertificates[0]

@@ -24,11 +24,11 @@ profiles:
     warn_above: 5.0
 `
 	tmpFile := "test-rbac-config.yaml"
-	err := os.WriteFile(tmpFile, []byte(yamlData), 0644)
+	err := os.WriteFile(tmpFile, []byte(yamlData), 0600)
 	if err != nil {
 		t.Fatalf("Failed to create temporary config file: %v", err)
 	}
-	defer os.Remove(tmpFile)
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	cfg, err := Load(tmpFile)
 	if err != nil {

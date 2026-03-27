@@ -9,19 +9,25 @@ import (
 	"os"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 // CountCreated returns the number of "acceptance.created" events in the audit log.
 // Used internally to verify dataset integrity against the YAML store.
 func CountCreated(path string) (int, error) {
-	file, err := os.Open(path)
+	cwd, _ := os.Getwd()
+	safePathStr, err := utils.SafePath(cwd, path)
+	if err != nil {
+		return 0, err
+	}
+	file, err := os.Open(safePathStr) // #nosec G304
 	if err != nil {
 		if os.IsNotExist(err) {
 			return 0, nil
 		}
 		return 0, err
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	count := 0
 	scanner := bufio.NewScanner(file)
