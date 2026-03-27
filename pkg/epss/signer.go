@@ -33,6 +33,16 @@ func hashPayload(f model.EPSSEnrichmentFile) string {
 
 	parts = append(parts, enrichs...)
 
+	// Include Provenance in the signature to ensure metadata integrity
+	var provKeys []string
+	for k := range f.Provenance {
+		provKeys = append(provKeys, k)
+	}
+	sort.Strings(provKeys)
+	for _, k := range provKeys {
+		parts = append(parts, fmt.Sprintf("prov:%s=%s", k, f.Provenance[k]))
+	}
+
 	return strings.Join(parts, "|")
 }
 
