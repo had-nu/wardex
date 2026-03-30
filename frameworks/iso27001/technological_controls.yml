@@ -1,0 +1,49 @@
+framework: iso27001
+version: "2022"
+domain: technological_controls
+annex: "A.8"
+last_reviewed: "2025-03-01"
+reviewed_by: "hadnu"
+
+controls:
+  - id: A.8.1
+    title: "User endpoint devices"
+    status: compliant
+    owner: "IT Operations"
+    implementation_note: "MDM policy enforced via Intune. Encryption at rest enabled."
+    evidence_refs:
+      - "docs/evidence/A.8.1-mdm-config.pdf"
+      - "docs/evidence/A.8.1-endpoint-policy.pdf"
+    last_assessed: "2025-02-15"
+    exceptions: []
+
+  - id: A.8.2
+    title: "Privileged access rights"
+    status: partial
+    owner: "Security Team"
+    implementation_note: "PAM solution deployed. Review cycle pending for legacy systems."
+    evidence_refs:
+      - "docs/evidence/A.8.2-pam-screenshot.png"
+    last_assessed: "2025-01-10"
+    exceptions:
+      - reason: "Legacy system X requires shared admin account pending migration"
+        expiry: "2025-09-01"
+        approved_by: "CISO"
+
+  - id: A.8.3
+    title: "Information access restriction"
+    status: non_compliant
+    owner: "IT Operations"
+    implementation_note: "RBAC model under design. No enforcement yet."
+    evidence_refs: []
+    last_assessed: "2025-01-10"
+    exceptions: []
+
+  - id: A.8.4
+    title: "Access to source code"
+    status: not_applicable
+    owner: ""
+    implementation_note: "Organisation does not develop software in scope."
+    evidence_refs: []
+    last_assessed: "2025-01-10"
+    exceptions: []
