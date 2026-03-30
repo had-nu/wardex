@@ -85,7 +85,7 @@ Example: `feat: add support for YAML config replay`
 ## Development Setup
 
 ```bash
-git clone https://github.com/github.com/had-nu/wardex.git
+git clone https://github.com/had-nu/wardex.git
 cd wardex
 go mod download
 make test
