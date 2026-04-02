@@ -3,7 +3,7 @@
 release_gate:
   enabled: true
   risk_appetite: 4.0           # Very permissive for dev velocity
-  warn_above: 2.5
+  warn_above: 2.0              # empirically calibrated: PROFILES_CONFIG DEV
   asset_context:
     internet_facing: false
     requires_auth: false
