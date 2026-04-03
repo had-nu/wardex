@@ -41,10 +41,10 @@ gh release create v1.2.0 \
 
 ```bash
 # Build the binary
-go build -o wardex .
+make build
 
 # Upload to the release
-gh release upload v1.2.0 ./wardex
+gh release upload v1.2.0 ./bin/wardex
 
 # Upload the banner
 gh release upload v1.2.0 doc/banner.png
@@ -84,7 +84,7 @@ git push origin --delete v1.1.0
 - [ ] All CI checks pass on `main`
 - [ ] Version in `banner.go` matches the tag
 - [ ] README badges reflect the correct version
-- [ ] `go build` compiles without errors
+- [ ] `make build` compiles without errors
 - [ ] Changelog / release notes are written
 
 ---
