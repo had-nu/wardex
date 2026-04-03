@@ -2,9 +2,10 @@
   <h1>Wardex</h1>
   <p><b>Analyse des Écarts, Passerelle de Mise en Production Basée sur les Risques et Impact Commercial — Outil CLI & Moteur en Go</b></p>
 
-  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
-  ![Go](https://img.shields.io/badge/Made_with-Go-00ADD8?style=flat-square&logo=go&logoColor=white)
+  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
+  ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
   [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
+  ![Security Hardened](https://img.shields.io/badge/Security-TeamPCP_Hardened-success?style=flat-square&logo=github-actions&logoColor=white)
   ![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
   [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
@@ -40,7 +41,7 @@ Wardex propose un mappage natif pour les normes de conformité suivantes (via le
 
 ## Compilation et Installation
 
-Assurez-vous d'avoir installé [Go (>= 1.21)](https://go.dev/doc/install).
+Assurez-vous d'avoir installé [Go (>= 1.26)](https://go.dev/doc/install).
 
 ### Option 1 : Installation Globale (Recommandé)
 Vous pouvez installer Wardex directement sur votre système, ce qui vous permet d'exécuter la commande `wardex` n'importe où :
@@ -56,7 +57,7 @@ Si vous préférez cloner le dépôt pour tester ou développer localement :
 ```bash
 git clone https://github.com/had-nu/wardex.git
 cd wardex
-go build -o wardex .
+make build
 ```
 
 ### Mise à jour vers la Dernière Version
@@ -68,8 +69,8 @@ go install github.com/had-nu/wardex@latest
 
 # Pour les builds locaux (ex: cibler une balise spécifique)
 git fetch --tags
-git checkout v1.1.1
-go build -o wardex .
+git checkout v1.7.1
+make build
 ```
 
 Veuillez consulter le [CHANGELOG.md](CHANGELOG.md) pour obtenir des détails sur les notes de publication et les correctifs.
@@ -83,6 +84,40 @@ Wardex vous permet d'intégrer des politiques dans un format YAML ou JSON simple
 ```
 
 Cela génère des rapports visuels (en Markdown, CSV ou JSON) exposant l'Analyse de Maturité des 4 domaines mondiaux de la norme ISO 27001 (Personnes, Processus, Technologique et Physique) et exécute des politiques de décision (ALLOW / BLOCK) en fonction du risque étalonné de l'organisation.
+
+## Intégration avec GitHub Actions (CI/CD)
+
+L'intégration de **Wardex** dans GitHub Actions permet de transformer votre pipeline en un véritable processus de **Gouvernance des Risques**. Wardex agit comme une "Passerelle de Mise en Production" juste après vos scans de sécurité.
+
+Exemple pratique :
+
+```yaml
+# .github/workflows/wardex-gate.yml
+jobs:
+  risk-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Installation Sécurisée (v1.7.1)
+      - name: Install Wardex
+        run: |
+          VERSION="v1.7.1"
+          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
+          sudo mv wardex /usr/local/bin/
+
+      # Évaluation des Risques
+      - name: Evaluate Risk Gate
+        run: |
+          wardex --config ./doc/examples/wardex-config.yaml \
+                 --gate ./evidence.json \
+                 ./doc/examples/policy-nis2.yaml \
+                 --fail-above 0.9
+```
+
+Consultez les fichiers d'exemple pour configurer votre pipeline :
+- [Configuration CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
+- [Exemple de Politique NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
 
 ## Nouveautés (v1.7.0)
 

@@ -2,9 +2,10 @@
   <h1>Wardex</h1>
   <p><b>Gap Analysis, Risk-Based Release Gate and Business Impact — CLI Tool & Engine in Go</b></p>
 
-  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
-  ![Go](https://img.shields.io/badge/Made_with-Go-00ADD8?style=flat-square&logo=go&logoColor=white)
+  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
+  ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
   [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
+  ![Security Hardened](https://img.shields.io/badge/Security-TeamPCP_Hardened-success?style=flat-square&logo=github-actions&logoColor=white)
   ![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
   [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
@@ -29,6 +30,7 @@ Designed to be used both as a standalone CLI and as an embeddable SDK, Wardex ac
 Check the documentation in `/doc` to understand the architectural vision and the business problems the tool solves:
 - [Business Vision (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Technical Architecture and Math (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
+- [Didactic Use Cases — 10 Complete Scenarios with Real Inputs & Outputs (USECASES.md)](doc/USECASES.md)
 
 ## Supported Frameworks (as of v1.5.0)
 
@@ -40,7 +42,7 @@ Wardex provides native mapping for the following compliance standards (via the `
 
 ## Build and Installation
 
-Ensure you have [Go (>= 1.21)](https://go.dev/doc/install) installed.
+Ensure you have [Go (>= 1.26)](https://go.dev/doc/install) installed.
 
 ### Option 1: Global Installation (Recommended)
 You can install Wardex directly on your system, allowing you to run the `wardex` command anywhere:
@@ -56,7 +58,7 @@ If you prefer to clone the repository to test or develop locally:
 ```bash
 git clone https://github.com/had-nu/wardex.git
 cd wardex
-go build -o wardex .
+make build
 ```
 
 ### Upgrading to Latest Release
@@ -68,8 +70,8 @@ go install github.com/had-nu/wardex@latest
 
 # For local builds (e.g., targeting a specific tag)
 git fetch --tags
-git checkout v1.1.1
-go build -o wardex .
+git checkout v1.7.1
+make build
 ```
 
 Please refer to the [CHANGELOG.md](CHANGELOG.md) for detailed release notes and patch information.
@@ -88,6 +90,40 @@ Wardex allows you to ingest policies in a simple YAML or JSON format, cross-refe
 ```
 
 This generates visual reports (in Markdown, CSV, or JSON) exposing the Maturity Analysis of the 4 global areas of ISO 27001 (People, Processes, Technological, and Physical) and executes decision policies (ALLOW / BLOCK / WARN) depending on the organization's calibrated risk.
+
+## GitHub Actions Integration (CI/CD)
+
+Integrating **Wardex** into GitHub Actions transforms your pipeline into a real **Risk Governance** process. Wardex acts as a "Release Gate" immediately following your security scans.
+
+Practical example:
+
+```yaml
+# .github/workflows/wardex-gate.yml
+jobs:
+  risk-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Secure Installation (v1.7.1)
+      - name: Install Wardex
+        run: |
+          VERSION="v1.7.1"
+          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
+          sudo mv wardex /usr/local/bin/
+
+      # Risk Evaluation
+      - name: Evaluate Risk Gate
+        run: |
+          wardex --config ./doc/examples/wardex-config.yaml \
+                 --gate ./evidence.json \
+                 ./doc/examples/policy-nis2.yaml \
+                 --fail-above 0.9
+```
+
+Check the example files to configure your pipeline:
+- [CI/CD Configuration (wardex-config.yaml)](doc/examples/wardex-config.yaml)
+- [Example NIS2/ISO27001 Policy (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
 
 ## SDK Usage
 
@@ -143,6 +179,29 @@ wardex accept verify
 ```
 
 Wardex guarantees the integrity of these exceptions using HMAC-SHA256 signatures, append-only audit logs (`JSONL`), and configuration drift detection.
+
+## Local Policy Management
+
+Wardex enables granular management of compliance policies by framework and domain (e.g., ISO 27001) using a simple, validatable YAML schema. Instead of manually creating or editing large files, you can use the `policy` subcommand to safely manipulate controls via automation:
+
+```bash
+# Validates all domain YAML files, ensuring the schema remains unbroken
+wardex policy validate frameworks/iso27001/
+
+# Lists the compliance status of all controls in a readable tabular format
+wardex policy list frameworks/iso27001/
+
+# Safely upserts a single control entry without breaking manual YAML syntax
+wardex policy add \
+  --file frameworks/iso27001/technological_controls.yml \
+  --id A.8.5 \
+  --title "Secure authentication" \
+  --status partial \
+  --owner "Security Team" \
+  --note "MFA enforced; hardware tokens pending rollout"
+```
+
+This ensures policy files map structurally to the expected `wardex` schema, simplifying audit requests and native repo integration for pure Governance-as-Code.
 
 ---
 <div align="center">
