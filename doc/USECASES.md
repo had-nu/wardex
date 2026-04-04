@@ -358,21 +358,28 @@ acceptances:
              --config=wardex-config.yaml \
              --output=markdown \
              --out-file=report-iso27001.md \
-             controlos.yaml
+             frameworks/iso27001/*.yml
 
 # Relatório NIS 2 — para o CISO e autoridades regulatórias EU
 ./bin/wardex --framework nis2 \
              --config=wardex-config.yaml \
              --output=markdown \
              --out-file=report-nis2.md \
-             controlos.yaml
+             frameworks/nis2/*.yml
 
 # Relatório DORA — para o Chief Risk Officer (CRO)
 ./bin/wardex --framework dora \
              --config=wardex-config.yaml \
              --output=markdown \
              --out-file=report-dora.md \
-             controlos.yaml
+             frameworks/dora/*.yml
+
+# Relatório SOC 2 — para clientes e parceiros SaaS
+./bin/wardex --framework soc2 \
+             --config=wardex-config.yaml \
+             --output=markdown \
+             --out-file=report-soc2.md \
+             frameworks/soc2/*.yml
 ```
 
 ### Diferença de cobertura por framework
@@ -447,6 +454,12 @@ frameworks/
     people_controls.yml           # A.6
     physical_controls.yml         # A.7
     technological_controls.yml    # A.8
+  soc2/
+    trust_services.yml            # Common Criteria (CC)
+  nis2/
+    cyber_hygiene.yml             # Artigo 21
+  dora/
+    resilience_controls.yml       # Artigos 5 e 9
 ```
 
 ### Workflow de dia-a-dia
