@@ -83,11 +83,7 @@ go install github.com/had-nu/wardex@latest
 # Para builds locais (ex: escolher uma tag específica)
 git fetch --tags
 git checkout v1.7.1
-<<<<<<< HEAD
 make build
-=======
-go build -o wardex .
->>>>>>> origin/main
 ```
 
 Por favor, consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes sobre as notas de lançamento e correções de bugs.
