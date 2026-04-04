@@ -15,7 +15,6 @@
   <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
   <br><br>
 
-  <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
 </div>
 
 > [!IMPORTANT]

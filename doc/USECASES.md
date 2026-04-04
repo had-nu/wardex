@@ -1,4 +1,4 @@
-# Wardex — Casos de Uso Didáticos
+# Wardex - Casos de Uso Didáticos
 
 **Versão de referência:** v1.7.1  
 **Audiência:** Engenheiros de Plataforma, Security Champions, DevSecOps, Auditores de Conformidade
@@ -9,20 +9,20 @@ Este documento descreve os **cenários macro** que o Wardex já suporta hoje, co
 
 ## Índice
 
-1. [Cenário 1 — Gap Analysis de Conformidade (Baseline)](#cenário-1--gap-analysis-de-conformidade-baseline)
-2. [Cenário 2 — Release Gate: BLOCK numa startup SaaS](#cenário-2--release-gate-block-numa-startup-saas)
-3. [Cenário 3 — Release Gate: ALLOW com Controlos de Compensação](#cenário-3--release-gate-allow-com-controlos-de-compensação)
-4. [Cenário 4 — EPSS em Falta → Fail-Close → Enrich](#cenário-4--epss-em-falta--fail-close--enrich)
-5. [Cenário 5 — Aceitação de Risco Formal com Expiração](#cenário-5--aceitação-de-risco-formal-com-expiração)
-6. [Cenário 6 — Multi-Framework: ISO 27001 vs NIS 2 vs DORA](#cenário-6--multi-framework-iso-27001-vs-nis-2-vs-dora)
-7. [Cenário 7 — A Mesma CVE, 4 Contextos Diferentes](#cenário-7--a-mesma-cve-4-contextos-diferentes)
-8. [Cenário 8 — Gestão de Políticas Locais (wardex policy)](#cenário-8--gestão-de-políticas-locais-wardex-policy)
-9. [Cenário 9 — Snapshot e Delta de Maturidade entre Auditorias](#cenário-9--snapshot-e-delta-de-maturidade-entre-auditorias)
-10. [Cenário 10 — Integração Grype → Wardex (Pipeline Completa)](#cenário-10--integração-grype--wardex-pipeline-completa)
+1. [Cenário 1 - Gap Analysis de Conformidade (Baseline)](#cenário-1--gap-analysis-de-conformidade-baseline)
+2. [Cenário 2 - Release Gate: BLOCK numa startup SaaS](#cenário-2--release-gate-block-numa-startup-saas)
+3. [Cenário 3 - Release Gate: ALLOW com Controlos de Compensação](#cenário-3--release-gate-allow-com-controlos-de-compensação)
+4. [Cenário 4 - EPSS em Falta -> Fail-Close -> Enrich](#cenário-4--epss-em-falta---fail-close---enrich)
+5. [Cenário 5 - Aceitação de Risco Formal com Expiração](#cenário-5--aceitação-de-risco-formal-com-expiração)
+6. [Cenário 6 - Multi-Framework: ISO 27001 vs NIS 2 vs DORA](#cenário-6--multi-framework-iso-27001-vs-nis-2-vs-dora)
+7. [Cenário 7 - A Mesma CVE, 4 Contextos Diferentes](#cenário-7--a-mesma-cve-4-contextos-diferentes)
+8. [Cenário 8 - Gestão de Políticas Locais (wardex policy)](#cenário-8--gestão-de-políticas-locais-wardex-policy)
+9. [Cenário 9 - Snapshot e Delta de Maturidade entre Auditorias](#cenário-9---snapshot-e-delta-de-maturidade-entre-auditorias)
+10. [Cenário 10 - Integração Grype -> Wardex (Pipeline Completa)](#cenário-10---integração-grype---wardex-pipeline-completa)
 
 ---
 
-## Cenário 1 — Gap Analysis de Conformidade (Baseline)
+## Cenário 1 - Gap Analysis de Conformidade (Baseline)
 
 **Contexto:** Uma equipa de segurança quer saber o estado actual de conformidade ISO 27001 antes de uma auditoria externa. Têm uma lista de controlos implementados em YAML.
 
@@ -90,12 +90,12 @@ controls:
 ### O que aprender
 
 - **O Wardex não pede os 93 controlos à mão.** Ele aceita os que já tens implementados e identifica os *gaps* por correlação com o catálogo ISO 27001 interno.
-- O **Roadmap** está ordenado por pontuação de risco — os itens no topo são os que têm maior impacto na conformidade global.
-- Sem `--gate`, corre apenas em modo de *Gap Analysis* — sem impacto na pipeline.
+- O **Roadmap** está ordenado por pontuação de risco - os itens no topo são os que têm maior impacto na conformidade global.
+- Sem `--gate`, corre apenas em modo de *Gap Analysis* - sem impacto na pipeline.
 
 ---
 
-## Cenário 2 — Release Gate: BLOCK numa startup SaaS
+## Cenário 2 - Release Gate: BLOCK numa startup SaaS
 
 **Contexto:** Uma startup SaaS quer bloquear deploys quando o risco de release for inaceitável. O scanner de vulnerabilidades (Grype) encontrou uma CVE crítica com EPSS alto.
 
@@ -145,17 +145,17 @@ vulnerabilities:
 
 ```
 EPSS Factor    = 0.84
-Adjusted Score = 9.1 × 0.84  = 7.644
-Exposure       = 1.0 (internet) × 0.8 (auth -0.2) × 1.0 (reachable) = 0.80
+Adjusted Score = 9.1 x 0.84  = 7.644
+Exposure       = 1.0 (internet) x 0.8 (auth -0.2) x 1.0 (reachable) = 0.80
 Compensating   = 0.35 (WAF)
-Compensated    = 7.644 × (1 - 0.35) = 4.969
-Final Risk     = 4.969 × 0.7 (criticality) × 0.80 (exposure) = 2.78  ← excede appetite 2.0
+Compensated    = 7.644 x (1 - 0.35) = 4.969
+Final Risk     = 4.969 x 0.7 (criticality) x 0.80 (exposure) = 2.78  ← excede appetite 2.0
 ```
 
 ### Output e Exit Code
 
 ```
-## Release Gate — Decision Breakdown
+## Release Gate - Decision Breakdown
 
 | CVE           | CVSS | EPSS | Release Risk | Decision      |
 |---------------|------|------|--------------|---------------|
@@ -168,13 +168,13 @@ Exit code: 2  (exitcodes.GateBlocked)
 
 ### O que aprender
 
-- O CVSS sozinho (9.1) não bloqueia — o **risco contextualizado** (2.8 > 2.0) bloqueia.
-- If the `risk_appetite` fosse `0.3` (perfil Infraestrutura Crítica - INFRA), o resultado seria **BLOCK** ainda mais severo.
+- O CVSS sozinho (9.1) não bloqueia - o **risco contextualizado** (2.8 > 2.0) bloqueia.
+- Se o `risk_appetite` fosse `0.3` (perfil Infraestrutura Crítica - INFRA), o resultado seria **BLOCK** ainda mais severo.
 - Exit code `2` garante que o **pipeline CI falha automaticamente**.
 
 ---
 
-## Cenário 3 — Release Gate: ALLOW com Controlos de Compensação
+## Cenário 3 - Release Gate: ALLOW com Controlos de Compensação
 
 **Contexto:** O mesmo CVE-2024-1234 (CVSS 9.1), mas o contexto de segurança tem controlos robustos: WAF + segmentação de rede + runtime protection. Resultado: ALLOW.
 
@@ -204,8 +204,8 @@ release_gate:
 
 ```
 Compensating total = 0.35 + 0.25 + 0.20 = 0.80  (clamped ao máximo de 0.80)
-Compensated Score  = 7.644 × (1 - 0.80) = 1.529
-Final Risk         = 1.529 × 0.7 × 0.80 = 0.86  ← abaixo do appetite 2.0
+Compensated Score  = 7.644 x (1 - 0.80) = 1.529
+Final Risk         = 1.529 x 0.7 x 0.80 = 0.86  ← abaixo do appetite 2.0
 ```
 
 ### Output
@@ -223,12 +223,12 @@ Exit code: 0
 ### O que aprender
 
 - **O Wardex não ignora os controlos que já implementaste.** Um WAF + segmentação + EDR pode transformar um BLOCK num ALLOW.
-- O tecto de `0.80` nos compensating controls evita gaming — nunca se anula 100% do risco.
+- O tecto de `0.80` nos compensating controls evita gaming - nunca se anula 100% do risco.
 - Este é o argumento central do Wardex contra o modelo "CVSS > 7.0 = bloqueia tudo".
 
 ---
 
-## Cenário 4 — EPSS em Falta → Fail-Close → Enrich
+## Cenário 4 - EPSS em Falta -> Fail-Close -> Enrich
 
 **Contexto:** O scanner upstream não fornece EPSS. O Wardex faz *fail-close* (assume EPSS=1.0) e bloqueia. A equipa usa `wardex enrich epss` para buscar os valores reais e desbloquear.
 
@@ -246,9 +246,9 @@ vulnerabilities:
 ### Comportamento sem EPSS
 
 ```
-EPSS Factor    = 1.0  (fail-close — assume pior caso)
-Adjusted Score = 5.3 × 1.0 = 5.3
-Final Risk     = 5.3 × 0.7 × 0.80 = 2.97  ← excede appetite 2.0 → BLOCK
+EPSS Factor    = 1.0  (fail-close - assume pior caso)
+Adjusted Score = 5.3 x 1.0 = 5.3
+Final Risk     = 5.3 x 0.7 x 0.80 = 2.97  ← excede appetite 2.0 -> BLOCK
 
 [HINT] 1 vulnerabilities lacked EPSS scores and defaulted to worst-case (1.0).
        Run 'wardex enrich epss vulns.yaml' to fetch real probabilities from FIRST.org.
@@ -274,8 +274,8 @@ WARDEX_ACCEPT_SECRET=mysecret \
 [INFO] Applied signed EPSS Enrichment for CVE-2024-9999: 0.030000
 
 EPSS Factor    = 0.03
-Adjusted Score = 5.3 × 0.03 = 0.159
-Final Risk     = 0.159 × 0.7 × 0.80 = 0.09  ← ALLOW
+Adjusted Score = 5.3 x 0.03 = 0.159
+Final Risk     = 0.159 x 0.7 x 0.80 = 0.09  ← ALLOW
 
 | CVE           | CVSS | EPSS | Release Risk | Decision    |
 |---------------|------|------|--------------|-------------|
@@ -285,12 +285,12 @@ Final Risk     = 0.159 × 0.7 × 0.80 = 0.09  ← ALLOW
 ### O que aprender
 
 - **EPSS desconhecido ≠ EPSS zero.** O Wardex assume o pior (1.0) para forçar revisão humana.
-- O enriquecimento é **assinado criptograficamente** — a pipeline rejeita ficheiros adulterados.
+- O enriquecimento é **assinado criptograficamente** - a pipeline rejeita ficheiros adulterados.
 - Este padrão é o *Human-in-the-Loop* (HITL): a máquina bloqueia, o humano enriquece e valida.
 
 ---
 
-## Cenário 5 — Aceitação de Risco Formal com Expiração
+## Cenário 5 - Aceitação de Risco Formal com Expiração
 
 **Contexto:** Uma CVE está a bloquear o release, mas a equipa de segurança decidiu formalmente aceitar o risco. O CISO assina a exceção por 30 dias.
 
@@ -342,39 +342,39 @@ acceptances:
 
 ### O que aprender
 
-- As aceitações têm **expiração obrigatória** — não existem exceções permanentes por design.
+- As aceitações têm **expiração obrigatória** - não existem exceções permanentes por design.
 - O HMAC-SHA256 impede adulteração retroativa do registo de aceitações.
 - O log de auditoria (`wardex-accept-audit.log`) é *append-only* para rastreabilidade SOC 2 / ISO 27001.
 
 ---
 
-## Cenário 6 — Multi-Framework: ISO 27001 vs NIS 2 vs DORA
+## Cenário 6 - Multi-Framework: ISO 27001 vs NIS 2 vs DORA
 
 **Contexto:** Uma organização financeira (banco tier-1) precisa de relatórios separados, um por framework, para diferentes audiências de compliance.
 
 ```bash
-# Relatório ISO 27001 — para auditores de certificação
+# Relatório ISO 27001 - para auditores de certificação
 ./bin/wardex --framework iso27001 \
              --config=wardex-config.yaml \
              --output=markdown \
              --out-file=report-iso27001.md \
              frameworks/iso27001/*.yml
 
-# Relatório NIS 2 — para o CISO e autoridades regulatórias EU
+# Relatório NIS 2 - para o CISO e autoridades regulatórias EU
 ./bin/wardex --framework nis2 \
              --config=wardex-config.yaml \
              --output=markdown \
              --out-file=report-nis2.md \
              frameworks/nis2/*.yml
 
-# Relatório DORA — para o Chief Risk Officer (CRO)
+# Relatório DORA - para o Chief Risk Officer (CRO)
 ./bin/wardex --framework dora \
              --config=wardex-config.yaml \
              --output=markdown \
              --out-file=report-dora.md \
              frameworks/dora/*.yml
 
-# Relatório SOC 2 — para clientes e parceiros SaaS
+# Relatório SOC 2 - para clientes e parceiros SaaS
 ./bin/wardex --framework soc2 \
              --config=wardex-config.yaml \
              --output=markdown \
@@ -396,11 +396,11 @@ Os **mesmos controlos** implementados produzem coberturas diferentes porque cada
 ### O que aprender
 
 - O mesmo controlo CTRL-IDAM-01 (MFA) cobre **A.9.4.2** (ISO), **Art.21.2(j)** (NIS 2) e **Art.9** (DORA) simultaneamente.
-- Um investimento em controlos pode satisfazer **múltiplos reguladores** — a análise de correlação do Wardex torna isto visível.
+- Um investimento em controlos pode satisfazer **múltiplos reguladores** - a análise de correlação do Wardex torna isto visível.
 
 ---
 
-## Cenário 7 — A Mesma CVE, 4 Contextos Diferentes
+## Cenário 7 - A Mesma CVE, 4 Contextos Diferentes
 
 **Demonstração** de como o contexto organizacional altera radicalmente a decisão para **CVE-2021-44228** (Log4Shell, CVSS 10.0, EPSS 0.94).
 
@@ -409,39 +409,39 @@ Os **mesmos controlos** implementados produzem coberturas diferentes porque cada
 ```bash
 # Banco Tier-1 (DORA, criticality=1.0, appetite=0.5)
 ./bin/wardex --config=config-bank.yaml --gate=log4shell.yaml controlos.yaml
-# → Final Risk: 14.2 → BLOCK
+# -> Final Risk: 14.2 -> BLOCK
 
 # Startup SaaS (criticality=0.7, appetite=2.0)
 ./bin/wardex --config=config-saas.yaml --gate=log4shell.yaml controlos.yaml
-# → Final Risk: 2.5 → BLOCK (mas por pouco)
+# -> Final Risk: 2.5 -> BLOCK (mas por pouco)
 
 # Hospital (HIPAA, criticality=0.9, appetite=0.8)
 ./bin/wardex --config=config-hospital.yaml --gate=log4shell.yaml controlos.yaml
-# → Final Risk: 7.9 → BLOCK
+# -> Final Risk: 7.9 -> BLOCK
 
 # Infraestrutura Crítica (NIS2/INFRA, criticality=1.5, internet_facing=true, auth=false, appetite=0.3)
 ./bin/wardex --config=config-infra.yaml --gate=log4shell.yaml controlos.yaml
-# → Final Risk: 7.1 → BLOCK
+# -> Final Risk: 7.1 -> BLOCK
 ```
 
 ### Tabela de decisões
 
 | Perfil          | Apetite | Risk Final | Decisão   |
 |-----------------|---------|------------|-----------|
-| 🏦 Banco Tier-1  | 0.5     | **14.1**   | ❌ BLOCK  |
-| 🏥 Hospital       | 0.8     | **11.3**   | ❌ BLOCK  |
-| 🚀 SaaS           | 2.0     | **3.5**    | ❌ BLOCK  |
-| ⚡ Infra (INFRA)  | 0.3     | **7.1**    | ❌ BLOCK  |
+| Banco Tier-1    | 0.5     | **14.1**   | BLOCK     |
+| Hospital        | 0.8     | **11.3**   | BLOCK     |
+| SaaS            | 2.0     | **3.5**    | BLOCK     |
+| Infra (INFRA)   | 0.3     | **7.1**    | BLOCK     |
 
 ### O que aprender
 
 - **Log4Shell não é universalmente equivalente.** Num ambiente de desenvolvimento isolado, o risco é menor, mas em infraestrutura crítica (INFRA), o impacto regulatório NIS2 força o bloqueio imediato.
-- No banco, o mesmo CVE tem risco `28×` maior que no sandbox — justificando um plano de resposta imediata.
+- No banco, o mesmo CVE tem risco `28x` maior que no sandbox - justificando um plano de resposta imediata.
 - Esta é a proposta central do Wardex: **contexto importa mais que o CVSS bruto**.
 
 ---
 
-## Cenário 8 — Gestão de Políticas Locais (wardex policy)
+## Cenário 8 - Gestão de Políticas Locais (wardex policy)
 
 **Contexto:** Uma equipa quer gerir o estado de conformidade dos controlos ISO 27001 A.8 em ficheiros YAML versionados no Git, sem edição manual propensa a erros.
 
@@ -467,7 +467,7 @@ frameworks/
 ```bash
 # 1. Validar todos os ficheiros antes de fazer commit
 wardex policy validate frameworks/iso27001/
-# ✓ 4 domain file(s), 42 control(s) — all valid in "frameworks/iso27001/"
+# [OK] 4 domain file(s), 42 control(s) - all valid in "frameworks/iso27001/"
 
 # 2. Verificar estado actual dos controlos
 wardex policy list frameworks/iso27001/
@@ -493,24 +493,24 @@ wardex policy add \
 ### O que aprender
 
 - `wardex policy validate` pode ser adicionado como **pre-commit hook** ou step de CI, garantindo que nenhum YAML quebrado entra no repositório.
-- O histórico de mudanças de status dos controlos fica naturalmente **rastreado no Git** (quem alterou, quando, porquê — via commit message).
+- O histórico de mudanças de status dos controlos fica naturalmente **rastreado no Git** (quem alterou, quando, porquê - via commit message).
 - O schema é rigoroso: `status` só aceita `compliant | partial | non_compliant | not_applicable`.
 
 ---
 
-## Cenário 9 — Snapshot e Delta de Maturidade entre Auditorias
+## Cenário 9 - Snapshot e Delta de Maturidade entre Auditorias
 
 **Contexto:** Uma equipa quer demonstrar evolução de maturidade entre a auditoria de Janeiro e a de Março.
 
 ```bash
-# Janeiro: primeira execução — cria snapshot
+# Janeiro: primeira execução - cria snapshot
 ./bin/wardex --config=wardex-config.yaml \
              --snapshot-file=snapshot-jan.json \
              --output=markdown \
              --out-file=report-jan.md \
              controlos-jan.yaml
 
-# Março: segunda execução — compara com snapshot anterior
+# Março: segunda execução - compara com snapshot anterior
 ./bin/wardex --config=wardex-config.yaml \
              --snapshot-file=snapshot-jan.json \
              --output=markdown \
@@ -525,21 +525,21 @@ wardex policy add \
 
 | Metric               | January   | March     | Change     |
 |----------------------|-----------|-----------|------------|
-| Global Coverage      | 34.4%     | 58.1%     | +23.7% ↑  |
-| Controls Covered     | 32 / 93   | 54 / 93   | +22 ↑     |
-| Controls Partial     | 8 / 93    | 12 / 93   | +4 ↑      |
-| Controls Gap         | 53 / 93   | 27 / 93   | -26 ↓     |
+| Global Coverage      | 34.4%     | 58.1%     | +23.7%     |
+| Controls Covered     | 32 / 93   | 54 / 93   | +22        |
+| Controls Partial     | 8 / 93    | 12 / 93   | +4         |
+| Controls Gap         | 53 / 93   | 27 / 93   | -26        |
 ```
 
 ### O que aprender
 
-- Os snapshots são utilizados para **comprovar progresso** a auditores externos — evidência objectiva de melhoria contínua exigida pela ISO 27001 Cláusula 10.
+- Os snapshots são utilizados para **comprovar progresso** a auditores externos - evidência objectiva de melhoria contínua exigida pela ISO 27001 Cláusula 10.
 - Usa `--no-snapshot` para correr sem escrever/ler snapshot (útil em pipelines temporárias ou dry-runs).
-- Os ficheiros de snapshot são JSON portáveis — podem ser arquivados, versionados ou partilhados com consultores externos.
+- Os ficheiros de snapshot são JSON portáveis - podem ser arquivados, versionados ou partilhados com consultores externos.
 
 ---
 
-## Cenário 10 — Integração Grype → Wardex (Pipeline Completa)
+## Cenário 10 - Integração Grype -> Wardex (Pipeline Completa)
 
 **Contexto:** Pipeline de CI/CD completa: Grype faz o scan do container, converte o output para formato Wardex, e o gate valida antes do deploy.
 
@@ -572,7 +572,7 @@ jobs:
         run: |
           grype myapp:latest -o json > grype-output.json
 
-      # 3. Converter output Grype → formato Wardex
+      # 3. Converter output Grype -> formato Wardex
       - name: Convert Grype Output
         run: |
           wardex convert grype grype-output.json --output wardex-vulns.yaml
@@ -626,15 +626,15 @@ epss-enriched.yaml  (assinado HMAC-SHA256)
   Gap Analysis + Release Gate Decision
 ─────────────────────────────────────────
     │
-    ├─ Exit 0  → Deploy continua ✅
-    ├─ Exit 2  → Deploy bloqueado ❌ (GateBlocked)
-    └─ Exit 3  → Compliance fail ❌ (ComplianceFail)
+    ├─ Exit 0  -> Deploy continua [OK]
+    ├─ Exit 2  -> Deploy bloqueado [BLOCK] (GateBlocked)
+    └─ Exit 3  -> Compliance fail [FAIL] (ComplianceFail)
 ```
 
 ### O que aprender
 
-- A pipeline completa cobre **scanning → conversão → enriquecimento → gate** sem intervenção manual.
-- Os exit codes `0 / 2 / 3` mapeiam directamente para sucesso/falha no CI — sem scripts de parsing de output.
+- A pipeline completa cobre **scanning -> conversão -> enriquecimento -> gate** sem intervenção manual.
+- Os exit codes `0 / 2 / 3` mapeiam directamente para sucesso/falha no CI - sem scripts de parsing de output.
 - A combinação Grype + Wardex cobre tanto **vulnerabilidades técnicas** (CVEs em dependências) como **maturidade de conformidade** (ISO 27001 gap) num único report.
 
 ---
@@ -650,9 +650,9 @@ epss-enriched.yaml  (assinado HMAC-SHA256)
 ## Referência Rápida: Fórmula de Risco
 
 ```
-FinalRisk = (CVSS × EPSS) × (1 - CompensatingControls) × Criticality × Exposure
+FinalRisk = (CVSS x EPSS) x (1 - CompensatingControls) x Criticality x Exposure
 
-Exposure = InternetWeight × (1 - AuthReduction) × (1 - ReachabilityReduction)
+Exposure = InternetWeight x (1 - AuthReduction) x (1 - ReachabilityReduction)
 
 Onde:
   InternetWeight    = 1.5 (High) | 1.0 (Standard) | 0.5 (Low/OT)
