@@ -8,7 +8,7 @@ release_gate:
     internet_facing: false      # Behind internal network
     requires_auth: true         # Requires service-to-service auth
     environment: "production"
-    criticality: 0.8            # Non-critical internal service
+    criticality: 0.75           # Non-critical internal service
   compensating_controls:
     - name: "WAF + Rate Limiting"
       effectiveness: 0.3        # 30% risk reduction

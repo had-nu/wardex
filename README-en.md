@@ -30,6 +30,7 @@ Designed to be used both as a standalone CLI and as an embeddable SDK, Wardex ac
 Check the documentation in `/doc` to understand the architectural vision and the business problems the tool solves:
 - [Business Vision (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Technical Architecture and Math (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
+- [Didactic Use Cases — 10 Complete Scenarios with Real Inputs & Outputs (USECASES.md)](doc/USECASES.md)
 
 ## Supported Frameworks (as of v1.5.0)
 
@@ -57,7 +58,7 @@ If you prefer to clone the repository to test or develop locally:
 ```bash
 git clone https://github.com/had-nu/wardex.git
 cd wardex
-go build -o wardex .
+make build
 ```
 
 ### Upgrading to Latest Release
@@ -69,16 +70,19 @@ go install github.com/had-nu/wardex@latest
 
 # For local builds (e.g., targeting a specific tag)
 git fetch --tags
+git status
 git checkout v1.7.1
-go build -o wardex .
+make build
 ```
 
 Please refer to the [CHANGELOG.md](CHANGELOG.md) for detailed release notes and patch information.
 
-## What's New (v1.7.0)
+## What's New (v1.7.1)
 
-- **Human-in-the-Loop EPSS Enrichment (HITL)**: Failed evaluations due to missing EPSS vectors (where Wardex assumes a "fail-close" 1.0) can now be enriched. The new `wardex enrich epss` command extracts real probabilities from the FIRST.org API and encapsulates them as a pipeline-permitted cryptographic exception.
-- **Strict Semantic Fail-Close**: The `0.05` fallback for unknown vulnerability scores has been revoked to `0.0`, enforcing secure friction. Without concrete data, the vulnerability will invariably be classified with maximum risk, triggering the *enrich* pipeline.
+- **Governance Commands (Automation Ready)**: New subcommands for complex workflows: `wardex evaluate` (focused gate check), `wardex aggregate` (composite multi-framework decision), and `wardex policy check-expiry` (audit of YAML policy exceptions).
+- **Empirical Risk Calibration**: `Criticality` and `Exposure` parameters re-calibrated for Hospital (1.5), Startup (0.75), and Dev environments based on NVD/EPSS empirical analysis.
+- **Human-in-the-Loop EPSS Enrichment (HITL)**: Failed evaluations due to missing EPSS vectors (where Wardex assumes a "fail-close" 1.0) can now be enriched via the FIRST.org API.
+- **Strict Semantic Fail-Close**: The `0.05` fallback for unknown scores has been revoked to `0.0`. Without concrete data, Wardex assumes maximum risk.
 
 ## Usage
 
@@ -178,6 +182,29 @@ wardex accept verify
 ```
 
 Wardex guarantees the integrity of these exceptions using HMAC-SHA256 signatures, append-only audit logs (`JSONL`), and configuration drift detection.
+
+## Local Policy Management
+
+Wardex enables granular management of compliance policies by framework and domain (e.g., ISO 27001) using a simple, validatable YAML schema. Instead of manually creating or editing large files, you can use the `policy` subcommand to safely manipulate controls via automation:
+
+```bash
+# Validates all domain YAML files, ensuring the schema remains unbroken
+wardex policy validate frameworks/iso27001/
+
+# Lists the compliance status of all controls in a readable tabular format
+wardex policy list frameworks/iso27001/
+
+# Safely upserts a single control entry without breaking manual YAML syntax
+wardex policy add \
+  --file frameworks/iso27001/technological_controls.yml \
+  --id A.8.5 \
+  --title "Secure authentication" \
+  --status partial \
+  --owner "Security Team" \
+  --note "MFA enforced; hardware tokens pending rollout"
+```
+
+This ensures policy files map structurally to the expected `wardex` schema, simplifying audit requests and native repo integration for pure Governance-as-Code.
 
 ---
 <div align="center">

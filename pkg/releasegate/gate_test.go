@@ -30,7 +30,7 @@ func TestRiskBasedGateVsBinaryThreshold(t *testing.T) {
 	// Contexto de alto risco: sistema financeiro exposto, sem compensação
 	highRiskGate := releasegate.Gate{
 		AssetContext: model.AssetContext{
-			Criticality: 0.9, InternetFacing: true, RequiresAuth: false,
+			Criticality: 1.5, InternetFacing: true, RequiresAuth: false,
 		},
 		CompensatingControls: []model.CompensatingControl{},
 		RiskAppetite:         6.0,
