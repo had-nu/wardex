@@ -100,9 +100,10 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 	_, _ = fmt.Fprintln(w, "|------|----------|---------|---------|--------|")
 	for _, r := range results {
 		icon := "✅"
-		if r.decision == "block" {
+		switch r.decision {
+		case "block":
 			icon = "❌"
-		} else if r.decision == "warn" {
+		case "warn":
 			icon = "⚠️"
 		}
 		_, _ = fmt.Fprintf(w, "| %s | %s %s | %d | %d | %d |\n",
