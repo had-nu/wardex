@@ -169,7 +169,7 @@ Exit code: 2  (exitcodes.GateBlocked)
 ### O que aprender
 
 - O CVSS sozinho (9.1) não bloqueia — o **risco contextualizado** (2.8 > 2.0) bloqueia.
-- Se o `risk_appetite` fosse `4.0` (perfil Dev Sandbox), o resultado seria **ALLOW**.
+- If the `risk_appetite` fosse `0.3` (perfil Infraestrutura Crítica - INFRA), o resultado seria **BLOCK** ainda mais severo.
 - Exit code `2` garante que o **pipeline CI falha automaticamente**.
 
 ---
@@ -419,23 +419,23 @@ Os **mesmos controlos** implementados produzem coberturas diferentes porque cada
 ./bin/wardex --config=config-hospital.yaml --gate=log4shell.yaml controlos.yaml
 # → Final Risk: 7.9 → BLOCK
 
-# Dev Sandbox (criticality=0.3, internet_facing=false, appetite=4.0)
-./bin/wardex --config=config-dev.yaml --gate=log4shell.yaml controlos.yaml
-# → Final Risk: 0.3 → ALLOW
+# Infraestrutura Crítica (NIS2/INFRA, criticality=1.5, internet_facing=true, auth=false, appetite=0.3)
+./bin/wardex --config=config-infra.yaml --gate=log4shell.yaml controlos.yaml
+# → Final Risk: 7.1 → BLOCK
 ```
 
 ### Tabela de decisões
 
 | Perfil          | Apetite | Risk Final | Decisão   |
 |-----------------|---------|------------|-----------|
-| 🏦 Banco Tier-1  | 0.5     | **14.2**   | ❌ BLOCK  |
-| 🏥 Hospital       | 0.8     | **7.9**    | ❌ BLOCK  |
-| 🚀 SaaS           | 2.0     | **2.5**    | ❌ BLOCK  |
-| 🔧 Dev Sandbox    | 4.0     | **0.3**    | ✅ ALLOW  |
+| 🏦 Banco Tier-1  | 0.5     | **14.1**   | ❌ BLOCK  |
+| 🏥 Hospital       | 0.8     | **11.3**   | ❌ BLOCK  |
+| 🚀 SaaS           | 2.0     | **3.5**    | ❌ BLOCK  |
+| ⚡ Infra (INFRA)  | 0.3     | **7.1**    | ❌ BLOCK  |
 
 ### O que aprender
 
-- **Log4Shell não é universalmente equivalente.** Num sandbox de dev sem dados reais, é aceitável aguardar o patch na próxima Sprint.
+- **Log4Shell não é universalmente equivalente.** Num ambiente de desenvolvimento isolado, o risco é menor, mas em infraestrutura crítica (INFRA), o impacto regulatório NIS2 força o bloqueio imediato.
 - No banco, o mesmo CVE tem risco `28×` maior que no sandbox — justificando um plano de resposta imediata.
 - Esta é a proposta central do Wardex: **contexto importa mais que o CVSS bruto**.
 
@@ -655,7 +655,7 @@ FinalRisk = (CVSS × EPSS) × (1 - CompensatingControls) × Criticality × Expos
 Exposure = InternetWeight × (1 - AuthReduction) × (1 - ReachabilityReduction)
 
 Onde:
-  InternetWeight    = 1.0 (exposto) | 0.6 (interno) | 0.3 (development)
+  InternetWeight    = 1.5 (High) | 1.0 (Standard) | 0.5 (Low/OT)
   AuthReduction     = 0.2 se requires_auth = true
   ReachabilityReduction = 0.5 se reachable = false
   CompensatingControls  = clamped em 0.80 máximo

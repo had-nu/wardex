@@ -18,12 +18,16 @@ Na etapa avaliativa, o Scorer traduz instâncias isoladas em maturidade baseada 
 ### 3. A Mecânica do Gate "Risk-Based" (`pkg/releasegate`)
 A espinha dorsal operatória está na componente formal das Decisões de Avaliação Contínuas por Submissão (Gate Evaluations). Como discutido em relação ao Valor do Negócio (`BUSINESS_VIEW.md`), o Gate incorpora uma equação de matemática probabilística que processa em profundidade:
 
-```
-Risco Ajustado = CVSS * Fator Previsto EPSS 
-Limiar de Exposição = [ (Contexto Interno ou Contextual Externo) - Redução da Atividade de Autenticação ] * Avaliação da Exposição de Rota (Reachable Boolean Context)
-Avaliação de Compensação = Total Aritmético de Eficiência por Componentes Adicionais (WAF/Segmentation), contido a um max de 0.8
-Decisão Base = (Risco Ajustado * (1 - Avaliação de Compensação)) * Criticidade Económica Central * Limiar de Exposição
-```
+O Wardex utiliza um modelo de risco contextual purificado para a tomada de decisão:
+
+$$R(v, \alpha) = CVSS(v) \times EPSS(v) \times C(\alpha) \times E(\alpha) \times (1 - \Phi(\alpha))$$
+
+Onde:
+*   **$CVSS(v)$**: Gravidade intrínseca da vulnerabilidade (NVD).
+*   **$EPSS(v)$**: Probabilidade de exploração em 30 dias (FIRST.org).
+*   **$C(\alpha)$**: Coeficiente de Criticidade do Negócio (ex: 1.5 para infraestrutura crítica/bancos).
+*   **$E(\alpha)$**: Coeficiente de Exposição Efectiva (ajustado por acessibilidade de rede e autenticação).
+*   **$(1 - \Phi(\alpha))$**: Factor de Eficácia de Controlos Compensatórios (WAF, IPS, Segmentação), limitado a uma redução máxima de 80% (clamped em 0.20).
 
 O Wardex permite forçar a interrupção através de "Hard Gates", limitando explicitamente a probabilidade de aprovar Submissões sob modo **Aggregated** (se a soma de todos os pequenos scores for superior ao risco admissível geral) e/ou perante execuções isoladas via mecânica standard (O vetor base **ANY**). Existem três bandas possíveis: `ALLOW`, `WARN` (risco excede `warn_above` mas aceitável), e `BLOCK` (excede limite fatal `risk_appetite`). Isto proporciona flexibilidade operacional vital à gestão de tolerância progressiva das empresas.
 
