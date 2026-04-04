@@ -83,7 +83,7 @@ cve_corpus = []
 for cvss_min, cvss_max, n in [(1.0, 4.0, 18), (4.0, 7.0, 47), (7.0, 9.0, 98), (9.0, 10.0, 74)]:
     for _ in range(n):
         cvss = random.uniform(cvss_min, cvss_max)
-        epss = random.betavariate(0.3, 3.0)  # heavy tail low EPSS
+        epss = random.betavariate(0.5, 3.0)  # Moderate tail for high EPSS
         cve_corpus.append({"cvss": cvss, "epss": epss})
 
 # Simulation study
@@ -121,7 +121,7 @@ print(f"\nTotal divergence: {total_diverge}/{total_pairs} = {total_diverge/total
 Path("data").mkdir(exist_ok=True)
 calibration_output = {
     "metadata": {
-        "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+        "generated_at": datetime.datetime.now(datetime.UTC).isoformat(),
         "corpus_size": len(cve_corpus),
         "note": "Synthetic calibration — VCDB substitute for CI without network access"
     },
@@ -139,8 +139,8 @@ snapshot = {
             "cve_id": f"CVE-2024-{i:04d}",
             "cvss_base": v["cvss"],
             "epss_score": v["epss"],
-            "cisa_kev": v["cvss"] >= 9.0 and v["epss"] >= 0.5,  # heurística conservadora
-            "ssvc_exploitation": "active" if v["epss"] > 0.7 else "poc" if v["epss"] > 0.2 else "none",
+            "cisa_kev": v["cvss"] >= 9.0 and v["epss"] >= 0.4,  # Lowered threshold
+            "ssvc_exploitation": "active" if v["epss"] > 0.5 else "poc" if v["epss"] > 0.15 else "none",
             "ssvc_automatable": v["cvss"] >= 8.0,
             "ssvc_impact": "Total" if v["cvss"] >= 9.0 else "Partial",
         }
