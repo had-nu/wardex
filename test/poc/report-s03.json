@@ -1,21 +1,12 @@
 {
   "Summary": {
-    "GeneratedAt": "2026-03-01T18:57:53.433800863Z",
+    "GeneratedAt": "2026-04-04T19:18:36.810668059+01:00",
     "TotalControls": 93,
     "CoveredCount": 0,
     "PartialCount": 93,
     "GapCount": 0,
     "GlobalCoverage": 0,
     "DomainSummaries": [
-      {
-        "Domain": "organizational",
-        "TotalControls": 37,
-        "CoveredCount": 0,
-        "PartialCount": 37,
-        "GapCount": 0,
-        "MaturityScore": 5.121621621621622,
-        "CoveragePercent": 0
-      },
       {
         "Domain": "people",
         "TotalControls": 8,
@@ -41,6 +32,15 @@
         "PartialCount": 34,
         "GapCount": 0,
         "MaturityScore": 5.205882352941177,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "organizational",
+        "TotalControls": 37,
+        "CoveredCount": 0,
+        "PartialCount": 37,
+        "GapCount": 0,
+        "MaturityScore": 5.121621621621622,
         "CoveragePercent": 0
       }
     ],
@@ -21872,7 +21872,7 @@
     "HighestRisk": 1.3851000000000002
   },
   "Delta": {
-    "SnapshotDate": "2026-03-01T18:57:53.401744874Z",
+    "SnapshotDate": "2026-04-04T19:18:36.760381213+01:00",
     "CoverageChange": 0,
     "NewlyCovered": null,
     "NewGaps": null,
