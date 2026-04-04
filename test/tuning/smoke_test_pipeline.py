@@ -25,8 +25,8 @@ all_incidents = (
     make_incidents("62", "Internal",            "High",  40) +   # HOSP: healthcare, internal
     make_incidents("51", "External - Internet", "Moderate", 80)+ # SAAS: tech, internet
     make_incidents("51", "Internal",            "Moderate", 60)+ # SAAS: tech, internal
-    make_incidents("22", "External - Internet", "High",     80)+ # INFRA: utilities, internet
-    make_incidents("22", "Internal",            "High",     80)  # INFRA: utilities, internal
+    make_incidents("22", "External - Internet", "High",     50)+ # INFRA: utilities, internet
+    make_incidents("22", "Internal",            "High",     50)  # INFRA: utilities, internal
 )
 
 PROFILES_CONFIG = [
