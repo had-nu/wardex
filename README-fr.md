@@ -126,6 +126,45 @@ Consultez les fichiers d'exemple pour configurer votre pipeline :
 - **Enrichissement EPSS avec Human-in-the-Loop (HITL)** : Les évaluations échouées en raison de vecteurs EPSS manquants peuvent désormais être enrichies via l'API de FIRST.org.
 - **Fail-Close Sémantique Strict** : La valeur de repli de `0.05` pour les scores inconnus a été révoquée à `0.0`. Sans données concrètes, Wardex suppose le risque maximal.
 
+L'intégration de **Wardex** dans GitHub Actions permet de transformer votre pipeline en un véritable processus de **Gouvernance des Risques**. Wardex agit comme une "Passerelle de Mise en Production" juste après vos scans de sécurité.
+
+Exemple pratique :
+
+```yaml
+# .github/workflows/wardex-gate.yml
+jobs:
+  risk-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Installation Sécurisée (v1.7.1)
+      - name: Install Wardex
+        run: |
+          VERSION="v1.7.1"
+          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
+          sudo mv wardex /usr/local/bin/
+
+      # Évaluation des Risques
+      - name: Evaluate Risk Gate
+        run: |
+          wardex --config ./doc/examples/wardex-config.yaml \
+                 --gate ./evidence.json \
+                 ./doc/examples/policy-nis2.yaml \
+                 --fail-above 0.9
+```
+
+Consultez les fichiers d'exemple pour configurer votre pipeline :
+- [Configuration CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
+- [Exemple de Politique NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
+
+## Nouveautés (v1.7.1)
+
+- **Commandes de Gouvernance (Automation Ready)** : De nouveaux sous-commandes pour les flux de travail complexes : `wardex evaluate` (évaluation ciblée), `wardex aggregate` (décision composite multi-framework) et `wardex policy check-expiry` (audit des exceptions expirées dans les fichiers YAML).
+- **Calibration Empirique du Risque** : Paramètres de `Criticality` et `Exposure` ré-étalonnés pour les profils Hôpital (1.5), Startup (0.75) et Dev, basés sur l'analyse empirique des données NVD/EPSS.
+- **Enrichissement EPSS avec Human-in-the-Loop (HITL)** : Les évaluations échouées en raison de vecteurs EPSS manquants peuvent désormais être enrichies via l'API de FIRST.org.
+- **Fail-Close Sémantique Strict** : La valeur de repli de `0.05` pour les scores inconnus a été révoquée à `0.0`. Sans données concrètes, Wardex suppose le risque maximal.
+
 ## Utilisation en tant que Bibliothèque (SDK)
 
 L'architecture de **Wardex** a été conçue avec une forte séparation des responsabilités (dans le répertoire `pkg/`). Cela signifie qu'en plus d'utiliser la CLI, Wardex peut être importé comme bibliothèque (SDK) dans n'importe quel autre projet Go, tel qu'une API REST, un service d'orchestration GRC ou un bot.

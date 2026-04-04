@@ -70,6 +70,7 @@ go install github.com/had-nu/wardex@latest
 
 # For local builds (e.g., targeting a specific tag)
 git fetch --tags
+git status
 git checkout v1.7.1
 make build
 ```

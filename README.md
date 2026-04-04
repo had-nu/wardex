@@ -83,7 +83,11 @@ go install github.com/had-nu/wardex@latest
 # Para builds locais (ex: escolher uma tag específica)
 git fetch --tags
 git checkout v1.7.1
+<<<<<<< HEAD
 make build
+=======
+go build -o wardex .
+>>>>>>> origin/main
 ```
 
 Por favor, consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes sobre as notas de lançamento e correções de bugs.
@@ -99,6 +103,45 @@ O Wardex permite ingerir as políticas num formato simples YAML ou JSON, cruzar 
 Isto gera relatórios visuais (em Markdown, CSV ou JSON) expondo a Análise de Maturidade das 4 áreas globais da ISO 27001 (Pessoas, Processos, Tecnológico e Físico) e executa as políticas de decisão (ALLOW / BLOCK / WARN) consoante o risco calibrado da organização.
 
 ## Integração com GitHub Actions (CI/CD)
+
+Integrar o **Wardex** no GitHub Actions permite transformar sua pipeline num processo de **Governança de Risco** real. O Wardex atua como um "Release Gate" logo após os seus scans de segurança.
+
+Veja um exemplo prático:
+
+```yaml
+# .github/workflows/wardex-gate.yml
+jobs:
+  risk-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Instalação Segura (v1.7.1)
+      - name: Install Wardex
+        run: |
+          VERSION="v1.7.1"
+          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
+          sudo mv wardex /usr/local/bin/
+
+      # Avaliação de Risco
+      - name: Evaluate Risk Gate
+        run: |
+          wardex --config ./doc/examples/wardex-config.yaml \
+                 --gate ./evidence.json \
+                 ./doc/examples/policy-nis2.yaml \
+                 --fail-above 0.9
+```
+
+Consulte os ficheiros de exemplo para configurar a sua pipeline:
+- [Configuração de CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
+- [Exemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
+
+## Novidades (v1.7.1)
+
+- **Comandos de Governança (Automation Ready)**: Novos subcomandos para pipelines complexas: `wardex evaluate` (focado em gate), `wardex aggregate` (decisão composta) e `wardex policy check-expiry` (auditoria de exceções em YAML).
+- **Calibração Empírica de Risco**: Parâmetros de `Criticality` e `Exposure` re-calibrados para perfis Hospital (1.5), Startup (0.75) e Dev, baseados em análise estatística de dados NVD/EPSS.
+- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas via API FIRST.org.
+- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0`. Sem dados concretos, o Wardex assume risco máximo.
 
 Integrar o **Wardex** no GitHub Actions permite transformar sua pipeline num processo de **Governança de Risco** real. O Wardex atua como um "Release Gate" logo após os seus scans de segurança.
 
