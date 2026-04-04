@@ -91,11 +91,12 @@ func PrintBanner(version string) {
 
 		// Colorize the logo elegantly
 		logoLine := ""
-		if i == 0 {
+		switch i {
+		case 0:
 			logoLine = fmt.Sprintf("%s%s%s", pink, logo[i], reset)
-		} else if i == 1 {
+		case 1:
 			logoLine = fmt.Sprintf("%s%s%s", cyan, logo[i], reset)
-		} else {
+		default:
 			logoLine = fmt.Sprintf("%s%s%s", dimPurple, logo[i], reset)
 		}
 
