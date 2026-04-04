@@ -57,7 +57,7 @@ Si prefiere clonar el repositorio para probar o desarrollar localmente:
 ```bash
 git clone https://github.com/had-nu/wardex.git
 cd wardex
-go build -o wardex .
+make build
 ```
 
 ### Actualización a la Última Versión
@@ -68,9 +68,9 @@ Cuando se lance un nuevo parche o versión menor (ej: `v1.1.1`), puede actualiza
 go install github.com/had-nu/wardex@latest
 
 # Para builds locales (ej: elegir una etiqueta específica)
-git fetch --tags
+git fetch
 git checkout v1.7.1
-go build -o wardex .
+make build
 ```
 
 Por favor, consulte el [CHANGELOG.md](CHANGELOG.md) para obtener detalles sobre las notas de lanzamiento y parches.
@@ -119,10 +119,51 @@ Consulte los archivos de ejemplo para configurar su pipeline:
 - [Configuración CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
 - [Ejemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
 
-## Novedades (v1.7.0)
+## Novedades (v1.7.1)
 
-- **Enriquecimiento EPSS con Human-in-the-Loop (HITL)**: Las evaluaciones fallidas debido a vectores EPSS faltantes (donde Wardex asume un "fail-close" de 1.0) ahora pueden enriquecerse. El nuevo comando `wardex enrich epss` extrae probabilidades reales de la API FIRST.org y las encapsula como una excepción criptográfica permitida por la pipeline.
-- **Fail-Close Semántico Estricto**: El valor de respaldo de `0.05` para puntajes de vulnerabilidad desconocidos se ha revocado a `0.0`, imponiendo una fricción segura. Sin datos concretos, la vulnerabilidad se clasificará invariablemente con el riesgo máximo, activando la pipeline *enrich*.
+- **Comandos de Gobernanza (Automation Ready)**: Nuevos subcomandos para flujos de trabajo complejos: `wardex evaluate` (evaluación enfocada), `wardex aggregate` (decisión compuesta multiframework) y `wardex policy check-expiry` (auditoría de excepciones expiradas en YAML).
+- **Calibración Empírica de Riesgo**: Parâmetros de `Criticality` y `Exposure` recalibrados para perfiles de Hospital (1.5), Startup (0.75) y Dev, basados en el análisis empírico de datos NVD/EPSS.
+- **Enriquecimiento EPSS con Human-in-the-Loop (HITL)**: Las evaluaciones fallidas debido a vectores EPSS faltantes pueden ahora enriquecerse a través de la API de FIRST.org.
+- **Fail-Close Semántico Estricto**: El valor de respaldo de `0.05` para puntajes desconocidos se ha revocado a `0.0`. Sin datos concretos, Wardex asume el riesgo máximo.
+
+Integrar **Wardex** en GitHub Actions permite transformar su pipeline en un proceso de **Gobernanza de Riesgos** real. Wardex actúa como una "Puerta de Liberación" justo después de sus escaneos de seguridad.
+
+Ejemplo práctico:
+
+```yaml
+# .github/workflows/wardex-gate.yml
+jobs:
+  risk-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Instalación Segura (v1.7.1)
+      - name: Install Wardex
+        run: |
+          VERSION="v1.7.1"
+          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
+          sudo mv wardex /usr/local/bin/
+
+      # Evaluación de Riesgos
+      - name: Evaluate Risk Gate
+        run: |
+          wardex --config ./doc/examples/wardex-config.yaml \
+                 --gate ./evidence.json \
+                 ./doc/examples/policy-nis2.yaml \
+                 --fail-above 0.9
+```
+
+Consulte los archivos de ejemplo para configurar su pipeline:
+- [Configuración CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
+- [Ejemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
+
+## Novedades (v1.7.1)
+
+- **Comandos de Gobernanza (Automation Ready)**: Nuevos subcomandos para flujos de trabajo complejos: `wardex evaluate` (evaluación enfocada), `wardex aggregate` (decisión compuesta multiframework) y `wardex policy check-expiry` (auditoría de excepciones expiradas en YAML).
+- **Calibración Empírica de Riesgo**: Parámetros de `Criticality` y `Exposure` recalibrados para perfiles de Hospital (1.5), Startup (0.75) y Dev, basados en el análisis empírico de datos NVD/EPSS.
+- **Enriquecimiento EPSS con Human-in-the-Loop (HITL)**: Las evaluaciones fallidas debido a vectores EPSS faltantes pueden ahora enriquecerse a través de la API de FIRST.org.
+- **Fail-Close Semántico Estricto**: El valor de respaldo de `0.05` para puntajes desconocidos se ha revocado a `0.0`. Sin datos concretos, Wardex asume el riesgo máximo.
 
 ## Uso como Biblioteca (SDK)
 

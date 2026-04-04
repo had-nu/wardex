@@ -263,7 +263,7 @@ header "Scenario 09 · WARN Gate Threshold"
 if ${WARDEX} \
     --config="${POC_DIR}/config-s09.yaml" \
     --gate="${POC_DIR}/scenario-07-converted.yaml" \
-    "${POC_DIR}/scenario-07-nocontrols.yaml" 2>&1 | grep -q "WARNING: Risk threshold exceeded WarnAbove"; then
+    "${POC_DIR}/scenario-07-nocontrols.yaml" 2>&1 | grep "WARNING: Risk threshold exceeded WarnAbove" > /dev/null; then
   ok "Gate correctly returned WARN and emitted warning to StdErr"
   PASS=$((PASS + 1))
 else

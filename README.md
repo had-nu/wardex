@@ -33,6 +33,7 @@ Consulte a documentação em `/doc` para compreender a visão arquitetónica e o
 - [A Visão de Negócio (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Arquitetura e Matemática Técnica (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
 - [Arquitetura de Não-Repudiação e Criptografia para Auditores (SOC 2, ISO 27001)](doc/wardex-g20-audit-readiness.md)
+- [Casos de Uso Didáticos — 10 Cenários Completos com Inputs e Outputs Reais](doc/USECASES.md)
 
 ## Frameworks Suportados (a partir da v1.5.0)
 
@@ -69,7 +70,7 @@ Se preferir clonar o repositório para testar ou desenvolver localmente:
 ```bash
 git clone https://github.com/had-nu/wardex.git
 cd wardex
-go build -o wardex .
+make build
 ```
 
 ### Atualização para a Versão Mais Recente
@@ -82,7 +83,11 @@ go install github.com/had-nu/wardex@latest
 # Para builds locais (ex: escolher uma tag específica)
 git fetch --tags
 git checkout v1.7.1
+<<<<<<< HEAD
+make build
+=======
 go build -o wardex .
+>>>>>>> origin/main
 ```
 
 Por favor, consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes sobre as notas de lançamento e correções de bugs.
@@ -92,7 +97,7 @@ Por favor, consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes sobre as notas 
 O Wardex permite ingerir as políticas num formato simples YAML ou JSON, cruzar as vulnerabilidades (ex: output do Grype ou SBOMs) num ficheiro alvo, e validar o gate:
 
 ```bash
-./bin/wardex --config=test/testdata/wardex-config.yaml --profile=minha-equipa --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml
+./bin/wardex --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml
 ```
 
 Isto gera relatórios visuais (em Markdown, CSV ou JSON) expondo a Análise de Maturidade das 4 áreas globais da ISO 27001 (Pessoas, Processos, Tecnológico e Físico) e executa as políticas de decisão (ALLOW / BLOCK / WARN) consoante o risco calibrado da organização.
@@ -131,10 +136,51 @@ Consulte os ficheiros de exemplo para configurar a sua pipeline:
 - [Configuração de CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
 - [Exemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
 
-## Novidades (v1.7.0)
+## Novidades (v1.7.1)
 
-- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas. O novo comando `wardex enrich epss` extrai probabilidades reais da API FIRST.org e encapsula-as como uma exceção criptográfica permitida pela pipeline.
-- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0` forçando atrito seguro. Sem dados concretos, a vulnerabilidade será invariavelmente classificada com risco máximo, acionando o pipeline *enrich*.
+- **Comandos de Governança (Automation Ready)**: Novos subcomandos para pipelines complexas: `wardex evaluate` (focado em gate), `wardex aggregate` (decisão composta) e `wardex policy check-expiry` (auditoria de exceções em YAML).
+- **Calibração Empírica de Risco**: Parâmetros de `Criticality` e `Exposure` re-calibrados para perfis Hospital (1.5), Startup (0.75) e Dev, baseados em análise estatística de dados NVD/EPSS.
+- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas via API FIRST.org.
+- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0`. Sem dados concretos, o Wardex assume risco máximo.
+
+Integrar o **Wardex** no GitHub Actions permite transformar sua pipeline num processo de **Governança de Risco** real. O Wardex atua como um "Release Gate" logo após os seus scans de segurança.
+
+Veja um exemplo prático:
+
+```yaml
+# .github/workflows/wardex-gate.yml
+jobs:
+  risk-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Instalação Segura (v1.7.1)
+      - name: Install Wardex
+        run: |
+          VERSION="v1.7.1"
+          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
+          sudo mv wardex /usr/local/bin/
+
+      # Avaliação de Risco
+      - name: Evaluate Risk Gate
+        run: |
+          wardex --config ./doc/examples/wardex-config.yaml \
+                 --gate ./evidence.json \
+                 ./doc/examples/policy-nis2.yaml \
+                 --fail-above 0.9
+```
+
+Consulte os ficheiros de exemplo para configurar a sua pipeline:
+- [Configuração de CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
+- [Exemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
+
+## Novidades (v1.7.1)
+
+- **Comandos de Governança (Automation Ready)**: Novos subcomandos para pipelines complexas: `wardex evaluate` (focado em gate), `wardex aggregate` (decisão composta) e `wardex policy check-expiry` (auditoria de exceções em YAML).
+- **Calibração Empírica de Risco**: Parâmetros de `Criticality` e `Exposure` re-calibrados para perfis Hospital (1.5), Startup (0.75) e Dev, baseados em análise estatística de dados NVD/EPSS.
+- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas via API FIRST.org.
+- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0`. Sem dados concretos, o Wardex assume risco máximo.
 
 ## Utilização como Biblioteca (SDK)
 
@@ -226,6 +272,29 @@ Validado com **237 CVEs reais** e scores EPSS ao vivo da FIRST.org:
 | [DEV] Dev Sandbox | 4.0 | **0** | 238 | 0% |
 
 Relatorio completo: [EPSS Multi-Context Stress Test Report](doc/epss-stress-test-report.md)
+
+## Gestão de Políticas Locais (Local Policy Management)
+
+O Wardex permite a gestão granular de ficheiros de políticas por framework e por domínio (ex: ISO 27001) usando a sua própria sintaxe YAML. Em vez de criar ou editar manualmente ficheiros longos, utilize o subcomando `policy` para manipular os controlos de forma segura e com suporte a ferramentas de automação:
+
+```bash
+# Valida todos os ficheiros YAML garantindo a integridade do schema
+wardex policy validate frameworks/iso27001/
+
+# Lista o estado de conformidade de todos os controlos de forma legível
+wardex policy list frameworks/iso27001/
+
+# Upsert (adicionar ou atualizar) de um único controlo sem quebrar YAML manual
+wardex policy add \
+  --file frameworks/iso27001/technological_controls.yml \
+  --id A.8.5 \
+  --title "Secure authentication" \
+  --status partial \
+  --owner "Security Team" \
+  --note "MFA enforced; hardware tokens pending rollout"
+```
+
+Isto garante que os ficheiros seguem sempre o _schema_ esperado, simplificando os processos de auditoria e integração nativa nos repositórios usando o Wardex como Governance-as-Code.
 
 ---
 
