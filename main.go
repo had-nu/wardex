@@ -8,7 +8,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/had-nu/wardex/cmd/aggregate"
 	"github.com/had-nu/wardex/cmd/convert"
+	"github.com/had-nu/wardex/cmd/evaluate"
 	"github.com/had-nu/wardex/cmd/policy"
 	"github.com/had-nu/wardex/cmd/simulate"
 	"github.com/had-nu/wardex/config"
@@ -88,10 +90,14 @@ func init() {
 	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora")
 	rootCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a cryptographically signed EPSS enrichment file")
 
+
+
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
 	rootCmd.AddCommand(convertCmd)
 	rootCmd.AddCommand(simulate.SimulateCmd)
 	rootCmd.AddCommand(policy.PolicyCmd)
+	rootCmd.AddCommand(evaluate.EvaluateCmd)
+	rootCmd.AddCommand(aggregate.AggregateCmd)
 	cli.AddCommands(rootCmd, &configPath)
 	enrichCli.AddCommands(rootCmd, &configPath)
 }
