@@ -132,10 +132,12 @@ Consulte os ficheiros de exemplo para configurar a sua pipeline:
 - [Configuração de CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
 - [Exemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
 
-## Novidades (v1.7.0)
+## Novidades (v1.7.1)
 
-- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas. O novo comando `wardex enrich epss` extrai probabilidades reais da API FIRST.org e encapsula-as como uma exceção criptográfica permitida pela pipeline.
-- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0` forçando atrito seguro. Sem dados concretos, a vulnerabilidade será invariavelmente classificada com risco máximo, acionando o pipeline *enrich*.
+- **Comandos de Governança (Automation Ready)**: Novos subcomandos para pipelines complexas: `wardex evaluate` (focado em gate), `wardex aggregate` (decisão composta) e `wardex policy check-expiry` (auditoria de exceções em YAML).
+- **Calibração Empírica de Risco**: Parâmetros de `Criticality` e `Exposure` re-calibrados para perfis Hospital (1.5), Startup (0.75) e Dev, baseados em análise estatística de dados NVD/EPSS.
+- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas via API FIRST.org.
+- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0`. Sem dados concretos, o Wardex assume risco máximo.
 
 ## Utilização como Biblioteca (SDK)
 

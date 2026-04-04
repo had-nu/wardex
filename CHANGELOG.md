@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.1] - Unreleased
 
 ### Added
-- **Security Hardening (TeamPCP Response)**: 
+- **Governance Commands (Automation Ready)**:
+  - Added `wardex evaluate` for focused, CI-optimized gate checks.
+  - Added `wardex aggregate` to combine multiple framework decisions into one final gate.
+  - Added `wardex policy check-expiry` to identify expired compliance exceptions in YAML policies.
+- **Empirical Risk Calibration**:
+  - Re-calibrated default `Criticality` and `Exposure` parameters for Hospital (1.5), Startup (0.75), and Dev environments based on NVD/EPSS empirical analysis (PR #35).
+- **Security Hardening (Team PCP Response)**:
   - Implementation of immutable GitHub Actions pinning via SHA256.
   - Strict `permissions: read-all` enforcement for `pull_request_target` workflows.
   - Subresource Integrity (SRI) for all simulation dashboard CDN dependencies.

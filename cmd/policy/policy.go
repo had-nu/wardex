@@ -6,7 +6,11 @@ import (
 	"path/filepath"
 	"text/tabwriter"
 
+	"time"
+
 	"github.com/had-nu/wardex/internal/policy"
+	"github.com/had-nu/wardex/pkg/exitcodes"
+	"github.com/had-nu/wardex/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -52,7 +56,7 @@ func runPolicyValidate(cmd *cobra.Command, args []string) error {
 		total += len(d.Controls)
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(),
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
 		"✓ %d domain file(s), %d control(s) — all valid in %q\n",
 		len(domains), total, args[0],
 	)
@@ -75,17 +79,68 @@ func runPolicyList(cmd *cobra.Command, args []string) error {
 	}
 
 	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
-	fmt.Fprintln(w, "ID\tTITLE\tSTATUS\tOWNER\tLAST ASSESSED")
-	fmt.Fprintln(w, "--\t-----\t------\t-----\t-------------")
+	_, _ = fmt.Fprintln(w, "ID\tTITLE\tSTATUS\tOWNER\tLAST ASSESSED")
+	_, _ = fmt.Fprintln(w, "--\t-----\t------\t-----\t-------------")
 
 	for _, d := range domains {
 		for _, c := range d.Controls {
-			fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n",
+			_, _ = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n",
 				c.ID, c.Title, c.Status, c.Owner, c.LastAssessed,
 			)
 		}
 	}
 	return w.Flush()
+}
+// ── check-expiry ─────────────────────────────────────────────────────────────
+
+var policyCheckExpiryCmd = &cobra.Command{
+	Use:   "check-expiry <framework-dir>",
+	Short: "Check for expired policy exceptions in a framework directory",
+	Args:  cobra.ExactArgs(1),
+	RunE:  runPolicyCheckExpiry,
+}
+
+func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
+	domains, err := policy.LoadFramework(args[0])
+	if err != nil {
+		return err
+	}
+
+	now := time.Now()
+	expiredCount := 0
+
+	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "ID\tDOMAIN\tEXPIRY\tREASON")
+	_, _ = fmt.Fprintln(w, "--\t------\t------\t------")
+
+	for _, d := range domains {
+		for _, c := range d.Controls {
+			for _, e := range c.Exceptions {
+				if e.Expiry == "" {
+					continue
+				}
+				expiry, err := time.Parse("2006-01-02", e.Expiry)
+				if err != nil {
+					continue
+				}
+				if expiry.Before(now) {
+					_, _ = fmt.Fprintf(w, "%s\t%s\t%s\t%s\n",
+						c.ID, d.Domain, e.Expiry, e.Reason,
+					)
+					expiredCount++
+				}
+			}
+		}
+	}
+
+	if expiredCount > 0 {
+		_ = w.Flush()
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "\n[FAIL] Found %d expired exception(s) in %q\n", expiredCount, args[0])
+		os.Exit(exitcodes.ComplianceFail)
+	}
+
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "✓ No expired exceptions found in %q\n", args[0])
+	return nil
 }
 
 // ── add ──────────────────────────────────────────────────────────────────────
@@ -116,11 +171,9 @@ func init() {
 	policyAddCmd.Flags().String("owner", "", "team or role responsible for this control")
 	policyAddCmd.Flags().String("note", "", "short implementation note")
 
-	_ = policyAddCmd.MarkFlagRequired("file")
-	_ = policyAddCmd.MarkFlagRequired("id")
 	_ = policyAddCmd.MarkFlagRequired("title")
 
-	PolicyCmd.AddCommand(policyValidateCmd, policyListCmd, policyAddCmd)
+	PolicyCmd.AddCommand(policyValidateCmd, policyListCmd, policyAddCmd, policyCheckExpiryCmd)
 	// wired into root inside main.go
 }
 
@@ -133,7 +186,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	note, _ := cmd.Flags().GetString("note")
 
 	// Resolve and clean the path before any I/O.
-	abs, err := filepath.Abs(filepath.Clean(file))
+	abs, err := utils.SafePath(".", filepath.Clean(file))
 	if err != nil {
 		return fmt.Errorf("policy add: resolve path: %w", err)
 	}
@@ -141,7 +194,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	var d policy.DomainFile
 
 	// Load existing file if it exists; silently init a new struct otherwise.
-	data, err := os.ReadFile(abs)
+	data, err := os.ReadFile(abs) // #nosec G304
 	switch {
 	case err == nil:
 		if err := yaml.Unmarshal(data, &d); err != nil {
@@ -192,6 +245,6 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	if updated {
 		verb = "Updated"
 	}
-	fmt.Fprintf(cmd.OutOrStdout(), "%s control %q in %q\n", verb, id, file)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%s control %q in %q\n", verb, id, file)
 	return nil
 }

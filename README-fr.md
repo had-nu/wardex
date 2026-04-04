@@ -119,10 +119,12 @@ Consultez les fichiers d'exemple pour configurer votre pipeline :
 - [Configuration CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
 - [Exemple de Politique NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
 
-## Nouveautés (v1.7.0)
+## Nouveautés (v1.7.1)
 
-- **Enrichissement EPSS avec Human-in-the-Loop (HITL)** : Les évaluations échouées en raison de vecteurs EPSS manquants (où Wardex suppose un "fail-close" de 1.0) peuvent désormais être enrichies. La nouvelle commande `wardex enrich epss` extrait des probabilités réelles de l'API FIRST.org et les encapsule sous la forme d'une exception cryptographique autorisée par le pipeline.
-- **Fail-Close Sémantique Strict** : La valeur de repli de `0.05` pour les scores de vulnérabilité inconnus a été révoquée à `0.0`, imposant une friction sécurisée. Sans données concrètes, la vulnérabilité sera invariablement classée avec un risque maximal, déclenchant le pipeline *enrich*.
+- **Commandes de Gouvernance (Automation Ready)** : De nouveaux sous-commandes pour les flux de travail complexes : `wardex evaluate` (évaluation ciblée), `wardex aggregate` (décision composite multi-framework) et `wardex policy check-expiry` (audit des exceptions expirées dans les fichiers YAML).
+- **Calibration Empirique du Risque** : Paramètres de `Criticality` et `Exposure` ré-étalonnés pour les profils Hôpital (1.5), Startup (0.75) et Dev, basés sur l'analyse empirique des données NVD/EPSS.
+- **Enrichissement EPSS avec Human-in-the-Loop (HITL)** : Les évaluations échouées en raison de vecteurs EPSS manquants peuvent désormais être enrichies via l'API de FIRST.org.
+- **Fail-Close Sémantique Strict** : La valeur de repli de `0.05` pour les scores inconnus a été révoquée à `0.0`. Sans données concrètes, Wardex suppose le risque maximal.
 
 ## Utilisation en tant que Bibliothèque (SDK)
 
