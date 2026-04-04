@@ -135,46 +135,7 @@ Consulte os ficheiros de exemplo para configurar a sua pipeline:
 ## Novidades (v1.7.1)
 
 - **Comandos de Governança (Automation Ready)**: Novos subcomandos para pipelines complexas: `wardex evaluate` (focado em gate), `wardex aggregate` (decisão composta) e `wardex policy check-expiry` (auditoria de exceções em YAML).
-- **Calibração Empírica de Risco**: Parâmetros de `Criticality` e `Exposure` re-calibrados para perfis Hospital (1.5), Startup (0.75) e Dev, baseados em análise estatística de dados NVD/EPSS.
-- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas via API FIRST.org.
-- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0`. Sem dados concretos, o Wardex assume risco máximo.
-
-Integrar o **Wardex** no GitHub Actions permite transformar sua pipeline num processo de **Governança de Risco** real. O Wardex atua como um "Release Gate" logo após os seus scans de segurança.
-
-Veja um exemplo prático:
-
-```yaml
-# .github/workflows/wardex-gate.yml
-jobs:
-  risk-governance:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      # Instalação Segura (v1.7.1)
-      - name: Install Wardex
-        run: |
-          VERSION="v1.7.1"
-          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
-          sudo mv wardex /usr/local/bin/
-
-      # Avaliação de Risco
-      - name: Evaluate Risk Gate
-        run: |
-          wardex --config ./doc/examples/wardex-config.yaml \
-                 --gate ./evidence.json \
-                 ./doc/examples/policy-nis2.yaml \
-                 --fail-above 0.9
-```
-
-Consulte os ficheiros de exemplo para configurar a sua pipeline:
-- [Configuração de CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
-- [Exemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
-
-## Novidades (v1.7.1)
-
-- **Comandos de Governança (Automation Ready)**: Novos subcomandos para pipelines complexas: `wardex evaluate` (focado em gate), `wardex aggregate` (decisão composta) e `wardex policy check-expiry` (auditoria de exceções em YAML).
-- **Calibração Empírica de Risco**: Parâmetros de `Criticality` e `Exposure` re-calibrados para perfis Hospital (1.5), Startup (0.75) e Dev, baseados em análise estatística de dados NVD/EPSS.
+- **Calibração Empírica de Risco**: Parâmetros de `Criticality` e `Exposure` re-calibrados para perfis Hospital (1.5), Startup (0.75) e Infraestrutura Crítica (1.5), baseados em análise estatística de dados NVD/EPSS.
 - **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas via API FIRST.org.
 - **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0`. Sem dados concretos, o Wardex assume risco máximo.
 
@@ -251,12 +212,12 @@ O comando consulta a API da FIRST.org (`api.first.org`), obtém as probabilidade
 
 O Wardex calcula: `FinalRisk = (CVSS x EPSS) x (1 - Compensacoes) x Criticidade x Exposicao`
 
-| CVE | CVSS | EPSS | [BANK] | [SAAS] | [DEV] | [HOSP] |
+| CVE | CVSS | EPSS | [BANK] | [SAAS] | [INFRA] | [HOSP] |
 |---|---|---|---|---|---|---|
-| **Log4Shell** | 10.0 | 0.94 | **14.2** `BLOCK` | **2.5** `BLOCK` | **0.3** `ALLOW` | **7.9** `BLOCK` |
-| **xz backdoor** | 10.0 | 0.86 | **12.8** `BLOCK` | **2.3** `BLOCK` | **0.2** `ALLOW` | **7.1** `BLOCK` |
-| **curl SOCKS5** | 9.8 | 0.26 | **3.9** `BLOCK` | **0.7** `ALLOW` | **0.1** `ALLOW` | **2.1** `BLOCK` |
-| **minimist** | 9.8 | 0.01 | **0.1** `ALLOW` | **0.0** `ALLOW` | **0.0** `ALLOW` | **0.1** `ALLOW` |
+| **Log4Shell** | 10.0 | 0.94 | **14.1** `BLOCK` | **3.5** `BLOCK` | **7.1** `BLOCK` | **11.3** `BLOCK` |
+| **xz backdoor** | 10.0 | 0.86 | **12.9** `BLOCK` | **3.2** `BLOCK` | **6.5** `BLOCK` | **10.3** `BLOCK` |
+| **curl SOCKS5** | 9.8 | 0.26 | **3.8** `BLOCK` | **1.0** `ALLOW` | **1.9** `BLOCK` | **3.1** `BLOCK` |
+| **minimist** | 9.8 | 0.01 | **0.1** `ALLOW` | **0.0** `ALLOW` | **0.1** `ALLOW` | **0.1** `ALLOW` |
 
 Validado com **237 CVEs reais** e scores EPSS ao vivo da FIRST.org:
 
@@ -265,7 +226,7 @@ Validado com **237 CVEs reais** e scores EPSS ao vivo da FIRST.org:
 | [BANK] Banco Tier-1 (DORA) | 0.5 | **176** | 57 | 74% |
 | [HOSP] Hospital (HIPAA) | 0.8 | **168** | 63 | 71% |
 | [SAAS] Startup SaaS | 2.0 | **111** | 86 | 47% |
-| [DEV] Dev Sandbox | 4.0 | **0** | 238 | 0% |
+| [INFRA] Energia/Águas (NIS2) | 0.3 | **180** | 53 | 76% |
 
 Relatorio completo: [EPSS Multi-Context Stress Test Report](doc/epss-stress-test-report.md)
 

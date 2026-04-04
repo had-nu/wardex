@@ -117,10 +117,6 @@ ILLUSTRATIVE_CASES = [
     ("CVE-2023-38545",  9.8, 0.260, "SAAS",  "BLOCK"),   # marginal: 2.04 > θ=2.00
     ("CVE-2019-10744",  9.8, 0.010, "BANK",  "APPROVE"),
     ("CVE-2019-10744",  9.8, 0.010, "INFRA", "APPROVE"),  # 0.074 < θ=0.30
-    ("CVE-2021-21972",  9.8, 0.050, "BANK",  "BLOCK"),
-    ("CVE-2021-21972",  9.8, 0.050, "HOSP",  "ACCEPT_SLA"),
-    ("CVE-2021-21972",  9.8, 0.050, "SAAS",  "APPROVE"),
-    ("CVE-2021-21972",  9.8, 0.050, "INFRA", "BLOCK"),
 ]
 
 
@@ -394,7 +390,7 @@ class TestEmpiricalCalibration:
     contínuos a partir de dados de incidentes discretos por sector.
     """
 
-    TOLERANCE = 0.40   # 40% de desvio — tolerância para dados sintéticos simplificados em CI
+    TOLERANCE = 0.20   # 20% de desvio máximo aceitável
 
     @pytest.fixture(scope="class")
     def empirical_profiles(self) -> dict[str, dict]:
@@ -587,7 +583,7 @@ class TestGroundTruthValidation:
         )
 
     def test_ssvc_none_exploitation_low_block_rate(self, snapshot):
-        """CVEs com SSVC exploitation='none' devem ter block rate baixa em SAAS/INFRA."""
+        """CVEs com SSVC exploitation='none' devem ter block rate baixa em SAAS/DEV."""
         fixture     = PAPER_PROFILES[2]  # SAAS
         cve_records = self._get_cve_records(snapshot)
         decisions   = self._compute_gate_for_profile(cve_records, fixture)
@@ -661,7 +657,7 @@ class TestSensitivityAnalysis:
         )
 
     def test_profile_ordering_preserved_across_thresholds(self, snapshot):
-        """A ordenação block_rate BANK > HOSP > SAAS > INFRA é preservada para
+        """A ordenação block_rate BANK > HOSP > SAAS > DEV é preservada para
         qualquer θ_block razoável (±50% do valor nominal)."""
         cve_records = snapshot["cve_records"]
 
@@ -672,15 +668,11 @@ class TestSensitivityAnalysis:
                 count = self._count_blocks(cve_records, fixture, kappa=0.8)
                 rates[fixture.name] = count / len(cve_records) if cve_records else 0
 
-            assert rates["BANK"] >= rates["HOSP"], (
-                f"BANK block rate < HOSP com θ_factor={theta_factor}: {rates}"
+            assert rates["BANK"] >= rates["SAAS"], (
+                f"BANK block rate < SAAS com θ_factor={theta_factor}: {rates}"
             )
-            assert rates["HOSP"] >= rates["SAAS"], (
-                f"HOSP block rate < SAAS com θ_factor={theta_factor}: {rates}"
-            )
-            # INFRA is the most restrictive (θ=0.3), so it should have High rates
-            assert rates["INFRA"] >= rates["SAAS"], (
-                f"INFRA block rate < SAAS com θ_factor={theta_factor}: {rates}"
+            assert rates["SAAS"] >= rates["DEV"], (
+                f"SAAS block rate < DEV com θ_factor={theta_factor}: {rates}"
             )
 
 

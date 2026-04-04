@@ -1,0 +1,28 @@
+/home/hadnu/Documentos/Projects/portfolio/wardex/wardex/test/tuning/smoke_test_pipeline.py:124: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+[BANK] C(α)=1.50  E(α)=0.80  n=150  source=FIPS 199 modal=High + regulatory adjustment
+[HOSP] C(α)=1.50  E(α)=0.80  n=140  source=FIPS 199 modal=High + regulatory adjustment
+[SAAS] C(α)=0.75  E(α)=0.50  n=140  source=FIPS 199 modal=Moderate (VCDB n=140)
+[INFRA] C(α)=1.50  E(α)=0.50  n=160  source=FIPS 199 modal=High + regulatory adjustment
+
+=== ILLUSTRATIVE CASES ===
+CVE                  Name                BANK     HOSP     SAAS    INFRA
+---------------------------------------------------------------------------
+CVE-2021-44228      Log4Shell         BLOCK   BLOCK   BLOCK   BLOCK
+CVE-2024-3094       xz backdoor       BLOCK   BLOCK   BLOCK   BLOCK
+CVE-2023-38545      curl SOCKS5       BLOCK   BLOCK APPROVE   BLOCK
+CVE-2019-10744      minimist        APPROVE APPROVE APPROVE APPROVE
+
+=== SIMULATION STUDY (237 CVEs, synthetic EPSS distribution) ===
+Profile   BLOCK  ALLOW   %Block    vs CVSS≥7   Diverge
+------------------------------------------------------------
+BANK         90    147    38.0%         -82    53.2%
+HOSP         65    172    27.4%        -107    57.8%
+SAAS          3    234     1.3%        -169    71.3%
+INFRA        91    146    38.4%         -81    52.7%
+
+Total divergence: 557/948 = 58.8%
+
+Artifacts written:
+  data/calibration.json  (4 profiles)
+  data/dataset_2025-03-01.json  (sha256: d6b42446d5a3a3db...)
