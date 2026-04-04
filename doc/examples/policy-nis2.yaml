@@ -1,0 +1,27 @@
+# Wardex Policy Example: NIS2 / ISO 27001 Alignment
+# Defines implemented controls and their effectiveness
+
+controls:
+  - id: "A.8.30"
+    name: "Outsourced Development"
+    framework: "NIS2"
+    maturity: 4
+    implemented: true
+    effectiveness: 0.8
+    justification: "Mandatory use of GoReleaser with CycloneDX SBOM and Cosign signatures."
+
+  - id: "A.8.28"
+    name: "Secure Coding"
+    framework: "ISO27001"
+    maturity: 5
+    implemented: true
+    effectiveness: 0.9
+    justification: "CI/CD pipelines with SHA256 pinning and mandatory static/dynamic analysis."
+
+  - id: "A.8.16"
+    name: "Monitoring and Logging"
+    framework: "ISO27001"
+    maturity: 3
+    implemented: true
+    effectiveness: 0.75
+    justification: "Centralized logging with real-time alerting for security events."

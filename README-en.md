@@ -70,16 +70,19 @@ go install github.com/had-nu/wardex@latest
 
 # For local builds (e.g., targeting a specific tag)
 git fetch --tags
+git status
 git checkout v1.7.1
 make build
 ```
 
 Please refer to the [CHANGELOG.md](CHANGELOG.md) for detailed release notes and patch information.
 
-## What's New (v1.7.0)
+## What's New (v1.7.1)
 
-- **Human-in-the-Loop EPSS Enrichment (HITL)**: Failed evaluations due to missing EPSS vectors (where Wardex assumes a "fail-close" 1.0) can now be enriched. The new `wardex enrich epss` command extracts real probabilities from the FIRST.org API and encapsulates them as a pipeline-permitted cryptographic exception.
-- **Strict Semantic Fail-Close**: The `0.05` fallback for unknown vulnerability scores has been revoked to `0.0`, enforcing secure friction. Without concrete data, the vulnerability will invariably be classified with maximum risk, triggering the *enrich* pipeline.
+- **Governance Commands (Automation Ready)**: New subcommands for complex workflows: `wardex evaluate` (focused gate check), `wardex aggregate` (composite multi-framework decision), and `wardex policy check-expiry` (audit of YAML policy exceptions).
+- **Empirical Risk Calibration**: `Criticality` and `Exposure` parameters re-calibrated for Hospital (1.5), Startup (0.75), and Dev environments based on NVD/EPSS empirical analysis.
+- **Human-in-the-Loop EPSS Enrichment (HITL)**: Failed evaluations due to missing EPSS vectors (where Wardex assumes a "fail-close" 1.0) can now be enriched via the FIRST.org API.
+- **Strict Semantic Fail-Close**: The `0.05` fallback for unknown scores has been revoked to `0.0`. Without concrete data, Wardex assumes maximum risk.
 
 ## Usage
 
