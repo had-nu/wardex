@@ -1,0 +1,38 @@
+framework: "nis2"
+annex: "Article 21"
+domain: "cyber_hygiene"
+controls:
+  - id: "NIS2.21.2.a"
+    title: "Policies on Risk Analysis"
+    status: "compliant"
+    maturity: 4
+    implementation_note: "Formal Risk Analysis policy reviewed annually by Board."
+    last_assessed: "2026-01-10"
+
+  - id: "NIS2.21.2.b"
+    title: "Incident Handling"
+    status: "compliant"
+    maturity: 5
+    implementation_note: "24/7 SOC powered by Sentinel and automated IR playbooks."
+    last_assessed: "2026-03-15"
+
+  - id: "NIS2.21.2.c"
+    title: "Business Continuity"
+    status: "partial"
+    maturity: 2
+    implementation_note: "Backup management in place; DR testing for tier-2 apps pending."
+    last_assessed: "2026-02-28"
+
+  - id: "NIS2.21.2.d"
+    title: "Supply Chain Security"
+    status: "compliant"
+    maturity: 3
+    implementation_note: "SBOM validation required for all new software ingestion."
+    last_assessed: "2026-04-01"
+
+  - id: "NIS2.21.2.e"
+    title: "Security in Acquisition"
+    status: "non_compliant"
+    maturity: 1
+    implementation_note: "Vulnerability disclosure policy not yet public."
+    last_assessed: "2026-04-02"
