@@ -1,0 +1,85 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/hadnu/Documentos/Projects/portfolio/wardex/wardex/test/tuning/venv/bin/python3
+cachedir: .pytest_cache
+metadata: {'Python': '3.12.3', 'Platform': 'Linux-6.17.0-20-generic-x86_64-with-glibc2.39', 'Packages': {'pytest': '9.0.2', 'pluggy': '1.6.0'}, 'Plugins': {'metadata': '3.1.1', 'json-report': '1.5.0', 'cov': '7.1.0', 'hypothesis': '6.151.10'}}
+hypothesis profile 'default'
+rootdir: /home/hadnu/Documentos/Projects/portfolio/wardex/wardex/test/tuning
+plugins: metadata-3.1.1, json-report-1.5.0, cov-7.1.0, hypothesis-6.151.10
+collecting ... collected 83 items / 22 deselected / 61 selected
+
+test_calibration.py::TestMathematicalProperties::test_bounded_output_maximum PASSED [  1%]
+test_calibration.py::TestMathematicalProperties::test_bounded_output_exact_maximum PASSED [  3%]
+test_calibration.py::TestMathematicalProperties::test_bounded_output_minimum PASSED [  4%]
+test_calibration.py::TestMathematicalProperties::test_bounded_output_with_controls_not_zero PASSED [  6%]
+test_calibration.py::TestMathematicalProperties::test_monotone_in_cvss PASSED [  8%]
+test_calibration.py::TestMathematicalProperties::test_monotone_in_epss PASSED [  9%]
+test_calibration.py::TestMathematicalProperties::test_monotone_in_c_alpha PASSED [ 11%]
+test_calibration.py::TestMathematicalProperties::test_monotone_in_e_alpha PASSED [ 13%]
+test_calibration.py::TestMathematicalProperties::test_monotone_decreasing_in_controls PASSED [ 14%]
+test_calibration.py::TestMathematicalProperties::test_failclose_epss_zero_treated_as_one PASSED [ 16%]
+test_calibration.py::TestMathematicalProperties::test_failclose_never_lower_than_known_epss PASSED [ 18%]
+test_calibration.py::TestMathematicalProperties::test_kappa_cap_applied PASSED [ 19%]
+test_calibration.py::TestMathematicalProperties::test_kappa_configurable PASSED [ 21%]
+test_calibration.py::TestMathematicalProperties::test_kappa_smaller_produces_higher_score PASSED [ 22%]
+test_calibration.py::TestPropertyBased::test_output_always_non_negative PASSED [ 24%]
+test_calibration.py::TestPropertyBased::test_output_bounded_above PASSED [ 26%]
+test_calibration.py::TestPropertyBased::test_monotone_cvss_strict PASSED [ 27%]
+test_calibration.py::TestPropertyBased::test_monotone_controls_decreasing PASSED [ 29%]
+test_calibration.py::TestPropertyBased::test_failclose_invariant PASSED  [ 31%]
+test_calibration.py::TestPropertyBased::test_kappa_monotone PASSED       [ 32%]
+test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2021-44228/BANK] PASSED [ 34%]
+test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2021-44228/DEV] PASSED [ 36%]
+test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2024-3094/BANK] PASSED [ 37%]
+test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2024-3094/DEV] PASSED [ 39%]
+test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2023-38545/BANK] PASSED [ 40%]
+test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2023-38545/SAAS] FAILED [ 42%]
+test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2019-10744/BANK] PASSED [ 44%]
+test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2019-10744/HOSP] PASSED [ 45%]
+test_calibration.py::TestIllustrativeCasesRegression::test_log4shell_bank_score_range PASSED [ 47%]
+test_calibration.py::TestIllustrativeCasesRegression::test_minimist_allows_all_profiles PASSED [ 49%]
+test_calibration.py::TestIllustrativeCasesRegression::test_log4shell_dev_below_threshold PASSED [ 50%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[52-High] PASSED [ 52%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[522-High] PASSED [ 54%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[62-High] PASSED [ 55%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[6211-High] PASSED [ 57%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[92-High] PASSED [ 59%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[51-Moderate] PASSED [ 60%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[54-Moderate] PASSED [ 62%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[44-Moderate] PASSED [ 63%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[23-Low] PASSED [ 65%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[11-Low] PASSED [ 67%]
+test_calibration.py::TestMappingFunctions::test_naics_to_fips199_mapping[00-Moderate] PASSED [ 68%]
+test_calibration.py::TestMappingFunctions::test_naics_uses_first_two_digits PASSED [ 70%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_c_alpha_mapping[Minimal-0.25] PASSED [ 72%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_c_alpha_mapping[Support-0.75] PASSED [ 73%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_c_alpha_mapping[Essential-1.5] PASSED [ 75%]
+test_calibration.py::TestMappingFunctions::test_ssvc_c_alpha_ordering PASSED [ 77%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_e_alpha_mapping[True-active-1.0] PASSED [ 78%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_e_alpha_mapping[True-poc-0.8] PASSED [ 80%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_e_alpha_mapping[True-none-0.5] PASSED [ 81%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_e_alpha_mapping[False-active-0.5] PASSED [ 83%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_e_alpha_mapping[False-poc-0.3] PASSED [ 85%]
+test_calibration.py::TestMappingFunctions::test_ssvc_to_e_alpha_mapping[False-none-0.3] PASSED [ 86%]
+test_calibration.py::TestMappingFunctions::test_ssvc_e_alpha_automatable_increases_exposure PASSED [ 88%]
+test_calibration.py::TestMappingFunctions::test_ssvc_e_alpha_exploitation_increases_exposure PASSED [ 90%]
+test_calibration.py::TestDeriveProfileCalibration::test_all_internet_facing_produces_high_e_alpha PASSED [ 91%]
+test_calibration.py::TestDeriveProfileCalibration::test_all_internal_produces_low_e_alpha PASSED [ 93%]
+test_calibration.py::TestDeriveProfileCalibration::test_regulatory_sector_adds_c_alpha_bonus PASSED [ 95%]
+test_calibration.py::TestDeriveProfileCalibration::test_non_regulatory_sector_no_bonus PASSED [ 96%]
+test_calibration.py::TestDeriveProfileCalibration::test_empty_incidents_returns_default PASSED [ 98%]
+test_calibration.py::TestDeriveProfileCalibration::test_mixed_fips_uses_modal PASSED [100%]
+
+=================================== FAILURES ===================================
+_ TestIllustrativeCasesRegression.test_illustrative_case[CVE-2023-38545/SAAS] __
+test_calibration.py:695: in test_illustrative_case
+    assert decision == expected_decision, (
+E   AssertionError: [CVE-2023-38545 / SAAS] Esperado=APPROVE, Obtido=BLOCK. Score=2.0384, θ_block=2.0, C(α)=1.0, E(α)=0.8
+E   assert 'BLOCK' == 'APPROVE'
+E     
+E     - APPROVE
+E     + BLOCK
+--------------------------------- JSON report ----------------------------------
+report saved to: reports/t1_t6_deterministic.json
+=========================== short test summary info ============================
+FAILED test_calibration.py::TestIllustrativeCasesRegression::test_illustrative_case[CVE-2023-38545/SAAS]
+================= 1 failed, 60 passed, 22 deselected in 4.23s ==================

@@ -1,0 +1,95 @@
+{
+  "action": {
+    "hacking": {
+      "variety": [
+        "Unknown"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "PK"
+      ],
+      "motive": [
+        "Fun"
+      ],
+      "name": [
+        "ZHC"
+      ],
+      "region": [
+        "142034"
+      ],
+      "variety": [
+        "Activist"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Web application"
+      },
+      {
+        "variety": "S - DNS"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "availability": {
+      "variety": [
+        "Interruption"
+      ]
+    },
+    "integrity": {
+      "variety": [
+        "Defacement"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "incident_id": "2AAA5380-1AAF-417B-9434-C9CF61D5063A",
+  "notes": "TeaM Madleets and ZHC are competing hacker groups, This falls somewhere between harmless fund and Stupitiy. TeaM Madleets let their DNS name laps and someone (ZHC?) bought it up from underneath them.",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "thocoats",
+    "created": "2014-05-26T07:12:15.155Z",
+    "github": "1465",
+    "master_id": "2AAA5380-1AAF-417B-9434-C9CF61D5063A",
+    "modified": "2014-05-26T07:12:15.155Z"
+  },
+  "reference": "http://www.ehackingnews.com/2014/01/team-madleets-wesbite-hacked-by.html#sthash.vKsnqa4a.dpuf (2014-05-26T07:12:15.155Z);",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Web site defacement",
+  "timeline": {
+    "incident": {
+      "day": 28,
+      "month": 1,
+      "year": 2014
+    }
+  },
+  "victim": {
+    "country": [
+      "PK"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "81",
+    "region": [
+      "142034"
+    ],
+    "victim_id": "TeaM Madleets"
+  }
+}

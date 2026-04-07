@@ -218,9 +218,10 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	_, _ = fmt.Fprintln(w, "|-----|------|------|--------------|----------|")
 	for _, d := range gateReport.Decisions {
 		icon := "[OK]"
-		if d.Decision == "block" {
+		switch d.Decision {
+		case "block":
 			icon = "[BLOCK]"
-		} else if d.Decision == "warn" {
+		case "warn":
 			icon = "[WARN]"
 		}
 		_, _ = fmt.Fprintf(w, "| %s | %.1f | %.2f | **%.1f** | %s %s |\n",

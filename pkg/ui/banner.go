@@ -50,72 +50,21 @@ func smoothGradient(text string, startPcnt, endPcnt float64) string {
 	return out + reset
 }
 
-// PrintBanner outputs the Wardex CLI startup banner with a "code-behind"
-// dark aesthetic mimicking the requested ASCII style layout.
+// PrintBanner outputs a professional, minimalist Wardex header.
 func PrintBanner(version string) {
-	now := time.Now().Format("15:04:05.000")
-	tStamp := fmt.Sprintf("%s[%s]%s", pink, now, reset)
+	now := time.Now().Format("2006-01-02 15:04:05")
 
-	lineSep := fmt.Sprintf("%s-------------------------------------------------------------------------------------------------------%s", purple, reset)
+	// Colors
+	p := pink
+	c := cyan
+	g := green
+	r := reset
+	d := dim
 
-	// --- Top Section: Compact Code & Logs ---
-	fmt.Printf("\n%s\n", smoothGradient("func (g *Gate) Evaluate(ctx context.Context) (*Decision, error) {", 0.0, 0.4))
-	fmt.Printf("%s %sSYSTEM_INIT%s   Ω :: W A R D E X %s\n", tStamp, cyan, reset, version)
-	fmt.Printf("%s\n", lineSep)
+	line := fmt.Sprintf("%s────────────────────────────────────────────────────────────────────────────────%s", d, r)
 
-	// --- Middle Section: Elegant Simple Logo over Dim Code ---
-	logo := []string{
-		`  ◈  W A R D E X                      `,
-		`  │  Risk-Based Release Gate          `,
-		`  └─────────────────────────────────  `,
-	}
-
-	bgContexts := []string{
-		`SUB RSP, 0x28                   `,
-		`score := g.RiskEngine.Score()   `,
-		`package wardex (import)         `,
-	}
-
-	bgContextsRight := []string{
-		` // 0x488B05           `,
-		` ; check thresholds    `,
-		` ; end frame           `,
-	}
-
-	for i := 0; i < 3; i++ {
-		leftBgRaw := fmt.Sprintf("%-35s", bgContexts[i])
-		leftBgHtml := smoothGradient(leftBgRaw, 0.0, 0.35)
-
-		rightBgRaw := bgContextsRight[i]
-		rightBgHtml := smoothGradient(rightBgRaw, 0.75, 1.0)
-
-		// Colorize the logo elegantly
-		logoLine := ""
-		if i == 0 {
-			logoLine = fmt.Sprintf("%s%s%s", pink, logo[i], reset)
-		} else if i == 1 {
-			logoLine = fmt.Sprintf("%s%s%s", cyan, logo[i], reset)
-		} else {
-			logoLine = fmt.Sprintf("%s%s%s", dimPurple, logo[i], reset)
-		}
-
-		fmt.Printf("%s%s   %s\n", leftBgHtml, logoLine, rightBgHtml)
-	}
-
-	// --- Bottom Section: Lower Context & Final Status ---
-	fmt.Printf("%s\n", smoothGradient("    if score > g.Threshold { return Deny, nil }", 0.1, 0.4))
-
-	fmt.Printf("%s[RISK-BASED]%s %sscore%s %s[RELEASE-GATE]%s %s0x8B2E%s %s0xRBRG-v2.1%s\n",
-		white, reset, dim, reset, cyan, reset, dim, reset, yellow, reset)
-
-	fmt.Printf("%s\n", lineSep)
-
-	fmt.Printf("%s %sGATE_STATUS%s   :: %sACTIVE%s       [%s█████████████████████████░░%s]  93%%\n",
-		tStamp, white, reset, pink, reset, pink, reset)
-	fmt.Printf("%s %sRISK_ENGINE%s   :: %sONLINE%s       %sTHRESHOLD=0.72  VECTORS=14  ASSETS=203%s\n",
-		tStamp, cyan, reset, green, reset, dim, reset)
-	fmt.Printf("%s %sPIPELINE%s      :: %sAWAITING_RELEASE_TOKEN%s\n",
-		tStamp, dimPurple, reset, yellow, reset)
-
-	fmt.Printf("%s\n\n", lineSep)
+	fmt.Printf("\n%s\n", line)
+	fmt.Printf("  %s◈ WARDEX%s v%s  %s|%s  Status: %sACTIVE%s  %s|%s  Threshold: %s0.72%s  %s|%s  %s%s%s\n",
+		p, r, version, d, r, g, r, d, r, c, r, d, r, d, now, r)
+	fmt.Printf("%s\n\n", line)
 }

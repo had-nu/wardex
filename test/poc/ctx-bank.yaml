@@ -3,7 +3,7 @@
 release_gate:
   enabled: true
   risk_appetite: 0.5           # Extremely strict: only negligible risk passes
-  warn_above: 0.3
+  warn_above: 0.03  # normalizado v4
   asset_context:
     internet_facing: true       # Public API
     requires_auth: false        # Pre-auth attack surface

@@ -1,0 +1,136 @@
+{
+  "action": {
+    "misuse": {
+      "notes": "used CAD drawings created for client A (the victim) for an engagement with client B without permission. ",
+      "variety": [
+        "Knowledge abuse"
+      ],
+      "vector": [
+        "Non-corporate"
+      ]
+    }
+  },
+  "actor": {
+    "partner": {
+      "country": [
+        "IT"
+      ],
+      "industry": "541340",
+      "motive": [
+        "Financial"
+      ],
+      "region": [
+        "150039"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "U - Desktop"
+      },
+      {
+        "variety": "U - Desktop or laptop"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ],
+    "hosting": [
+      "External - unknown environment"
+    ],
+    "management": [
+      "External"
+    ],
+    "notes": "desktop owned by Partner."
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Secrets"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "notes": "CAD drawings",
+      "state": [
+        "Stored"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "loss": [
+      {
+        "rating": "Unknown",
+        "variety": "Legal and regulatory"
+      },
+      {
+        "rating": "Unknown",
+        "variety": "Competitive advantage"
+      }
+    ],
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "4B4BDE4A-4BF4-4152-B5F1-FC33AD99F21D",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "whbaker",
+    "asset": {
+      "total": "No"
+    },
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown",
+        "data_abuse": "Yes"
+      }
+    },
+    "created": "2013-08-22T20:18:56Z",
+    "master_id": "4B4BDE4A-4BF4-4152-B5F1-FC33AD99F21D",
+    "modified": "2014-05-10T00:58:19Z",
+    "timeline": {
+      "notification": {
+        "year": 2013
+      }
+    }
+  },
+  "reference": "http://www.natlawreview.com/article/english-court-appeal-dismisses-formula-one-confidentiality-and-copyright-infringemen",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Partner engineering firm sold CAD drawings developed for the victim to another company in violation of contract.",
+  "timeline": {
+    "compromise": {
+      "unit": "NA"
+    },
+    "containment": {
+      "unit": "Unknown"
+    },
+    "discovery": {
+      "unit": "Unknown"
+    },
+    "exfiltration": {
+      "unit": "NA"
+    },
+    "incident": {
+      "year": 2009
+    }
+  },
+  "victim": {
+    "country": [
+      "IN"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "336111",
+    "notes": "NAICS: 336111",
+    "region": [
+      "142034"
+    ],
+    "victim_id": "Force India"
+  }
+}

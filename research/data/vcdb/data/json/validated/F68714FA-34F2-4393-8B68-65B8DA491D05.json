@@ -1,0 +1,105 @@
+{
+  "action": {
+    "physical": {
+      "variety": [
+        "Tampering",
+        "Disabled controls"
+      ],
+      "vector": [
+        "Public facility"
+      ]
+    }
+  },
+  "actor": {
+    "unknown": {}
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "T - Gas terminal"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Payment"
+        }
+      ],
+      "data_disclosure": "Potentially",
+      "data_victim": [
+        "Customer"
+      ],
+      "state": [
+        "Unknown"
+      ]
+    },
+    "integrity": {
+      "variety": [
+        "Hardware tampering"
+      ]
+    }
+  },
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Law enforcement"
+      ]
+    }
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "F68714FA-34F2-4393-8B68-65B8DA491D05",
+  "plus": {
+    "analysis_status": "Finalized",
+    "analyst": "adam-schwieger",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2015-04-29T02:11:00Z",
+    "dbir_year": 2016,
+    "github": "4647",
+    "master_id": "F68714FA-34F2-4393-8B68-65B8DA491D05",
+    "modified": "2015-04-29T02:11:00Z",
+    "timeline": {
+      "notification": {
+        "day": 6,
+        "month": 11,
+        "year": 2014
+      }
+    }
+  },
+  "reference": "http://www.sheepsheadbites.com/2014/11/thieves-skimming-credit-cards-local-gas-stations/",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Skimming devices have been found on two separate Sunoco Gas Stations in Brooklyn.",
+  "timeline": {
+    "incident": {
+      "year": 2014
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "4471",
+    "locations_affected": 2,
+    "region": [
+      "019021"
+    ],
+    "state": "NY",
+    "victim_id": "Sunoco"
+  }
+}

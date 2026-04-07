@@ -1,0 +1,106 @@
+{
+  "action": {
+    "physical": {
+      "variety": [
+        "Tampering",
+        "Disabled controls",
+        "Surveillance"
+      ],
+      "vector": [
+        "Public facility"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Financial"
+      ],
+      "region": [
+        "000000"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "T - ATM"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Bank"
+        }
+      ],
+      "data_disclosure": "Potentially",
+      "state": [
+        "Unknown"
+      ]
+    },
+    "integrity": {
+      "variety": [
+        "Hardware tampering"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "30EDB265-79A0-4A90-905D-6FFDAC58C3B3",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "jayjacobs",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2014-09-04T18:17:00Z",
+    "github": "2450",
+    "master_id": "30EDB265-79A0-4A90-905D-6FFDAC58C3B3",
+    "modified": "2014-09-04T18:17:00Z",
+    "timeline": {
+      "notification": {
+        "year": 2013
+      }
+    }
+  },
+  "reference": "http://newsinfo.inquirer.net/452229/cops-uncover-atm-fraud-in-boracay",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "ATM skimming, 2 ATMS",
+  "timeline": {
+    "incident": {
+      "year": 2013
+    }
+  },
+  "victim": {
+    "country": [
+      "PH"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "522110",
+    "region": [
+      "142035"
+    ]
+  }
+}

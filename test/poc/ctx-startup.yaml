@@ -2,7 +2,7 @@
 # Behind auth + load balancer, moderate criticality, compensating WAF
 release_gate:
   enabled: true
-  risk_appetite: 2.0           # Moderate tolerance to ship faster
+  risk_appetite: 0.20           # Moderate tolerance to ship faster  # normalizado v4 [0, 1.5]
   warn_above: 1.0
   asset_context:
     internet_facing: false      # Behind internal network
