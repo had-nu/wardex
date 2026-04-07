@@ -1,0 +1,43 @@
+framework: "dora"
+annex: "Chapter II"
+domain: "resilience_controls"
+controls:
+  - id: "DORA.Art5"
+    title: "Governance and ICT Risk"
+    status: "compliant"
+    maturity: 5
+    owner: "Board of Directors"
+    implementation_note: "Annual ICT Risk Management Framework review and approval."
+    last_assessed: "2026-01-20"
+
+  - id: "DORA.Art9"
+    title: "Protection and Prevention"
+    status: "compliant"
+    maturity: 4
+    owner: "Security Ops"
+    implementation_note: "Segmentation via micro-services and zero-trust proxy."
+    last_assessed: "2026-03-22"
+
+  - id: "DORA.Art10"
+    title: "Detection"
+    status: "partial"
+    maturity: 3
+    owner: "SOC"
+    implementation_note: "SIEM covers all Tier-1 assets; expanding to Tier-2 by Q2."
+    last_assessed: "2026-04-03"
+
+  - id: "DORA.Art11"
+    title: "Response and Recovery"
+    status: "compliant"
+    maturity: 4
+    owner: "Business Continuity"
+    implementation_note: "Comprehensive ICT-related incident response and recovery plan."
+    last_assessed: "2026-02-15"
+
+  - id: "DORA.Art24"
+    title: "Digital Operational Resilience Testing"
+    status: "non_compliant"
+    maturity: 1
+    owner: "Internal Audit"
+    implementation_note: "Digital operational resilience testing (purple team) scheduled for Q4."
+    last_assessed: "2026-04-04"

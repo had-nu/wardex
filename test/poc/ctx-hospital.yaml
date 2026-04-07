@@ -3,7 +3,7 @@
 release_gate:
   enabled: true
   risk_appetite: 0.8           # Strict but slightly more tolerant than banking
-  warn_above: 0.5
+  warn_above: 0.05  # normalizado v4
   asset_context:
     internet_facing: true       # Patient portal is public
     requires_auth: true         # Requires patient/doctor credentials

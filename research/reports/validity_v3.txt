@@ -1,0 +1,51 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/hadnu/Documentos/Projects/portfolio/wardex/wardex/test/tuning/venv/bin/python3
+cachedir: .pytest_cache
+metadata: {'Python': '3.12.3', 'Platform': 'Linux-6.17.0-20-generic-x86_64-with-glibc2.39', 'Packages': {'pytest': '9.0.2', 'pluggy': '1.6.0'}, 'Plugins': {'metadata': '3.1.1', 'json-report': '1.5.0', 'cov': '7.1.0', 'hypothesis': '6.151.10'}}
+hypothesis profile 'default'
+rootdir: /home/hadnu/Documentos/Projects/portfolio/wardex/wardex
+plugins: metadata-3.1.1, json-report-1.5.0, cov-7.1.0, hypothesis-6.151.10
+collecting ... collected 7 items
+
+test/tuning/convergent_validity.py::TestConvergentValidity::test_spearman_concordance_per_profile[BANK] 
+[CV] BANK: Spearman ρ = 0.899 (n=237, threshold=0.4)
+PASSED
+test/tuning/convergent_validity.py::TestConvergentValidity::test_spearman_concordance_per_profile[HOSP] 
+[CV] HOSP: Spearman ρ = 0.899 (n=237, threshold=0.4)
+PASSED
+test/tuning/convergent_validity.py::TestConvergentValidity::test_spearman_concordance_per_profile[SAAS] 
+[CV] SAAS: Spearman ρ = 0.899 (n=237, threshold=0.4)
+PASSED
+test/tuning/convergent_validity.py::TestConvergentValidity::test_spearman_concordance_per_profile[INFRA] 
+[CV] INFRA: Spearman ρ = 0.899 (n=237, threshold=0.4)
+PASSED
+test/tuning/convergent_validity.py::TestConvergentValidity::test_exploitation_tier_ordering 
+[CV] SSVC exploitation median R_ssvc: none=0.100, poc=1.280, active=6.267
+PASSED
+test/tuning/convergent_validity.py::TestConvergentValidity::test_kev_higher_risk_both_sources 
+[CV] KEV vs non-KEV medians:
+     SSVC:  KEV=7.861, non-KEV=0.098
+     FIPS:  KEV=7.861, non-KEV=0.820
+PASSED
+test/tuning/convergent_validity.py::TestConvergentValidity::test_print_convergent_validity_report 
+
+=== CONVERGENT VALIDITY REPORT ===
+Profile    Spearman ρ   n CVEs      Verdict
+---------------------------------------------
+BANK            0.899      237       strong
+HOSP            0.899      237       strong
+SAAS            0.899      237       strong
+INFRA           0.899      237       strong
+
+Mission Prevalence distribution:
+  Essential: 42 CVEs (17.7%)
+  Minimal: 110 CVEs (46.4%)
+  Support: 85 CVEs (35.9%)
+
+Exploitation tier distribution:
+  active: 13 CVEs (5.5%)
+  none: 151 CVEs (63.7%)
+  poc: 73 CVEs (30.8%)
+PASSED
+
+============================== 7 passed in 4.65s ===============================

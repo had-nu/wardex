@@ -5,8 +5,6 @@ run:
 
 linters:
   disable-all: true
-  disable:
-    - staticcheck
   enable:
     - errcheck
     - govet

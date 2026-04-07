@@ -1,0 +1,110 @@
+{
+  "action": {
+    "hacking": {
+      "variety": [
+        "Unknown"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Unknown"
+      ],
+      "region": [
+        "000000"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "Unknown"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Personal"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_total": 109,
+      "data_victim": [
+        "Customer"
+      ],
+      "notes": "Usernames, encrypted passwords and decrypted passwords acquired and dumped by hacker",
+      "state": [
+        "Stored encrypted"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "C4A6B0E2-2F6E-4162-BA7D-6E63449DF726",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "abooker",
+    "asset": {
+      "total": "No"
+    },
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown",
+        "data_abuse": "Unknown"
+      }
+    },
+    "created": "2013-03-15T19:58:34Z",
+    "master_id": "C4A6B0E2-2F6E-4162-BA7D-6E63449DF726",
+    "modified": "2014-05-10T00:58:19Z",
+    "timeline": {
+      "notification": {
+        "day": 10,
+        "month": 1,
+        "year": 2012
+      }
+    }
+  },
+  "reference": "http://www.efortresses.com/2012-Breaches-Matrix.htm ",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Usernames, encrypted passwords and decrypted passwords acquired and dumped by hacker",
+  "timeline": {
+    "incident": {
+      "year": 2012
+    }
+  },
+  "victim": {
+    "country": [
+      "IT"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "81",
+    "region": [
+      "150039"
+    ],
+    "victim_id": "Le Muse Societ Cooperativa"
+  }
+}

@@ -16,8 +16,8 @@ domain_weights:
 release_gate:
   enabled: true
   mode: "any"              # "any" = block if any single vuln exceeds appetite
-  risk_appetite: 6.0       # Threshold: composite score above this → BLOCK
-  warn_above: 4.5          # Threshold: composite score above this → WARN
+  risk_appetite: 0.6       # Threshold: composite score above this → BLOCK  # normalizado v4 [0, 1.5]
+  warn_above: 0.45  # normalizado v4          # Threshold: composite score above this → WARN
 
   asset_context:
     criticality: 0.9

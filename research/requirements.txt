@@ -1,0 +1,7 @@
+# Data Science Pipeline Dependencies for Wardex V2 Empirical Paper
+requests>=2.31.0
+pytest>=8.0.0
+pytest-cov>=4.1.0
+numpy>=1.26.0
+hypothesis>=6.98.0
+python-dotenv>=1.0.0

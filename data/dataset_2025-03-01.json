@@ -1,0 +1,2199 @@
+{
+  "cve_records": [
+    {
+      "cve_id": "CVE-2024-0000",
+      "cvss_base": 2.9182803953736514,
+      "epss_score": 0.0005102411287173076,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0001",
+      "cvss_base": 3.030098462268734,
+      "epss_score": 0.343796659402056,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0002",
+      "cvss_base": 1.65591392441081,
+      "epss_score": 0.18202637583641612,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0003",
+      "cvss_base": 2.6348244418096503,
+      "epss_score": 0.011872497725730732,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0004",
+      "cvss_base": 2.0207515495539754,
+      "epss_score": 0.015068551632020666,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0005",
+      "cvss_base": 1.290149130500392,
+      "epss_score": 0.15182085646876597,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0006",
+      "cvss_base": 2.6086842743641023,
+      "epss_score": 0.45539158940501795,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0007",
+      "cvss_base": 2.855559257092738,
+      "epss_score": 0.39106951572667464,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0008",
+      "cvss_base": 1.2393759307708825,
+      "epss_score": 0.03735330056787585,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0009",
+      "cvss_base": 2.0944965369102526,
+      "epss_score": 0.09139221186187162,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0010",
+      "cvss_base": 2.9441061557397807,
+      "epss_score": 0.10018322836914122,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0011",
+      "cvss_base": 2.1383663252729432,
+      "epss_score": 0.03350160688193611,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0012",
+      "cvss_base": 1.6329485307589793,
+      "epss_score": 0.05295798867992891,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0013",
+      "cvss_base": 2.376555557762196,
+      "epss_score": 0.028520210452778312,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0014",
+      "cvss_base": 2.7537579706706214,
+      "epss_score": 0.4549159423829059,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0015",
+      "cvss_base": 2.5285788810293934,
+      "epss_score": 0.009755818971916951,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0016",
+      "cvss_base": 3.3762380930888924,
+      "epss_score": 0.09365539564883063,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0017",
+      "cvss_base": 2.587343035297411,
+      "epss_score": 4.380784009498608e-05,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0018",
+      "cvss_base": 4.800475569857628,
+      "epss_score": 0.17753715054052352,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0019",
+      "cvss_base": 6.861447782563241,
+      "epss_score": 0.2896063436556631,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0020",
+      "cvss_base": 6.737883518034462,
+      "epss_score": 0.23388753038405924,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0021",
+      "cvss_base": 4.4585178056489045,
+      "epss_score": 8.816643288107078e-07,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0022",
+      "cvss_base": 6.6361656334695525,
+      "epss_score": 0.5293865321119888,
+      "cisa_kev": false,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0023",
+      "cvss_base": 6.840848335893982,
+      "epss_score": 0.010840485405544633,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0024",
+      "cvss_base": 6.297503287920963,
+      "epss_score": 0.006994253560431535,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0025",
+      "cvss_base": 6.617299123255773,
+      "epss_score": 0.07232769765332653,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0026",
+      "cvss_base": 4.603453190169088,
+      "epss_score": 0.16052706270636632,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0027",
+      "cvss_base": 4.674092011094672,
+      "epss_score": 0.08395795999640458,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0028",
+      "cvss_base": 4.212979258027097,
+      "epss_score": 0.0634634689256852,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0029",
+      "cvss_base": 4.21257204966596,
+      "epss_score": 0.045188971673977736,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0030",
+      "cvss_base": 6.806542721742013,
+      "epss_score": 0.07873554000836393,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0031",
+      "cvss_base": 4.571229743085633,
+      "epss_score": 0.0050132438718984975,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0032",
+      "cvss_base": 6.187227548379552,
+      "epss_score": 0.006060054187101096,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0033",
+      "cvss_base": 4.745969001760857,
+      "epss_score": 0.0190905767595374,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0034",
+      "cvss_base": 4.749419343646301,
+      "epss_score": 0.20074247373848741,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0035",
+      "cvss_base": 4.1517649885746435,
+      "epss_score": 0.25984086298370085,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0036",
+      "cvss_base": 5.203120877648358,
+      "epss_score": 0.0009015855868513467,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0037",
+      "cvss_base": 5.269022457970489,
+      "epss_score": 0.01027349142994597,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0038",
+      "cvss_base": 4.171495818722449,
+      "epss_score": 0.2358951702102918,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0039",
+      "cvss_base": 6.02563766081227,
+      "epss_score": 0.021317865462250608,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0040",
+      "cvss_base": 5.257674746007617,
+      "epss_score": 0.09520196060043559,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0041",
+      "cvss_base": 5.187357540373764,
+      "epss_score": 0.229373118657625,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0042",
+      "cvss_base": 4.217629343479472,
+      "epss_score": 0.7368346885213886,
+      "cisa_kev": false,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0043",
+      "cvss_base": 6.799778133981127,
+      "epss_score": 0.34882096462944845,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0044",
+      "cvss_base": 6.5012348639194215,
+      "epss_score": 4.182321895055389e-05,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0045",
+      "cvss_base": 6.816790011781311,
+      "epss_score": 0.021296267009730478,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0046",
+      "cvss_base": 4.817044636944449,
+      "epss_score": 0.029725240086723795,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0047",
+      "cvss_base": 6.716009473237969,
+      "epss_score": 0.2786066233374534,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0048",
+      "cvss_base": 4.010637067263347,
+      "epss_score": 0.02839158035296664,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0049",
+      "cvss_base": 4.02900909882502,
+      "epss_score": 0.0012810460748919129,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0050",
+      "cvss_base": 4.444281356702448,
+      "epss_score": 0.002846995242545893,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0051",
+      "cvss_base": 6.582107746002708,
+      "epss_score": 0.438174213266378,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0052",
+      "cvss_base": 6.340348725614328,
+      "epss_score": 0.25700781468820166,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0053",
+      "cvss_base": 6.789643047081023,
+      "epss_score": 0.0003921226951142228,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0054",
+      "cvss_base": 6.406705416811417,
+      "epss_score": 0.37258316480982134,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0055",
+      "cvss_base": 4.324286879208872,
+      "epss_score": 0.41078237501263165,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0056",
+      "cvss_base": 5.380909704036826,
+      "epss_score": 0.07620052499385059,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0057",
+      "cvss_base": 6.593058826090859,
+      "epss_score": 0.39548390647834264,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0058",
+      "cvss_base": 6.94344906159478,
+      "epss_score": 0.012150686415324108,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0059",
+      "cvss_base": 4.796399087568906,
+      "epss_score": 0.003518353724023117,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0060",
+      "cvss_base": 5.81862655991843,
+      "epss_score": 0.0962046721763024,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0061",
+      "cvss_base": 6.126355851502511,
+      "epss_score": 1.247485308263419e-06,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0062",
+      "cvss_base": 6.22585023351843,
+      "epss_score": 0.4005883281513502,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0063",
+      "cvss_base": 4.990600108127789,
+      "epss_score": 0.02931194374745071,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0064",
+      "cvss_base": 4.927853986625959,
+      "epss_score": 0.10305297539682658,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0065",
+      "cvss_base": 7.840892667545816,
+      "epss_score": 0.4874915316245479,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0066",
+      "cvss_base": 7.0008118793945755,
+      "epss_score": 0.03222100302138727,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0067",
+      "cvss_base": 7.929976380494028,
+      "epss_score": 0.08745820844599732,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0068",
+      "cvss_base": 8.59204952025356,
+      "epss_score": 0.012918211289590188,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0069",
+      "cvss_base": 7.670376510819602,
+      "epss_score": 0.25925531134960134,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0070",
+      "cvss_base": 8.699475389249464,
+      "epss_score": 0.0019503681868205136,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0071",
+      "cvss_base": 8.39270850098101,
+      "epss_score": 0.06516497870843001,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0072",
+      "cvss_base": 7.213174593127078,
+      "epss_score": 0.23924556497337515,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0073",
+      "cvss_base": 8.69667269470332,
+      "epss_score": 0.2291486480272852,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0074",
+      "cvss_base": 8.66113833944283,
+      "epss_score": 0.023797936309891844,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0075",
+      "cvss_base": 8.042599625655964,
+      "epss_score": 0.35719257518517716,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0076",
+      "cvss_base": 7.543430214164369,
+      "epss_score": 0.0976414108199279,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0077",
+      "cvss_base": 8.387899624598104,
+      "epss_score": 0.2160563884097617,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0078",
+      "cvss_base": 7.831548468206312,
+      "epss_score": 0.01362648462600087,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0079",
+      "cvss_base": 8.53118915223614,
+      "epss_score": 0.08160842449902869,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0080",
+      "cvss_base": 8.706895901138209,
+      "epss_score": 0.31144364344770187,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0081",
+      "cvss_base": 8.206505177882482,
+      "epss_score": 0.024871060556047885,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0082",
+      "cvss_base": 7.672259087396765,
+      "epss_score": 0.30794122530338036,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0083",
+      "cvss_base": 7.255255594562321,
+      "epss_score": 0.17987113126603843,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0084",
+      "cvss_base": 7.054204092680624,
+      "epss_score": 0.17132487188024367,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0085",
+      "cvss_base": 7.758207728376279,
+      "epss_score": 0.012309758889835895,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0086",
+      "cvss_base": 8.504019647109569,
+      "epss_score": 0.23154525900868672,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0087",
+      "cvss_base": 7.699920687440368,
+      "epss_score": 0.6273574649129098,
+      "cisa_kev": false,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0088",
+      "cvss_base": 8.127939163860038,
+      "epss_score": 0.01286444902704901,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0089",
+      "cvss_base": 8.214494987781864,
+      "epss_score": 0.11734278491398697,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0090",
+      "cvss_base": 7.216197499315213,
+      "epss_score": 0.00022107614733486643,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0091",
+      "cvss_base": 7.793308883033255,
+      "epss_score": 0.14295862918825455,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0092",
+      "cvss_base": 7.2038026108919535,
+      "epss_score": 0.18259755682162324,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0093",
+      "cvss_base": 7.741141752436112,
+      "epss_score": 0.052264423192318506,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0094",
+      "cvss_base": 7.211077741287998,
+      "epss_score": 0.28132462097849975,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0095",
+      "cvss_base": 7.870974290015354,
+      "epss_score": 0.030846720574220877,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0096",
+      "cvss_base": 7.871148986007789,
+      "epss_score": 0.10254110049947801,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0097",
+      "cvss_base": 7.173325796111349,
+      "epss_score": 0.31113455221607605,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0098",
+      "cvss_base": 7.757978608256528,
+      "epss_score": 0.0007534796319621125,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0099",
+      "cvss_base": 8.595664713656193,
+      "epss_score": 0.6404543440533215,
+      "cisa_kev": false,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0100",
+      "cvss_base": 7.171225923916042,
+      "epss_score": 0.25478443541909057,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0101",
+      "cvss_base": 7.612412060260176,
+      "epss_score": 0.13006320893121262,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0102",
+      "cvss_base": 8.491870873427219,
+      "epss_score": 0.07373241204750597,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0103",
+      "cvss_base": 7.241311769504612,
+      "epss_score": 0.015990740287877787,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0104",
+      "cvss_base": 7.370299684875324,
+      "epss_score": 0.013995692210671795,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0105",
+      "cvss_base": 8.049273738217217,
+      "epss_score": 0.06605399391898106,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0106",
+      "cvss_base": 7.358883087370806,
+      "epss_score": 0.00014449024189499462,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0107",
+      "cvss_base": 8.106717933597217,
+      "epss_score": 0.08901351955928259,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0108",
+      "cvss_base": 8.74543946999707,
+      "epss_score": 0.14629696024851563,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0109",
+      "cvss_base": 7.1027534343671554,
+      "epss_score": 0.24870995221856992,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0110",
+      "cvss_base": 7.148164340511279,
+      "epss_score": 0.2873702637095409,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0111",
+      "cvss_base": 7.607671023684455,
+      "epss_score": 0.45502139543227,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0112",
+      "cvss_base": 8.581481659686839,
+      "epss_score": 0.02534962062277271,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0113",
+      "cvss_base": 8.72033333165236,
+      "epss_score": 0.5003185972412761,
+      "cisa_kev": false,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0114",
+      "cvss_base": 8.48017861096909,
+      "epss_score": 0.5564388738514777,
+      "cisa_kev": false,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0115",
+      "cvss_base": 7.3141141867617545,
+      "epss_score": 0.011770859493608158,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0116",
+      "cvss_base": 7.462952469112052,
+      "epss_score": 0.03057089134899621,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0117",
+      "cvss_base": 8.250116014328444,
+      "epss_score": 0.06043800019973668,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0118",
+      "cvss_base": 8.653262319300119,
+      "epss_score": 0.0034130559752961155,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0119",
+      "cvss_base": 8.138414098638185,
+      "epss_score": 0.02656246857188735,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0120",
+      "cvss_base": 8.88535248148808,
+      "epss_score": 0.11681168561151963,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0121",
+      "cvss_base": 7.500735804824008,
+      "epss_score": 0.0018777401849097866,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0122",
+      "cvss_base": 8.901572555612704,
+      "epss_score": 0.02004350851817551,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0123",
+      "cvss_base": 8.303018978867373,
+      "epss_score": 0.3158464602388329,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0124",
+      "cvss_base": 7.983451604382027,
+      "epss_score": 0.005275706382493014,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0125",
+      "cvss_base": 8.715466188800706,
+      "epss_score": 0.07075648533847707,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0126",
+      "cvss_base": 8.627132069475945,
+      "epss_score": 0.16689115930241327,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0127",
+      "cvss_base": 8.940369453617155,
+      "epss_score": 0.06604386893293458,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0128",
+      "cvss_base": 7.375165082789055,
+      "epss_score": 0.04637160253705002,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0129",
+      "cvss_base": 7.407116476700548,
+      "epss_score": 0.1785171239642238,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0130",
+      "cvss_base": 8.21774333416393,
+      "epss_score": 0.023839765024977606,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0131",
+      "cvss_base": 7.186418402563045,
+      "epss_score": 0.046369671639756006,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0132",
+      "cvss_base": 8.433206651983582,
+      "epss_score": 0.05539435971902538,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0133",
+      "cvss_base": 7.4874618121502765,
+      "epss_score": 0.05519055119066179,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0134",
+      "cvss_base": 7.552494805644082,
+      "epss_score": 0.29936085967538506,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0135",
+      "cvss_base": 8.997804666458677,
+      "epss_score": 0.09464125189219941,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0136",
+      "cvss_base": 8.103834834141622,
+      "epss_score": 0.16149098012222313,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0137",
+      "cvss_base": 8.394996855241143,
+      "epss_score": 0.08646117557107301,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0138",
+      "cvss_base": 8.622817805129754,
+      "epss_score": 0.034067675848565654,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0139",
+      "cvss_base": 7.990657299232847,
+      "epss_score": 0.0005436637271764138,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0140",
+      "cvss_base": 8.748380748108616,
+      "epss_score": 0.08913473207692263,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0141",
+      "cvss_base": 7.819957239492728,
+      "epss_score": 0.17462742496304479,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0142",
+      "cvss_base": 7.677122468102864,
+      "epss_score": 0.3298773223841589,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0143",
+      "cvss_base": 8.518803618668727,
+      "epss_score": 0.5618674579707867,
+      "cisa_kev": false,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0144",
+      "cvss_base": 8.841858197560594,
+      "epss_score": 0.0644231528422257,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0145",
+      "cvss_base": 7.887357103323412,
+      "epss_score": 0.0014621275150638773,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0146",
+      "cvss_base": 7.291139591398797,
+      "epss_score": 0.2833873812875906,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0147",
+      "cvss_base": 8.23942073707483,
+      "epss_score": 0.05689884401803658,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0148",
+      "cvss_base": 7.507954678827085,
+      "epss_score": 0.015916198829524414,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0149",
+      "cvss_base": 8.35522177139816,
+      "epss_score": 0.015277773039817916,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0150",
+      "cvss_base": 8.277877404720025,
+      "epss_score": 0.09402431342905933,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0151",
+      "cvss_base": 7.474411403855149,
+      "epss_score": 0.19096923533456323,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0152",
+      "cvss_base": 8.371598985468024,
+      "epss_score": 0.17597653448047104,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0153",
+      "cvss_base": 8.80831058178745,
+      "epss_score": 0.030542398171269726,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0154",
+      "cvss_base": 8.273235756011784,
+      "epss_score": 0.41344361183671163,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0155",
+      "cvss_base": 8.159147610736806,
+      "epss_score": 0.2700243970053807,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0156",
+      "cvss_base": 7.351280140888614,
+      "epss_score": 0.002836129311741339,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0157",
+      "cvss_base": 7.513940169126524,
+      "epss_score": 0.033638014075201554,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0158",
+      "cvss_base": 8.934539494600065,
+      "epss_score": 0.2207489166190117,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0159",
+      "cvss_base": 8.345656763747508,
+      "epss_score": 0.027442840036791007,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0160",
+      "cvss_base": 8.122814764499758,
+      "epss_score": 0.6412618135522676,
+      "cisa_kev": false,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0161",
+      "cvss_base": 8.818775276855785,
+      "epss_score": 0.08773069834176823,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0162",
+      "cvss_base": 7.60872916871201,
+      "epss_score": 0.10970389096943586,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": false,
+      "ssvc_impact": "Partial"
+    },
+    {
+      "cve_id": "CVE-2024-0163",
+      "cvss_base": 9.743140121523172,
+      "epss_score": 0.29927216629840625,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0164",
+      "cvss_base": 9.414884527436808,
+      "epss_score": 0.005380949832554424,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0165",
+      "cvss_base": 9.032716286855047,
+      "epss_score": 0.14670091912946565,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0166",
+      "cvss_base": 9.544465861482145,
+      "epss_score": 0.5416961760496108,
+      "cisa_kev": true,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0167",
+      "cvss_base": 9.122159719087264,
+      "epss_score": 0.20118288224411635,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0168",
+      "cvss_base": 9.597145959519546,
+      "epss_score": 0.0003536538369288264,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0169",
+      "cvss_base": 9.564577975907964,
+      "epss_score": 0.003992565915028096,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0170",
+      "cvss_base": 9.869695426769544,
+      "epss_score": 0.10556874811007903,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0171",
+      "cvss_base": 9.174497120901393,
+      "epss_score": 0.5712389488284443,
+      "cisa_kev": true,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0172",
+      "cvss_base": 9.237931606090463,
+      "epss_score": 0.15165901063347878,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0173",
+      "cvss_base": 9.526085526597868,
+      "epss_score": 0.0031186888222301673,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0174",
+      "cvss_base": 9.521451214713084,
+      "epss_score": 0.0020618359876665355,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0175",
+      "cvss_base": 9.490268854144226,
+      "epss_score": 0.6040447427198345,
+      "cisa_kev": true,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0176",
+      "cvss_base": 9.065682233320114,
+      "epss_score": 0.03138482541784813,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0177",
+      "cvss_base": 9.994627755860924,
+      "epss_score": 0.09796540161493865,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0178",
+      "cvss_base": 9.701779418546066,
+      "epss_score": 0.17025024568731212,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0179",
+      "cvss_base": 9.215023066327497,
+      "epss_score": 0.11382335449912274,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0180",
+      "cvss_base": 9.415989650261496,
+      "epss_score": 0.0030985460065203712,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0181",
+      "cvss_base": 9.152638924768723,
+      "epss_score": 0.6065941574883658,
+      "cisa_kev": true,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0182",
+      "cvss_base": 9.811769285277393,
+      "epss_score": 0.11463069148241142,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0183",
+      "cvss_base": 9.122231285354559,
+      "epss_score": 0.0344862920879481,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0184",
+      "cvss_base": 9.721060678746149,
+      "epss_score": 0.5318676622959019,
+      "cisa_kev": true,
+      "ssvc_exploitation": "active",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0185",
+      "cvss_base": 9.212738805672005,
+      "epss_score": 0.34104121427809597,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0186",
+      "cvss_base": 9.36756105061535,
+      "epss_score": 0.0006333004948428126,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0187",
+      "cvss_base": 9.30898468882991,
+      "epss_score": 0.022551147164677248,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0188",
+      "cvss_base": 9.400784343999515,
+      "epss_score": 0.04220989967429076,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0189",
+      "cvss_base": 9.215132880033511,
+      "epss_score": 0.09459281511683154,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0190",
+      "cvss_base": 9.776835619966741,
+      "epss_score": 0.35416097242356276,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0191",
+      "cvss_base": 9.61783818192603,
+      "epss_score": 0.13580675263987443,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0192",
+      "cvss_base": 9.442044186697778,
+      "epss_score": 0.08028849178815355,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0193",
+      "cvss_base": 9.28324647008045,
+      "epss_score": 0.13615235285119465,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0194",
+      "cvss_base": 9.395263396087628,
+      "epss_score": 0.19640521971353533,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0195",
+      "cvss_base": 9.137234805257327,
+      "epss_score": 0.21104240833131868,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0196",
+      "cvss_base": 9.175694801875842,
+      "epss_score": 0.06324161303110085,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0197",
+      "cvss_base": 9.806200186566764,
+      "epss_score": 0.0008078219644555226,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0198",
+      "cvss_base": 9.575759160736832,
+      "epss_score": 0.3131141878852284,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0199",
+      "cvss_base": 9.801322154310451,
+      "epss_score": 0.32039410392148254,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0200",
+      "cvss_base": 9.395766696859333,
+      "epss_score": 0.05781274680948971,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0201",
+      "cvss_base": 9.510483284542149,
+      "epss_score": 0.0039016616888681733,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0202",
+      "cvss_base": 9.815037005750014,
+      "epss_score": 0.04658142001552046,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0203",
+      "cvss_base": 9.760215295546892,
+      "epss_score": 0.104032552385703,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0204",
+      "cvss_base": 9.754445825246986,
+      "epss_score": 0.3086987863499087,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0205",
+      "cvss_base": 9.864246874831416,
+      "epss_score": 0.3716533983726094,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0206",
+      "cvss_base": 9.302820435139013,
+      "epss_score": 0.03362163430712203,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0207",
+      "cvss_base": 9.451913863700682,
+      "epss_score": 0.004578971017213798,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0208",
+      "cvss_base": 9.85529337145609,
+      "epss_score": 0.1589143263237319,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0209",
+      "cvss_base": 9.791817797265358,
+      "epss_score": 0.1962439578897445,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0210",
+      "cvss_base": 9.321526762880428,
+      "epss_score": 0.2628376459013906,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0211",
+      "cvss_base": 9.899126833955773,
+      "epss_score": 0.05183055281798107,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0212",
+      "cvss_base": 9.247743723598283,
+      "epss_score": 0.07916002100952961,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0213",
+      "cvss_base": 9.372851982101327,
+      "epss_score": 0.04804435121797856,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0214",
+      "cvss_base": 9.789226931563665,
+      "epss_score": 0.34974278611477894,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0215",
+      "cvss_base": 9.284146973878114,
+      "epss_score": 0.10419765845211787,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0216",
+      "cvss_base": 9.967696507692745,
+      "epss_score": 0.16101129533519684,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0217",
+      "cvss_base": 9.30958188741596,
+      "epss_score": 0.03320075767607428,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0218",
+      "cvss_base": 9.828958972894464,
+      "epss_score": 0.12940518820222063,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0219",
+      "cvss_base": 9.362597668982044,
+      "epss_score": 0.025619566999736193,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0220",
+      "cvss_base": 9.077165084300876,
+      "epss_score": 0.16223486423318834,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0221",
+      "cvss_base": 9.883682165492562,
+      "epss_score": 0.0008331860514740365,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0222",
+      "cvss_base": 9.831345056689125,
+      "epss_score": 0.014820265591139858,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0223",
+      "cvss_base": 9.237530201446924,
+      "epss_score": 0.05356968015934984,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0224",
+      "cvss_base": 9.53401114969826,
+      "epss_score": 0.04516478021096693,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0225",
+      "cvss_base": 9.367840958225033,
+      "epss_score": 0.1099451075743217,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0226",
+      "cvss_base": 9.966268153205947,
+      "epss_score": 0.006855985959128714,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0227",
+      "cvss_base": 9.55454074542443,
+      "epss_score": 0.002905841807883434,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0228",
+      "cvss_base": 9.90530620897824,
+      "epss_score": 0.01095309717315441,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0229",
+      "cvss_base": 9.026670190802939,
+      "epss_score": 0.0022372573394556458,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0230",
+      "cvss_base": 9.374912673417768,
+      "epss_score": 0.00017729573697623877,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0231",
+      "cvss_base": 9.791380637482176,
+      "epss_score": 0.004337584755709087,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0232",
+      "cvss_base": 9.138792691818185,
+      "epss_score": 0.2726503769134005,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0233",
+      "cvss_base": 9.548804245443835,
+      "epss_score": 0.00834652084195027,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0234",
+      "cvss_base": 9.419825543753443,
+      "epss_score": 0.004795880655769913,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0235",
+      "cvss_base": 9.515375730209406,
+      "epss_score": 0.030130405868745474,
+      "cisa_kev": false,
+      "ssvc_exploitation": "none",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    },
+    {
+      "cve_id": "CVE-2024-0236",
+      "cvss_base": 9.240564238806543,
+      "epss_score": 0.18951765080069094,
+      "cisa_kev": false,
+      "ssvc_exploitation": "poc",
+      "ssvc_automatable": true,
+      "ssvc_impact": "Total"
+    }
+  ],
+  "calibrations": [
+    {
+      "profile_name": "BANK",
+      "naics_codes": [
+        "52"
+      ],
+      "c_alpha": 1.5,
+      "e_alpha": 0.8,
+      "c_alpha_source": "FIPS 199 modal=High + regulatory adjustment",
+      "e_alpha_source": "VCDB access vector distribution: 80.0% internet-facing (mostly internet-facing)",
+      "n_incidents": 150,
+      "theta_block": 0.5,
+      "theta_warn": 0.3,
+      "n_cves": 237
+    },
+    {
+      "profile_name": "HOSP",
+      "naics_codes": [
+        "62"
+      ],
+      "c_alpha": 1.5,
+      "e_alpha": 0.8,
+      "c_alpha_source": "FIPS 199 modal=High + regulatory adjustment",
+      "e_alpha_source": "VCDB access vector distribution: 71.4% internet-facing (mostly internet-facing)",
+      "n_incidents": 140,
+      "theta_block": 0.8,
+      "theta_warn": 0.5,
+      "n_cves": 237
+    },
+    {
+      "profile_name": "SAAS",
+      "naics_codes": [
+        "51"
+      ],
+      "c_alpha": 0.75,
+      "e_alpha": 0.5,
+      "c_alpha_source": "FIPS 199 modal=Moderate (VCDB n=140)",
+      "e_alpha_source": "VCDB access vector distribution: 57.1% internet-facing (mixed exposure)",
+      "n_incidents": 140,
+      "theta_block": 2.0,
+      "theta_warn": 1.0,
+      "n_cves": 237
+    },
+    {
+      "profile_name": "INFRA",
+      "naics_codes": [
+        "22"
+      ],
+      "c_alpha": 1.5,
+      "e_alpha": 0.5,
+      "c_alpha_source": "FIPS 199 modal=High + regulatory adjustment",
+      "e_alpha_source": "VCDB access vector distribution: 50.0% internet-facing (mixed exposure)",
+      "n_incidents": 100,
+      "theta_block": 0.3,
+      "theta_warn": 0.2,
+      "n_cves": 237
+    }
+  ],
+  "metadata": {
+    "sha256": "8f4e653f8852ecf07063ad910875c58eeb009e9b66f84209a5bd5ad603c70265",
+    "n_cves": 237
+  }
+}

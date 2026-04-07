@@ -14,7 +14,6 @@
   <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
   <br><br>
 
-  <img src="doc/banner.png" alt="Wardex Secure Release Gate Banner" width="800">
 </div>
 
 > [!IMPORTANT]
@@ -80,7 +79,7 @@ Please refer to the [CHANGELOG.md](CHANGELOG.md) for detailed release notes and 
 ## What's New (v1.7.1)
 
 - **Governance Commands (Automation Ready)**: New subcommands for complex workflows: `wardex evaluate` (focused gate check), `wardex aggregate` (composite multi-framework decision), and `wardex policy check-expiry` (audit of YAML policy exceptions).
-- **Empirical Risk Calibration**: `Criticality` and `Exposure` parameters re-calibrated for Hospital (1.5), Startup (0.75), and Dev environments based on NVD/EPSS empirical analysis.
+- **Empirical Risk Calibration**: `Criticality` and `Exposure` parameters re-calibrated for Hospital (1.5), Startup (0.75), and Infrastructure (1.5) environments based on NVD/EPSS empirical analysis.
 - **Human-in-the-Loop EPSS Enrichment (HITL)**: Failed evaluations due to missing EPSS vectors (where Wardex assumes a "fail-close" 1.0) can now be enriched via the FIRST.org API.
 - **Strict Semantic Fail-Close**: The `0.05` fallback for unknown scores has been revoked to `0.0`. Without concrete data, Wardex assumes maximum risk.
 
@@ -182,6 +181,28 @@ wardex accept verify
 ```
 
 Wardex guarantees the integrity of these exceptions using HMAC-SHA256 signatures, append-only audit logs (`JSONL`), and configuration drift detection.
+
+## Contextual Risk — Same CVE, 4 Decisions
+
+Wardex calculates: `FinalRisk = (CVSS x EPSS) x (1 - Compensation) x Criticality x Exposure`
+
+| CVE | CVSS | EPSS | [BANK] | [SAAS] | [INFRA] | [HOSP] |
+|---|---|---|---|---|---|---|
+| **Log4Shell** | 10.0 | 0.94 | **14.1** `BLOCK` | **3.5** `BLOCK` | **7.1** `BLOCK` | **11.3** `BLOCK` |
+| **xz backdoor** | 10.0 | 0.86 | **12.9** `BLOCK` | **3.2** `BLOCK` | **6.5** `BLOCK` | **10.3** `BLOCK` |
+| **curl SOCKS5** | 9.8 | 0.26 | **3.8** `BLOCK` | **1.0** `ALLOW` | **1.9** `BLOCK` | **3.1** `BLOCK` |
+| **minimist** | 9.8 | 0.01 | **0.1** `ALLOW` | **0.0** `ALLOW` | **0.1** `ALLOW` | **0.1** `ALLOW` |
+
+Validated with **237 real CVEs** and live EPSS scores from FIRST.org:
+
+| Profile | Appetite | BLOCK | ALLOW | % Block |
+|---|---|---|---|---|
+| [BANK] Tier-1 Bank (DORA) | 0.5 | **176** | 57 | 74% |
+| [HOSP] Hospital (HIPAA) | 0.8 | **168** | 63 | 71% |
+| [SAAS] Startup SaaS | 2.0 | **111** | 86 | 47% |
+| [INFRA] Utilities (NIS2) | 0.3 | **180** | 53 | 76% |
+
+Full report: [EPSS Multi-Context Stress Test Report](doc/epss-stress-test-report.md)
 
 ## Local Policy Management
 

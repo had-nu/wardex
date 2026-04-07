@@ -1,0 +1,100 @@
+{
+  "action": {
+    "hacking": {
+      "variety": [
+        "Unknown"
+      ],
+      "vector": [
+        "Web application"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Financial"
+      ],
+      "region": [
+        "000000"
+      ],
+      "variety": [
+        "Organized crime"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Web application"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Medical"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_victim": [
+        "Patient"
+      ],
+      "state": [
+        "Stored"
+      ]
+    }
+  },
+  "confidence": "Low",
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Actor disclosure"
+      ]
+    }
+  },
+  "incident_id": "c4dbb2a0-da2f-11e7-a58f-dff506a792fb",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "Spitler",
+    "created": "2017-12-06T07:55:13.194Z",
+    "dbir_year": 2018,
+    "github": "10209",
+    "master_id": "332ebef8-402d-48fa-bfae-742920a58c01",
+    "modified": "2017-12-06T07:55:13.194Z",
+    "sub_source": "phidbr"
+  },
+  "reference": "https://www.databreaches.net/auburn-eye-care-associates-can-you-see-it-now/",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Hacking via unconfirmed methods results in loss of medical data",
+  "targeted": "Opportunistic",
+  "timeline": {
+    "incident": {
+      "month": 6,
+      "year": 2017
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "Small",
+    "government": [
+      "NA"
+    ],
+    "industry": "621111",
+    "region": [
+      "019021"
+    ],
+    "state": "CA",
+    "victim_id": "Auburn Eye Care Assoicates"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "action": {
+    "misuse": {
+      "variety": [
+        "Possession abuse"
+      ],
+      "vector": [
+        "Physical access"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "job_change": [
+        "Unknown"
+      ],
+      "motive": [
+        "Financial"
+      ],
+      "variety": [
+        "Cashier"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "M - Payment card"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Payment"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "state": [
+        "Unknown"
+      ]
+    }
+  },
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Customer"
+      ]
+    }
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "BA602E9A-8D68-4857-A80E-F03A2A22CF04",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "hrbrmstr",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2014-07-07T15:04:00Z",
+    "github": "2765",
+    "master_id": "BA602E9A-8D68-4857-A80E-F03A2A22CF04",
+    "modified": "2014-07-07T15:04:00Z",
+    "timeline": {
+      "notification": {
+        "day": 30,
+        "month": 5,
+        "year": 2013
+      }
+    }
+  },
+  "reference": "http://www.thejakartapost.com/news/2013/05/31/four-arrested-body-shop-customer-data-phishing.html",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "",
+  "timeline": {
+    "containment": {
+      "unit": "Months",
+      "value": 3
+    },
+    "discovery": {
+      "unit": "Weeks",
+      "value": 2
+    },
+    "incident": {
+      "month": 3,
+      "year": 2013
+    }
+  },
+  "victim": {
+    "country": [
+      "Unknown"
+    ],
+    "employee_count": "Small",
+    "government": [
+      "NA"
+    ],
+    "industry": "811121",
+    "locations_affected": 4,
+    "region": [
+      "000000"
+    ],
+    "victim_id": "Jakarta Body Shops"
+  }
+}

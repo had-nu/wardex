@@ -209,11 +209,12 @@ func runWardex(cmd *cobra.Command, args []string) {
 			domainMap[dom] = ds
 		}
 		ds.TotalControls++
-		if f.Status == model.StatusCovered {
+		switch f.Status {
+		case model.StatusCovered:
 			ds.CoveredCount++
-		} else if f.Status == model.StatusPartial {
+		case model.StatusPartial:
 			ds.PartialCount++
-		} else {
+		default:
 			ds.GapCount++
 		}
 		ds.MaturityScore += f.FinalScore
@@ -228,11 +229,12 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 	rep.Summary.TotalControls = len(cat)
 	for _, f := range findings {
-		if f.Status == model.StatusCovered {
+		switch f.Status {
+		case model.StatusCovered:
 			rep.Summary.CoveredCount++
-		} else if f.Status == model.StatusPartial {
+		case model.StatusPartial:
 			rep.Summary.PartialCount++
-		} else {
+		default:
 			rep.Summary.GapCount++
 		}
 	}
@@ -331,7 +333,8 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 		gateReport := gate.Evaluate(vulnsFormat.Vulnerabilities)
 		rep.Gate = &gateReport
-		if gateReport.OverallDecision == "block" {
+		switch gateReport.OverallDecision {
+		case "block":
 			gateFailed = true
 			missingEpss := 0
 			for _, v := range vulnsFormat.Vulnerabilities {
@@ -343,7 +346,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 				fmt.Fprintf(os.Stderr, "\n[HINT] %d vulnerabilities lacked EPSS scores and defaulted to worst-case (1.0).\n", missingEpss)
 				fmt.Fprintf(os.Stderr, "       Run 'wardex enrich epss %s' to fetch real probabilities from FIRST.org and sign the enrichment.\n", gateFile)
 			}
-		} else if gateReport.OverallDecision == "warn" {
+		case "warn":
 			fmt.Fprintf(os.Stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
 		}
 	}

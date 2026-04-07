@@ -54,9 +54,10 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 
 	if report.Gate != nil {
 		icon := "[OK] ALLOW"
-		if report.Gate.OverallDecision == "block" {
+		switch report.Gate.OverallDecision {
+		case "block":
 			icon = "[X] BLOCK"
-		} else if report.Gate.OverallDecision == "warn" {
+		case "warn":
 			icon = "[!] WARN"
 		}
 		_, _ = fmt.Fprintf(f, "| Release Gate Decision | %s |\n", icon)
@@ -75,9 +76,10 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 		_, _ = fmt.Fprintf(f, "| CVE | CVSS | EPSS | Release Risk | Decision |\n|---|---|---|---|---|\n")
 		for _, dec := range report.Gate.Decisions {
 			icon := "[OK] ALLOW"
-			if dec.Decision == "block" {
+			switch dec.Decision {
+			case "block":
 				icon = "[X] BLOCK"
-			} else if dec.Decision == "warn" {
+			case "warn":
 				icon = "[!] WARN"
 			}
 			_, _ = fmt.Fprintf(f, "| %s | %.1f | %.2f | **%.1f** | %s |\n",
