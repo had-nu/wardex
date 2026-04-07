@@ -1,0 +1,104 @@
+{
+  "action": {
+    "physical": {
+      "variety": [
+        "Theft"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Unknown"
+      ],
+      "region": [
+        "000000"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "U - Laptop"
+      },
+      {
+        "variety": "U - Desktop or laptop"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "availability": {
+      "variety": [
+        "Loss"
+      ]
+    },
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 800,
+          "variety": "Medical"
+        }
+      ],
+      "data_disclosure": "Potentially",
+      "data_total": 800
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "2F1517E1-41C7-450C-8894-6D727B815C58",
+  "plus": {
+    "analysis_status": "First pass",
+    "created": "2013-04-12T22:29:56Z",
+    "master_id": "2F1517E1-41C7-450C-8894-6D727B815C58",
+    "modified": "2014-04-27T19:37:02Z",
+    "timeline": {
+      "notification": {}
+    }
+  },
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "",
+  "timeline": {
+    "discovery": {
+      "unit": "Months",
+      "value": 7
+    },
+    "incident": {
+      "day": 4,
+      "month": 6,
+      "year": 2010
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "1 to 10",
+    "government": [
+      "NA"
+    ],
+    "industry": "523991",
+    "region": [
+      "019021"
+    ],
+    "state": "NE",
+    "victim_id": "Omaha Construction Industry Health and Welfare Plan"
+  }
+}

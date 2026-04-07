@@ -1,0 +1,108 @@
+{
+  "action": {
+    "error": {
+      "notes": "Location: Unknown",
+      "variety": [
+        "Misconfiguration"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "motive": [
+        "Unknown"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Unknown"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 745,
+          "variety": "Personal"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_total": 745,
+      "data_victim": [
+        "Customer"
+      ],
+      "state": [
+        "Stored unencrypted"
+      ]
+    }
+  },
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Customer"
+      ]
+    }
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "CED869CC-55C0-416B-BFC3-CB9AB9E7880B",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "Spitler",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2013-10-09T15:05:00Z",
+    "github": "412",
+    "master_id": "CED869CC-55C0-416B-BFC3-CB9AB9E7880B",
+    "modified": "2014-05-10T00:58:19Z",
+    "timeline": {
+      "notification": {
+        "day": 18,
+        "month": 9,
+        "year": 2013
+      }
+    }
+  },
+  "reference": "http://www.oag.state.md.us/idtheft/Breach%20Notices/itu-231917.pdf; www.atg.state.vt.us/assets/files/Public Storage ltrt Consumers re Security Breach.pdf",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Customer while viewing his lease of a storage unit online, was able to view other customers' leases as well. ",
+  "timeline": {
+    "incident": {
+      "day": 4,
+      "month": 9,
+      "year": 2013
+    }
+  },
+  "victim": {
+    "country": [
+      "Unknown"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "531130",
+    "region": [
+      "000000"
+    ],
+    "victim_id": "Public Storage"
+  }
+}

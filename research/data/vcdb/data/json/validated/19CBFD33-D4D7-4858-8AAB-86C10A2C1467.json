@@ -1,0 +1,89 @@
+{
+  "action": {
+    "hacking": {
+      "variety": [
+        "SQLi",
+        "Exploit vuln"
+      ],
+      "vector": [
+        "Web application"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "YE"
+      ],
+      "motive": [
+        "Ideology"
+      ],
+      "name": [
+        "Ymh"
+      ],
+      "region": [
+        "142145"
+      ],
+      "variety": [
+        "Activist"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Web application"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "integrity": {
+      "variety": [
+        "Defacement",
+        "Repurpose"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "incident_id": "19CBFD33-D4D7-4858-8AAB-86C10A2C1467",
+  "notes": "Military Technical College (mtc.edu.eg), the Tourist Development Authority (tda.gov.eg) and the Egyptian Armed Forces Training Authority (mcf.mil.eg)\r\nYMH used SQLInjection for similar attacks in the same time frame \r\nhttp://thehackerspost.com/2013/03/sudan-embassy-website-hacked-by-ymh.html\r\n\r\nThe Hacker found and exploited SQL Injection flaw in the website and managed to upload the deface page with the deface message.\r\n\r\nWebsite Link:\r\nwww.embrss-norway.org\r\n\r\nDefaced Link:\r\nwww.embrss-norway.org/page.php?id=41\r\n\r\nMirror of the Hacked Website: \r\nhttp://www.zone-h.org/mirror/id/18949912\r\n\r\nAs its an official embassy website, its not known, whether this site contained classified diplomat data or hacker accessed to sensitive data if it contains. But its clear, hacker had accessed to the database and defaced the website.\r\n.\r\n",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "thocoats",
+    "created": "2014-05-26T07:26:54.728Z",
+    "github": "1924",
+    "master_id": "19CBFD33-D4D7-4858-8AAB-86C10A2C1467",
+    "modified": "2014-05-26T07:26:54.728Z"
+  },
+  "reference": "http://news.softpedia.com/news/Egyptian-Military-and-Government-Websites-Defaced-by-Hacktivist-435687.shtml (2014-05-26T07:26:54.728Z);",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Web site defacement",
+  "timeline": {
+    "incident": {
+      "day": 23,
+      "month": 3,
+      "year": 2014
+    }
+  },
+  "victim": {
+    "country": [
+      "EG"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "Unknown"
+    ],
+    "industry": "92",
+    "region": [
+      "002015"
+    ],
+    "victim_id": "Egyptian Govt Military education"
+  }
+}

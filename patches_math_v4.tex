@@ -1,0 +1,253 @@
+% =============================================================
+%  PATCHES MATEMÁTICOS — Paper_Draft_v4_PTBR.tex
+%  Gerado em: 2026-04-07
+%  Aplicar em ordem. Cada bloco substitui a secção indicada.
+% =============================================================
+
+% -------------------------------------------------------------
+% PATCH 1 — §III.B  "A Função de Pontuação"
+%   Substitui o parágrafo introdutório + equação (2) + §III.B.1
+%   Localização: logo após a linha \subsection{A Função de Pontuação}
+% -------------------------------------------------------------
+
+A função $R(v, \alpha)$ é uma função de utilidade multi-atributo no sentido
+de Keeney e Raiffa~\cite{keeney1993}: cada fator contribui de forma
+independente para a avaliação do risco de lançamento, e a composição
+multiplicativa é válida sob \emph{independência preferencial} — a ordenação
+de preferências sobre valores de CVSS não depende do nível de EPSS, e
+vice-versa~\cite{keeney1993}. Essa lógica composicional alinha-se ao modelo
+canônico de risco da ISO/IEC~27005:2022~\cite{iso27005}, que formaliza o
+risco como produto de probabilidade de ocorrência e impacto, e é consistente
+com a estrutura interna do próprio CVSS, que agrega sub-pontuações
+($\text{AV} \times \text{AC} \times \text{PR} \times \text{UI}$)
+multiplicativamente, sem derivação probabilística~\cite{mell2007}. A
+normalização de $\text{CVSS}(v)$ para $[0,1]$ — dividindo pelo máximo da
+escala, 10 — alinha o sinal de ameaça com $\text{EPSS}(v) \in [0,1]$,
+produzindo um produto adimensional que captura a ameaça como severidade
+normalizada ponderada pela probabilidade de exploração. $R(v, \alpha)$ não
+representa uma probabilidade de exploração; representa um sinal de risco
+ordinal cujo valor reside no comportamento relativo entre perfis e
+vulnerabilidades, não na sua magnitude absoluta.
+
+\begin{equation}
+  R(v, \alpha) =
+  \underbrace{\frac{\text{CVSS}(v)}{10} \cdot \text{EPSS}(v)}_{\text{sinal de ameaça}}
+  \cdot \underbrace{C(\alpha)}_{\text{criticidade}}
+  \cdot \underbrace{E(\alpha)}_{\text{exposição}}
+  \cdot \underbrace{[1 - \Phi(\alpha)]}_{\text{redução por controles}}
+  \label{eq:scoring}
+\end{equation}
+
+% --- §III.B.1  Sinal de Ameaça (substitui o bloco existente) ---
+
+\subsubsection{Sinal de Ameaça}
+
+$\text{CVSS}(v) \in [0, 10]$ é a pontuação base do NVD, normalizada para
+$[0,1]$ pela divisão por 10. $\text{EPSS}(v) \in [0, 1]$ é a probabilidade
+diária de exploração publicada pela FIRST.org. O produto
+$\text{CVSS}(v)/10 \cdot \text{EPSS}(v) \in [0, 1]$ representa a ameaça
+efetiva: uma vulnerabilidade tecnicamente severa porém raramente explorada
+produz sinal baixo; uma vulnerabilidade moderadamente severa com exploração
+ativa produz sinal proporcional. Quando EPSS não está disponível, o modelo
+atribui $\text{EPSS}(v) = 1{,}0$ (\emph{princípio fail-close}): a ausência
+de dado de exploração não é creditada como risco menor do que exploração
+medida.
+
+
+% -------------------------------------------------------------
+% PATCH 2 — §III.C  "Propriedades Formais"
+%   Substitui apenas a Proposição 2 (bounded output).
+%   Manter Proposição 1 (monotonicidade) e Proposição 3 (fail-close) inalteradas.
+% -------------------------------------------------------------
+
+\begin{proposition}[Saída limitada]
+  $R(v, \alpha) \in [0,\, 1{,}5]$.
+\end{proposition}
+
+\begin{proof}
+  Limite inferior: todos os fatores são não-negativos, portanto $R \geq 0$.
+  Limite superior: $\text{CVSS}(v)/10 \leq 1$; $\text{EPSS}(v) \leq 1$;
+  $C(\alpha) \leq 1{,}5$; $E(\alpha) \leq 1{,}0$; e com $\Phi(\alpha) = 0$
+  o termo de controle é 1,0. Máximo: $1 \times 1 \times 1{,}5 \times 1{,}0
+  \times 1{,}0 = 1{,}5$.
+\end{proof}
+
+% Nota: os limiares θ_block e θ_warn em todas as tabelas e figuras
+% devem ser reescalonados por fator 1/10 em relação à versão anterior.
+% Valores atualizados por perfil:
+%   Finance  (NAICS 52):  θ_block = 0,050
+%   Health   (NAICS 62):  θ_block = 0,080
+%   SaaS     (NAICS 51):  θ_block = 0,200
+%   Utilities(NAICS 22):  θ_block = 0,015   ← alterado (ver Patch 4)
+
+
+% -------------------------------------------------------------
+% PATCH 3 — §VI.B  "Natureza Heurística da Função de Pontuação"
+%   Substitui o parágrafo de abertura da secção.
+% -------------------------------------------------------------
+
+Reconhece-se explicitamente que $R(v, \alpha)$ é uma heurística de
+pontuação, não um modelo de risco probabilístico em sentido formal. CVSS é
+uma medida de severidade em escala $[0, 10]$; EPSS é uma probabilidade em
+$[0, 1]$. O produto normalizado não corresponde a uma quantidade
+probabilística de interpretação direta — não é, por exemplo, a frequência
+esperada de incidentes por implantação. Essa é uma escolha de projeto
+deliberada, sustentada por três razões. Em primeiro lugar, a composição
+multiplicativa é justificada pela teoria de utilidade multi-atributo
+(MAUT)~\cite{keeney1993}, que exige apenas independência preferencial entre
+os atributos — pressuposto razoável no contexto de decisões de gate, onde a
+preferência por menor CVSS não depende do nível de EPSS. Em segundo lugar, a
+quantificação probabilística formal do risco, como no framework
+FAIR~\cite{jones2005}, requer distribuições de frequência e magnitude de
+perda que não estão disponíveis em tempo de gate numa pipeline típica de
+CI/CD. Em terceiro lugar, o valor da função não reside na magnitude absoluta
+de $R$, mas no seu comportamento ordinal: ela ordena as decisões de
+lançamento de forma sensível ao contexto organizacional — exatamente o que o
+limiar estático de CVSS não captura, e o que os resultados da simulação
+quantificam. Leitores que busquem uma alternativa com fundamentação
+probabilística rigorosa devem consultar o framework FAIR~\cite{jones2005}; o
+modelo presente oferece tratabilidade operacional como contribuição primária.
+
+
+% -------------------------------------------------------------
+% PATCH 4 — §V.B  Tabela de perfis organizacionais
+%   Substitui a tabela de perfis existente.
+%   Inclui renomeação NAICS, θ reescalonados, e θ_Utilities corrigido.
+% -------------------------------------------------------------
+
+\begin{table}[t]
+\caption{Perfis Organizacionais — Parâmetros e Contexto Regulatório}
+\label{tab:profiles}
+\centering
+\begin{tabular}{lccccl}
+\toprule
+\textbf{Perfil} & \textbf{NAICS} & $C(\alpha)$ & $E(\alpha)$ &
+$\theta_{\text{block}}$ & \textbf{Contexto Regulatório} \\
+\midrule
+Finance  & 52 & 1,50 & 1,00 & 0,050 & DORA, PCI-DSS \\
+Health   & 62 & 1,50 & 0,80 & 0,080 & HIPAA, NIS2   \\
+SaaS     & 51 & 1,00 & 0,80 & 0,200 & —             \\
+Utilities& 22 & 1,50 & 0,50 & 0,015 & NIS2 Art.~21  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Texto de justificativa empírica — inserir em §V.A, após a descrição do corpus:
+
+Os valores de $C(\alpha)$ derivam da taxonomia de impacto do NIST FIPS~199
+aplicada à categoria de dado predominante em cada setor NAICS: NAICS~52
+(Finanças) e NAICS~62 (Saúde) tratam dados pessoais e financeiros regulados,
+classificados como impacto \emph{High} pelo FIPS~199, com multiplicador
+adicional para ativos sujeitos a penalidades regulatórias obrigatórias (DORA,
+HIPAA); NAICS~51 (Informação/SaaS) mapeia para \emph{Moderate} na ausência
+de obrigações regulatórias mandatórias; NAICS~22 (Utilities) mapeia para
+\emph{High} com escopo regulatório sob a NIS2. Os valores de $E(\alpha)$
+foram atribuídos com base na escada de vetor de ataque do CVSS ambiental
+como taxonomia de referência: acesso público não autenticado ($E = 1{,}0$)
+para serviços financeiros voltados à internet; acesso externo autenticado
+($E = 0{,}80$) para portais de saúde e interfaces SaaS; acesso interno
+autenticado ($E = 0{,}50$) para redes de tecnologia operacional em
+infraestrutura crítica, em conformidade com os requisitos de segmentação de
+rede impostos pelo Art.~21 da NIS2~\cite{nis2directive}. Ambos $C(\alpha)$ e
+$E(\alpha)$ são configuráveis no protótipo para acomodar classificações
+organizacionais específicas.
+
+
+% -------------------------------------------------------------
+% PATCH 5 — §VI.C  Sobreposição Finance/Utilities
+%   Inserir como novo parágrafo em §VI.C (Calibração dos Parâmetros de Perfil)
+% -------------------------------------------------------------
+
+Os perfis Finance e Utilities compartilham $C(\alpha) = 1{,}50$, refletindo
+classificação de impacto regulatório idêntica pelo FIPS~199. Sua divergência
+opera em dois eixos distintos. Sistemas Finance operam com exposição máxima
+($E = 1{,}00$) e estão sujeitos a objetivos de tempo de recuperação impostos
+pela DORA que implicam ciclos de remediação curtos, o que permite um limiar
+$\theta_{\text{block}} = 0{,}050$ — correspondendo ao produto efetivo
+$\text{CVSS}_n \times \text{EPSS} > 0{,}0\overline{3}$ para bloqueio.
+Sistemas Utilities operam com exposição direta reduzida ($E = 0{,}50$,
+refletindo segmentação de rede OT), mas estão sujeitos a janelas de
+manutenção infrequentes onde vulnerabilidades não remediadas persistem por
+períodos mais longos; consequentemente, $\theta_{\text{block}} = 0{,}015$
+reflete menor tolerância a risco residual por ciclo de patch — correspondendo
+ao produto efetivo $\text{CVSS}_n \times \text{EPSS} > 0{,}020$. A separação
+entre os limiares efetivos ($0{,}0\overline{3}$ vs.\ $0{,}020$) é estrutural:
+Utilities bloqueia um superconjunto estrito das vulnerabilidades que Finance
+bloquearia com os mesmos parâmetros de ameaça, compensando a menor exposição
+com menor tolerância de limiar. Os intervalos de confiança de 95\% (bootstrap,
+$N = 1{.}000$) para as taxas de bloqueio dos dois perfis são
+não-sobrepostos~(cf.\ Tabela~1).
+
+
+% -------------------------------------------------------------
+% PATCH 6 — Novas referências (adicionar ao bloco \bibliography)
+% -------------------------------------------------------------
+
+@book{keeney1993,
+  author    = {Keeney, Ralph L. and Raiffa, Howard},
+  title     = {Decisions with Multiple Objectives: Preferences and
+               Value Trade-offs},
+  publisher = {Cambridge University Press},
+  year      = {1993},
+  doi       = {10.1017/CBO9781139174084}
+}
+
+@standard{iso27005,
+  author       = {{International Organisation for Standardisation}},
+  title        = {{ISO/IEC 27005:2022} --- Information Security Risk
+                  Management},
+  organization = {ISO},
+  year         = {2022}
+}
+
+@techreport{nis2directive,
+  author      = {{European Parliament and Council}},
+  title       = {Directive (EU) 2022/2555 on measures for a high common
+                 level of cybersecurity across the Union ({NIS2})},
+  institution = {Official Journal of the European Union},
+  year        = {2022},
+  note        = {Art.~21: Cybersecurity risk-management measures}
+}
+
+% Referência existente — verificar se já consta no .bib com esta chave:
+% @book{jones2005,  (FAIR — Jones 2005)  já deve estar presente
+% @article{mell2007, (CVSS — Mell et al.) já deve estar presente
+
+
+% =============================================================
+%  VERIFICAÇÃO PÓS-APLICAÇÃO
+%  Após aplicar todos os patches:
+%  1. Compilar e confirmar que equação (2) renderiza correctamente
+%  2. Confirmar que Prop. 2 mostra [0, 1,5]
+%  3. Confirmar que Tabela de perfis mostra θ reescalonados
+%  4. Correr test_calibration_v3.py — esperado: 85 passed, 0 failed
+%     (os thresholds no código Go precisam de ser actualizados também —
+%      ver nota abaixo)
+% =============================================================
+
+% NOTA PARA O CÓDIGO GO (pkg/releasegate):
+% Os valores θ_block e θ_warn nos perfis de configuração estão em escala
+% original [0, 15]. Após normalização do CVSS, devem ser divididos por 10.
+% Alternativa: manter a escala original no código e normalizar CVSS/10
+% apenas no cálculo de R — o resultado numérico é idêntico, e o código
+% existente não precisa de alterar os thresholds. Recomendado: normalizar
+% apenas na função de scoring, deixar os thresholds de configuração na
+% escala [0, 1,5] para consistência com o paper.
+
+% -------------------------------------------------------------
+% PATCH 7 — §V.A Justificativa da Selecção de Perfis
+%   Inserir antes da tabela de perfis (Tabela 1).
+% -------------------------------------------------------------
+
+The simulation study covers four organisational profiles selected by two complementary criteria. First, the profiles were chosen to maximise heterogeneity across the two-dimensional parameter space $(C(\alpha), E(\alpha))$: Finance (C = 1.50, E = 1.00) and Utilities (C = 1.50, E = 0.50) share criticality classification but differ structurally in exposure; Health (C = 1.50, E = 0.80) occupies the intermediate exposure range; and SaaS (C = 1.00, E = 0.80) is the sole profile under FIPS 199 Moderate impact, providing a baseline without regulatory scope. This selection covers the four operationally relevant quadrants of (high/moderate criticality) × (high/low exposure) without redundancy. Sectors such as Retail (NAICS 44–45) and Education (NAICS 61) were excluded because their FIPS 199 classification and exposure profiles are not materially distinct from SaaS within this parameter space, and would not produce qualitatively different gate decisions under the model.
+
+Second, the four profiles collectively span the principal regulatory frameworks imposing explicit vulnerability management obligations in CI/CD-adjacent domains: DORA and PCI-DSS for Finance, HIPAA for Health, and NIS2 Article 21 for Utilities. The SaaS profile — with no mandatory regulatory floor — serves as a control case representing organisations below the threshold of formal compliance obligation. Public Administration (NAICS 92) was considered but excluded: VCDB incident records for government entities are systematically under-reported relative to actual occurrence~\cite{verizon2024dbir}, reducing the reliability of empirical parameter derivation for that sector below the Wilson interval criterion established in Section V.A (n >= 50, margin <= 14 pp).
+
+% Adicionar ao bloco \bibliography:
+@techreport{verizon2024dbir,
+  author      = {{Verizon}},
+  title       = {Data Breach Investigations Report 2024},
+  institution = {Verizon Business},
+  year        = {2024},
+  url         = {https://www.verizon.com/business/resources/reports/dbir/}
+}

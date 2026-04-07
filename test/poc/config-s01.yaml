@@ -3,8 +3,8 @@ organization:
   name: "Wardex PoC"
 release_gate:
   enabled: true
-  risk_appetite: 6.0
-  warn_above: 4.5
+  risk_appetite: 0.6  # normalizado v4 [0, 1.5]
+  warn_above: 0.45  # normalizado v4
   asset_context:
     criticality: 0.8
     internet_facing: true

@@ -1,0 +1,103 @@
+{
+  "action": {
+    "misuse": {
+      "variety": [
+        "Privilege abuse"
+      ],
+      "vector": [
+        "LAN access"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "motive": [
+        "Financial"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Database"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 1,
+          "variety": "Personal"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_total": 1,
+      "state": [
+        "Stored unencrypted"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "33822412-26B2-4EAD-BDA7-422ECCB38778",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "Splitler",
+    "asset": {
+      "total": "No"
+    },
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "No",
+        "data_abuse": "Unknown"
+      }
+    },
+    "created": "2013-08-23T00:17:27Z",
+    "master_id": "33822412-26B2-4EAD-BDA7-422ECCB38778",
+    "modified": "2014-05-10T00:58:19Z",
+    "timeline": {
+      "notification": {
+        "day": 28,
+        "month": 7,
+        "year": 2013
+      }
+    }
+  },
+  "reference": "http://www.williamsonherald.com/home?id=84195 (20131104);http://www.databreaches.net/tn-franklin-police-work-through-metro-report-on-possible-law-enforcement-data-breach/ (20131104)",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Police employee misuses access to look up information on police chief's family member.",
+  "timeline": {
+    "incident": {
+      "month": 7,
+      "year": 2013
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "Unknown"
+    ],
+    "industry": "9281",
+    "region": [
+      "019021"
+    ],
+    "state": "TN",
+    "victim_id": "Franklin Police"
+  }
+}
