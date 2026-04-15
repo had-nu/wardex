@@ -27,10 +27,10 @@ test/poc/
 
 | # | Name | Key Input | Expected | Composite Risk |
 |---|------|-----------|----------|----------------|
-| 01 | Happy Path | CVSS 3.2, EPSS 0.018, no reach | **ALLOW** | ~0.00 |
-| 02 | Critical Block | CVSS 9.8, EPSS 0.91, internet, no auth | **BLOCK** | ~8.47 |
-| 03 | Compensating Controls | CVSS 8.1 + WAF + auth + segmentation | **ALLOW** | ~0.44 |
-| 04 | Risk Acceptance | CVSS 9.1, no controls, no auth → exception | **BLOCK** (baseline) | ~6.50 |
+| 01 | Happy Path | CVSS 3.2, EPSS 0.018, no reach | **ALLOW** | ~0.000 |
+| 02 | Critical Block | CVSS 9.8, EPSS 0.91, internet, no auth | **BLOCK** | ~1.34 |
+| 03 | Compensating Controls | CVSS 8.1 + WAF + auth + segmentation | **ALLOW** | ~0.04 |
+| 04 | Risk Acceptance | CVSS 9.1, no controls, no auth → exception | **BLOCK** (baseline) | ~1.16 |
 
 ---
 
@@ -110,7 +110,7 @@ The script will:
 Wardex uses a composite risk formula, **not raw CVSS**:
 
 ```
-composite = (CVSS × EPSS) × (1 - compEffect) × criticality × exposure
+composite = (CVSS/10 × EPSS) × (1 - compEffect) × criticality × exposure
 ```
 
 Where:
@@ -121,11 +121,13 @@ Where:
 
 | Factor | Value |
 |--------|-------|
-| `internetWeight` | 1.0 (internet-facing) or 0.6 (internal) or 0.3 (dev) |
+| `internetWeight` | 1.0 (internet/public) or 0.6 (internal) or 0.3 (dev) |
 | `authReduction` | 0.2 if `RequiresAuth = true`, else 0.0 |
 | `reachableReduction` | 0.5 if `Reachable = false`, else 0.0 |
+| `criticality` | 1.5 (High/Regulated), 1.0 (Moderate), 0.3 (Low) |
 
 **Decision**: If `composite > risk_appetite` → **BLOCK**, otherwise **ALLOW**.
+Scale for $R \in [0, 1.5]$. Typical thresholds: 0.05 (Finance), 0.08 (Health), 0.20 (SaaS).
 
 ---
 
@@ -134,59 +136,59 @@ Where:
 ### Scenario 01 — Happy Path → ALLOW
 
 ```
-CVSS = 3.2, EPSS = 0.018, Reachable = false
+CVSS = 0.32 (3.2/10), EPSS = 0.018, Reachable = false
 Criticality = 0.3, Internet = false, Auth = true
 
-adjusted     = 3.2 × 0.018 = 0.058
+adjusted     = 0.32 × 0.018 = 0.0057
 exposure     = 0.6 × (1-0.2) × (1-0.5) = 0.24
 compEffect   = 0.0 (no controls)
-finalRisk    = 0.058 × 0.3 × 0.24 ≈ 0.004
+finalRisk    = 0.0057 × 0.3 × 0.24 ≈ 0.0004
 
-0.004 < 6.0 → ALLOW [PASS]
+0.0004 < 0.20 → ALLOW [PASS]
 ```
 
 ### Scenario 02 — Critical CVE → BLOCK
 
 ```
-CVSS = 9.8, EPSS = 0.91, Reachable = true
-Criticality = 0.95, Internet = true, Auth = false
+CVSS = 0.98 (9.8/10), EPSS = 0.91, Reachable = true
+Criticality = 1.5 (Finance), Internet = true, Auth = false
 
-adjusted     = 9.8 × 0.91 = 8.918
+adjusted     = 0.98 × 0.91 = 0.8918
 exposure     = 1.0 × 1.0 × 1.0 = 1.0
 compEffect   = 0.0 (no controls)
-finalRisk    = 8.918 × 0.95 × 1.0 = 8.47
+finalRisk    = 0.8918 × 1.5 × 1.0 = 1.337
 
-8.47 > 6.0 → BLOCK [PASS]
+1.337 > 0.05 → BLOCK [PASS]
 ```
 
 ### Scenario 03 — Compensating Controls → ALLOW
 
 ```
-CVSS = 8.1, EPSS = 0.45, Reachable = true
-Criticality = 0.75, Internet = true, Auth = true
+CVSS = 0.81 (8.1/10), EPSS = 0.45, Reachable = true
+Criticality = 1.0 (SaaS), Internet = true, Auth = true
 Controls: WAF(0.40) + auth(0.30) + segmentation(0.15) = 0.85 → clamped to 0.8
 
-adjusted     = 8.1 × 0.45 = 3.645
-compensated  = 3.645 × (1 - 0.8) = 0.729
+adjusted     = 0.81 × 0.45 = 0.3645
+compensated  = 0.3645 × (1 - 0.8) = 0.0729
 exposure     = 1.0 × (1-0.2) × 1.0 = 0.8
-finalRisk    = 0.729 × 0.75 × 0.8 = 0.437
+finalRisk    = 0.0729 × 1.0 × 0.8 = 0.058
 
-0.437 < 6.0 → ALLOW [PASS]
+0.058 < 0.20 → ALLOW [PASS]
 ```
 
 ### Scenario 04 — Risk Acceptance Baseline → BLOCK
 
 ```
-CVSS = 9.1, EPSS = 0.84, Reachable = true
-Criticality = 0.85, Internet = true, Auth = false
+CVSS = 0.91 (9.1/10), EPSS = 0.84, Reachable = true
+Criticality = 1.5 (Health), Internet = true, Auth = true
 Controls: none
 
-adjusted     = 9.1 × 0.84 = 7.644
-compensated  = 7.644 × 1.0 = 7.644
-exposure     = 1.0 × 1.0 × 1.0 = 1.0
-finalRisk    = 7.644 × 0.85 × 1.0 = 6.50
+adjusted     = 0.91 × 0.84 = 0.7644
+compensated  = 0.7644 × 1.0 = 0.7644
+exposure     = 1.0 × (1-0.2) × 1.0 = 0.8
+finalRisk    = 0.7644 × 1.5 × 0.8 = 0.917
 
-6.50 > 6.0 → BLOCK [PASS] (baseline for acceptance)
+0.917 > 0.08 → BLOCK [PASS] (baseline for acceptance)
 ```
 
 ---

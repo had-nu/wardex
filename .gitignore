@@ -50,3 +50,6 @@ wardex-simulator.html
 stress-enrich.yaml
 stress-vulns.yaml
 research/archive/
+
+# Mathematical calibration source (transient)
+patches_math_v4.tex
