@@ -1,14 +1,14 @@
-# PROFILE A: Banco Tier-1 (DORA-regulated) — Payment Gateway
+# PROFILE: Finance (NAICS 52) — Banking Tier-1 (DORA-regulated)
 # Internet-facing, no auth barrier, maximum criticality, zero tolerance
 release_gate:
   enabled: true
-  risk_appetite: 0.5           # Extremely strict: only negligible risk passes
-  warn_above: 0.03  # normalizado v4
+  risk_appetite: 0.050          # Extremely strict: only negligible risk passes
+  warn_above: 0.030             # Pre-block warning band
   asset_context:
     internet_facing: true       # Public API
     requires_auth: false        # Pre-auth attack surface
     environment: "production"
-    criticality: 1.5            # Critical financial infrastructure
+    criticality: 1.5            # Critical financial infrastructure (FIPS 199 High)
   compensating_controls: []     # No mitigations claimed
 acceptance_workflow:
   enabled: true
