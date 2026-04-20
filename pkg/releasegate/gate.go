@@ -15,7 +15,8 @@ type Gate struct {
 	CompensatingControls []model.CompensatingControl
 	RiskAppetite         float64
 	WarnAbove            float64
-	Mode                 string // "any" | "aggregate"
+	AggregateLimit       float64 // threshold for total risk in aggregate mode
+	Mode                 string  // "any" | "aggregate"
 }
 
 // Evaluate performs compound risk analysis on all vulnerabilitles and returns the GateReport.
@@ -67,7 +68,11 @@ func (g *Gate) Evaluate(vulns []model.Vulnerability) model.GateReport {
 
 	report.HighestRisk = highestRisk
 
-	if g.Mode == "aggregate" && totalRisk > g.RiskAppetite {
+	aggregateThreshold := g.RiskAppetite
+	if g.AggregateLimit > 0 {
+		aggregateThreshold = g.AggregateLimit
+	}
+	if g.Mode == "aggregate" && totalRisk > aggregateThreshold {
 		report.OverallDecision = "block"
 	}
 

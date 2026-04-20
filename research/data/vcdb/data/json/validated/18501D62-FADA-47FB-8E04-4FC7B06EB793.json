@@ -1,0 +1,136 @@
+{
+  "action": {
+    "hacking": {
+      "variety": [
+        "SQLi",
+        "Exploit vuln"
+      ],
+      "vector": [
+        "Web application"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Ideology"
+      ],
+      "notes": "Izz ad-Din al-Qassam Cyber Fighters",
+      "region": [
+        "142034",
+        "019021",
+        "150154",
+        "142145",
+        "150151"
+      ],
+      "variety": [
+        "Activist"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Web application"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "availability": {
+      "variety": [
+        "Loss"
+      ]
+    },
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Credentials"
+        },
+        {
+          "variety": "Internal"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_total": 70000,
+      "data_victim": [
+        "Customer"
+      ],
+      "state": [
+        "Stored unencrypted"
+      ]
+    },
+    "integrity": {
+      "variety": [
+        "Repurpose"
+      ]
+    }
+  },
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Actor disclosure"
+      ]
+    }
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "18501D62-FADA-47FB-8E04-4FC7B06EB793",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "bhaskarvk",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2014-08-06T21:21:00Z",
+    "github": "1659",
+    "master_id": "18501D62-FADA-47FB-8E04-4FC7B06EB793",
+    "modified": "2014-08-06T21:21:00Z",
+    "timeline": {
+      "notification": {
+        "month": 2,
+        "year": 2014
+      }
+    }
+  },
+  "reference": "http://news.softpedia.com/news/Details-of-70-000-Users-Leaked-by-Hackers-From-Systems-of-SPIROL-International-428669.shtml",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Hackers stole email addresses, usernames, passwords of users/customers and posted online",
+  "timeline": {
+    "containment": {
+      "unit": "Months"
+    },
+    "discovery": {
+      "unit": "Days"
+    },
+    "incident": {
+      "month": 2,
+      "year": 2014
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "101 to 1000",
+    "government": [
+      "NA"
+    ],
+    "industry": "332722",
+    "region": [
+      "019021"
+    ],
+    "state": "CT",
+    "victim_id": "Spirol International"
+  }
+}

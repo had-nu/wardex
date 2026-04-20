@@ -1,0 +1,124 @@
+{
+  "action": {
+    "physical": {
+      "variety": [
+        "Theft",
+        "Disabled controls"
+      ],
+      "vector": [
+        "Victim work area"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "US"
+      ],
+      "motive": [
+        "Financial"
+      ],
+      "region": [
+        "019021"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "amount": 4,
+        "variety": "U - Desktop"
+      },
+      {
+        "variety": "U - Desktop or laptop"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "availability": {
+      "variety": [
+        "Loss"
+      ]
+    },
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 4000000,
+          "variety": "Personal"
+        }
+      ],
+      "data_disclosure": "Potentially",
+      "data_total": 4000000,
+      "data_victim": [
+        "Patient"
+      ],
+      "notes": "no medical records were on computers, only personal information.",
+      "state": [
+        "Stored unencrypted"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "18DF47BA-2F55-4E20-BEF2-287EBB6B89F6",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "dhylender",
+    "asset": {
+      "total": "No"
+    },
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Yes",
+        "data_abuse": "Unknown"
+      }
+    },
+    "created": "2013-08-25T19:38:08Z",
+    "master_id": "18DF47BA-2F55-4E20-BEF2-287EBB6B89F6",
+    "modified": "2014-05-10T00:58:18Z",
+    "timeline": {
+      "notification": {
+        "day": 23,
+        "month": 8,
+        "year": 2013
+      }
+    }
+  },
+  "reference": "http://www.dailyherald.com/article/20130823/news/708239619/",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Four computers containing personal data for some 4 million Advocate Medical Group patients were stolen last month from one of the company's Park Ridge administrative offices, hospital officials announced Friday.",
+  "timeline": {
+    "incident": {
+      "day": 15,
+      "month": 7,
+      "year": 2013
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "621498",
+    "region": [
+      "019021"
+    ],
+    "state": "IL",
+    "victim_id": "Advocate Medical Group"
+  }
+}

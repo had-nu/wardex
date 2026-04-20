@@ -1,0 +1,150 @@
+{
+  "action": {
+    "malware": {
+      "variety": [
+        "Backdoor",
+        "Backdoor or C2"
+      ],
+      "vector": [
+        "Email attachment"
+      ]
+    },
+    "social": {
+      "target": [
+        "Unknown"
+      ],
+      "variety": [
+        "Phishing"
+      ],
+      "vector": [
+        "Email"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Financial"
+      ],
+      "region": [
+        "000000"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Database"
+      },
+      {
+        "variety": "P - Unknown"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Medical"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_victim": [
+        "Patient"
+      ],
+      "state": [
+        "Unknown"
+      ]
+    },
+    "integrity": {
+      "variety": [
+        "Software installation",
+        "Alter behavior"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "7B4B9338-2CE9-4093-B8DF-148DF54A884C",
+  "plus": {
+    "analysis_status": "Finalized",
+    "analyst": "DaveyBaby",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2016-09-07T19:47:00Z",
+    "dbir_year": 2016,
+    "github": "5744",
+    "master_id": "A60C467E-4043-42F4-BED3-D6AF10E29634",
+    "modified": "2016-09-07T20:06:00Z",
+    "sub_source": "phidbr",
+    "timeline": {
+      "notification": {
+        "day": 30,
+        "month": 4,
+        "year": 2015
+      }
+    }
+  },
+  "reference": "http://www.wcvb.com/health/patient-information-may-have-been-accessed-in-health-care-data-breach/32667428 ; http://abcnews.go.com/Technology/wireStory/partners-healthcare-notifies-3300-patients-email-breach-30716877",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Employees of Partners Healthcare System received phishing emails which led to a data breach of patient information. The information was accessed but it is not known if any of the data was misused.",
+  "timeline": {
+    "incident": {
+      "month": 11,
+      "year": 2014
+    }
+  },
+  "value_chain": {
+    "development": {
+      "notes": "VERIS 1.3.6: value_chain.development.variety.Email added because action.social.vector.Email exists.",
+      "variety": [
+        "Email"
+      ]
+    },
+    "distribution": {
+      "notes": "VERIS 1.3.6: value_chain.distribution.variety.Email added because action.social.vector.Email exists.",
+      "variety": [
+        "Email"
+      ]
+    },
+    "targeting": {
+      "notes": "VERIS 1.3.6: value_chain.targeting.variety.Email addresses added because action.social.vector.Email exists.",
+      "variety": [
+        "Email addresses"
+      ]
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "621491",
+    "region": [
+      "019021"
+    ],
+    "state": "MA",
+    "victim_id": "Partners Healthcare System"
+  }
+}

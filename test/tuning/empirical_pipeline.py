@@ -69,8 +69,15 @@ class ProfileCalibration:
 # Citação: nvd.nist.gov, CC0 (domínio público)
 # ══════════════════════════════════════════════════════════════
 
+import os
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 NVD_API_BASE = "https://services.nvd.nist.gov/rest/json/cves/2.0"
-NVD_API_KEY  = "YOUR_NVD_API_KEY"   # https://nvd.nist.gov/developers/request-an-api-key
+NVD_API_KEY  = os.environ.get("NVD_API_KEY", "")   # https://nvd.nist.gov/developers/request-an-api-key
 
 def fetch_nvd_cvss(cve_id: str) -> dict:
     """
@@ -196,9 +203,11 @@ def fetch_epss_snapshot(snapshot_date: str, cve_ids: list[str]) -> dict[str, flo
     cve_set = set(cve_ids)
     scores  = {}
     with open(cache_file, newline="") as f:
-        reader = csv.DictReader(f)
+        # Ignore EPSS initial metadata comments (e.g. #model_version:...)
+        lines = (line for line in f if not line.startswith("#"))
+        reader = csv.DictReader(lines)
         for row in reader:
-            if row["cve"] in cve_set:
+            if "cve" in row and row["cve"] in cve_set:
                 scores[row["cve"]] = float(row["epss"])
 
     return scores
@@ -377,7 +386,9 @@ def load_vulzoo_exploit_db() -> dict[str, list[str]]:
 
     if not cache.exists():
         resp = requests.get(url, timeout=60)
-        resp.raise_for_status()
+        if resp.status_code != 200:
+            print(f"[VulZoo] Failed to fetch. Skipping VulZoo exploits.")
+            return {}
         cache.write_bytes(resp.content)
 
     cve_to_sources: dict[str, list[str]] = {}
@@ -862,12 +873,18 @@ def compute_contextual_score(
     kappa: float = 0.8,
 ) -> float:
     """
-    Função de scoring central. R(v, α) = CVSS × EPSS × C(α) × E(α) × (1 − Φ(α))
-    fail-close: se epss == 0.0, usar 1.0 (indisponível ≠ inexplorável)
+    Função de scoring central (v4).
+    R(v, α) = [CVSS(v)/10 · EPSS(v)] · C(α) · E(α) · [1 − Φ(α)]
+
+    Proposição 2 (Bounded output): R(v, α) ∈ [0, 1.5].
+    Prova: CVSS(v)/10 ≤ 1, EPSS(v) ≤ 1, C(α) ≤ 1.5, E(α) ≤ 1.0,
+    (1−Φ) ≤ 1.0. Máximo: 1 × 1 × 1.5 × 1.0 × 1.0 = 1.5. □
+
+    fail-close: se epss == 0.0, usar 1.0 (indisponível ≠ inexplorável).
     """
     epss_eff = epss if epss > 0.0 else 1.0
     phi      = min(compensating_effectiveness, kappa)
-    return cvss * epss_eff * c_alpha * e_alpha * (1.0 - phi)
+    return (cvss / 10.0) * epss_eff * c_alpha * e_alpha * (1.0 - phi)
 
 
 def evaluate_gate(score: float, theta_block: float, theta_warn: float) -> str:
@@ -1000,11 +1017,13 @@ CVE_LIST = [
     # ... + 233 CVEs adicionais do corpus NVD
 ]
 
+# Ensemble publicado no paper v4 (escala [0, 1.5] — cf. Proposição 2).
+# θ_block e θ_warn expressos na escala normalizada (CVSS/10).
 PROFILES_CONFIG = [
-    ("BANK", ["52"],         {"block": 0.5, "warn": 0.3}),
-    ("HOSP", ["62"],         {"block": 0.8, "warn": 0.5}),
-    ("SAAS", ["51"],         {"block": 2.0, "warn": 1.0}),
-    ("DEV",  ["51", "54"],   {"block": 4.0, "warn": 2.0}),
+    ("BANK",  ["52"],       {"block": 0.05,  "warn": 0.03}),   # θ_Finance
+    ("HOSP",  ["62"],       {"block": 0.08,  "warn": 0.05}),
+    ("SAAS",  ["51"],       {"block": 0.20,  "warn": 0.10}),
+    ("INFRA", ["22"],       {"block": 0.03,  "warn": 0.02}),   # θ_Utilities (NIS2 Essential Entity)
 ]
 
 def main():

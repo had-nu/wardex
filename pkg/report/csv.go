@@ -44,7 +44,7 @@ func generateCSV(report model.GapReport, outFile string) error {
 	for _, finding := range report.Findings {
 		reasons := ""
 		if len(finding.GapReasons) > 0 {
-			reasons = finding.GapReasons[0] // Simplify for CSV
+			reasons = finding.GapReasons[0]
 		}
 
 		row := []string{
@@ -61,5 +61,76 @@ func generateCSV(report model.GapReport, outFile string) error {
 		}
 	}
 
+	writer.Flush()
+
+	if report.Gate != nil || report.Delta != nil {
+		if err := writer.Write([]string{}); err != nil {
+			return fmt.Errorf("failed to write CSV separator: %w", err)
+		}
+
+		if err := writer.Write([]string{"## Release Gate"}); err != nil {
+			return fmt.Errorf("failed to write section header: %w", err)
+		}
+
+		gateHeader := []string{"CVE", "CVSS", "EPSS", "Release Risk", "Decision"}
+		if err := writer.Write(gateHeader); err != nil {
+			return fmt.Errorf("failed to write gate header: %w", err)
+		}
+
+		if report.Gate != nil {
+			for _, dec := range report.Gate.Decisions {
+				row := []string{
+					dec.Vulnerability.CVEID,
+					fmt.Sprintf("%.1f", dec.Breakdown.CVSSBase),
+					fmt.Sprintf("%.2f", dec.Breakdown.EPSSFactor),
+					fmt.Sprintf("%.1f", dec.ReleaseRisk),
+					dec.Decision,
+				}
+				if err := writer.Write(row); err != nil {
+					return fmt.Errorf("failed to write gate row: %w", err)
+				}
+			}
+
+			if err := writer.Write([]string{}); err != nil {
+				return fmt.Errorf("failed to write CSV separator: %w", err)
+			}
+
+			summaryRow := []string{
+				fmt.Sprintf("Overall Decision: %s", report.Gate.OverallDecision),
+				fmt.Sprintf("Gate Maturity Level: %d", report.Gate.GateMaturityLevel),
+				"", "", "",
+			}
+			if err := writer.Write(summaryRow); err != nil {
+				return fmt.Errorf("failed to write gate summary: %w", err)
+			}
+		}
+	}
+
+	if report.Delta != nil {
+		if err := writer.Write([]string{}); err != nil {
+			return fmt.Errorf("failed to write CSV separator: %w", err)
+		}
+
+		if err := writer.Write([]string{"## Snapshot Delta"}); err != nil {
+			return fmt.Errorf("failed to write delta header: %w", err)
+		}
+
+		deltaHeader := []string{"Coverage Change", "Newly Covered", "New Gaps", "Unchanged"}
+		if err := writer.Write(deltaHeader); err != nil {
+			return fmt.Errorf("failed to write delta header: %w", err)
+		}
+
+		deltaRow := []string{
+			fmt.Sprintf("%.1f%%", report.Delta.CoverageChange),
+			fmt.Sprintf("%d", len(report.Delta.NewlyCovered)),
+			fmt.Sprintf("%d", len(report.Delta.NewGaps)),
+			fmt.Sprintf("%d", report.Delta.Unchanged),
+		}
+		if err := writer.Write(deltaRow); err != nil {
+			return fmt.Errorf("failed to write delta row: %w", err)
+		}
+	}
+
+	writer.Flush()
 	return nil
 }

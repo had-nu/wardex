@@ -1,0 +1,98 @@
+{
+  "action": {
+    "error": {
+      "variety": [
+        "Disposal error"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "motive": [
+        "NA"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "M - Documents"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Medical"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "state": [
+        "Unknown"
+      ]
+    }
+  },
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Actor disclosure"
+      ]
+    }
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "7CDBE12F-2279-49C7-A5D5-95267288546F",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "jayjacobs",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2014-09-04T18:01:00Z",
+    "github": "2952",
+    "master_id": "7CDBE12F-2279-49C7-A5D5-95267288546F",
+    "modified": "2014-09-04T18:01:00Z",
+    "timeline": {
+      "notification": {
+        "year": 2014
+      }
+    }
+  },
+  "reference": "http://www.theboltonnews.co.uk/news/local/10326409.Hospital_notes_found_in_street/",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "papers found on street from a local hospital.",
+  "timeline": {
+    "incident": {
+      "year": 2014
+    }
+  },
+  "victim": {
+    "country": [
+      "Unknown"
+    ],
+    "employee_count": "101 to 1000",
+    "government": [
+      "NA"
+    ],
+    "industry": "62",
+    "region": [
+      "000000"
+    ],
+    "victim_id": "Hospital Auxilio Mutuo"
+  }
+}

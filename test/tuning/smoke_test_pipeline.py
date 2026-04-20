@@ -29,11 +29,12 @@ all_incidents = (
     make_incidents("22", "Internal",            "High",     50)  # INFRA: utilities, internal
 )
 
+# Escala normalizada v4: θ expressos em [0, 1.5] (CVSS/10 internalizado na fórmula)
 PROFILES_CONFIG = [
-    ("BANK",  ["52"],       {"block": 0.5,  "warn": 0.3}),
-    ("HOSP",  ["62"],       {"block": 0.8,  "warn": 0.5}),
-    ("SAAS",  ["51"],       {"block": 2.0,  "warn": 1.0}),
-    ("INFRA", ["22"],       {"block": 0.3,  "warn": 0.2}),
+    ("BANK",  ["52"],       {"block": 0.05,  "warn": 0.03}),
+    ("HOSP",  ["62"],       {"block": 0.08,  "warn": 0.05}),
+    ("SAAS",  ["51"],       {"block": 0.20,  "warn": 0.10}),
+    ("INFRA", ["22"],       {"block": 0.015, "warn": 0.02}),  # θ_Utilities
 ]
 
 calibrations = {}
@@ -54,15 +55,18 @@ for name, naics, thetas in PROFILES_CONFIG:
           f"n={cal.n_incidents}  source={cal.c_alpha_source}")
 
 # ── Casos ilustrativos do paper (Table 2) ────────────────────────────────
+# Casos ilustrativos do paper v4 (Table 2) — scores na escala [0, 1.5]
 ILLUSTRATIVE = [
     ("CVE-2021-44228", 10.0, 0.940, "Log4Shell"),
     ("CVE-2024-3094",  10.0, 0.860, "xz backdoor"),
     ("CVE-2023-38545",  9.8, 0.260, "curl SOCKS5"),
+    ("CVE-2021-21972",  9.8, 0.050, "vCenter RCE"),
     ("CVE-2019-10744",  9.8, 0.010, "minimist"),
 ]
 
-print("\n=== ILLUSTRATIVE CASES ===")
+print("\n=== ILLUSTRATIVE CASES (v4, escala normalizada) ===")
 print(f"{'CVE':<20} {'Name':<15} {'BANK':>8} {'HOSP':>8} {'SAAS':>8} {'INFRA':>8}")
+print(f"{'':20} {'score / dec':15}" + " " * 36)
 print("-" * 75)
 
 for cve_id, cvss, epss, name in ILLUSTRATIVE:
@@ -71,7 +75,7 @@ for cve_id, cvss, epss, name in ILLUSTRATIVE:
         cal = calibrations[prof_name]
         score = compute_contextual_score(cvss, epss, cal["c_alpha"], cal["e_alpha"])
         dec = evaluate_gate(score, thetas["block"], thetas["warn"])
-        row.append(f"{dec:>8}")
+        row.append(f"{score:.3f}/{dec:>8}")
     print("".join(row))
 
 # ── CVE sintético corpus (237 entradas para o simulation study) ──────────

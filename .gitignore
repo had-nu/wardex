@@ -63,6 +63,7 @@ wardex-simulator.html
 # Stress Test Outputs
 stress-enrich.yaml
 stress-vulns.yaml
+research/archive/
 
-# Research Artifacts (calibration data)
-research/
+# Mathematical calibration source (transient)
+patches_math_v4.tex

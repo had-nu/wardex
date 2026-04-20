@@ -101,7 +101,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 				}
 			}
 			if !allowed {
-				fmt.Fprintf(os.Stderr, "[RBAC VIOLATION] Actor %q not authorized for profile %q\n", actor, profileName)
+				fmt.Fprintf(os.Stderr, "[RBAC VIOLATION] Actor %q is not authorized for profile %q!\n[RBAC ENFORCEMENT] Override rejected. Falling back to strict baseline configuration.\n", actor, profileName)
 			} else {
 				cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
 				cfg.ReleaseGate.WarnAbove = p.WarnAbove
@@ -135,6 +135,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		CompensatingControls: cfg.ReleaseGate.CompensatingControls,
 		RiskAppetite:         cfg.ReleaseGate.RiskAppetite,
 		WarnAbove:            cfg.ReleaseGate.WarnAbove,
+		AggregateLimit:       cfg.ReleaseGate.AggregateLimit,
 		Mode:                 gateModeVal,
 	}
 

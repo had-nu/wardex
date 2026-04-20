@@ -48,7 +48,7 @@ ok "wardex built successfully"
 
 # ── Scenario 01: Happy Path ──────────────────────────────────────────────────
 header "Scenario 01 · Happy Path → ALLOW"
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s01.yaml" \
     --gate="${POC_DIR}/scenario-01-happy-path.yaml" \
     "${CONTROLS}"; then
@@ -62,7 +62,7 @@ fi
 
 # ── Scenario 02: Block Path ─────────────────────────────────────────────────
 header "Scenario 02 · Critical CVE → BLOCK"
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s02.yaml" \
     --gate="${POC_DIR}/scenario-02-block-critical.yaml" \
     "${CONTROLS}"; then
@@ -76,7 +76,7 @@ fi
 
 # ── Scenario 03: Compensating Controls ──────────────────────────────────────
 header "Scenario 03 · Compensating Controls → ALLOW"
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s03.yaml" \
     --gate="${POC_DIR}/scenario-03-compensating-controls.yaml" \
     "${CONTROLS}"; then
@@ -94,7 +94,7 @@ header "Scenario 04 · Risk Acceptance Exception Flow"
 # Step 1: Initial gate — must BLOCK
 info "Step 1: Running initial gate (expect BLOCK)"
 rm -f wardex-acceptances.yaml wardex-accept-audit.log
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s04.yaml" \
     --gate="${POC_DIR}/scenario-04-risk-acceptance.yaml" \
     "${CONTROLS}"; then
@@ -106,7 +106,7 @@ else
 
   # Step 2: Register exception
   info "Step 2: Registering risk-acceptance exception"
-  ${WARDEX} --config="${POC_DIR}/config-s04.yaml" accept request \
+  "${WARDEX}" --config="${POC_DIR}/config-s04.yaml" accept request \
     --report "${POC_DIR}/report-s04-initial.json" \
     --cve CVE-2025-0042 \
     --accepted-by sec-lead@company.com \
@@ -116,7 +116,7 @@ else
 
   # Step 3: Re-run gate — must now ALLOW
   info "Step 3: Re-running gate with active exception (expect ALLOW)"
-  if ${WARDEX} \
+  if "${WARDEX}" \
       --config="${POC_DIR}/config-s04.yaml" \
       --gate="${POC_DIR}/scenario-04-risk-acceptance.yaml" \
       "${CONTROLS}"; then
@@ -125,7 +125,7 @@ else
 
     # Step 4: Verify integrity
     info "Step 4: Verifying HMAC integrity of all acceptance records"
-    if ${WARDEX} --config="${POC_DIR}/config-s04.yaml" accept verify; then
+    if "${WARDEX}" --config="${POC_DIR}/config-s04.yaml" accept verify; then
       ok "All acceptance records passed integrity check"
       PASS=$((PASS + 1))
     else
@@ -140,7 +140,7 @@ fi
 
 # ── Scenario 05: Warn Risk Band ──────────────────────────────────────────────
 header "Scenario 05 · Warn Risk Band → ALLOW (with Warnings)"
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s05.yaml" \
     --gate="${POC_DIR}/scenario-05-warn-band.yaml" \
     "${CONTROLS}"; then
@@ -155,14 +155,14 @@ fi
 # ── Scenario 06: Grype Adapter & Risk Simulator ──────────────────────────────
 header "Scenario 06 · Grype Adapter & Risk Simulator (DX Sprint)"
 info "Step 1: Converting Grype JSON to Wardex YAML"
-if ${WARDEX} convert grype "${POC_DIR}/scenario-06-mock-grype.json" \
+if "${WARDEX}" convert grype "${POC_DIR}/scenario-06-mock-grype.json" \
     --default-epss 1.0 \
     --output "${POC_DIR}/scenario-06-converted.yaml"; then
   ok "Grype JSON successfully converted to Wardex Native YAML"
   
   info "Step 2: Dry-run converted Grype output against the gate"
   # This block will fail the gate because it's a 9.8 Critical vuln without compensations, testing the integration
-  if ${WARDEX} \
+  if "${WARDEX}" \
       --config="${POC_DIR}/config-s06.yaml" \
       --gate="${POC_DIR}/scenario-06-converted.yaml" \
       "${CONTROLS}" > /dev/null 2>&1; then
@@ -178,7 +178,7 @@ else
 fi
 
 info "Step 3: Generating offline Risk Simulator"
-if ${WARDEX} simulate > /dev/null; then
+if "${WARDEX}" simulate > /dev/null; then
   ok "Wardex Risk Simulator generated successfully"
   PASS=$((PASS + 1))
 else
@@ -203,19 +203,19 @@ cd "${REPO_ROOT}"
 cat << 'EOF' > "${POC_DIR}/config-s07.yaml"
 release_gate:
   enabled: true
-  risk_appetite: 0.1
-  warn_above: 0.05
+  risk_appetite: 0.05
+  warn_above: 0.03
   asset_context:
-    criticality: 1.0
+    criticality: 1.5
     internet_facing: true
     requires_auth: false
 EOF
 
 header "Scenario 07 · SBOM Ingestion (CycloneDX) → BLOCK"
 info "Converting mock-sbom.json to Wardex native YAML..."
-${WARDEX} convert sbom "${POC_DIR}/scenario-07-mock-sbom.json" -o "${POC_DIR}/scenario-07-converted.yaml"
+"${WARDEX}" convert sbom "${POC_DIR}/scenario-07-mock-sbom.json" -o "${POC_DIR}/scenario-07-converted.yaml"
 
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s07.yaml" \
     --gate="${POC_DIR}/scenario-07-converted.yaml" \
     "${POC_DIR}/scenario-07-nocontrols.yaml"; then
@@ -230,7 +230,7 @@ fi
 header "Scenario 08 · RBAC Profile Overrides (Strict vs Lenient)"
 
 # Baseline run (strict config) -> Expect BLOCK
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s08.yaml" \
     --gate="${POC_DIR}/scenario-07-converted.yaml" \
     "${POC_DIR}/scenario-07-nocontrols.yaml"; then
@@ -242,7 +242,7 @@ else
 fi
 
 # Override run (lenient profile) -> Expect ALLOW
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s08.yaml" \
     --profile="lenient-team" \
     --gate="${POC_DIR}/scenario-07-converted.yaml" \
@@ -260,7 +260,7 @@ header "Scenario 09 · WARN Gate Threshold"
 # Scenario: CVSS 9.8 * EPSS 0.05 * Crit 1.0 = Risk 0.49
 # Config: warn_above = 0.1, risk_appetite = 1.0
 # Expectation: Risk (0.49) > warn_above (0.1), but < risk_appetite (1.0). Gate = WARN, Exit = 0.
-if ${WARDEX} \
+if "${WARDEX}" \
     --config="${POC_DIR}/config-s09.yaml" \
     --gate="${POC_DIR}/scenario-07-converted.yaml" \
     "${POC_DIR}/scenario-07-nocontrols.yaml" 2>&1 | grep "WARNING: Risk threshold exceeded WarnAbove" > /dev/null; then
