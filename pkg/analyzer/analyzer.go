@@ -4,16 +4,20 @@
 package analyzer
 
 import (
+	"fmt"
+
 	"github.com/had-nu/wardex/pkg/model"
 	"github.com/had-nu/wardex/pkg/scorer"
 )
 
+// Analyzer performs compliance gap analysis against a framework catalog.
 type Analyzer struct {
 	Catalog  []model.CatalogControl
 	Mappings []model.Mapping
 	Controls []model.ExistingControl
 }
 
+// New creates a new Analyzer with the given catalog, control mappings, and existing controls.
 func New(catalog []model.CatalogControl, mappings []model.Mapping, controls []model.ExistingControl) *Analyzer {
 	return &Analyzer{
 		Catalog:  catalog,
@@ -22,8 +26,13 @@ func New(catalog []model.CatalogControl, mappings []model.Mapping, controls []mo
 	}
 }
 
-// Analyze processes mappings and produces coverage findings for each Annex A control.
-func (a *Analyzer) Analyze() []model.Finding {
+// Analyze processes mappings and produces coverage findings for each framework control.
+// Returns a slice of Findings representing the compliance status of each control.
+func (a *Analyzer) Analyze() ([]model.Finding, error) {
+	if len(a.Catalog) == 0 {
+		return nil, fmt.Errorf("analyzer: empty catalog")
+	}
+
 	var findings []model.Finding
 
 	mappingByAnnex := make(map[string][]model.Mapping)
@@ -56,5 +65,32 @@ func (a *Analyzer) Analyze() []model.Finding {
 		findings = append(findings, finding)
 	}
 
-	return findings
+	return findings, nil
+}
+
+// AnalyzeWithConfig performs analysis with additional configuration options.
+func (a *Analyzer) AnalyzeWithConfig(opts *AnalyzerOptions) ([]model.Finding, error) {
+	opts.setDefaults()
+	if opts.FilterLowConfidence {
+		var filtered []model.Mapping
+		for _, m := range a.Mappings {
+			if m.Confidence == "high" {
+				filtered = append(filtered, m)
+			}
+		}
+		a.Mappings = filtered
+	}
+	return a.Analyze()
+}
+
+// AnalyzerOptions provides configuration for AnalyzeWithConfig.
+type AnalyzerOptions struct {
+	FilterLowConfidence bool
+	MinMaturity         int
+}
+
+func (o *AnalyzerOptions) setDefaults() {
+	if o == nil {
+		*o = AnalyzerOptions{}
+	}
 }

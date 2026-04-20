@@ -72,10 +72,7 @@ var epssCmd = &cobra.Command{
 
 		var cvesToFetch []string
 		for _, v := range vulnsFormat.Vulnerabilities {
-			if v.EPSSScore == 0.0 || v.EPSSScore == 1.0 { // missing or defaulted
-				if len(cvesToFetch) > 0 && cvesToFetch[len(cvesToFetch)-1] == v.CVEID {
-					continue
-				}
+			if v.EPSSScore == 0.0 { // missing - 0.0 means not fetched
 				cvesToFetch = append(cvesToFetch, v.CVEID)
 			}
 		}

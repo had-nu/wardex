@@ -23,32 +23,6 @@ const (
 	reset     = "\033[0m"
 )
 
-// smoothGradient generates an extremely smooth purple horizontal gradient for the background code.
-func smoothGradient(text string, startPcnt, endPcnt float64) string {
-	var out string
-	rs := []rune(text)
-	if len(rs) == 0 {
-		return ""
-	}
-	for i, r := range rs {
-		ratio := startPcnt + (endPcnt-startPcnt)*(float64(i)/float64(len(rs)))
-		if ratio > 1 {
-			ratio = 1
-		}
-		if ratio < 0 {
-			ratio = 0
-		}
-
-		// Map ratio linearly:
-		// Deep Cyber Purple (45, 10, 85) -> Vibrant Magenta/Pink Context (160, 0, 150)
-		red := 45 + int(ratio*115)
-		green := 10 - int(ratio*10)
-		blue := 85 + int(ratio*65)
-
-		out += fmt.Sprintf("\033[38;2;%d;%d;%dm%c", red, green, blue, r)
-	}
-	return out + reset
-}
 
 // PrintBanner outputs a professional, minimalist Wardex header.
 func PrintBanner(version string) {
