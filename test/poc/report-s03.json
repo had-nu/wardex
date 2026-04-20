@@ -1,30 +1,12 @@
 {
   "Summary": {
-    "GeneratedAt": "2026-04-04T19:58:30.806189264+01:00",
+    "GeneratedAt": "2026-04-15T17:32:07.385781681+01:00",
     "TotalControls": 93,
     "CoveredCount": 0,
     "PartialCount": 93,
     "GapCount": 0,
     "GlobalCoverage": 0,
     "DomainSummaries": [
-      {
-        "Domain": "organizational",
-        "TotalControls": 37,
-        "CoveredCount": 0,
-        "PartialCount": 37,
-        "GapCount": 0,
-        "MaturityScore": 5.121621621621622,
-        "CoveragePercent": 0
-      },
-      {
-        "Domain": "people",
-        "TotalControls": 8,
-        "CoveredCount": 0,
-        "PartialCount": 8,
-        "GapCount": 0,
-        "MaturityScore": 5,
-        "CoveragePercent": 0
-      },
       {
         "Domain": "physical",
         "TotalControls": 14,
@@ -41,6 +23,24 @@
         "PartialCount": 34,
         "GapCount": 0,
         "MaturityScore": 5.205882352941177,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "organizational",
+        "TotalControls": 37,
+        "CoveredCount": 0,
+        "PartialCount": 37,
+        "GapCount": 0,
+        "MaturityScore": 5.121621621621622,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "people",
+        "TotalControls": 8,
+        "CoveredCount": 0,
+        "PartialCount": 8,
+        "GapCount": 0,
+        "MaturityScore": 5,
         "CoveragePercent": 0
       }
     ],
@@ -21819,7 +21819,7 @@
   ],
   "Gate": {
     "OverallDecision": "allow",
-    "GateMaturityLevel": 3,
+    "GateMaturityLevel": 4,
     "Decisions": [
       {
         "Vulnerability": {
@@ -21829,19 +21829,19 @@
           "Component": "",
           "Reachable": true
         },
-        "ReleaseRisk": 1.3851000000000002,
-        "RiskAppetite": 6,
+        "ReleaseRisk": 0.11664000000000002,
+        "RiskAppetite": 0.2,
         "Decision": "allow",
         "Breakdown": {
           "CVSSBase": 8.1,
           "EPSSFactor": 0.45,
-          "AdjustedScore": 3.645,
-          "AssetCriticality": 0.95,
-          "ExposureFactor": 1,
+          "AdjustedScore": 0.3645,
+          "AssetCriticality": 1,
+          "ExposureFactor": 0.8,
           "CompensatingEffect": 0.6,
-          "FinalReleaseRisk": 1.3851000000000002
+          "FinalReleaseRisk": 0.11664000000000002
         },
-        "AuditTrail": "[allow] CVE-2024-3388 — release_risk: 1.4, cvss_adjusted: 3.6, exposure: 1.00"
+        "AuditTrail": "[allow] CVE-2024-3388 — release_risk: 0.1, cvss_adjusted: 0.4, exposure: 0.80"
       },
       {
         "Vulnerability": {
@@ -21851,32 +21851,32 @@
           "Component": "",
           "Reachable": true
         },
-        "ReleaseRisk": 0.87172,
-        "RiskAppetite": 6,
+        "ReleaseRisk": 0.07340800000000001,
+        "RiskAppetite": 0.2,
         "Decision": "allow",
         "Breakdown": {
           "CVSSBase": 7.4,
           "EPSSFactor": 0.31,
-          "AdjustedScore": 2.294,
-          "AssetCriticality": 0.95,
-          "ExposureFactor": 1,
+          "AdjustedScore": 0.2294,
+          "AssetCriticality": 1,
+          "ExposureFactor": 0.8,
           "CompensatingEffect": 0.6,
-          "FinalReleaseRisk": 0.87172
+          "FinalReleaseRisk": 0.07340800000000001
         },
-        "AuditTrail": "[allow] CVE-2024-6610 — release_risk: 0.9, cvss_adjusted: 2.3, exposure: 1.00"
+        "AuditTrail": "[allow] CVE-2024-6610 — release_risk: 0.1, cvss_adjusted: 0.2, exposure: 0.80"
       }
     ],
     "BlockedCount": 0,
     "AllowedCount": 2,
     "WarnCount": 0,
-    "HighestRisk": 1.3851000000000002
+    "HighestRisk": 0.11664000000000002
   },
   "Delta": {
-    "SnapshotDate": "2026-04-04T19:58:30.74886669+01:00",
+    "SnapshotDate": "2026-04-15T17:32:07.347871558+01:00",
     "CoverageChange": 0,
     "NewlyCovered": null,
     "NewGaps": null,
     "Unchanged": 93,
-    "GateMaturityChange": 1
+    "GateMaturityChange": 2
   }
 }

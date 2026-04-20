@@ -1,21 +1,12 @@
 {
   "Summary": {
-    "GeneratedAt": "2026-04-04T19:58:30.648885132+01:00",
+    "GeneratedAt": "2026-04-15T17:32:07.317154693+01:00",
     "TotalControls": 93,
     "CoveredCount": 0,
     "PartialCount": 93,
     "GapCount": 0,
     "GlobalCoverage": 0,
     "DomainSummaries": [
-      {
-        "Domain": "organizational",
-        "TotalControls": 37,
-        "CoveredCount": 0,
-        "PartialCount": 37,
-        "GapCount": 0,
-        "MaturityScore": 5.121621621621622,
-        "CoveragePercent": 0
-      },
       {
         "Domain": "people",
         "TotalControls": 8,
@@ -41,6 +32,15 @@
         "PartialCount": 34,
         "GapCount": 0,
         "MaturityScore": 5.205882352941177,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "organizational",
+        "TotalControls": 37,
+        "CoveredCount": 0,
+        "PartialCount": 37,
+        "GapCount": 0,
+        "MaturityScore": 5.121621621621622,
         "CoveragePercent": 0
       }
     ],
@@ -21829,19 +21829,19 @@
           "Component": "",
           "Reachable": false
         },
-        "ReleaseRisk": 0.018432,
-        "RiskAppetite": 6,
+        "ReleaseRisk": 0.002304,
+        "RiskAppetite": 0.2,
         "Decision": "allow",
         "Breakdown": {
           "CVSSBase": 3.2,
           "EPSSFactor": 0.018,
-          "AdjustedScore": 0.0576,
-          "AssetCriticality": 0.8,
+          "AdjustedScore": 0.0057599999999999995,
+          "AssetCriticality": 1,
           "ExposureFactor": 0.4,
           "CompensatingEffect": 0,
-          "FinalReleaseRisk": 0.018432
+          "FinalReleaseRisk": 0.002304
         },
-        "AuditTrail": "[allow] CVE-2024-9901 — release_risk: 0.0, cvss_adjusted: 0.1, exposure: 0.40"
+        "AuditTrail": "[allow] CVE-2024-9901 — release_risk: 0.0, cvss_adjusted: 0.0, exposure: 0.40"
       },
       {
         "Vulnerability": {
@@ -21851,17 +21851,17 @@
           "Component": "",
           "Reachable": false
         },
-        "ReleaseRisk": 0.0044800000000000005,
-        "RiskAppetite": 6,
+        "ReleaseRisk": 0.0005600000000000001,
+        "RiskAppetite": 0.2,
         "Decision": "allow",
         "Breakdown": {
           "CVSSBase": 2.8,
           "EPSSFactor": 0.005,
-          "AdjustedScore": 0.013999999999999999,
-          "AssetCriticality": 0.8,
+          "AdjustedScore": 0.0014,
+          "AssetCriticality": 1,
           "ExposureFactor": 0.4,
           "CompensatingEffect": 0,
-          "FinalReleaseRisk": 0.0044800000000000005
+          "FinalReleaseRisk": 0.0005600000000000001
         },
         "AuditTrail": "[allow] CVE-2024-7743 — release_risk: 0.0, cvss_adjusted: 0.0, exposure: 0.40"
       }
@@ -21869,10 +21869,10 @@
     "BlockedCount": 0,
     "AllowedCount": 2,
     "WarnCount": 0,
-    "HighestRisk": 0.018432
+    "HighestRisk": 0.002304
   },
   "Delta": {
-    "SnapshotDate": "2026-04-04T19:18:38.110238468+01:00",
+    "SnapshotDate": "2026-04-15T17:31:48.118177186+01:00",
     "CoverageChange": 0,
     "NewlyCovered": null,
     "NewGaps": null,
