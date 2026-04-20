@@ -1,0 +1,29 @@
+release_gate:
+  enabled: true
+  mode: "aggregate"
+  risk_appetite: 6.5
+  warn_above: 4.0
+  asset_context:
+    criticality: 0.9
+    internet_facing: true
+    requires_auth: true
+    data_class: "restricted"
+    environment: "production"
+  compensating_controls:
+    - type: "network_segmentation"
+      effectiveness: 0.6
+      justification: "MFA heavily enforced across all privileged access"
+    - type: "network_segmentation"
+      effectiveness: 0.5
+      justification: "Network segmentation limiting lateral movement"
+
+acceptance:
+  signing_secret_file: "/tmp/test-secret.key"
+  limits:
+    max_acceptance_days: 90
+    min_justification_chars: 20
+
+reporting:
+  format: "markdown"
+  output: "stdout"
+  verbose: true

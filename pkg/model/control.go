@@ -5,27 +5,27 @@ package model
 
 // ExistingControl representa um controle já implementado na organização.
 type ExistingControl struct {
-	ID                  string
-	Name                string
-	Description         string   // Usado no matching inferido
-	Framework           string   // Informative
-	Domains             []string // Temas semânticos declarados
-	Maturity            int      // 1 (inicial) a 5 (otimizado)
-	Evidences           []Evidence
-	ContextWeight       float64 // Multiplicador de risco (default: 1.0)
-	WeightJustification string  // Justificativa auditável
+	ID                  string     `yaml:"id"`
+	Name                string     `yaml:"name"`
+	Description         string     `yaml:"description,omitempty"`
+	Framework           string     `yaml:"framework,omitempty"`
+	Domains             []string   `yaml:"domains,omitempty"`
+	Maturity            int        `yaml:"maturity"`
+	Evidences           []Evidence `yaml:"evidences,omitempty"`
+	ContextWeight       float64    `yaml:"context_weight,omitempty"`
+	WeightJustification string     `yaml:"weight_justification,omitempty"`
 }
 
 // CatalogControl representa um controle da ISO 27001:2022 Annex A.
 type CatalogControl struct {
 	ID            string     `yaml:"id"`
 	Name          string     `yaml:"name"`
-	Domain        string     `yaml:"domain"` // "organizational" | "people" | "physical" | "technological"
-	Domains       []string   `yaml:"domains"`
-	Keywords      []string   `yaml:"keywords"`
-	EvidenceTypes []string   `yaml:"evidence_types"`
-	BaseScore     float64    `yaml:"base_score"` // Criticidade base 0.0–10.0
-	Practices     []Practice `yaml:"practices"`  // Práticas concretas que cobrem o controle
+	Domain        string     `yaml:"domain"`
+	Domains       []string   `yaml:"domains,omitempty"`
+	Keywords      []string   `yaml:"keywords,omitempty"`
+	EvidenceTypes []string   `yaml:"evidence_types,omitempty"`
+	BaseScore     float64    `yaml:"base_score"`
+	Practices     []Practice `yaml:"practices,omitempty"`
 }
 
 // Practice representa uma prática concreta associada a um controle Annex A.
@@ -39,15 +39,15 @@ type Practice struct {
 
 // Evidence representa uma evidência declarada.
 type Evidence struct {
-	Type string // "policy" | "procedure" | "test_result" | "log" | "certificate" | "document"
-	Ref  string
+	Type string `yaml:"type"`
+	Ref  string `yaml:"ref"`
 }
 
 // Mapping representa a correlação entre um controle existente e um controle da Annex A.
 type Mapping struct {
-	ExistingControlID string
-	CatalogControlID  string
-	Confidence        string // "high" | "low"
-	MatchedDomains    []string
-	MatchedKeywords   []string
+	ExistingControlID string   `yaml:"existing_control_id"`
+	CatalogControlID  string   `yaml:"catalog_control_id"`
+	Confidence        string   `yaml:"confidence"`
+	MatchedDomains    []string `yaml:"matched_domains,omitempty"`
+	MatchedKeywords   []string `yaml:"matched_keywords,omitempty"`
 }
