@@ -1,0 +1,52 @@
+controls:
+  - id: CTRL-001
+    name: Information Security Policy
+    description: Documented information security policy
+    maturity: 4
+    domains:
+      - governance
+    evidences:
+      - type: policy
+        ref: https://internal.example.com/security-policy
+
+  - id: CTRL-002
+    name: Access Control Standards
+    description: Documented access control requirements
+    maturity: 3
+    domains:
+      - access_control
+    evidences:
+      - type: policy
+        ref: https://internal.example.com/access-policy
+
+  - id: CTRL-003
+    name: Cryptographic Controls
+    description: Data encryption at rest and in transit
+    maturity: 5
+    domains:
+      - cryptography
+    evidences:
+      - type: implementation
+        ref: AWS KMS configuration
+      - type: audit_log
+        ref: CloudTrail logs
+
+  - id: CTRL-004
+    name: Log Management
+    description: Centralized logging and monitoring
+    maturity: 4
+    domains:
+      - logging
+    evidences:
+      - type: implementation
+        ref: CloudWatch configuration
+
+  - id: CTRL-005
+    name: Incident Response Plan
+    description: Documented incident response procedures
+    maturity: 3
+    domains:
+      - incident_management
+    evidences:
+      - type: policy
+        ref: https://internal.example.com/ir-plan
