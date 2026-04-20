@@ -62,7 +62,10 @@ func TestCorrelator(t *testing.T) {
 		{ID: "C2", Description: "centralized log server"},
 	}
 
-	mappings := c.Correlate(exts)
+	mappings, err := c.Correlate(exts)
+	if err != nil {
+		t.Fatalf("Correlate failed: %v", err)
+	}
 	if len(mappings) != 2 {
 		t.Fatalf("expected 2 mappings, got %d", len(mappings))
 	}
