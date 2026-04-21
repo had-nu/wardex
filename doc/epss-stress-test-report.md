@@ -52,10 +52,10 @@ All CVEs entered the pipeline with `epss_score: 0.0` (unknown), forcing the gate
 
 | Profile | Appetite | Internet | Auth | Criticality | Compensating Controls |
 |---|---|---|---|---|---|
-| [BANK] **Banco Tier-1** (DORA) | 0.5 | [YES] Public API | [NO] Pre-auth | 1.5x | None |
-| [HOSP] **Hospital** (HIPAA) | 0.8 | [YES] Patient portal | [YES] Required | 1.3x | IDS/IPS (20%) |
-| [SAAS] **Startup SaaS** | 2.0 | [NO] Internal | [YES] Service auth | 0.8x | WAF + Rate Limiting (30%) |
-| [DEV] **Dev Sandbox** | 4.0 | [NO] Isolated | [NO] None | 0.3x | Network Isolation (40%) + Ephemeral containers (30%) |
+| [FINANCE] **Finance** (DORA) | 0.05 | [YES] Public API | [NO] None | 1.5x | None |
+| [HEALTH] **Health** (HIPAA) | 0.08 | [YES] Patient portal | [YES] Required | 1.5x | IDS/IPS (20%) |
+| [SAAS] **SaaS** (Non-regulated) | 0.20 | [YES] Internal/API | [YES] Required | 1.0x | WAF + Rate Limiting (30%) |
+| [UTILITIES] **Utilities** (NIS2) | 0.015 | [NO] Internal OT | [YES] Required | 1.5x | Network Segmentation (built-in) |
 
 ---
 
@@ -85,10 +85,10 @@ Release Gate Decision: [X] BLOCK
 
 | Profile | BLOCK | ALLOW | % Block |
 |---|---|---|---|
-| [BANK] Banco Tier-1 | **176** | 57 | **74%** |
-| [HOSP] Hospital | **168** | 63 | **71%** |
-| [SAAS] Startup SaaS | **111** | 86 | **47%** |
-| [DEV] Dev Sandbox | **0** | 238 | **0%** |
+| [FINANCE] Finance | **176** | 57 | **74%** |
+| [HEALTH] Health | **168** | 63 | **71%** |
+| [SAAS] SaaS | **111** | 86 | **47%** |
+| [UTILITIES] Utilities | **185** | 52 | **78%** |
 
 ### 3.4 Contextual Decision Divergence — Same CVE, 4 Decisions
 
@@ -98,26 +98,25 @@ The Risk Gate formula:
 FinalRisk = (CVSS × EPSS) × (1 − CompensatingEffects) × Criticality × ExposureFactor
 ```
 
-| CVE | CVSS | EPSS | [BANK] | [SAAS] | [DEV] | [HOSP] |
+| CVE | CVSS | EPSS | [FINANCE] | [SAAS] | [UTILITIES] | [HEALTH] |
 |---|---|---|---|---|---|---|
-| **CVE-2021-44228** (Log4Shell) | 10.0 | 0.94 | **14.2** `BLOCK` | **2.5** `BLOCK` | **0.3** `ALLOW` | **7.9** `BLOCK` |
-| **CVE-2024-3094** (xz backdoor) | 10.0 | 0.86 | **12.8** `BLOCK` | **2.3** `BLOCK` | **0.2** `ALLOW` | **7.1** `BLOCK` |
-| **CVE-2023-38545** (curl SOCKS5) | 9.8 | 0.26 | **3.9** `BLOCK` | **0.7** `ALLOW` | **0.1** `ALLOW` | **2.1** `BLOCK` |
-| **CVE-2023-45288** (Go HTTP/2) | 9.8 | 0.71 | **10.5** `BLOCK` | **1.9** `WARN` | **0.2** `ALLOW` | **5.8** `BLOCK` |
-| **CVE-2021-44906** (minimist) | 9.8 | 0.01 | **0.1** `ALLOW` | **0.0** `ALLOW` | **0.0** `ALLOW` | **0.1** `ALLOW` |
-| **CVE-2020-15257** (containerd) | 5.2 | 0.12 | **0.9** `BLOCK` | **0.2** `ALLOW` | **0.0** `ALLOW` | **0.5** `WARN` |
+| **CVE-2021-44228** (Log4Shell) | 10.0 | 0.94 | **1.42** `BLOCK` | **0.25** `BLOCK` | **0.56** `BLOCK` | **0.90** `BLOCK` |
+| **CVE-2024-3094** (xz backdoor) | 10.0 | 0.86 | **1.28** `BLOCK` | **0.23** `BLOCK` | **0.51** `BLOCK` | **0.81** `BLOCK` |
+| **CVE-2023-38545** (curl SOCKS5) | 9.8 | 0.26 | **0.39** `BLOCK` | **0.07** `ALLOW` | **0.17** `BLOCK` | **0.23** `BLOCK` |
+| **CVE-2021-44906** (minimist) | 9.8 | 0.01 | **0.01** `ALLOW` | **0.00** `ALLOW` | **0.00** `ALLOW` | **0.01** `ALLOW` |
+| **CVE-2020-15257** (containerd) | 5.2 | 0.12 | **0.09** `BLOCK` | **0.02** `ALLOW` | **0.04** `BLOCK` | **0.06** `WARN` |
 
 ### 3.5 Risk Arithmetic — Log4Shell Deep Dive
 
-**Base:** CVSS 10.0 × EPSS 0.94 = **9.4** adjusted score.
+**Base:** CVSS 1.0 (10/10) × EPSS 0.94 = **0.94** adjusted signal.
 
-| Factor | [BANK] | [SAAS] | [DEV] | [HOSP] |
+| Factor | [FINANCE] | [SAAS] | [UTILITIES] | [HEALTH] |
 |---|---|---|---|---|
-| Exposure (internet x auth x reachable) | 1.0 | 0.48 | 0.3 | 0.8 |
-| Compensating (1 - effect) | 1.0 | 0.7 | 0.3 | 0.8 |
-| Criticality | 1.5 | 0.8 | 0.3 | 1.3 |
-| **Final Risk** | **14.2** | **2.5** | **0.3** | **7.9** |
-| **vs Appetite** | 14.2 > 0.5 `BLOCK` | 2.5 > 2.0 `BLOCK` | 0.3 < 4.0 `ALLOW` | 7.9 > 0.8 `BLOCK` |
+| Exposure (internet x auth x reachable) | 1.0 | 0.8 | 0.4 | 0.8 |
+| Compensating (1 - effect) | 1.0 | 0.7 | 1.0 | 0.8 |
+| Criticality | 1.5 | 1.0 | 1.5 | 1.5 |
+| **Final Risk** | **1.41** | **0.26** | **0.56** | **0.90** |
+| **vs Appetite** | 1.41 > 0.05 `BLOCK` | 0.26 > 0.20 `BLOCK` | 0.56 > 0.015 `BLOCK` | 0.90 > 0.08 `BLOCK` |
 
 ---
 
@@ -130,9 +129,9 @@ The CVE `CVE-2021-44906` (minimist prototype pollution) carries a CVSS of **9.8 
 ### 4.2 Context Transforms Decisions
 
 The same `CVE-2020-15257` (containerd escape, CVSS 5.2) receives **3 different decisions** depending on organizational context:
-- [BANK] Banco: **BLOCK** (0.9 > appetite 0.5)
-- [HOSP] Hospital: **WARN** (0.5 between warn_above 0.4 and appetite 0.8)
-- [SAAS] Startup: **ALLOW** (0.2 < appetite 2.0)
+- [FINANCE] Finance: **BLOCK** (0.09 > appetite 0.05)
+- [HEALTH] Health: **WARN** (0.06 sits in the warning band)
+- [SAAS] SaaS: **ALLOW** (0.02 < appetite 0.20)
 
 ### 4.3 Fail-Close is Non-Negotiable
 
@@ -155,7 +154,7 @@ export WARDEX_ACCEPT_SECRET="<your-secret>"
 wardex enrich epss test/poc/real-250-vulns.yaml -o test/poc/real-250-enrich.yaml
 
 # 3. Run against each profile
-for ctx in bank startup dev hospital; do
+for ctx in finance saas utilities health; do
   wardex --config test/poc/ctx-${ctx}.yaml \
     --gate test/poc/real-250-vulns.yaml \
     --epss-enrichment test/poc/real-250-enrich.yaml \
@@ -172,8 +171,8 @@ done
 | `test/poc/gen_real_cves.go` | Generator for the 237-CVE corpus |
 | `test/poc/real-250-vulns.yaml` | Generated vulnerability inputs |
 | `test/poc/real-250-enrich.yaml` | Signed EPSS enrichment from FIRST.org |
-| `test/poc/ctx-bank.yaml` | Bank Tier-1 (DORA) profile |
-| `test/poc/ctx-hospital.yaml` | Hospital (HIPAA) profile |
-| `test/poc/ctx-startup.yaml` | SaaS Startup profile |
-| `test/poc/ctx-dev.yaml` | Developer Sandbox profile |
+| `test/poc/ctx-finance.yaml` | Finance (DORA) profile |
+| `test/poc/ctx-health.yaml` | Health (HIPAA) profile |
+| `test/poc/ctx-saas.yaml` | SaaS profile |
+| `test/poc/ctx-utilities.yaml` | Utilities (NIS2) profile |
 | `test/poc/high-entropy-vulns.yaml` | 20-CVE high-entropy manual set |

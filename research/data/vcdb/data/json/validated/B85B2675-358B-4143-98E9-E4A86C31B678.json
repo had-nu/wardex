@@ -1,0 +1,113 @@
+{
+  "action": {
+    "misuse": {
+      "variety": [
+        "Privilege abuse"
+      ],
+      "vector": [
+        "LAN access"
+      ]
+    }
+  },
+  "actor": {
+    "partner": {
+      "country": [
+        "US"
+      ],
+      "industry": "522130",
+      "motive": [
+        "Unknown"
+      ],
+      "region": [
+        "019021"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Web application"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Personal"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_victim": [
+        "Other"
+      ],
+      "state": [
+        "Stored"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "B85B2675-358B-4143-98E9-E4A86C31B678",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "swidup",
+    "asset": {
+      "total": "No"
+    },
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Yes",
+        "data_abuse": "Unknown"
+      }
+    },
+    "created": "2013-02-06T22:00:37Z",
+    "master_id": "B85B2675-358B-4143-98E9-E4A86C31B678",
+    "modified": "2014-05-10T00:58:19Z",
+    "timeline": {
+      "notification": {
+        "day": 8,
+        "month": 6,
+        "year": 2012
+      }
+    }
+  },
+  "reference": "http://doj.nh.gov/consumer/security-breaches/documents/arizona-central-cu-experian-20120608.pdf ",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Experian's client, Arizona Central Credit, was identified as having accessed information without proper authorization.  The information compromised included name and address, SSN, DOB and/or account numbers.",
+  "timeline": {
+    "incident": {
+      "day": 11,
+      "month": 4,
+      "year": 2012
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "1001 to 10000",
+    "government": [
+      "NA"
+    ],
+    "industry": "561450",
+    "region": [
+      "019021"
+    ],
+    "revenue": {
+      "amount": 576700000,
+      "iso_currency_code": "USD"
+    },
+    "state": "CA",
+    "victim_id": "Experian"
+  }
+}

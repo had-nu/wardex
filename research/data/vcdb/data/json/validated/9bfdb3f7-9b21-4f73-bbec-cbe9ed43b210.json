@@ -1,0 +1,106 @@
+{
+  "action": {
+    "physical": {
+      "variety": [
+        "Skimmer"
+      ],
+      "vector": [
+        "Victim public area"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Financial"
+      ],
+      "region": [
+        "019201"
+      ],
+      "variety": [
+        "Organized crime"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "amount": 2,
+        "variety": "T - Kiosk"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ],
+    "country": [
+      "US"
+    ],
+    "total_amount": 2
+  },
+  "attribute": {
+    "integrity": {
+      "variety": [
+        "Hardware tampering"
+      ]
+    }
+  },
+  "confidence": "Medium",
+  "discovery_method": {
+    "internal": {
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "incident_id": "0532cea0-de82-11e7-9424-7b935f12be98",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "Hylender",
+    "created": "2017-12-11T20:55:24.402Z",
+    "dbir_year": 2017,
+    "github": "9219",
+    "master_id": "9bfdb3f7-9b21-4f73-bbec-cbe9ed43b210",
+    "modified": "2017-12-12T00:03:52.884Z",
+    "timeline": {
+      "notification": {
+        "day": 10,
+        "month": 2,
+        "year": 2017
+      }
+    }
+  },
+  "reference": "http://www.wlwt.com/article/2-more-credit-card-skimmers-found-bringing-total-to-13-in-butler-county/8729963",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "two payment card skimmers found at a shell station in monroe, ohio.",
+  "targeted": "Targeted",
+  "timeline": {
+    "compromise": {
+      "unit": "Minutes"
+    },
+    "incident": {
+      "month": 2,
+      "year": 2017
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "1 to 10",
+    "government": [
+      "NA"
+    ],
+    "industry": "447110",
+    "locations_affected": 1,
+    "region": [
+      "019021"
+    ],
+    "state": "OH",
+    "victim_id": "Monroe Shell Station"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "action": {
+    "misuse": {
+      "variety": [
+        "Knowledge abuse"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "motive": [
+        "Ideology"
+      ],
+      "variety": [
+        "Doctor or nurse"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "U - Unknown"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Medical"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_victim": [
+        "Patient"
+      ]
+    }
+  },
+  "confidence": "Low",
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Actor disclosure"
+      ]
+    }
+  },
+  "incident_id": "969f8680-d969-11e7-8b17-fdfed30923dd",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "Spitler",
+    "created": "2017-12-05T08:26:38.136Z",
+    "dbir_year": 2018,
+    "github": "10251",
+    "master_id": "634516e1-c1b8-45ac-b9f4-af3abe8a32e7",
+    "modified": "2017-12-05T08:26:38.136Z",
+    "sub_source": "phidbr"
+  },
+  "reference": "https://www.ghanaweb.com//GhanaHomePage/health/Nurses-at-Asesewa-Hospital-accused-of-revealing-information-of-HIV-AIDS-patients-586478",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Nurses are divulging PHI",
+  "timeline": {
+    "incident": {
+      "year": 2017
+    }
+  },
+  "victim": {
+    "country": [
+      "GH"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "NA"
+    ],
+    "industry": "622110",
+    "region": [
+      "002011"
+    ],
+    "victim_id": "Asesewa Hospital"
+  }
+}

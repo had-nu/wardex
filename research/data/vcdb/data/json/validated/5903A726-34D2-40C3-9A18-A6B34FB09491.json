@@ -1,0 +1,126 @@
+{
+  "action": {
+    "error": {
+      "variety": [
+        "Loss"
+      ],
+      "vector": [
+        "Random error"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "motive": [
+        "NA"
+      ],
+      "variety": [
+        "Executive"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "M - Flash drive"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "availability": {
+      "duration": {
+        "unit": "Never"
+      },
+      "variety": [
+        "Loss"
+      ]
+    },
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 2125,
+          "variety": "Personal"
+        }
+      ],
+      "data_disclosure": "Potentially",
+      "data_total": 2125,
+      "state": [
+        "Stored unencrypted"
+      ]
+    }
+  },
+  "discovery_method": {
+    "other": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "5903A726-34D2-40C3-9A18-A6B34FB09491",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "Splitler",
+    "asset": {
+      "total": "No"
+    },
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "No",
+        "data_abuse": "No"
+      }
+    },
+    "created": "2013-08-07T16:01:38Z",
+    "master_id": "5903A726-34D2-40C3-9A18-A6B34FB09491",
+    "modified": "2014-05-10T00:58:19Z",
+    "timeline": {
+      "notification": {
+        "month": 6,
+        "year": 2013
+      }
+    }
+  },
+  "reference": "http://healthitsecurity.com/2013/07/01/nebraska-doctor%E2%80%99s-office-notifies-2125-patients-of-breach/",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Doctor lost chip off of a thumb drive that contained 2125 PII records, but not medical information.",
+  "timeline": {
+    "compromise": {
+      "unit": "NA"
+    },
+    "containment": {
+      "unit": "Unknown"
+    },
+    "discovery": {
+      "unit": "Unknown"
+    },
+    "exfiltration": {
+      "unit": "NA"
+    },
+    "incident": {
+      "month": 6,
+      "year": 2013
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "1 to 10",
+    "government": [
+      "NA"
+    ],
+    "industry": "621112",
+    "region": [
+      "019021"
+    ],
+    "revenue": {
+      "amount": 890000,
+      "iso_currency_code": "USD"
+    },
+    "state": "NE",
+    "victim_id": "Wedgewood Legacy Medical"
+  }
+}

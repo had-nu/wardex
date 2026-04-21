@@ -24,7 +24,7 @@ func TestRiskBasedGateVsBinaryThreshold(t *testing.T) {
 			{Type: "network_segmentation", Effectiveness: 0.7},
 			{Type: "runtime_protection", Effectiveness: 0.5},
 		},
-		RiskAppetite: 6.0,
+		RiskAppetite: 0.6, // escala normalizada [0, 1.5] — v4
 	}
 
 	// Contexto de alto risco: sistema financeiro exposto, sem compensação
@@ -33,7 +33,7 @@ func TestRiskBasedGateVsBinaryThreshold(t *testing.T) {
 			Criticality: 1.5, InternetFacing: true, RequiresAuth: false,
 		},
 		CompensatingControls: []model.CompensatingControl{},
-		RiskAppetite:         6.0,
+		RiskAppetite:         0.6, // escala normalizada [0, 1.5] — v4
 	}
 
 	lowReport := lowRiskGate.Evaluate([]model.Vulnerability{vuln})

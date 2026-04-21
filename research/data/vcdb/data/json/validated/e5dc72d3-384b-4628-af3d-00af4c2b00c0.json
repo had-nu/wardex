@@ -1,0 +1,80 @@
+{
+  "action": {
+    "error": {
+      "variety": [
+        "Publishing error"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "motive": [
+        "NA"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Web application"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ],
+    "hosting": [
+      "External - unknown environment"
+    ]
+  },
+  "attribute": {
+    "unknown": {
+      "notes": "Added by rules.py due to no attribute section."
+    }
+  },
+  "confidence": "Medium",
+  "discovery_method": {
+    "unknown": true
+  },
+  "incident_id": "12a9acf0-da2e-11e7-a58f-dff506a792fb",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "Spitler",
+    "created": "2017-12-06T07:40:14.798Z",
+    "dbir_year": 2018,
+    "github": "10213",
+    "master_id": "e5dc72d3-384b-4628-af3d-00af4c2b00c0",
+    "modified": "2017-12-06T07:40:14.798Z",
+    "sub_source": "phidbr"
+  },
+  "reference": "https://yle.fi/uutiset/osasto/news/thl_personal_data_and_lab_results_of_more_than_6000_people_leaked_online/9851191",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Personal data and lab results of more than 6,000 people leaked online",
+  "targeted": "NA",
+  "timeline": {
+    "incident": {
+      "year": 2017
+    }
+  },
+  "victim": {
+    "country": [
+      "FI"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "Unknown"
+    ],
+    "industry": "923120",
+    "region": [
+      "150154"
+    ],
+    "victim_id": "National Institute for Health and Welfare"
+  }
+}

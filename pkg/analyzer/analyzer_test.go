@@ -26,7 +26,10 @@ func TestAnalyzer_Covered(t *testing.T) {
 	}
 
 	a := analyzer.New(cat, maps, controls)
-	findings := a.Analyze()
+	findings, err := a.Analyze()
+	if err != nil {
+		t.Fatalf("Analyze failed: %v", err)
+	}
 
 	if len(findings) != 1 {
 		t.Fatalf("expected 1 finding")
@@ -52,7 +55,10 @@ func TestAnalyzer_Partial_LowConfidence(t *testing.T) {
 	}
 
 	a := analyzer.New(cat, maps, controls)
-	findings := a.Analyze()
+	findings, err := a.Analyze()
+	if err != nil {
+		t.Fatalf("Analyze failed: %v", err)
+	}
 
 	if findings[0].Status != model.StatusPartial {
 		t.Errorf("expected status partial, got %s", findings[0].Status)
@@ -67,7 +73,10 @@ func TestAnalyzer_Gap(t *testing.T) {
 	cat := []model.CatalogControl{{ID: "A.1", BaseScore: 5.0}}
 
 	a := analyzer.New(cat, nil, nil)
-	findings := a.Analyze()
+	findings, err := a.Analyze()
+	if err != nil {
+		t.Fatalf("Analyze failed: %v", err)
+	}
 
 	if findings[0].Status != model.StatusGap {
 		t.Errorf("expected status gap, got %s", findings[0].Status)

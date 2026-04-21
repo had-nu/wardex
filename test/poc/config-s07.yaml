@@ -1,8 +1,8 @@
 release_gate:
   enabled: true
-  risk_appetite: 0.1
-  warn_above: 0.05
+  risk_appetite: 0.05
+  warn_above: 0.03
   asset_context:
-    criticality: 1.0
+    criticality: 1.5
     internet_facing: true
     requires_auth: false

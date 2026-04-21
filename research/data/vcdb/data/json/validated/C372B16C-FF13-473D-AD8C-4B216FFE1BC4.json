@@ -1,0 +1,115 @@
+{
+  "action": {
+    "physical": {
+      "variety": [
+        "Theft"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Financial"
+      ],
+      "region": [
+        "000000"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "U - Laptop"
+      },
+      {
+        "variety": "U - Desktop or laptop"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "availability": {
+      "variety": [
+        "Loss"
+      ]
+    },
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 2988,
+          "variety": "Medical"
+        }
+      ],
+      "data_disclosure": "Potentially",
+      "data_total": 2988,
+      "data_victim": [
+        "Patient"
+      ],
+      "state": [
+        "Stored unencrypted"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "C372B16C-FF13-473D-AD8C-4B216FFE1BC4",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "swidup",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2015-07-17T22:10:00Z",
+    "master_id": "C372B16C-FF13-473D-AD8C-4B216FFE1BC4",
+    "modified": "2015-07-17T22:10:00Z",
+    "timeline": {
+      "notification": {
+        "year": 2011
+      }
+    }
+  },
+  "reference": "https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Theft of a laptop exposes 2988 records.",
+  "timeline": {
+    "incident": {
+      "day": 28,
+      "month": 12,
+      "year": 2011
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "11 to 100",
+    "government": [
+      "NA"
+    ],
+    "industry": "621498",
+    "region": [
+      "019021"
+    ],
+    "state": "MA",
+    "victim_id": "Sleep HealthCenters LLC"
+  }
+}

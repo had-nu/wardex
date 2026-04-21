@@ -90,37 +90,41 @@ class ProfileFixture:
     expected_block_rate_max: float
 
 
-# Valores exactos conforme publicados no paper (Table 1)
+# Valores exactos conforme publicados no paper v4 (Table 1)
+# Escala normalizada: CVSS/10 → R_max = 1.5 (Proposição 2).
+# θ_block e θ_warn expressos na escala [0, 1.5].
 # INFRA: operador de utilities/energia, NIS2 Essential Entity.
 # C(α)=1.50 — FIPS 199 High + regulatory (NIS2 Art.21).
 # E(α)=0.50 — segmentação OT/IT parcial: HMI com acesso remoto, mas não
 #              totalmente internet-facing como sistemas financeiros.
-# θ_block=0.30 — tolerância zero: qualquer exploração confirmada em infra-
+# θ_block=0.03 — tolerância zero: qualquer exploração confirmada em infra-
 #                estrutura crítica é inaceitável independentemente da probabilidade.
 PAPER_PROFILES = [
-    ProfileFixture("BANK",  1.50, 1.00, 0.5, 0.3, 0.70, 0.80),
-    ProfileFixture("HOSP",  1.50, 0.80, 0.8, 0.5, 0.65, 0.76),
-    ProfileFixture("SAAS",  1.00, 0.80, 2.0, 1.0, 0.40, 0.55),
-    ProfileFixture("INFRA", 1.50, 0.50, 0.3, 0.2, 0.55, 0.75),
+    ProfileFixture("BANK",  1.50, 1.00, 0.05, 0.03, 0.70, 0.80),
+    ProfileFixture("HOSP",  1.50, 0.80, 0.08, 0.05, 0.65, 0.76),
+    ProfileFixture("SAAS",  1.00, 0.80, 0.20, 0.10, 0.40, 0.55),
+    ProfileFixture("INFRA", 1.50, 0.50, 0.03, 0.02, 0.55, 0.75),
 ]
 
-# Casos ilustrativos do paper (Table 2) — ground truth de regressão
-# Nota: CVE-2023-38545/SAAS → BLOCK (score=2.04 > θ=2.00; caso marginal
+# Casos ilustrativos do paper v4 (Table 2) — ground truth de regressão
+# Escala normalizada (CVSS/10): score = (CVSS/10) × EPSS × C(α) × E(α)
+# Nota: CVE-2023-38545/SAAS → BLOCK (score=0.2038 > θ=0.20; caso marginal
 # que demonstra sensibilidade ao threshold — documentado em §V.B).
+# Nota: CVE-2021-21972/INFRA → BLOCK (score=0.0368 > θ=0.03; 23% acima do threshold).
 ILLUSTRATIVE_CASES = [
     # (cve_id, cvss, epss, profile_name, expected_decision)
-    ("CVE-2021-44228", 10.0, 0.940, "BANK",  "BLOCK"),
-    ("CVE-2021-44228", 10.0, 0.940, "INFRA", "BLOCK"),
-    ("CVE-2024-3094",  10.0, 0.860, "BANK",  "BLOCK"),
-    ("CVE-2024-3094",  10.0, 0.860, "INFRA", "BLOCK"),
-    ("CVE-2023-38545",  9.8, 0.260, "BANK",  "BLOCK"),
-    ("CVE-2023-38545",  9.8, 0.260, "SAAS",  "BLOCK"),   # marginal: 2.04 > θ=2.00
-    ("CVE-2019-10744",  9.8, 0.010, "BANK",  "APPROVE"),
-    ("CVE-2019-10744",  9.8, 0.010, "INFRA", "APPROVE"),  # 0.074 < θ=0.30
-    ("CVE-2021-21972",  9.8, 0.050, "BANK",  "BLOCK"),
-    ("CVE-2021-21972",  9.8, 0.050, "HOSP",  "ACCEPT_SLA"),
-    ("CVE-2021-21972",  9.8, 0.050, "SAAS",  "APPROVE"),
-    ("CVE-2021-21972",  9.8, 0.050, "INFRA", "BLOCK"),
+    ("CVE-2021-44228", 10.0, 0.940, "BANK",  "BLOCK"),  # 1.0×0.94×1.5×1.0 = 1.41
+    ("CVE-2021-44228", 10.0, 0.940, "INFRA", "BLOCK"),  # 1.0×0.94×1.5×0.5 = 0.705
+    ("CVE-2024-3094",  10.0, 0.860, "BANK",  "BLOCK"),  # 1.0×0.86×1.5×1.0 = 1.29
+    ("CVE-2024-3094",  10.0, 0.860, "INFRA", "BLOCK"),  # 1.0×0.86×1.5×0.5 = 0.645
+    ("CVE-2023-38545",  9.8, 0.260, "BANK",  "BLOCK"),  # 0.98×0.26×1.5×1.0 = 0.3822
+    ("CVE-2023-38545",  9.8, 0.260, "SAAS",  "BLOCK"),  # 0.98×0.26×1.0×0.8 = 0.2038 > θ=0.20; marginal
+    ("CVE-2019-10744",  9.8, 0.010, "BANK",  "APPROVE"),# 0.98×0.01×1.5×1.0 = 0.0147 < θ=0.05
+    ("CVE-2019-10744",  9.8, 0.010, "INFRA", "APPROVE"), # 0.98×0.01×1.5×0.5 = 0.0074 < θ=0.03
+    ("CVE-2021-21972",  9.8, 0.050, "BANK",  "BLOCK"),  # 0.98×0.05×1.5×1.0 = 0.0735 > θ=0.05
+    ("CVE-2021-21972",  9.8, 0.050, "HOSP",  "ACCEPT_SLA"), # 0.98×0.05×1.5×0.8 = 0.0588; θ_warn=0.05 < 0.0588 < θ_block=0.08
+    ("CVE-2021-21972",  9.8, 0.050, "SAAS",  "APPROVE"), # 0.98×0.05×1.0×0.8 = 0.0392 < θ_warn=0.10
+    ("CVE-2021-21972",  9.8, 0.050, "INFRA", "BLOCK"),  # 0.98×0.05×1.5×0.5 = 0.0368 > θ=0.03
 ]
 
 
@@ -139,22 +143,22 @@ class TestMathematicalProperties:
     # ── P2: Bounded output ───────────────────────────────────────────────────
 
     def test_bounded_output_maximum(self):
-        """R ≤ 15 para qualquer input válido (Proposição 2)."""
+        """R ≤ 1.5 para qualquer input válido (Proposição 2)."""
         score = compute_contextual_score(
             cvss=10.0, epss=1.0,
             c_alpha=1.50, e_alpha=1.00,
             compensating_effectiveness=0.0, kappa=0.8
         )
-        assert score <= 15.0, f"Upper bound violado: R={score}"
+        assert score <= 1.5, f"Upper bound violado: R={score}"
 
     def test_bounded_output_exact_maximum(self):
-        """Maximum exacto: 10 × 1 × 1.5 × 1.0 × (1−0) = 15.0"""
+        """Maximum exacto (v4): (10/10) × 1 × 1.5 × 1.0 × (1−0) = 1.5"""
         score = compute_contextual_score(
             cvss=10.0, epss=1.0,
             c_alpha=1.50, e_alpha=1.00,
             compensating_effectiveness=0.0, kappa=0.8
         )
-        assert math.isclose(score, 15.0, rel_tol=1e-9)
+        assert math.isclose(score, 1.5, rel_tol=1e-9)
 
     def test_bounded_output_minimum(self):
         """R ≥ 0 para qualquer input válido."""
@@ -174,7 +178,7 @@ class TestMathematicalProperties:
             compensating_effectiveness=1.0,   # sum_eps=1.0, capped at κ=0.8
             kappa=0.8
         )
-        expected = 5.0 * 0.5 * 1.0 * 1.0 * (1 - 0.8)
+        expected = (5.0 / 10.0) * 0.5 * 1.0 * 1.0 * (1 - 0.8)
         assert math.isclose(score, expected, rel_tol=1e-9)
         assert score > 0.0
 
@@ -318,9 +322,9 @@ class TestPropertyBased:
            ctrl=valid_ctrl, kappa=valid_kappa)
     @settings(max_examples=500, deadline=None)
     def test_output_bounded_above(self, cvss, epss, c, e, ctrl, kappa):
-        """R ≤ CVSS_MAX × 1 × C_MAX × 1 × 1 = 10 × 2.0 × 1 = 20 (limite liberal)."""
+        """R ≤ 1 × 1 × C_MAX × 1 × 1 = 1.5 (Proposição 2 — escala normalizada v4)."""
         score = compute_contextual_score(cvss, epss, c, e, ctrl, kappa)
-        upper = 10.0 * 1.0 * 2.0 * 1.0 * 1.0  # bound liberal
+        upper = 1.0 * 1.0 * 2.0 * 1.0 * 1.0  # bound liberal (C_max=2.0 no espaço de busca)
         assert score <= upper + 1e-9, f"R={score} excede upper bound liberal={upper}"
 
     @given(
@@ -721,15 +725,15 @@ class TestIllustrativeCasesRegression:
         )
 
     def test_log4shell_infra_score_range(self):
-        """Log4Shell em INFRA deve ter R >> θ_block=0.30 (não é caso marginal).
-        Score esperado: 10.0 × 0.94 × 1.5 × 0.5 = 7.05 — 23× acima do threshold."""
+        """Log4Shell em INFRA deve ter R >> θ_block=0.03 (não é caso marginal).
+        Score esperado (v4): (10.0/10) × 0.94 × 1.5 × 0.5 = 0.705 — 23× acima do threshold."""
         fixture = next(f for f in PAPER_PROFILES if f.name == "INFRA")
         score = compute_contextual_score(
             cvss=10.0, epss=0.940,
             c_alpha=fixture.c_alpha, e_alpha=fixture.e_alpha
         )
-        assert math.isclose(score, 7.05, rel_tol=1e-6), (
-            f"Log4Shell INFRA score={score:.4f}, esperado ≈7.05"
+        assert math.isclose(score, 0.705, rel_tol=1e-6), (
+            f"Log4Shell INFRA score={score:.4f}, esperado ≈0.705"
         )
         assert score > fixture.theta_block * 20, (
             f"Log4Shell INFRA score={score:.2f} não está bem acima de "
@@ -739,7 +743,7 @@ class TestIllustrativeCasesRegression:
     def test_minimist_allows_all_profiles(self):
         """minimist (CVSS=9.8, EPSS=0.01) deve ser APPROVE em todos os perfis.
         É o caso exemplar de EPSS a corrigir o over-blocking do CVSS-only.
-        Mesmo INFRA com θ_block=0.30: R = 9.8×0.01×1.5×0.5 = 0.074 < 0.30."""
+        Mesmo INFRA com θ_block=0.03: R = (9.8/10)×0.01×1.5×0.5 = 0.0074 < 0.03."""
         for fixture in PAPER_PROFILES:
             score = compute_contextual_score(
                 cvss=9.8, epss=0.010,
@@ -759,7 +763,7 @@ class TestIllustrativeCasesRegression:
             cvss=10.0, epss=0.940,
             c_alpha=fixture.c_alpha, e_alpha=fixture.e_alpha
         )
-        # R = 10.0 × 0.94 × 1.5 × 0.5 = 7.05 >> θ_block=0.30
+        # R = (10.0/10) × 0.94 × 1.5 × 0.5 = 0.705 >> θ_block=0.03
         decision = evaluate_gate(score, fixture.theta_block, fixture.theta_warn)
         assert decision == "BLOCK", (
             f"Log4Shell em INFRA deveria ser BLOCK mas é {decision}. "
@@ -767,17 +771,17 @@ class TestIllustrativeCasesRegression:
         )
 
     def test_curl_socks5_saas_marginal_block(self):
-        """curl SOCKS5 em SAAS: score=2.04 excede θ_block=2.00 por margem estreita.
+        """curl SOCKS5 em SAAS: score=0.2038 excede θ_block=0.20 por margem estreita.
         Documenta o caso limite — ajuste de EPSS de 0.26→0.25 inverteria a decisão."""
         fixture = next(f for f in PAPER_PROFILES if f.name == "SAAS")
         score   = compute_contextual_score(
             cvss=9.8, epss=0.260,
             c_alpha=fixture.c_alpha, e_alpha=fixture.e_alpha
         )
-        # 9.8 × 0.26 × 1.0 × 0.8 = 2.0384
-        expected = 9.8 * 0.26 * 1.0 * 0.8
+        # (9.8/10) × 0.26 × 1.0 × 0.8 = 0.20384
+        expected = (9.8 / 10.0) * 0.26 * 1.0 * 0.8
         assert math.isclose(score, expected, rel_tol=1e-9)
-        assert score > fixture.theta_block  # marginal BLOCK: 2.04 > 2.00
+        assert score > fixture.theta_block  # marginal BLOCK: 0.2038 > 0.20
         decision = evaluate_gate(score, fixture.theta_block, fixture.theta_warn)
         assert decision == "BLOCK", (
             f"curl SOCKS5 / SAAS: score={score:.4f} excede θ_block={fixture.theta_block} "
