@@ -1,9 +1,9 @@
 <div align="center">
 
-```text
-   WARDEX
+![Wardex Lockup](pkg/ui/wardex-lockup.svg)
 
-   security posture intelligence platform  ·  v1.7.2
+```text
+   (●───────────────────────)  WARDEX  ·  risk-based release gate  v1.7.2
 ```
 
 [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.2-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
@@ -16,7 +16,7 @@
 [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
 
 <br>
-<a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
+<a href="README-en.md">English</a> | <a href="README.md">Português</a>
 <br><br>
 
 </div>

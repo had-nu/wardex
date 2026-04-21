@@ -94,3 +94,7 @@ doc/wardex-gap-delta.docx
 test/test_calibration_*.py
 test/wardex-risk-simulator.jsx
 test/wardex_test_prompt.md
+
+# Legacy Documentation
+README-es.md
+README-fr.md
