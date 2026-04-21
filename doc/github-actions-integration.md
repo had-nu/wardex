@@ -4,12 +4,12 @@ Wardex é um **release gate**, não um scanner. Não encontra vulnerabilidades �
 
 Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo GitHub Actions.
 
-> **Versão de referência:** v1.7.1  
+> **Versão de referência:** v1.7.2  
 > **Todos os comandos neste documento foram verificados contra o código fonte actual.**
 
 ---
 
-## Mapa de Comandos (v1.7.1)
+## Mapa de Comandos (v1.7.2)
 
 | Comando | Estado | Propósito |
 |---------|--------|-----------|
@@ -66,7 +66,7 @@ jobs:
       # Passo 2: Instalar Wardex
       - name: Install Wardex
         run: |
-          VERSION="v1.7.1"
+          VERSION="v1.7.2"
           curl -sSL \
             "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" \
             | tar -xz
@@ -267,7 +267,7 @@ jobs:
 
       - name: Install Wardex
         run: |
-          VERSION="v1.7.1"
+          VERSION="v1.7.2"
           curl -sSL \
             "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" \
             | tar -xz && sudo mv wardex /usr/local/bin/
@@ -331,7 +331,7 @@ A estrutura de directórios espelha a hierarquia de secções do framework. Quan
 
 ---
 
-## Exit Codes Reais (v1.7.1)
+## Exit Codes Reais (v1.7.2)
 
 | Código | Constante | Quando ocorre |
 |--------|-----------|---------------|
@@ -352,4 +352,4 @@ case $exit_code in
 esac
 ```
 
-> ⚠️ Nota: o ficheiro `github-actions-risk-gate.md` original (movido para este documento) continha exit codes e comandos incorrectos (`wardex evaluate`, `wardex aggregate`, `--output sarif`, exit code 1 para gate blocked). Todos foram corrigidos aqui para corresponder ao código fonte real da v1.7.1.
+> [NOTE] Nota: o ficheiro `github-actions-risk-gate.md` original (movido para este documento) continha exit codes e comandos incorrectos (`wardex evaluate`, `wardex aggregate`, `--output sarif`, exit code 1 para gate blocked). Todos foram corrigidos aqui para corresponder ao código fonte real da v1.7.2.

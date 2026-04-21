@@ -2,7 +2,7 @@
   <h1>Wardex</h1>
   <p><b>Gap Analysis, Risk-Based Release Gate e Business Impact — CLI Tool & Engine em Go</b></p>
 
-  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
+  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.2-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
   ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
   [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
   [![CI Pipeline](https://github.com/had-nu/wardex/actions/workflows/ci.yml/badge.svg)](https://github.com/had-nu/wardex/actions/workflows/ci.yml)
@@ -31,8 +31,7 @@ Desenhado para ser utilizado tanto como uma CLI autónoma como um SDK integráve
 Consulte a documentação em `/doc` para compreender a visão arquitetónica e os problemas de negócio que a ferramenta resolve:
 - [A Visão de Negócio (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
 - [Arquitetura e Matemática Técnica (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
-- [Arquitetura de Não-Repudiação e Criptografia para Auditores (SOC 2, ISO 27001)](doc/wardex-g20-audit-readiness.md)
-- [Casos de Uso Didáticos — 10 Cenários Completos com Inputs e Outputs Reais](doc/USECASES.md)
+- [Manual de Implementação e Playbook Operacional (WARDEX_PLAYBOOK.md)](doc/WARDEX_PLAYBOOK.md)
 
 ## Frameworks Suportados (a partir da v1.5.0)
 
@@ -114,7 +113,7 @@ jobs:
       # Instalação Segura (v1.7.1)
       - name: Install Wardex
         run: |
-          VERSION="v1.7.1"
+          VERSION="v1.7.2"
           curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
           sudo mv wardex /usr/local/bin/
 
@@ -131,12 +130,12 @@ Consulte os ficheiros de exemplo para configurar a sua pipeline:
 - [Configuração de CI/CD (wardex-config.yaml)](doc/examples/wardex-config.yaml)
 - [Exemplo de Política NIS2/ISO27001 (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
 
-## Novidades (v1.7.1)
+## Novidades (v1.7.2)
 
-- **Comandos de Governança (Automation Ready)**: Novos subcomandos para pipelines complexas: `wardex evaluate` (focado em gate), `wardex aggregate` (decisão composta) e `wardex policy check-expiry` (auditoria de exceções em YAML).
-- **Calibração Empírica de Risco**: Parâmetros de `Criticality` e `Exposure` re-calibrados para perfis Hospital (1.5), Startup (0.75) e Infraestrutura Crítica (1.5), baseados em análise estatística de dados NVD/EPSS.
-- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações falhadas devido a vectores EPSS em falta (onde o Wardex assume "fail-close" 1.0) podem agora ser enriquecidas via API FIRST.org.
-- **Fail-Close Semântico Rigoroso**: O fallback de `0.05` para pontuações de vulnerabilidade desconhecidas foi revogado para `0.0`. Sem dados concretos, o Wardex assume risco máximo.
+- **Security Posture Intelligence Engine**: Novo motor que quantifica a "Postura de Segurança" organizacional através do Posture Index e Risk Exposure metrics (visto em `doc/WARDEX_PLAYBOOK.md`).
+- **Comandos de Governança (Automation Ready)**: Subcomandos otimizados: `wardex evaluate` (focado em gate), `wardex aggregate` (decisão composta) e `wardex policy check-expiry`.
+- **Enriquecimento EPSS c/ Human-in-the-Loop (HITL)**: Avaliações que falham por EPSS ausente podem agora ser enriquecidas via API FIRST.org e assinadas criptograficamente.
+- **Fail-Close Semântico Rigoroso**: O fallback de risco para dados desconhecidos agora assume risco máximo (EPSS 1.0) por predefinição.
 
 ## Utilização como Biblioteca (SDK)
 
