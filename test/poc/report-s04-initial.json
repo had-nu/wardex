@@ -21829,25 +21829,25 @@
           "Component": "",
           "Reachable": true
         },
-        "ReleaseRisk": 6.497399999999999,
-        "RiskAppetite": 6,
+        "ReleaseRisk": 1.1465999999999998,
+        "RiskAppetite": 0.08,
         "Decision": "block",
         "Breakdown": {
           "CVSSBase": 9.1,
           "EPSSFactor": 0.84,
-          "AdjustedScore": 7.643999999999999,
-          "AssetCriticality": 0.85,
+          "AdjustedScore": 0.7643999999999999,
+          "AssetCriticality": 1.5,
           "ExposureFactor": 1,
           "CompensatingEffect": 0,
-          "FinalReleaseRisk": 6.497399999999999
+          "FinalReleaseRisk": 1.1465999999999998
         },
-        "AuditTrail": "[block] CVE-2025-0042 — release_risk: 6.5, cvss_adjusted: 7.6, exposure: 1.00"
+        "AuditTrail": "[block] CVE-2025-0042 — release_risk: 1.1, cvss_adjusted: 0.8, exposure: 1.00"
       }
     ],
     "BlockedCount": 1,
     "AllowedCount": 0,
     "WarnCount": 0,
-    "HighestRisk": 6.497399999999999
+    "HighestRisk": 1.1465999999999998
   },
   "Delta": {
     "SnapshotDate": "2026-04-04T19:58:30.806189264+01:00",
@@ -21855,6 +21855,6 @@
     "NewlyCovered": null,
     "NewGaps": null,
     "Unchanged": 93,
-    "GateMaturityChange": -1
+    "GateMaturityChange": -2
   }
 }

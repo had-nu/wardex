@@ -21829,25 +21829,25 @@
           "Component": "lib-legacy",
           "Reachable": true
         },
-        "ReleaseRisk": 2.8160000000000007,
-        "RiskAppetite": 6,
+        "ReleaseRisk": 0.3520000000000001,
+        "RiskAppetite": 0.5,
         "Decision": "warn",
         "Breakdown": {
           "CVSSBase": 5.5,
           "EPSSFactor": 0.8,
-          "AdjustedScore": 4.4,
-          "AssetCriticality": 0.8,
+          "AdjustedScore": 0.44000000000000006,
+          "AssetCriticality": 1,
           "ExposureFactor": 0.8,
           "CompensatingEffect": 0,
-          "FinalReleaseRisk": 2.8160000000000007
+          "FinalReleaseRisk": 0.3520000000000001
         },
-        "AuditTrail": "[warn] CVE-2025-0043 — release_risk: 2.8, cvss_adjusted: 4.4, exposure: 0.80"
+        "AuditTrail": "[warn] CVE-2025-0043 — release_risk: 0.4, cvss_adjusted: 0.4, exposure: 0.80"
       }
     ],
     "BlockedCount": 0,
     "AllowedCount": 0,
     "WarnCount": 1,
-    "HighestRisk": 2.8160000000000007
+    "HighestRisk": 0.3520000000000001
   },
   "Delta": {
     "SnapshotDate": "2026-04-04T19:58:30.957440538+01:00",

@@ -1,0 +1,104 @@
+controls:
+  - id: "CTRL-001"
+    name: "Firewall perimetral"
+    maturity: 3
+    evidences:
+      - type: "policy"
+        ref: "firewall-config-v2.1.yaml"
+
+  - id: "CTRL-002"
+    name: "SIEM centralizado"
+    maturity: 3
+    evidences:
+      - type: "test_result"
+        ref: "siem-dashboard.png"
+
+  - id: "CTRL-003"
+    name: "MFA - Azure AD"
+    maturity: 4
+    evidences:
+      - type: "policy"
+        ref: "azure-mfa-policy.json"
+
+  - id: "CTRL-004"
+    name: "Patch Management"
+    maturity: 2
+
+  - id: "CTRL-005"
+    name: "Backup & Recovery"
+    maturity: 3
+    evidences:
+      - type: "procedure"
+        ref: "backup-schedule.conf"
+
+  - id: "CTRL-006"
+    name: "Web Application Firewall"
+    maturity: 3
+
+  - id: "CTRL-007"
+    name: "SBOM Creation"
+    maturity: 2
+    evidences:
+      - type: "test_result"
+        ref: "sbom-output.json"
+
+  - id: "CTRL-008"
+    name: "API Gateway"
+    maturity: 4
+
+  - id: "CTRL-009"
+    name: "Container Security"
+    maturity: 3
+    evidences:
+      - type: "test_result"
+        ref: "trivy-scan-results.json"
+
+  - id: "CTRL-010"
+    name: "Encryption at Rest"
+    maturity: 4
+    evidences:
+      - type: "policy"
+        ref: "kms-keys.yaml"
+
+  - id: "CTRL-011"
+    name: "DDoS Protection"
+    maturity: 3
+
+  - id: "CTRL-012"
+    name: "Incident Response Plan"
+    maturity: 2
+
+  - id: "CTRL-013"
+    name: "Vendor Risk Assessment"
+    maturity: 2
+
+  - id: "CTRL-014"
+    name: "Security Training"
+    maturity: 3
+    evidences:
+      - type: "test_result"
+        ref: "training-records.csv"
+
+  - id: "CTRL-015"
+    name: "Vulnerability Scanner"
+    maturity: 3
+
+  - id: "CTRL-016"
+    name: "Encryption in Transit"
+    maturity: 4
+
+  - id: "CTRL-017"
+    name: "Network Segmentation"
+    maturity: 2
+
+  - id: "CTRL-018"
+    name: "Log Retention"
+    maturity: 3
+
+  - id: "CTRL-019"
+    name: "Penetration Testing"
+    maturity: 2
+
+  - id: "CTRL-020"
+    name: "Access Reviews"
+    maturity: 2
