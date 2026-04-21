@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="100" viewBox="0 0 420 100">
+  <rect width="420" height="100" fill="#0d1117"/>
+  <line x1="60" y1="0" x2="60" y2="100" stroke="#f0f6fc" stroke-width="0.5" opacity="0.13"/>
+  <line x1="100.5" y1="20.6" x2="19.5" y2="79.4" stroke="#f0f6fc" stroke-width="0.5" opacity="0.13"/>
+  <line x1="100.5" y1="79.4" x2="19.5" y2="20.6" stroke="#f0f6fc" stroke-width="0.5" opacity="0.13"/>
+  <polygon fill="none" stroke="#f0f6fc" stroke-width="2" stroke-linejoin="round"
+    points="60,0 75.5,2.4 89.4,9.5 100.5,20.6 107.6,34.5 110,50 107.6,65.5 100.5,79.4 89.4,90.5 75.5,97.6 60,100 44.5,97.6 30.6,90.5 19.5,79.4 12.4,65.5 10,50 12.4,34.5 19.5,20.6 30.6,9.5 44.5,2.4"/>
+  <circle cx="10" cy="50" r="5.5" fill="#f0f6fc"/>
+  <line x1="10" y1="50" x2="103" y2="50" stroke="#f0f6fc" stroke-width="2" stroke-linecap="round"/>
+  <text x="128" y="45" font-family="'Courier New', monospace" font-size="28" font-weight="600"
+    letter-spacing="6" fill="#f0f6fc">WARDEX</text>
+  <text x="130" y="65" font-family="'Courier New', monospace" font-size="10" letter-spacing="2.5"
+    fill="#00c4a7">RISK-BASED RELEASE GATE</text>
+</svg>
