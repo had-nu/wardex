@@ -1,0 +1,6 @@
+vulnerabilities:
+    - cve_id: CVE-2021-23337
+      cvss_base: 9.8
+      epss_score: 0.05
+      component: pkg:npm/lodash@4.17.20
+      reachable: true

@@ -21829,19 +21829,19 @@
           "Component": "",
           "Reachable": true
         },
-        "ReleaseRisk": 8.472100000000001,
-        "RiskAppetite": 6,
+        "ReleaseRisk": 1.3377000000000003,
+        "RiskAppetite": 0.05,
         "Decision": "block",
         "Breakdown": {
           "CVSSBase": 9.8,
           "EPSSFactor": 0.91,
-          "AdjustedScore": 8.918000000000001,
-          "AssetCriticality": 0.95,
+          "AdjustedScore": 0.8918000000000001,
+          "AssetCriticality": 1.5,
           "ExposureFactor": 1,
           "CompensatingEffect": 0,
-          "FinalReleaseRisk": 8.472100000000001
+          "FinalReleaseRisk": 1.3377000000000003
         },
-        "AuditTrail": "[block] CVE-2024-1234 — release_risk: 8.5, cvss_adjusted: 8.9, exposure: 1.00"
+        "AuditTrail": "[block] CVE-2024-1234 — release_risk: 1.3, cvss_adjusted: 0.9, exposure: 1.00"
       },
       {
         "Vulnerability": {
@@ -21851,25 +21851,25 @@
           "Component": "",
           "Reachable": true
         },
-        "ReleaseRisk": 5.964099999999999,
-        "RiskAppetite": 6,
-        "Decision": "warn",
+        "ReleaseRisk": 0.9417,
+        "RiskAppetite": 0.05,
+        "Decision": "block",
         "Breakdown": {
           "CVSSBase": 8.6,
           "EPSSFactor": 0.73,
-          "AdjustedScore": 6.278,
-          "AssetCriticality": 0.95,
+          "AdjustedScore": 0.6278,
+          "AssetCriticality": 1.5,
           "ExposureFactor": 1,
           "CompensatingEffect": 0,
-          "FinalReleaseRisk": 5.964099999999999
+          "FinalReleaseRisk": 0.9417
         },
-        "AuditTrail": "[warn] CVE-2024-5566 — release_risk: 6.0, cvss_adjusted: 6.3, exposure: 1.00"
+        "AuditTrail": "[block] CVE-2024-5566 — release_risk: 0.9, cvss_adjusted: 0.6, exposure: 1.00"
       }
     ],
-    "BlockedCount": 1,
+    "BlockedCount": 2,
     "AllowedCount": 0,
-    "WarnCount": 1,
-    "HighestRisk": 8.472100000000001
+    "WarnCount": 0,
+    "HighestRisk": 1.3377000000000003
   },
   "Delta": {
     "SnapshotDate": "2026-04-04T19:58:30.648885132+01:00",
