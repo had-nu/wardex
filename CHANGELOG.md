@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.2] - 2026-04-21
+
+### Added
+- **SDK API**: New programmatic API for integration (`pkg/sdk/assess.go`)
+- **NIS2/DORA Support**: Policy templates for NIS2 and DORA frameworks
+- **Calibrated Risk Gate**: Enhanced calibration with NAICS organizational profiles
+- **Playbook Documentation**: Comprehensive operational playbook
+- **Comprehensive USECASES.md**: 10 didactic scenarios for training
+
+### Changed
+- Updated Go dependencies (AWS SDK v2, Cloud Logging)
+- GitHub Actions updated to latest versions
+- Improved documentation and CLI banner redesign
+- Enhanced risk calibration with statistical bootstrapping
+
+### Fixed
+- Fixed `.golangci.yml` configuration (v2 → v3 format)
+- StaticCheck QF1003 resolved (if/else → switch)
+- Various README typos and linter configurations
+
+### Security
+- Isolated empirical research scripts to `/research`
+- Internal docs moved to `/internal/doc/` for cleaner public clone
+
+---
+
 ## [1.7.1] - Unreleased
 
 ### Added
