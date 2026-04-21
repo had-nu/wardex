@@ -5,13 +5,20 @@ package releasegate
 
 import "github.com/had-nu/wardex/pkg/model"
 
+// scoreNorm normaliza o output para a escala [0, 1.5] do paper v4 (§IV.A — Proposição 2).
+// R_normalizado = R_absoluto / scoreNorm, com CVSS_max/10 = 1.
+// Absorvido internamente: os YAML de configuração expressam os thresholds directamente
+// em [0, 1.5] sem necessitar de ajustamento.
+const scoreNorm = 10.0
+
 // CalculateRisk generates a risk breakdown for a single vulnerability in context.
 func CalculateRisk(vuln model.Vulnerability, ctx model.AssetContext, comps []model.CompensatingControl) model.RiskBreakdown {
 	epss := vuln.EPSSScore
 	if epss == 0.0 {
 		epss = 1.0
 	}
-	adjusted := vuln.CVSSBase * epss
+	// Normalização v4: CVSS/10 → score base ∈ [0, 1]
+	adjusted := (vuln.CVSSBase / scoreNorm) * epss
 
 	internetWeight := 0.6
 	if ctx.InternetFacing {

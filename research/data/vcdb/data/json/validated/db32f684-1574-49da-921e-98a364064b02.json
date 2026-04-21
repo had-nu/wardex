@@ -1,0 +1,83 @@
+{
+  "action": {
+    "misuse": {
+      "variety": [
+        "Data mishandling"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "motive": [
+        "Convenience"
+      ],
+      "variety": [
+        "Other"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "M - Documents"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Personal"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_total": 1
+    }
+  },
+  "confidence": "Medium",
+  "discovery_method": {
+    "unknown": true
+  },
+  "incident_id": "39fdff10-c58c-11e7-8314-790c8d59abbb",
+  "plus": {
+    "analysis_status": "Reviewed",
+    "analyst": "Spitler",
+    "created": "2017-11-10T01:32:48.145Z",
+    "dbir_year": 2018,
+    "github": "9109",
+    "master_id": "db32f684-1574-49da-921e-98a364064b02",
+    "modified": "2017-11-10T01:32:48.145Z"
+  },
+  "reference": "http://www.bordermail.com.au/story/4446860/teacher-watchdog-leaked-secret-yeshivah-sex-abuse-complaint/?cs=12",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "PII of abuse complainant disclosed",
+  "targeted": "NA",
+  "timeline": {
+    "incident": {
+      "month": 2,
+      "year": 2017
+    }
+  },
+  "victim": {
+    "country": [
+      "AU"
+    ],
+    "employee_count": "11 to 100",
+    "government": [
+      "Unknown"
+    ],
+    "industry": "923110",
+    "region": [
+      "009053"
+    ],
+    "victim_id": "The Victorian Institute of Teaching"
+  }
+}

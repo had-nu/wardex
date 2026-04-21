@@ -36,7 +36,7 @@ import (
 )
 
 var (
-	Version       = "1.7.1"
+	Version       = "1.7.2"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -71,7 +71,7 @@ var rootCmd = &cobra.Command{
 		}
 		return nil
 	},
-	Run:     runWardex,
+	Run: runWardex,
 }
 
 func init() {
@@ -89,8 +89,6 @@ func init() {
 	rootCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override (Warning: Identity is cryptographically trusted only in CI environments via WARDEX_ACTOR)")
 	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora")
 	rootCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a cryptographically signed EPSS enrichment file")
-
-
 
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
 	rootCmd.AddCommand(convertCmd)
@@ -160,7 +158,11 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 	cat := catalog.Load(frameworkName)
 	corr := correlator.New(cat)
-	mappings := corr.Correlate(extControls)
+	mappings, err := corr.Correlate(extControls)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Correlation failed: %v\n", err)
+		os.Exit(1)
+	}
 
 	// Filter confidence if necessary (not fully required by spec, but added for robust coverage)
 	var filtered []model.Mapping
@@ -172,7 +174,11 @@ func runWardex(cmd *cobra.Command, args []string) {
 	}
 
 	an := analyzer.New(cat, filtered, extControls)
-	findings := an.Analyze()
+	findings, err := an.Analyze()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Analysis failed: %v\n", err)
+		os.Exit(1)
+	}
 
 	var sortedRoadmap []model.Finding
 	for _, f := range findings {
@@ -255,6 +261,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 			CompensatingControls: cfg.ReleaseGate.CompensatingControls,
 			RiskAppetite:         cfg.ReleaseGate.RiskAppetite,
 			WarnAbove:            cfg.ReleaseGate.WarnAbove,
+			AggregateLimit:       cfg.ReleaseGate.AggregateLimit,
 			Mode:                 gateModeVal,
 		}
 

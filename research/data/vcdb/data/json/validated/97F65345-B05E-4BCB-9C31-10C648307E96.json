@@ -1,0 +1,117 @@
+{
+  "action": {
+    "hacking": {
+      "variety": [
+        "Unknown"
+      ],
+      "vector": [
+        "Unknown"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Unknown"
+      ],
+      "region": [
+        "000000"
+      ],
+      "variety": [
+        "Unknown"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "U - Desktop"
+      },
+      {
+        "variety": "U - Desktop or laptop"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "availability": {
+      "variety": [
+        "Loss"
+      ]
+    },
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 1670,
+          "variety": "Medical"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_total": 1670,
+      "data_victim": [
+        "Patient"
+      ],
+      "state": [
+        "Unknown"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "97F65345-B05E-4BCB-9C31-10C648307E96",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "gbassett",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2015-07-23T16:53:19Z",
+    "master_id": "97F65345-B05E-4BCB-9C31-10C648307E96",
+    "modified": "2015-07-23T16:53:19Z",
+    "timeline": {
+      "notification": {
+        "day": 5,
+        "month": 6,
+        "year": 2013
+      }
+    }
+  },
+  "reference": "https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "",
+  "timeline": {
+    "incident": {
+      "year": 2013
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "Small",
+    "government": [
+      "NA"
+    ],
+    "industry": "611310",
+    "locations_affected": 1,
+    "region": [
+      "019021",
+      "021000"
+    ],
+    "state": "MA",
+    "victim_id": "University of Massachusetts Amherst"
+  }
+}

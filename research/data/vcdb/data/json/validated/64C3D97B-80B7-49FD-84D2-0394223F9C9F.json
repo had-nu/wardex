@@ -1,0 +1,89 @@
+{
+  "action": {
+    "unknown": {}
+  },
+  "actor": {
+    "unknown": {}
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "U - Desktop"
+      },
+      {
+        "variety": "U - Desktop or laptop"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 2621,
+          "variety": "Medical"
+        }
+      ],
+      "data_disclosure": "Potentially",
+      "data_total": 2621,
+      "data_victim": [
+        "Patient"
+      ],
+      "state": [
+        "Stored unencrypted"
+      ]
+    }
+  },
+  "discovery_method": {
+    "unknown": true
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "64C3D97B-80B7-49FD-84D2-0394223F9C9F",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "swidup",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2015-07-25T03:58:26Z",
+    "master_id": "64C3D97B-80B7-49FD-84D2-0394223F9C9F",
+    "modified": "2015-07-25T03:58:26Z",
+    "timeline": {
+      "notification": {
+        "year": 2011
+      }
+    }
+  },
+  "reference": "https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Desktop computer is compromised, resulting in the exposure of 2621 records.",
+  "timeline": {
+    "incident": {
+      "day": 22,
+      "month": 2,
+      "year": 2011
+    }
+  },
+  "victim": {
+    "country": [
+      "PR"
+    ],
+    "employee_count": "Unknown",
+    "government": [
+      "Unknown"
+    ],
+    "industry": "921",
+    "region": [
+      "019029"
+    ],
+    "victim_id": "Departamento de Salud de Puerto Rico"
+  }
+}

@@ -36,33 +36,20 @@ Thumbs.db
 portal-workspaces/
 cmd/portal/
 
-# Test / Benchmark Data (generated, transient)
+# Test / Benchmark Data
 test/poc/real-250-enrich.yaml
 test/poc/real-250-vulns.yaml
-test/poc/report-s*.json
-test/poc/run-all-scenarios.sh
 
-# Stress & Benchmark Tools
-test/poc/stress/
-test/poc/gen_cves/
-test/poc/scan/
-test/poc/poc.zip
-
-# Security & Runtime Outputs (user-specific, transient)
+# Security & Runtime Outputs
 test/outputs/
 report.json
-report.md
-report.csv
 wardex-accept-audit.log
 wardex-acceptances.yaml
-wardex-epss-enrichment.yaml
-wardex-snapshot.json
 wardex-erd.md.resolved
 wardex-simulator.html
-
-# Stress Test Outputs
 stress-enrich.yaml
 stress-vulns.yaml
+research/archive/
 
-# Research Artifacts (calibration data)
-research/
+# Mathematical calibration source (transient)
+patches_math_v4.tex

@@ -1,0 +1,114 @@
+{
+  "action": {
+    "hacking": {
+      "variety": [
+        "Abuse of functionality",
+        "Exploit vuln"
+      ],
+      "vector": [
+        "Web application"
+      ]
+    }
+  },
+  "actor": {
+    "external": {
+      "country": [
+        "Unknown"
+      ],
+      "motive": [
+        "Fun",
+        "Unknown"
+      ],
+      "region": [
+        "000000"
+      ],
+      "variety": [
+        "Unknown",
+        "Unaffiliated"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "S - Web application"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "confidentiality": {
+      "data": [
+        {
+          "variety": "Personal"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_victim": [
+        "Customer"
+      ],
+      "state": [
+        "Stored unencrypted"
+      ]
+    }
+  },
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Actor disclosure"
+      ]
+    }
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "3E8E5A65-40BC-42CF-B652-377B2FD0C504",
+  "plus": {
+    "analysis_status": "First pass",
+    "analyst": "blackfist",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2014-07-08T14:17:00Z",
+    "github": "1655",
+    "master_id": "3E8E5A65-40BC-42CF-B652-377B2FD0C504",
+    "modified": "2014-07-08T14:17:00Z",
+    "timeline": {
+      "notification": {
+        "day": 19,
+        "month": 2,
+        "year": 2014
+      }
+    }
+  },
+  "reference": "http://thehackernews.com/2014/02/Online-Dating-app-Tinder.html",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Researchers discover flaw and create app to reveal exact location of users of a popular dating application called Tinder",
+  "timeline": {
+    "incident": {
+      "month": 2,
+      "year": 2014
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "Small",
+    "government": [
+      "NA"
+    ],
+    "industry": "511210",
+    "region": [
+      "019021"
+    ],
+    "state": "CA",
+    "victim_id": "Tinder"
+  }
+}

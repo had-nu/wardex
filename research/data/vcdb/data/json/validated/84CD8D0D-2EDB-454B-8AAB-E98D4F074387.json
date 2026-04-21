@@ -1,0 +1,119 @@
+{
+  "action": {
+    "physical": {
+      "notes": "\nVERIS 1_3_7 to 1_4_0 Migration script to remove privileged access",
+      "variety": [
+        "Theft"
+      ],
+      "vector": [
+        "Victim secure area"
+      ]
+    }
+  },
+  "actor": {
+    "internal": {
+      "job_change": [
+        "Resigned"
+      ],
+      "motive": [
+        "Unknown",
+        "Financial"
+      ],
+      "variety": [
+        "Unknown",
+        "End-user"
+      ]
+    }
+  },
+  "asset": {
+    "assets": [
+      {
+        "variety": "M - Payment card"
+      }
+    ],
+    "cloud": [
+      "Unknown"
+    ]
+  },
+  "attribute": {
+    "availability": {
+      "variety": [
+        "Loss"
+      ]
+    },
+    "confidentiality": {
+      "data": [
+        {
+          "amount": 1,
+          "variety": "Payment"
+        }
+      ],
+      "data_disclosure": "Yes",
+      "data_total": 1,
+      "data_victim": [
+        "Patient"
+      ],
+      "state": [
+        "Unknown"
+      ]
+    }
+  },
+  "discovery_method": {
+    "external": {
+      "variety": [
+        "Customer"
+      ]
+    }
+  },
+  "impact": {
+    "overall_rating": "Unknown"
+  },
+  "incident_id": "5F323B3F-C1BE-451A-B48D-E6878346DC54",
+  "plus": {
+    "analysis_status": "Finalized",
+    "analyst": "Spitler",
+    "attribute": {
+      "confidentiality": {
+        "credit_monitoring": "Unknown"
+      }
+    },
+    "created": "2016-09-06T14:56:00Z",
+    "dbir_year": 2018,
+    "github": "6762",
+    "master_id": "84CD8D0D-2EDB-454B-8AAB-E98D4F074387",
+    "modified": "2016-09-06T15:09:00Z",
+    "sub_source": "phidbr",
+    "timeline": {
+      "notification": {
+        "day": 7,
+        "month": 12,
+        "year": 2016
+      }
+    }
+  },
+  "reference": "http://www.chicagotribune.com/suburbs/morton-grove/crime/ct-mgc-id-theft-tl-1126-20151207-story.html",
+  "schema_version": "1.4.0",
+  "security_incident": "Confirmed",
+  "source_id": "vcdb",
+  "summary": "Caregiver steals physical credit card from patient.",
+  "timeline": {
+    "incident": {
+      "year": 2014
+    }
+  },
+  "victim": {
+    "country": [
+      "US"
+    ],
+    "employee_count": "Small",
+    "government": [
+      "NA"
+    ],
+    "industry": "621610",
+    "region": [
+      "019021"
+    ],
+    "state": "IL",
+    "victim_id": "Compassionate Care, Inc."
+  }
+}

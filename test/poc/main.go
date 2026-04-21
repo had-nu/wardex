@@ -32,7 +32,7 @@ func main() {
 					RequiresAuth:   true,
 				},
 				CompensatingControls: nil,
-				RiskAppetite:         6.0,
+				RiskAppetite:         0.20,
 			},
 			vulns: []model.Vulnerability{
 				{CVEID: "CVE-2024-9901", CVSSBase: 3.2, EPSSScore: 0.018, Reachable: false},
@@ -45,12 +45,12 @@ func main() {
 			name: "02 · Critical CVE → BLOCK",
 			gate: releasegate.Gate{
 				AssetContext: model.AssetContext{
-					Criticality:    0.95,
+					Criticality:    1.5,
 					InternetFacing: true,
 					RequiresAuth:   false,
 				},
 				CompensatingControls: nil,
-				RiskAppetite:         6.0,
+				RiskAppetite:         0.05,
 			},
 			vulns: []model.Vulnerability{
 				{CVEID: "CVE-2024-1234", CVSSBase: 9.8, EPSSScore: 0.91, Reachable: true},
@@ -63,7 +63,7 @@ func main() {
 			name: "03 · Compensating Controls → ALLOW",
 			gate: releasegate.Gate{
 				AssetContext: model.AssetContext{
-					Criticality:    0.75,
+					Criticality:    1.0,
 					InternetFacing: true,
 					RequiresAuth:   true,
 				},
@@ -72,7 +72,7 @@ func main() {
 					{Type: "auth", Effectiveness: 0.30},
 					{Type: "network_segmentation", Effectiveness: 0.15},
 				},
-				RiskAppetite: 6.0,
+				RiskAppetite: 0.20,
 			},
 			vulns: []model.Vulnerability{
 				{CVEID: "CVE-2024-3388", CVSSBase: 8.1, EPSSScore: 0.45, Reachable: true},
@@ -85,12 +85,12 @@ func main() {
 			name: "04 · Risk Acceptance baseline → BLOCK (pre-exception)",
 			gate: releasegate.Gate{
 				AssetContext: model.AssetContext{
-					Criticality:    0.85,
+					Criticality:    1.5,
 					InternetFacing: true,
 					RequiresAuth:   false,
 				},
 				CompensatingControls: nil,
-				RiskAppetite:         6.0,
+				RiskAppetite:         0.08,
 			},
 			vulns: []model.Vulnerability{
 				{CVEID: "CVE-2025-0042", CVSSBase: 9.1, EPSSScore: 0.84, Reachable: true},

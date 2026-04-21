@@ -1,0 +1,544 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#", 
+  "additionalProperties": false, 
+  "description": "VERIS VCDB Schema 1.4.1.",
+  "properties": {
+    "plus": {
+      "properties": {
+        "sub_source": {
+          "description": "This field defines how the data was selected below the source level.  For example, It is a PHIDBR, record in VCDB, it should be 'phidbr'.  If it is a priority incident, it should be 'priority'.  If the incident is randomly assigned through vcdb assignment, it should be  'random' or blank.  It can be used by others to differentiate between different sources within their data.",
+          "type": "string"
+        },
+        "row_number": {
+          "type": "integer"
+        },
+        "analysis_status": {
+          "description": "In-progress (not yet complete) -> Ready for review (complete but not reviewed by DBIR team) -> First pass (One person has reviewed) -> Reviewed (Two people have reviewed) -> Finalized (Reviewed by single person reviewing all data)",
+          "minLength": 1, 
+          "type": "string"
+        }, 
+        "analyst": {
+          "minLength": 1, 
+          "type": "string",
+          "description": "Individual coding the incident. Please use a consistent format, like [first_initial][last_name] (e.g. asmith)"
+        }, 
+        "analyst_notes": {
+          "minLength": 1, 
+          "type": "string",
+          "description": "Record notes about the analysis of the incident. (This is in contrast to notes about the incident itself which should go in 'notes'.)"
+        }, 
+        "asset": {
+          "additionalProperties": false, 
+          "properties": {
+            "total": {
+              "minLength": 1, 
+              "type": "string"
+            }
+          }, 
+          "type": "object"
+        }, 
+        "asset_os": {
+          "items": {
+            "type": "string"
+          }, 
+          "minItems": 1, 
+          "type": "array", 
+          "uniqueItems": true
+        }, 
+        "attack_difficulty_initial": {
+          "minLength": 1, 
+          "type": "string"
+        }, 
+        "attack_difficulty_legacy": {
+          "minLength": 1, 
+          "type": "string"
+        }, 
+        "attack_difficulty_subsequent": {
+          "minLength": 1, 
+          "type": "string"
+        }, 
+        "attribute": {
+          "additionalProperties": false, 
+          "properties": {
+            "confidentiality": {
+              "additionalProperties": false, 
+              "properties": {
+                "credit_monitoring": {
+                  "minLength": 1, 
+                  "type": "string"
+                }, 
+                "credit_monitoring_years": {
+                  "minLength": 1, 
+                  "type": "number",
+                  "minimum": 0.01
+                }, 
+                "data_abuse": {
+                  "description": "The data was used for fraud, used mischievously, used maliciously, or otherwise abused.",
+                  "minLength": 1, 
+                  "type": "string"
+                }
+              }, 
+              "type": "object"
+            }
+          }, 
+          "type": "object"
+        }, 
+        "control_inadequacies_legacy": {
+          "items": {
+            "type": "string"
+          }, 
+          "minItems": 1, 
+          "type": "array", 
+          "uniqueItems": true
+        }, 
+        "created": {
+          "minLength": 1, 
+          "type": "string"
+        }, 
+        "dbir_year": {
+          "minLength": 1, 
+          "type": "integer",
+          "default": 2020
+        }, 
+        "event_chain": {
+          "items": {
+            "additionalProperties": false, 
+            "properties": {
+              "action": {
+                "minLength": 1, 
+                "type": "string"
+              }, 
+              "actor": {
+                "minLength": 1, 
+                "type": "string"
+              }, 
+              "asset": {
+                "minLength": 1, 
+                "type": "string"
+              }, 
+              "attribute": {
+                "minLength": 1, 
+                "type": "string"
+              }, 
+              "summary": {
+                "minLength": 1, 
+                "type": "string"
+              }
+            }, 
+            "type": "object"
+          }, 
+          "minItems": 1, 
+          "type": "array", 
+          "uniqueItems": false
+        },
+        "github": {
+          "minLength": 1, 
+          "type": "string",
+          "description": "Github issue #.  Only used in VCDB."
+        }, 
+        "investigator": {
+          "minLength": 1, 
+          "type": "string"
+        }, 
+        "modified": {
+          "minLength": 1, 
+          "type": "string"
+        }, 
+        "pci": {
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "compliance_status": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "merchant_level": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "notes": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "status_determined": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "requirements": {
+              "additionalProperties": false,
+              "properties": {
+                "req_1": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_2": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_3": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_4": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_5": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_6": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_7": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_8": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_9": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_10": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_11": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "req_12": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "assessed": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "in_place": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_cause": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "breach_contribute": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "notes": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+       "security_maturity": {
+              "description": "How would you rate the maturity of the victim's overall security program?",
+              "minLength": 1,
+              "type": "string"
+            },
+        "timeline": {
+          "additionalProperties": false, 
+          "properties": {
+            "notification": {
+              "additionalProperties": false, 
+              "properties": {
+                "day": {
+                  "minLength": 1, 
+                  "type": "integer"
+                }, 
+                "month": {
+                  "minLength": 1, 
+                  "type": "integer"
+                }, 
+                "year": {
+                  "minLength": 1, 
+                  "type": "integer"
+                }
+              }, 
+              "type": "object"
+            }
+          }, 
+          "type": "object"
+        }, 
+        "unfollowed_policies": {
+          "minLength": 1, 
+          "type": "string"
+        }, 
+        "unknown_unknowns": {
+          "items": {
+            "type": "string"
+          }, 
+          "minItems": 1, 
+          "type": "array", 
+          "uniqueItems": true
+        }
+      }, 
+      "required": [
+        "master_id"
+      ], 
+      "type": "object"
+    },
+    "source_id": {
+      "default": "vcdb"
+    },
+    "schema_name": {
+      "description": "Name of Schema.  This can be used to signal to software reading the schema which it is.  Common values are 'verisc', 'dbir', and 'vcdb'.", 
+      "type": "string", 
+      "default": "vcdb"
+    }
+  },
+  "type": "object"
+}

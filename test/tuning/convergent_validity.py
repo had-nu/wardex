@@ -42,11 +42,12 @@ from pipeline import (
 
 
 # ── Parâmetros dos 4 perfis do paper (Fonte A: FIPS199/VCDB) ─────────────────
+# Escala normalizada v4 (CVSS/10): θ em [0, 1.5]
 PAPER_PROFILES_CV = {
-    "BANK":  {"c_alpha": 1.50, "e_alpha": 1.00, "theta_block": 0.5},
-    "HOSP":  {"c_alpha": 1.50, "e_alpha": 0.80, "theta_block": 0.8},
-    "SAAS":  {"c_alpha": 1.00, "e_alpha": 0.80, "theta_block": 2.0},
-    "INFRA": {"c_alpha": 1.50, "e_alpha": 0.50, "theta_block": 0.3},
+    "BANK":  {"c_alpha": 1.50, "e_alpha": 1.00, "theta_block": 0.05},
+    "HOSP":  {"c_alpha": 1.50, "e_alpha": 0.80, "theta_block": 0.08},
+    "SAAS":  {"c_alpha": 1.00, "e_alpha": 0.80, "theta_block": 0.20},
+    "INFRA": {"c_alpha": 1.50, "e_alpha": 0.50, "theta_block": 0.015},
 }
 
 
