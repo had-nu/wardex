@@ -46,6 +46,7 @@ type AssessmentResult struct {
 	Summary  model.ExecutiveSummary
 	Findings []model.Finding
 	Roadmap  []model.Finding
+	Posture  analyzer.PostureReport
 	Gate     *model.GateReport
 	Delta    *model.Delta
 }
@@ -85,11 +86,13 @@ func Analyze(controls []model.ExistingControl, framework string) (*AssessmentRes
 	}
 
 	summary := buildSummary(cat, findings)
+	posture := an.AssessPosture(findings)
 
 	return &AssessmentResult{
 		Summary:  summary,
 		Findings: findings,
 		Roadmap:  sortedRoadmap,
+		Posture:  posture,
 	}, nil
 }
 
@@ -135,11 +138,13 @@ func AnalyzeWithConfig(controls []model.ExistingControl, framework string, opts 
 	}
 
 	summary := buildSummary(cat, findings)
+	posture := an.AssessPosture(findings)
 
 	return &AssessmentResult{
 		Summary:  summary,
 		Findings: findings,
 		Roadmap:  sortedRoadmap,
+		Posture:  posture,
 	}, nil
 }
 
