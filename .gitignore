@@ -67,3 +67,16 @@ research/archive/
 
 # Mathematical calibration source (transient)
 patches_math_v4.tex
+
+# Test / Calibration Data (generated, transient)
+test/tuning/
+test/tuning/reports/
+
+# Research Data (empirical, not for release)
+research/
+research/.venv/
+
+# Internal Documentation (not for public clone)
+# Exception: allow tracking internal docs locally
+!/internal/doc/
+internal/doc/
