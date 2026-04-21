@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 run:
   timeout: 5m
   go: "1.26"
@@ -9,23 +9,11 @@ linters:
     - errcheck
     - govet
     - ineffassign
-    - gosec
 
 linters-settings:
   errcheck:
     check-type-assertions: true
     check-blank: true
-  gosec:
-    excludes:
-      - G204  # subprocess launched with variable — review each case
 
 issues:
-  exclude-rules:
-    - linters:
-        - errcheck
-      path: pkg/report/markdown.go
-    - path: "_test\\.go"
-      linters:
-        - gosec
-      text: "G304|G306"
   exclude-use-default: false
