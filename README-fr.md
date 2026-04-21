@@ -1,18 +1,27 @@
 <div align="center">
-  <h1>Wardex</h1>
-  <p><b>Analyse des Écarts, Passerelle de Mise en Production Basée sur les Risques et Impact Commercial — Outil CLI & Moteur en Go</b></p>
 
-  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
-  ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
-  [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
-  ![Security Hardened](https://img.shields.io/badge/Security-TeamPCP_Hardened-success?style=flat-square&logo=github-actions&logoColor=white)
-  ![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
-  [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
-  [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
+```text
+██╗    ██╗ █████╗ ██████╗ ██████╗ ███████╗██╗  ██╗
+██║    ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝╚██╗██╔╝
+██║ █╗ ██║███████║██████╔╝██║  ██║█████╗   ╚███╔╝ 
+██║███╗██║██╔══██║██╔══██╗██║  ██║██╔══╝   ██╔██╗ 
+╚███╔███╔╝██║  ██║██║  ██║██████╔╝███████╗██╔╝ ██╗
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
 
-  <br>
-  <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
-  <br><br>
+   security posture intelligence platform  ·  v1.7.2
+```
+
+[![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.2-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
+![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
+[![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
+![Security Hardened](https://img.shields.io/badge/Security-TeamPCP_Hardened-success?style=flat-square&logo=github-actions&logoColor=white)
+![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
+[![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
+
+<br>
+<a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
+<br><br>
 
 </div>
 
@@ -20,9 +29,7 @@
 > **Motivation TeamPCP (Surface d'Attaque) :** Suite à la campagne "TeamPCP" qui a transformé les outils de sécurité en vecteurs d'attaque contre les pipelines les plus diligents, Wardex a priorisé et accéléré sa feuille de route de durcissement défensif. Les mises à jour récentes incluent le verrouillage (pinning) SHA256 de toutes les Actions, une isolation stricte des permissions dans les workflows, l'intégrité des CDNs via SRI et une provenance cryptographique pour toutes les données d'enrichissement. Une note post-mortem détaillée sera bientôt publiée.
 
 
-Wardex est un outil d'interface en ligne de commande (CLI) robuste et un Moteur écrit en Go qui intègre les contrôles de sécurité déjà mis en œuvre dans votre organisation et les associe à de multiples cadres de conformité mondiaux, y compris les 93 contrôles de la norme ISO/CEI 27001:2022 (Annexe A), SOC 2, NIS 2 et DORA.
-
-Conçu pour être utilisé à la fois comme une CLI autonome et comme un SDK intégrable, Wardex agit comme une **Passerelle de Mise en Production Basée sur les Risques (Risk-Based Release Gate)** dans vos pipelines CI/CD. Au lieu de bloquer les sorties de logiciels sur la base de métriques binaires et statiques (comme "CVSS > 7.0"), Wardex calcule le risque réel de mise en production en ajustant la vulnérabilité technique à l'impact commercial, à l'exposition de l'infrastructure et aux contrôles compensatoires existants.
+**Wardex** est une plateforme de *Security Posture Intelligence* et un moteur de décision écrit en Go, conçu pour transformer les données de sécurité brutes en intelligence de risque exploitable. Fonctionnant à la fois comme une CLI autonome et comme un SDK intégrable, il agit comme une *Passerelle de Mise en Production Basée sur les Risques (Risk-Based Release Gate)* avancée dans les pipelines CI/CD, en mappant les contrôles mis en œuvre sur les cadres mondiaux (ISO 27001:2022, SOC 2, NIS 2, DORA) pour calculer le risque de lancement réel — en implémentant le CVSS comme il se doit : enrichi de scores d'exploitabilité (EPSS), du contexte commercial et de l'efficacité des contrôles compensatoires.
 
 ## Pourquoi Wardex ?
 
@@ -68,11 +75,43 @@ go install github.com/had-nu/wardex@latest
 
 # Pour les builds locaux (ex: cibler une balise spécifique)
 git fetch --tags
-git checkout v1.7.1
-make build
+Veuillez consulter le [CHANGELOG.md](CHANGELOG.md) pour obtenir des détails sur les notes de publication et les correctifs.
+
+## Flux de Travail Technique (The "Stitching")
+
+Wardex n'opère pas dans le vide. C'est le "Cerveau de Décision" qui unit la posture de gouvernance à la réalité technique du code. Le flux fonctionne via l'intégration de trois composants principaux :
+
+### 1. Le Trio de Données
+La décision du Release Gate est basée sur le croisement de trois fichiers :
+*   **`wardex-config.yaml` (La Règle) :** Défini dans votre dépôt, il indique quel framework utiliser et quelle est la limite de risque acceptable.
+*   **`posture.json` (La Défense) :** Généré automatiquement par **[Bridgr](https://github.com/had-nu/bridgr)**, il contient les preuves des contrôles actifs (WAF, Code Review, etc.) au moment du push.
+*   **`vulns.json` (L'Attaque) :** Généré par vos scans (Grype, Snyk, etc.) et normalisé par la commande `wardex convert`.
+
+### 2. Architecture de la Pipeline (CI/CD)
+
+```text
+[ Push / PR ]
+      │
+      ├─► [ Bridgr ] ───────► Génère posture.json (Évidence Réelle)
+      │
+      ├─► [ Scanners ] ─────► [ wardex convert ] ──► Génère vulns.json (Vulnerabilités)
+      │
+      └─► [ WARDEX EVALUATE ] ◄─── Utilise config.yaml + posture.json + vulns.json
+                │
+          [ DÉCISION ] ──────► ALLOW (Deploy) / BLOCK (Fix needed)
 ```
 
-Veuillez consulter le [CHANGELOG.md](CHANGELOG.md) pour obtenir des détails sur les notes de publication et les correctifs.
+### 3. Exemple de Commande dans la Pipeline
+
+```bash
+# 1. Normalise les résultats de votre scanner (ex: Grype)
+wardex convert --from grype results.json > vulns.json
+
+# 2. Exécute l'évaluation calibrée par risque
+wardex evaluate --config .wardex/config.yaml --gate vulns.json --posture posture.json
+```
+
+---
 
 ## Utilisation
 
