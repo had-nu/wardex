@@ -1,3 +1,6 @@
+// Copyright (c) 2025–2026 André Gustavo Leão de Melo Ataíde (had-nu). All rights reserved.
+// SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Wardex-Commercial
+
 package policy
 
 import (
@@ -57,7 +60,7 @@ func runPolicyValidate(cmd *cobra.Command, args []string) error {
 	}
 
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
-		"✓ %d domain file(s), %d control(s) — all valid in %q\n",
+		"[OK] %d domain file(s), %d control(s) — all valid in %q\n",
 		len(domains), total, args[0],
 	)
 	return nil
@@ -139,7 +142,7 @@ func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
 		os.Exit(exitcodes.ComplianceFail)
 	}
 
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "✓ No expired exceptions found in %q\n", args[0])
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "[OK] No expired exceptions found in %q\n", args[0])
 	return nil
 }
 

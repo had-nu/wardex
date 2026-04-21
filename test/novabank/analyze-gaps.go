@@ -1,3 +1,6 @@
+// Copyright (c) 2025–2026 André Gustavo Leão de Melo Ataíde (had-nu). All rights reserved.
+// SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Wardex-Commercial
+
 package main
 
 import (
@@ -56,7 +59,11 @@ func main() {
 	}
 
 	a := analyzer.New(catalog, ms.Mappings, controls)
-	findings := a.Analyze()
+	findings, err := a.Analyze()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Analysis failed: %v\n", err)
+		os.Exit(1)
+	}
 
 	gapCount := 0
 	partialCount := 0
@@ -68,13 +75,13 @@ func main() {
 	fmt.Println("|----------------|--------|-------|----------|------------|------------")
 
 	for _, f := range findings {
-		icon := "✅"
+		icon := "[OK]"
 		switch f.Status {
 		case model.StatusGap:
-			icon = "❌"
+			icon = "[FAIL]"
 			gapCount++
 		case model.StatusPartial:
-			icon = "⚠️"
+			icon = "[WARN]"
 			partialCount++
 		case model.StatusCovered:
 			coveredCount++
