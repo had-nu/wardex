@@ -1,18 +1,26 @@
 <div align="center">
-  <h1>Wardex</h1>
-  <p><b>Gap Analysis, Risk-Based Release Gate and Business Impact — CLI Tool & Engine in Go</b></p>
 
-  [![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.1-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
-  ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
-  [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
-  ![Security Hardened](https://img.shields.io/badge/Security-TeamPCP_Hardened-success?style=flat-square&logo=github-actions&logoColor=white)
-  ![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
-  [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
-  [![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
+```text
+██╗    ██╗ █████╗ ██████╗ ██████╗ ███████╗██╗  ██╗
+██║    ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝╚██╗██╔╝
+██║ █╗ ██║███████║██████╔╝██║  ██║█████╗   ╚███╔╝ 
+██║███╗██║██╔══██║██╔══██║██║  ██║██╔══╝   ██╔██╗ 
+╚███╔███╔╝██║  ██║██║  ██║██████╔╝███████╗██╔╝ ██╗
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
 
-  <br>
-  <a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
-  <br><br>
+   security posture intelligence platform  ·  v1.7.2
+```
+
+[![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.2-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
+![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
+[![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
+![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
+[![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
+
+<br>
+<a href="README-en.md">English</a> | <a href="README-fr.md">Français</a> | <a href="README-es.md">Castellano</a> | <a href="README.md">Português</a>
+<br><br>
 
 </div>
 
@@ -20,9 +28,7 @@
 > **TeamPCP Attack Surface Motivation:** Following the "TeamPCP" campaign which weaponized security tools into attack vectors against diligent pipelines, Wardex has prioritized and accelerated its defensive hardening roadmap. Recent updates include SHA256 pinning for all Actions, strict workflow permission isolation, CDN integrity via SRI, and cryptographic provenance for all enrichment data. A full security post-mortem is forthcoming.
 
 
-Wardex is a robust Command Line Interface (CLI) tool and Engine written in Go that ingests already implemented security controls in your organization and maps them against multiple global compliance frameworks, including the 93 controls of the ISO/IEC 27001:2022 standard (Annex A), SOC 2, NIS 2, and DORA.
-
-Designed to be used both as a standalone CLI and as an embeddable SDK, Wardex acts as a **Risk-Based Release Gate** in your CI/CD pipelines. Instead of blocking software releases based on static binary metrics (like "CVSS > 7.0"), Wardex calculates the real release risk by adjusting technical vulnerability to business impact, infrastructure exposure, and existing compensating controls.
+**Wardex** is a *Security Posture Intelligence* platform and a decision engine written in Go, designed to transform raw security data into actionable risk intelligence. Operating as both a standalone CLI and an embeddable SDK, it serves as an advanced *Risk-Based Release Gate* in CI/CD pipelines, mapping implemented controls against global frameworks (ISO 27001:2022, SOC 2, NIS 2, DORA) to calculate the real release risk — implementing CVSS as it was meant to be: enriched with exploitability scores (EPSS), business context, and compensating control effectiveness.
 
 ## Why Wardex?
 
