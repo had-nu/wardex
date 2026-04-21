@@ -99,12 +99,12 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 	_, _ = fmt.Fprintln(w, "| File | Decision | Blocked | Allowed | Warned |")
 	_, _ = fmt.Fprintln(w, "|------|----------|---------|---------|--------|")
 	for _, r := range results {
-		icon := "✅"
+		icon := "[OK]"
 		switch r.decision {
 		case "block":
-			icon = "❌"
+			icon = "[FAIL]"
 		case "warn":
-			icon = "⚠️"
+			icon = "[WARN]"
 		}
 		_, _ = fmt.Fprintf(w, "| %s | %s %s | %d | %d | %d |\n",
 			r.file, icon, strings.ToUpper(r.decision),
@@ -131,14 +131,14 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 
 	if blocked {
 		combined = "BLOCK"
-		_, _ = fmt.Fprintf(w, "\n**Combined Decision:** ❌ %s (%s — %d/%d framework(s) blocked)\n\n",
+		_, _ = fmt.Fprintf(w, "\n**Combined Decision:** [FAIL] %s (%s — %d/%d framework(s) blocked)\n\n",
 			combined, failOn, blockCount, len(results),
 		)
 		os.Exit(exitcodes.GateBlocked)
 	}
 
 	combined = "ALLOW"
-	_, _ = fmt.Fprintf(w, "\n**Combined Decision:** ✅ %s\n\n", combined)
+	_, _ = fmt.Fprintf(w, "\n**Combined Decision:** [OK] %s\n\n", combined)
 	os.Exit(exitcodes.OK)
 	return nil
 }
