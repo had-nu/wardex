@@ -35,6 +35,7 @@ Thumbs.db
 # Wardex Portal POC (Not in official architecture)
 portal-workspaces/
 cmd/portal/
+wardex-simulator.html
 
 # Test / Benchmark Data (generated, transient)
 test/poc/real-250-enrich.yaml
