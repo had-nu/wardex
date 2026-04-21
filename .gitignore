@@ -80,3 +80,20 @@ research/.venv/
 # Exception: allow tracking internal docs locally
 !/internal/doc/
 internal/doc/
+
+# Internal skills and notes
+SKILL-*.md
+
+# Internal Benchmark & Stress Reports
+doc/TESTING_RESILIENCE.md
+doc/epss-stress-test-report.md
+doc/wardex-benchmark*.md
+doc/wardex-g*-*.md
+doc/wardex-gap-analysis-v*.md
+doc/wardex-gap-delta.docx
+doc/wardex-gap-matrix.md
+
+# Python Test & Calibration scripts
+test/test_calibration_*.py
+test/wardex-risk-simulator.jsx
+test/wardex_test_prompt.md
