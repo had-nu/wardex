@@ -36,7 +36,7 @@ func generateCSV(report model.GapReport, outFile string) error {
 	writer := csv.NewWriter(f)
 	defer writer.Flush()
 
-	header := []string{"Control ID", "Name", "Domain", "Status", "Score", "Gap Reasons"}
+	header := []string{"Control ID", "Name", "Domain", "Status", "Score", "Maturity", "Gap Reasons"}
 	if err := writer.Write(header); err != nil {
 		return fmt.Errorf("failed to write CSV header: %w", err)
 	}
@@ -53,6 +53,7 @@ func generateCSV(report model.GapReport, outFile string) error {
 			finding.Control.Domain,
 			string(finding.Status),
 			fmt.Sprintf("%.2f", finding.FinalScore),
+			fmt.Sprintf("%.1f", finding.EffectiveMaturity),
 			reasons,
 		}
 
@@ -128,6 +129,40 @@ func generateCSV(report model.GapReport, outFile string) error {
 		}
 		if err := writer.Write(deltaRow); err != nil {
 			return fmt.Errorf("failed to write delta row: %w", err)
+		}
+	}
+
+	if report.LayerDelta != nil {
+		if err := writer.Write([]string{}); err != nil {
+			return fmt.Errorf("failed to write CSV separator: %w", err)
+		}
+		if err := writer.Write([]string{"## Layer Delta"}); err != nil {
+			return fmt.Errorf("failed to write section header: %w", err)
+		}
+		_ = writer.Write([]string{"Metric", "Value"})
+		_ = writer.Write([]string{"Documented Count", fmt.Sprintf("%d", report.LayerDelta.DocumentedCount)})
+		_ = writer.Write([]string{"Implemented Count", fmt.Sprintf("%d", report.LayerDelta.ImplementedCount)})
+		_ = writer.Write([]string{"Active Coverage", fmt.Sprintf("%d", len(report.LayerDelta.ActiveCoverage))})
+		_ = writer.Write([]string{"Policy Gap", fmt.Sprintf("%d", len(report.LayerDelta.PolicyGap))})
+		_ = writer.Write([]string{"Shadow Security", fmt.Sprintf("%d", len(report.LayerDelta.ImplementedOnly))})
+	}
+
+	if len(report.AssetCompliance) > 0 {
+		if err := writer.Write([]string{}); err != nil {
+			return fmt.Errorf("failed to write CSV separator: %w", err)
+		}
+		if err := writer.Write([]string{"## Asset Compliance"}); err != nil {
+			return fmt.Errorf("failed to write section header: %w", err)
+		}
+		_ = writer.Write([]string{"Asset ID", "Asset Name", "Score", "Status", "Missing Count"})
+		for _, ac := range report.AssetCompliance {
+			_ = writer.Write([]string{
+				ac.AssetID,
+				ac.AssetName,
+				fmt.Sprintf("%.1f%%", ac.ComplianceScore*100.0),
+				ac.Status,
+				fmt.Sprintf("%d", len(ac.MissingControls)),
+			})
 		}
 	}
 

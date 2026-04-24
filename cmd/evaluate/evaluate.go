@@ -9,9 +9,7 @@ import (
 
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
-	"github.com/had-nu/wardex/pkg/accept/configaudit"
-	"github.com/had-nu/wardex/pkg/accept/signer"
-	"github.com/had-nu/wardex/pkg/accept/store"
+	"github.com/had-nu/wardex/pkg/accept"
 	"github.com/had-nu/wardex/pkg/epss"
 	"github.com/had-nu/wardex/pkg/exitcodes"
 	"github.com/had-nu/wardex/pkg/ingestion"
@@ -157,9 +155,9 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	vulns := vulnsEnvelope.Vulnerabilities
 
 	// Filter accepted CVEs
-	if key, err := signer.ResolveSecret(*cfg); err == nil {
-		configHash, _ := configaudit.Hash(configPath)
-		if accs, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
+	if key, err := accept.ResolveSecret(*cfg); err == nil {
+		configHash, _ := accept.ConfigHash(configPath)
+		if accs, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
 			acceptedMap := make(map[string]bool)
 			for _, a := range accs {
 				if !a.Revoked {
@@ -180,7 +178,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 
 	// Apply EPSS enrichment
 	if epssEnrich != "" {
-		if key, err := signer.ResolveSecret(*cfg); err == nil {
+		if key, err := accept.ResolveSecret(*cfg); err == nil {
 			safeEnrichPath, err := utils.SafePath(cwd, epssEnrich)
 			if err == nil {
 				if edata, err := os.ReadFile(safeEnrichPath); err == nil { // #nosec G304

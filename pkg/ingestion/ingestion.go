@@ -38,8 +38,10 @@ func LoadMany(paths []string) ([]model.ExistingControl, error) {
 		}
 
 		for _, c := range controls {
-			if !seen[c.ID] {
-				seen[c.ID] = true
+			// Key is ID + Layer to allow different layers for the same ID
+			key := fmt.Sprintf("%s|%s", c.ID, c.Layer)
+			if !seen[key] {
+				seen[key] = true
 				allControls = append(allControls, c)
 			}
 		}

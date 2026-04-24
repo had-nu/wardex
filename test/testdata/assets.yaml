@@ -1,0 +1,118 @@
+# assets.yaml — v1.8.0 schema
+# Três activos com perfis de risco distintos:
+#   ASSET-001: Payment API — internet-facing, criticidade máxima, threat modelling completo
+#   ASSET-002: Internal HR Portal — interno, criticidade moderada, sem threat modelling
+#   ASSET-003: Data Pipeline (ETL) — air-gapped, criticidade alta, shadow security relevante
+
+- id: ASSET-001
+  name: Payment API
+  type: application
+  criticality: 1.50
+  scope:
+    - iso27001
+  controls:
+    - DOC-TECH-001
+    - DOC-TECH-002
+    - DOC-TECH-003
+    - DOC-TECH-004
+    - DOC-ORG-001
+    - DOC-ORG-003
+  owner: platform-team
+
+  exposure:
+    internet_facing: true
+    requires_auth: true
+    network_zone: dmz
+    data_classification: restricted
+
+  threats:
+    - id: T-001
+      scenario: "Unauthenticated API abuse via exposed payment endpoint"
+      mitre_technique: T1190
+      likelihood: high
+    - id: T-002
+      scenario: "Credential stuffing against authentication layer"
+      mitre_technique: T1110
+      likelihood: medium
+    - id: T-003
+      scenario: "Injection attack via malformed payment fields"
+      mitre_technique: T1059
+      likelihood: medium
+
+  compensating_controls:
+    - type: waf
+      effectiveness: 0.35
+      ref: DOC-TECH-004
+      threat_ref: T-001
+    - type: rate_limiting
+      effectiveness: 0.20
+      ref: DOC-TECH-004
+      threat_ref: T-002
+    - type: mfa
+      effectiveness: 0.40
+      ref: DOC-TECH-002
+      threat_ref: T-002
+    # T-003 has no compensating_control → will be flagged as unmitigated
+
+- id: ASSET-002
+  name: Internal HR Portal
+  type: application
+  criticality: 0.50
+  scope:
+    - iso27001
+  controls:
+    - DOC-PPL-001
+    - DOC-PPL-002
+    - DOC-PPL-003
+    - DOC-ORG-001
+    - DOC-TECH-002
+  owner: hr-infra
+
+  exposure:
+    internet_facing: false
+    requires_auth: true
+    network_zone: internal
+    data_classification: confidential
+
+  # No threats declared — report will annotate absence.
+  # Compensating controls inherit from global config (no per-asset override).
+
+- id: ASSET-003
+  name: Customer Data Pipeline (ETL)
+  type: data
+  criticality: 1.00
+  scope:
+    - iso27001
+  controls:
+    - DOC-TECH-003
+    - DOC-TECH-001
+    - IMPL-PHY-001
+    - DOC-ORG-004
+  owner: data-engineering
+
+  exposure:
+    internet_facing: false
+    requires_auth: true
+    network_zone: internal
+    data_classification: restricted
+
+  threats:
+    - id: T-001
+      scenario: "Insider data exfiltration via ETL job manipulation"
+      mitre_technique: T1078
+      likelihood: medium
+    - id: T-002
+      scenario: "Supply chain compromise via malicious ETL dependency"
+      mitre_technique: T1195
+      likelihood: low
+
+  compensating_controls:
+    - type: privileged_access_management
+      effectiveness: 0.45
+      ref: DOC-TECH-002
+      threat_ref: T-001
+    - type: sast
+      effectiveness: 0.30
+      ref: DOC-TECH-005
+      # Note: DOC-TECH-005 not in controls list for this asset → unverified ref
+      threat_ref: T-002

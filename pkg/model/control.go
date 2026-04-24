@@ -3,17 +3,27 @@
 
 package model
 
+type ControlLayer string
+
+const (
+	LayerDocumented  ControlLayer = "documented"
+	LayerImplemented ControlLayer = "implemented"
+)
+
 // ExistingControl representa um controle já implementado na organização.
 type ExistingControl struct {
-	ID                  string     `yaml:"id"`
-	Name                string     `yaml:"name"`
-	Description         string     `yaml:"description,omitempty"`
-	Framework           string     `yaml:"framework,omitempty"`
-	Domains             []string   `yaml:"domains,omitempty"`
-	Maturity            int        `yaml:"maturity"`
-	Evidences           []Evidence `yaml:"evidences,omitempty"`
-	ContextWeight       float64    `yaml:"context_weight,omitempty"`
-	WeightJustification string     `yaml:"weight_justification,omitempty"`
+	ID                  string       `yaml:"id"`
+	Name                string       `yaml:"name"`
+	Description         string       `yaml:"description,omitempty"`
+	Framework           string       `yaml:"framework,omitempty"`
+	Domains             []string     `yaml:"domains,omitempty"`
+	Maturity            int          `yaml:"maturity"`
+	Layer               ControlLayer `yaml:"layer"`
+	Effectiveness       float64      `yaml:"effectiveness,omitempty"`
+	ReviewRequired      bool         `yaml:"review_required,omitempty"`
+	Evidences           []Evidence   `yaml:"evidences,omitempty"`
+	ContextWeight       float64      `yaml:"context_weight,omitempty"`
+	WeightJustification string       `yaml:"weight_justification,omitempty"`
 }
 
 // CatalogControl representa um controle da ISO 27001:2022 Annex A.

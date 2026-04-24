@@ -43,7 +43,7 @@
       "c_alpha_source": "FIPS 199 modal=Moderate (VCDB n=140)",
       "e_alpha_source": "VCDB access vector distribution: 57.1% internet-facing (mixed exposure)",
       "n_incidents": 140,
-      "theta_block": 2.0,
+      "theta_block": 0.25,
       "theta_warn": 1.0,
       "n_cves": 237
     },
