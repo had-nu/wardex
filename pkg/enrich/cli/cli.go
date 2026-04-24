@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/accept/signer"
+	"github.com/had-nu/wardex/pkg/accept"
 	"github.com/had-nu/wardex/pkg/epss"
 	"github.com/had-nu/wardex/pkg/model"
 	"github.com/had-nu/wardex/pkg/utils"
@@ -40,7 +40,7 @@ var epssCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		key, err := signer.ResolveSecret(*cfg)
+		key, err := accept.ResolveSecret(*cfg)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "\n[FAIL] Missing or invalid WARDEX_SECRET. Enrichment non-repudiation requires a valid signature key.\n%v\n", err)
 			os.Exit(1)

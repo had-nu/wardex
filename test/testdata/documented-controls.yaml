@@ -1,0 +1,195 @@
+# documented-controls.yaml
+# Layer: documented — políticas declaradas pelo infosec director.
+# Cobre domínios: organizational, people, technological.
+# Physical não está documentado → controlo operacional no implemented-controls.yaml
+# será classificado como shadow security.
+#
+# Correlator: domain intersection (high confidence).
+# Um controlo com domains: [organizational] faz match com todos os 37 A.5.x.
+# A cobertura documentada cobre 37 + 8 + 34 = 79 dos 93 controlos.
+# Os 14 A.7.x (physical) ficam como gap na camada documentada.
+
+- id: DOC-ORG-001
+  name: Information Security Policies
+  description: >
+    Top-level security policy approved by CISO, reviewed annually.
+    Covers acceptable use, classification, and governance.
+  layer: documented
+  domains: [organizational]
+  maturity: 4
+  evidences:
+    - type: policy
+      ref: isp-v3.2-ciso-approved-2025-01
+
+- id: DOC-ORG-002
+  name: Supplier and Third-Party Risk Management
+  description: >
+    Vendor security assessment process, contractual clauses, and
+    annual review of critical suppliers.
+  layer: documented
+  domains: [organizational]
+  maturity: 3
+  evidences:
+    - type: procedure
+      ref: vendor-risk-policy-v2.0
+    - type: policy
+      ref: dpa-standard-clause-library
+
+- id: DOC-ORG-003
+  name: Incident Management and Response
+  description: >
+    Documented incident response plan with defined roles, escalation
+    paths, and post-incident review requirements.
+  layer: documented
+  domains: [organizational]
+  maturity: 3
+  evidences:
+    - type: procedure
+      ref: ir-plan-v1.4
+
+- id: DOC-ORG-004
+  name: Risk Assessment and Treatment
+  description: >
+    Annual risk assessment methodology using likelihood × impact matrix.
+    Risk register maintained in Jira.
+  layer: documented
+  domains: [organizational]
+  maturity: 4
+  evidences:
+    - type: policy
+      ref: risk-methodology-v2.1
+    - type: log
+      ref: jira:risk-register-2025-Q1
+
+- id: DOC-ORG-005
+  name: Business Continuity and Disaster Recovery
+  description: >
+    BCP covering RTOs and RPOs for tier-1 systems. DR plan with
+    annual tabletop exercise.
+  layer: documented
+  domains: [organizational]
+  maturity: 2
+  evidences:
+    - type: procedure
+      ref: bcp-v1.0-draft
+
+- id: DOC-PPL-001
+  name: Security Awareness Training Programme
+  description: >
+    Mandatory annual security awareness training for all staff.
+    Phishing simulation quarterly.
+  layer: documented
+  domains: [people]
+  maturity: 4
+  evidences:
+    - type: test_result
+      ref: lms-completion-rate-94pct-q1-2025
+    - type: log
+      ref: phishing-sim-results-2025-03
+
+- id: DOC-PPL-002
+  name: Pre-Employment Screening
+  description: >
+    Background checks (criminal record, employment history) required
+    before access to production systems.
+  layer: documented
+  domains: [people]
+  maturity: 3
+  evidences:
+    - type: policy
+      ref: hr-screening-policy-v1.1
+
+- id: DOC-PPL-003
+  name: Security Responsibilities in Employment Agreements
+  description: >
+    NDA and acceptable use clauses in all employment contracts.
+    Reviewed by legal on hire.
+  layer: documented
+  domains: [people]
+  maturity: 4
+  evidences:
+    - type: policy
+      ref: contract-template-sec-clauses-2024
+
+- id: DOC-PPL-004
+  name: Disciplinary Process for Security Violations
+  description: >
+    Documented process for handling insider threat incidents and
+    policy violations, mapped to HR disciplinary framework.
+  layer: documented
+  domains: [people]
+  maturity: 2
+  review_required: false
+  evidences:
+    - type: policy
+      ref: hr-disciplinary-framework-s4
+
+- id: DOC-TECH-001
+  name: Vulnerability Management — Scanner and Triage
+  description: >
+    Grype integrated in CI pipeline. Weekly Trivy scans on container
+    registry. Manual triage backlog tracked in Jira.
+  layer: documented
+  domains: [technological]
+  maturity: 3
+  evidences:
+    - type: test_result
+      ref: grype-ci-integration-2025
+    - type: log
+      ref: jira:vuln-backlog-2025-Q1
+
+- id: DOC-TECH-002
+  name: Identity and Access Management — MFA
+  description: >
+    MFA mandatory for all production access and VPN. Enforced via
+    Okta for SaaS and AWS IAM for cloud workloads.
+  layer: documented
+  domains: [technological]
+  maturity: 4
+  evidences:
+    - type: log
+      ref: okta-mfa-enrolment-rate-2025
+    - type: policy
+      ref: iam-policy-v3.0
+
+- id: DOC-TECH-003
+  name: Cryptography and Key Management
+  description: >
+    AES-256 at rest, TLS 1.3 in transit. KMS used for key lifecycle.
+    Key rotation policy 12 months for data keys, 90 days for signing keys.
+  layer: documented
+  domains: [technological]
+  maturity: 4
+  evidences:
+    - type: policy
+      ref: crypto-policy-v2.2
+    - type: architecture
+      ref: kms-architecture-diagram-2024
+
+- id: DOC-TECH-004
+  name: Network Security — Segmentation and Perimeter
+  description: >
+    VPC-based segmentation. WAF in front of public endpoints.
+    Security groups reviewed quarterly.
+  layer: documented
+  domains: [technological]
+  maturity: 4
+  evidences:
+    - type: architecture
+      ref: aws-vpc-topology-2025
+    - type: policy
+      ref: network-sec-policy-v1.3
+
+- id: DOC-TECH-005
+  name: SAST and DAST Integration
+  description: >
+    Semgrep SAST runs on every PR. DAST scheduled post-release
+    in staging. Results reviewed by AppSec lead.
+  layer: documented
+  domains: [technological]
+  maturity: 3
+  evidences:
+    - type: test_result
+      ref: semgrep-ci-config-main
+    - type: procedure
+      ref: dast-schedule-q2-2025

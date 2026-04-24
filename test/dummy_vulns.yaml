@@ -1,6 +1,0 @@
-vulnerabilities:
-  - cve_id: "CVE-2024-XXXX"
-    cvss_base: 7.1
-    epss_score: 0.1
-    component: "com.example:test-lib:1.0.0"
-    reachable: true

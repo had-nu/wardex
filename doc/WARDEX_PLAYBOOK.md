@@ -1,7 +1,7 @@
 # Wardex Implementation Playbook
 
-**Version:** v1.7.2  
-**Status:** Official Operational Guide  
+**Version:** v1.8.0
+**Status:** Official Operational Guide
 **Audience:** CISO, DevSecOps Leads, Compliance Officers, Platform Engineers
 
 ---
@@ -21,7 +21,7 @@ Wardex is not a compliance checklist; it is a **Risk-Contextualized Decision Eng
 **Objective:** Determine the current state of ISO 27001 compliance.
 **Execution:**
 ```bash
-./bin/wardex --framework iso27001 ./my-current-controls.yaml
+wardex assess --framework iso27001 ./my-current-controls.yaml
 ```
 **Analyst's Insight:** Focus on the **Roadmap** section. Wardex prioritizes gaps not just by "missing item", but by the `BaseScore` impact. Address the top 3 items to maximize compliance gain with minimum effort.
 
@@ -85,15 +85,13 @@ wardex --snapshot-file jan-snapshot.json ./controls-new.yaml
 
 ---
 
-### [Intelligence Play 11] Security Posture Assessment (v1.7.2)
+### [Intelligence Play 11] Security Posture Assessment (v1.8.0)
 **Objective:** Generate an executive-level intelligence report on organizational posture.
 **Execution:**
-Using the SDK or the integrated reporting engine:
-```go
-result, _ := sdk.Analyze(controls, "iso27001")
-fmt.Printf("Posture Index: %.1f", result.Posture.GlobalIndex)
+```bash
+wardex assess documented-controls.yaml implemented-controls.yaml --assets assets.yaml
 ```
-**Analyst's Insight:** Use the **Posture Index** for Board Reporting. It accounts for control impact and maturity, providing a much more accurate "Security Credit Score" than simple compliance counts.
+**Analyst's Insight:** Use the **Layer Delta** to identify "Paper Security" (documented but not implemented). Use **Asset Compliance** to see which specific business units or systems are falling behind.
 
 ---
 
@@ -111,10 +109,10 @@ fmt.Printf("Posture Index: %.1f", result.Posture.GlobalIndex)
 ## Appendix B: Governance & Risk Management Guide
 
 ### 1. Defining Risk Appetite
-Risk Appetite is the threshold where Wardex triggers a `BLOCK`.
-- **High (0.3 - 0.8)**: Critical Infrastructure, Banking, Healthcare.
-- **Moderate (1.0 - 2.5)**: B2B SaaS, FinTech, E-commerce.
-- **Low (3.0+)**: Internal tools, Sandboxes, Non-critical marketing sites.
+Risk Appetite is the threshold where Wardex triggers a `BLOCK`. Scale is [0, 1.5].
+- **High (0.1 - 0.3)**: Critical Infrastructure (DORA, NIS2).
+- **Moderate (0.4 - 0.7)**: Banking, Healthcare, FinTech.
+- **Low (0.8 - 1.5)**: B2B SaaS, E-commerce, Internal tools.
 
 ### 2. Review Cycles
 - **Quarterly**: Full Gap Analysis and Snapshot generation.

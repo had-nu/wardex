@@ -14,6 +14,7 @@ import (
 func EvaluateCoverage(maps []model.Mapping, controls []model.ExistingControl) (model.CoverageStatus, []string) {
 	var reasons []string
 
+	hasImplemented := false
 	hasHighConfidence := false
 	hasMaturity := false
 	hasEvidence := false
@@ -32,26 +33,32 @@ func EvaluateCoverage(maps []model.Mapping, controls []model.ExistingControl) (m
 			continue
 		}
 
-		if m.Confidence == "high" {
-			hasHighConfidence = true
-		} else {
-			reasons = append(reasons, fmt.Sprintf("Controle '%s' tem matching inferido apenas (low confidence)", ec.ID))
-		}
+		if ec.Layer == model.LayerImplemented {
+			hasImplemented = true
 
-		if ec.Maturity >= 3 {
-			hasMaturity = true
-		} else {
-			reasons = append(reasons, fmt.Sprintf("Controle '%s' tem maturidade %d (mínimo 3 exigido)", ec.ID, ec.Maturity))
-		}
+			if m.Confidence == "high" {
+				hasHighConfidence = true
+			} else {
+				reasons = append(reasons, fmt.Sprintf("Controle '%s' (implemented) tem matching inferido apenas (low confidence)", ec.ID))
+			}
 
-		if len(ec.Evidences) > 0 {
-			hasEvidence = true
+			if ec.Maturity >= 3 {
+				hasMaturity = true
+			} else {
+				reasons = append(reasons, fmt.Sprintf("Controle '%s' (implemented) tem maturidade %d (mínimo 3 exigido)", ec.ID, ec.Maturity))
+			}
+
+			if len(ec.Evidences) > 0 {
+				hasEvidence = true
+			} else {
+				reasons = append(reasons, fmt.Sprintf("Controle '%s' (implemented) não tem evidências declaradas", ec.ID))
+			}
 		} else {
-			reasons = append(reasons, fmt.Sprintf("Controle '%s' não tem evidências declaradas", ec.ID))
+			reasons = append(reasons, fmt.Sprintf("Controle '%s' está apenas documentado (Paper Security)", ec.ID))
 		}
 	}
 
-	if hasHighConfidence && hasMaturity && hasEvidence {
+	if hasImplemented && hasHighConfidence && hasMaturity && hasEvidence {
 		return model.StatusCovered, nil
 	}
 

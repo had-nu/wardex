@@ -18,3 +18,14 @@ security:
   enforce_actor_trust: true
   # Fallback risk for unknown vectors (Safe-path)
   fail_close_default: 1.0
+
+# Release Gate Context
+release_gate:
+  enabled: true
+  risk_appetite: 0.20        # Normalized scale [0, 1.5]
+  warn_above: 0.12           # Warning threshold
+  mode: any                  # "any" | "aggregate"
+  asset_context:
+    criticality: 0.8         # C(α)
+    internet_facing: true    # E(α) input
+    requires_auth: true      # E(α) input

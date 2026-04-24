@@ -10,17 +10,19 @@ A complexidade interna subjacente não impacta a eficiência temporal nem logís
 As rotinas foram concebidas adotando mapeamento de modelos padronizados, por forma a ser totalmente imune à semântica local das especificações particulares da organização:
 * Os módulos aceitam `YAML`, `JSON` e exportações em `CSV`.
 * O mecanismo implementa validações do schema obrigatório exigindo campos como `ID` e `Maturidade` desde logo, para impedir a geração de modelos imperfeitos para as componentes downstream que tomam a decisão avaliatória primária.
-* A avaliação procede a uma análise dupla entre "Correlação Elevada (High)" e "Correlação de Nível Deduzido (Inferential/Low)". Se uma organização usa "NIST", mas o Wardex utiliza a ISO 27001 como matriz de avaliação, o Correlacionador usa mapeamento estrito por `Domains`, saltando para mapeamento via Regex simplificado nos elementos lexicais contidos em descrições de `Name` ou `Description` para as correlações Inferidas de Baixo Nível. O resultado não bloqueia a compatibilidade internacional da infraestrutura GRC independente caso os domínios divirjam pontualmente, embora assinale explicitamente que a correlação exige curadoria extra para validação humana através das restrições de "Partial Coverages". 
+* A avaliação procede a uma análise dupla entre "Correlação Elevada (High)" e "Correlação de Nível Deduzido (Low)". Se uma organização usa "NIST", mas o Wardex utiliza a ISO 27001 como matriz de avaliação, o Correlacionador usa a interseção de domínios para alta confiança e o método `strings.Contains` em palavras-chave para as correlações de baixo nível. O resultado não bloqueia a compatibilidade internacional da infraestrutura GRC independente caso os domínios divirjam pontualmente, embora assinale explicitamente que a correlação exige curadoria extra para validação humana através das restrições de "Partial Coverages". 
 
 ### 2. Máquina Analítica e de Classificação (`pkg/scorer`, `pkg/analyzer`)
-Na etapa avaliativa, o Scorer traduz instâncias isoladas em maturidade baseada em domínios ISO (A.5 à A.8), permitindo que relatórios expressem, em vez de lacunas obscuras e técnicas singulares, défices amplos nas políticas formativas gerais de Gestão do Capital Humano, Organizacional, Tecnológico ou Físico (Facility Controls). Aqui insere-se a importância orgânica do Peso Contextual (`context_weight`). Base Scores puros, gerados arbitrariamente sobre controlos estáticos (Ex: Utilização Criptografia Têm Nível 10 - Elevado), não importam unicamente num modelo funcionalista, o que motivou a arquitetura do Scorer de prever multiplicadores explícitos geríveis centralmente do lado do cliente entre a gama conservadora standard de [0.5, 2.0] a fim de normalizar prioridades face à urgência autística dos outputs do *vendor* nativo.
+Na etapa avaliativa, o Scorer traduz instâncias isoladas em maturidade baseada em domínios ISO (A.5 à A.8). A pontuação de maturidade por domínio é calculada na v1.8.0 como a média da maturidade efectiva (`EffectiveMaturity`) dos controlos cobertos, permitindo uma visão realista da postura técnica.
+* **Layer Delta (`ComputeLayerDelta`)**: Identifica o desvio entre o que o infosec declarou (Paper Security) e o que os scanners/ferramentas confirmaram (Shadow Security).
+* **Asset Assessment (`AssessAssets`)**: Mapeia controlos a activos específicos, permitindo auditorias contextuais por unidade de negócio ou sistema crítico.
 
 ### 3. A Mecânica do Gate "Risk-Based" (`pkg/releasegate`)
 A espinha dorsal operatória está na componente formal das Decisões de Avaliação Contínuas por Submissão (Gate Evaluations). Como discutido em relação ao Valor do Negócio (`BUSINESS_VIEW.md`), o Gate incorpora uma equação de matemática probabilística que processa em profundidade:
 
 O Wardex utiliza um modelo de risco contextual purificado para a tomada de decisão:
 
-$$R(v, \alpha) = CVSS(v) \times EPSS(v) \times C(\alpha) \times E(\alpha) \times (1 - \Phi(\alpha))$$
+$$R(v, \alpha) = (CVSS(v)/10) \times EPSS(v) \times C(\alpha) \times E(\alpha) \times (1 - \Phi(\alpha))$$
 
 Onde:
 *   **$CVSS(v)$**: Gravidade intrínseca da vulnerabilidade (NVD).
@@ -31,7 +33,7 @@ Onde:
 
 O Wardex permite forçar a interrupção através de "Hard Gates", limitando explicitamente a probabilidade de aprovar Submissões sob modo **Aggregated** (se a soma de todos os pequenos scores for superior ao risco admissível geral) e/ou perante execuções isoladas via mecânica standard (O vetor base **ANY**). Existem três bandas possíveis: `ALLOW`, `WARN` (risco excede `warn_above` mas aceitável), e `BLOCK` (excede limite fatal `risk_appetite`). Isto proporciona flexibilidade operacional vital à gestão de tolerância progressiva das empresas.
 
-A adoção progressiva deste módulo inferida de `InferMaturityLevel()` produz pontuação analítica do Gate num ranking em camadas baseadas em variáveis providenciadas (Level 1 a Level 5). Esse número alimenta organicamente os "Technological Control Scores", criando um ciclo reflexivo orgânico face aos progressos alcançados da ferramenta CI inserido integralmente num sistema ISO superior. Ao documentar mais características, a maturidade pontual tecnológica global do negócio acresce.
+A adoção progressiva deste módulo inferida de `InferMaturityLevel()` produz pontuação analítica do Gate num ranking em camadas baseadas em variáveis providenciadas (Level 1 a Level 5). Ao documentar mais características, a maturidade pontual tecnológica global do negócio acresce.
 
 ### 4. Gestão do Delta de Conformidade Incremental (`pkg/snapshot`)
 Para gerir fluxos perfeitamente funcionais em metodologias ágeis de monitorização cíclica (CICD) - exigência suprema contemplada através da Regra do Aperfeiçoamento Incremental Contínuo prevista sob regulamentação da ISO Cláusula 10.2, - concebeu-se uma rotina nativa na exportação e compilação do rasto serializado em ficheiros `.wardex_snapshot.json`. Esta persistência elementar executa o diferencial delta, traduzindo no momento de elaboração dos relatórios subsequentes dados numéricos absolutos entre falhas novas, resolvidas à data, reduções de riscos e o respetivo acréscimo de avanço de percentil da Conformidade de Segurança da Rede sem interrupções nem interações das equipas envolvidas do Q.A (Qualidade / Assurance) do ambiente laboratorial da empresa para documentação exterior ou de entidades inspetórias de *Auditoria ISO Oficial*.
@@ -40,14 +42,14 @@ Para gerir fluxos perfeitamente funcionais em metodologias ágeis de monitoriza�
 A arquitetura do **Wardex** não estaria completa sem uma fundação de testes robusta de modo a suportar os fluxos altamente sensíveis de Segurança e Integridade das pipelines (CI). O código fonte atende a dois espectros essenciais de garantia e qualidade:
 
 1. **Unit Testing Exaustivo**: Todos os submódulos (`analyzer`, `correlator`, `ingestion`, `releasegate`, `report`, `scorer`, `snapshot`) possuem as respetivas suítes de teste (ex: `TestRiskBasedGateVsBinaryThreshold`, `TestGateMaturityInference`) para validar a exatidão das equações e saídas. As validações assentam primordialmente no cálculo comparativo das variáveis em *hard-coded* assegurando que desvios acidentais e de refatorações geram regressões iminentemente reportadas visíveis.
-2. **Native Go Fuzzing**: Sendo que o Wardex processa invariavelmente controlos YAML, JSON e CSV como inputs primários (e frequentemente provindos de *data lakes* de terceiros corrompidos ou não estruturados), implementou-se em `pkg/ingestion/ingestion_fuzz_test.go` o motor Nativo de Fuzzing de Go (`go test -fuzz`). A bateria aplica estritamente mutações em centenas de milhares de sequências binárias randomizadas para avaliar ruturas catastróficas dos parsers ("*Panics*"). Com execuções que já ultrapassaram o crivo de milhões de execuções imperfeitas com *Zero Panics*, garante-se que o CLI encerra com erros controlados sem interromper bruscamente a rotina do pipeline ou expor falhas de memória (memory leaks) sob estresse massivo.
+2. **Native Go Fuzzing**: Sendo que o Wardex processa invariavelmente controlos YAML, JSON e CSV como inputs primários, implementou-se em `pkg/ingestion/ingestion_fuzz_test.go` o motor Nativo de Fuzzing de Go (`go test -fuzz`). O motor valida campos obrigatórios e rejeita linhas malformadas, garantindo que o CLI encerra com erros controlados sem interromper bruscamente a rotina do pipeline ou expor falhas de memória (memory leaks) sob estresse massivo.
 
 ### 6. Sistema de Aceitação de Risco Assinado (`pkg/accept`)
-Para suportar exceções justificadas ao *Release Gate*, o Wardex integra um sub-sistema isolado encarregue da *Aceitação Formal de Risco* com validação de adulteração state-of-the-art:
+Para suportar exceções justificadas ao *Release Gate*, o Wardex integra um sistema unificado em `pkg/accept` encarregue da *Aceitação Formal de Risco* com validação de adulteração state-of-the-art:
 
-* **Integridade Criptográfica (`pkg/accept/signer`)**: Recusa o uso de segredos na base de código, exigindo variáveis de ambiente restritas para injetar as chaves na assinatura HMAC-SHA256 gerada para cada payload excecional (`id|cve|owner|timestamp|...`).
-* **Validação por Design (`pkg/accept/verifier`)**: Todas as exceções passam obrigatoriamente pelas rotinas de carga de memória estritas de `store.Load()`. O sistema implementa o padrão "Fail-Closed" e aborta com Exit Codes rigorosos (`3` para adulterações/tampering ou configurações obsoletas pós-*drift*, `4` em casos de logs truncados). Mais detalhes em [EXIT_CODES.md](EXIT_CODES.md).
-* **Auditoria Imutável e Forwarding (`pkg/accept/audit` & `pkg/accept/forwarder`)**: Mantém compatibilidade SIEM instantânea. Todos os passos ("created", "revoked", "expired") escrevem matrizes `JSONL` locais com timestamps assinalados para a zona global UTC antes de efetuar *Log Forwarding* simultâneo por *Multiplexer* para Syslog, Webhooks HTTP, ou sub-sistemas em Cloud (AWS CloudWatch, GCP Logging ativáveis via *build tags* nativas sem aumentar o peso estático dos binários base).
+* **Integridade Criptográfica**: Recusa o uso de segredos na base de código, exigindo variáveis de ambiente restritas (`WARDEX_ACCEPT_SECRET`) para assinar payloads HMAC-SHA256.
+* **Validação por Design**: Todas as exceções passam por rotinas de carga estritas. O sistema implementa o padrão "Fail-Closed" e aborta com Exit Codes rigorosos (`3` para adulterações/tampering ou configurações obsoletas pós-*drift*).
+* **Auditoria Imutável**: Regista todos os passos ("created", "revoked", "expired") em matrizes `JSONL` locais (`wardex-accept-audit.log`) para integração com SIEM.
 
 ### 7. Testando o Módulo de Aceitação Localmente
 
@@ -55,7 +57,7 @@ Para validar em profundidade o comportamento criptográfico da aceitação de ri
 
 1. **Geração do *Dummy Report* Base**: O *Gate* avalia vulnerabilidades passadas como argumento (ex. via Grype) com a matriz de políticas YAML da sua empresa. Execute primeiro a validação primária:
    ```bash
-   wardex --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml --output=json --out-file=report.json
+    wardex assess --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml --output=json --out-file=report.json
    ```
 
 2. **Injetar Segredo de Assinatura via Config e EnvVars**: O mecanismo obriga à verificação do `hmac_secret_env` contido na policy original da organização para proibir *bypasses* estáticos:

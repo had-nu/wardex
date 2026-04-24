@@ -27,13 +27,14 @@ type GatePracticeStatus struct {
 
 // Finding representa o resultado da análise de um controle da Annex A.
 type Finding struct {
-	Control        CatalogControl
-	Status         CoverageStatus
-	FinalScore     float64
-	CoveredBy      []Mapping
-	GapReasons     []string
-	Recommendation string
-	GatePractice   *GatePracticeStatus // não-nil se o controle tem práticas de gate
+	Control           CatalogControl
+	Status            CoverageStatus
+	FinalScore        float64
+	EffectiveMaturity float64 // Média aritmética dos controlos cobertos (v1.8.0 fix)
+	CoveredBy         []Mapping
+	GapReasons        []string
+	Recommendation    string
+	GatePractice      *GatePracticeStatus // não-nil se o controle tem práticas de gate
 }
 
 // DomainSummary resume a cobertura e maturidade de um domínio.
@@ -72,9 +73,11 @@ type Delta struct {
 
 // GapReport é o relatório completo.
 type GapReport struct {
-	Summary  ExecutiveSummary
-	Findings []Finding
-	Roadmap  []Finding // Subset de gaps/partials, ordenado por FinalScore desc
-	Gate     *GateReport
-	Delta    *Delta
+	Summary         ExecutiveSummary
+	Findings        []Finding
+	Roadmap         []Finding // Subset de gaps/partials, ordenado por FinalScore desc
+	Gate            *GateReport
+	Delta           *Delta
+	LayerDelta      *LayerDelta       `json:"layer_delta,omitempty"`
+	AssetCompliance []AssetCompliance `json:"asset_compliance,omitempty"`
 }

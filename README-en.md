@@ -2,16 +2,10 @@
 
 ![Wardex Lockup](pkg/ui/wardex-lockup.svg)
 
-```text
-   (●───────────────────────)  WARDEX  ·  risk-based release gate  v1.7.2
-```
-
-[![Wardex](https://img.shields.io/badge/Risk--based_Release-Wardex_v1.7.2-FF00FF?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHRleHQgeD0iMiIgeT0iMTQiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE2IiBmb250LWZhbWlseT0ic2VyaWYiPs6pPC90ZXh0Pjwvc3ZnPgo=)](https://github.com/had-nu/wardex)
-![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)
+[![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
-![ISO-27001](https://img.shields.io/badge/Compliance-ISO_27001%3A2022-8A2BE2?style=flat-square&logo=checkmarx&logoColor=white)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-8A2BE2.svg?style=flat-square&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
-[![Powered by lazy.go](https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square&logo=go&logoColor=white)](https://github.com/had-nu/lazy.go)
+[![CI](https://github.com/had-nu/wardex/actions/workflows/ci.yml/badge.svg)](https://github.com/had-nu/wardex/actions/workflows/ci.yml)
+[![License: AGPL v3 / Commercial](https://img.shields.io/badge/License-AGPL_v3_%7C_Commercial-8A2BE2.svg?style=flat-square)](#licensing)
 
 <br>
 <a href="README-en.md">English</a> | <a href="README.md">Português</a>
@@ -20,215 +14,311 @@
 </div>
 
 > [!IMPORTANT]
-> **TeamPCP Attack Surface Motivation:** Following the "TeamPCP" campaign which weaponized security tools into attack vectors against diligent pipelines, Wardex has prioritized and accelerated its defensive hardening roadmap. Recent updates include SHA256 pinning for all Actions, strict workflow permission isolation, CDN integrity via SRI, and cryptographic provenance for all enrichment data. A full security post-mortem is forthcoming.
+> **Supply chain hardening (TeamPCP):** Following the TeamPCP campaign — which turned security tooling into attack vectors against CI/CD pipelines — Wardex accelerated its defensive hardening roadmap. GitHub Actions use SHA256 pinning, workflows declare minimal permissions explicitly, and EPSS enrichment payloads are cryptographically signed before entering the pipeline.
 
+---
 
-**Wardex** is a *Security Posture Intelligence* platform and a decision engine written in Go, designed to transform raw security data into actionable risk intelligence. Operating as both a standalone CLI and an embeddable SDK, it serves as an advanced *Risk-Based Release Gate* in CI/CD pipelines, mapping implemented controls against global frameworks (ISO 27001:2022, SOC 2, NIS 2, DORA) to calculate the real release risk — implementing CVSS as it was meant to be: enriched with exploitability scores (EPSS), business context, and compensating control effectiveness.
+**Wardex** is a CLI and Go library with two distinct purposes:
 
-## Why Wardex?
+1. **Risk-based release gate** — evaluates vulnerabilities in asset context (CVSS × EPSS × criticality × exposure × compensating controls) and decides ALLOW, WARN, or BLOCK. Replaces static CVSS thresholds.
 
-Check the documentation in `/doc` to understand the architectural vision and the business problems the tool solves:
-- [Business Vision (BUSINESS_VIEW.md)](doc/BUSINESS_VIEW.md)
-- [Technical Architecture and Math (TECHNICAL_VIEW.md)](doc/TECHNICAL_VIEW.md)
-- [Didactic Use Cases — 10 Complete Scenarios with Real Inputs & Outputs (USECASES.md)](doc/USECASES.md)
+2. **Compliance gap analysis** — compares controls documented by infosec against operationally confirmed controls, and maps both against a framework catalogue. Identifies real coverage, what exists only on paper (*paper security*), and what operates without a policy (*shadow security*).
 
-## Supported Frameworks (as of v1.5.0)
+The two modes are independent. You can use either one on its own.
 
-Wardex provides native mapping for the following compliance standards (via the `--framework` flag):
-- **ISO/IEC 27001:2022** (`iso27001` - default)
-- **SOC 2** (`soc2` - Trust Services Criteria)
-- **NIS 2** (`nis2` - EU Directive 2022/2555)
-- **DORA** (`dora` - Digital Operational Resilience Act)
+---
 
-## Build and Installation
+## Supported frameworks
 
-Ensure you have [Go (>= 1.26)](https://go.dev/doc/install) installed.
+ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA
 
-### Option 1: Global Installation (Recommended)
-You can install Wardex directly on your system, allowing you to run the `wardex` command anywhere:
+```bash
+wardex assess controls.yaml --framework iso27001  # default
+wardex assess controls.yaml --framework nis2
+wardex assess controls.yaml --framework dora
+```
+
+---
+
+## Installation
 
 ```bash
 go install github.com/had-nu/wardex@latest
 ```
-*(Ensure the `$(go env GOPATH)/bin` directory is included in your `$PATH` or environment)*
 
-### Option 2: Local Build from Source
-If you prefer to clone the repository to test or develop locally:
+Requires Go ≥ 1.26. Ensure `$(go env GOPATH)/bin` is in your `$PATH`.
+
+To build from source:
 
 ```bash
 git clone https://github.com/had-nu/wardex.git
-cd wardex
-make build
+cd wardex && make build
 ```
 
-### Upgrading to Latest Release
-When a new patch or minor version is released (e.g., `v1.1.1`), you can upgrade by fetching the latest code or tag and rebuilding:
+---
+
+## Compliance gap analysis
+
+Wardex compares what infosec has declared against what is operationally active, and identifies the delta against the framework.
+
+### Input
+
+Two YAML files with a `layer` field identifying the origin:
+
+```yaml
+# documented-controls.yaml — policies declared by infosec
+- id: CTRL-IAM-001
+  name: Multi-Factor Authentication
+  layer: documented
+  domains: [access_control]
+  maturity: 4
+  evidences:
+    - type: policy
+      ref: https://wiki.internal/sec/mfa-policy
+
+# implemented-controls.yaml — operationally confirmed controls
+# (produced by Bridgr or maintained manually)
+- id: CTRL-IAM-001
+  name: Multi-Factor Authentication
+  layer: implemented
+  domains: [access_control]
+  maturity: 4
+  effectiveness: 0.90
+  evidences:
+    - type: tool
+      ref: okta-mfa-config-2026
+```
+
+The same ID appearing in both files is the expected case: a control that is both declared and confirmed operational. IDs present in only one file are the signal of interest.
+
+### Running
 
 ```bash
-# For global installations
-go install github.com/had-nu/wardex@latest
-
-# For local builds (e.g., targeting a specific tag)
-git fetch --tags
-git status
-git checkout v1.7.1
-make build
+wardex assess documented-controls.yaml implemented-controls.yaml \
+  --framework iso27001 \
+  -o markdown
 ```
 
-Please refer to the [CHANGELOG.md](CHANGELOG.md) for detailed release notes and patch information.
+### What the report produces
 
-## What's New (v1.7.1)
+The report separates results into four compliance states:
 
-- **Governance Commands (Automation Ready)**: New subcommands for complex workflows: `wardex evaluate` (focused gate check), `wardex aggregate` (composite multi-framework decision), and `wardex policy check-expiry` (audit of YAML policy exceptions).
-- **Empirical Risk Calibration**: `Criticality` and `Exposure` parameters re-calibrated for Hospital (1.5), Startup (0.75), and Infrastructure (1.5) environments based on NVD/EPSS empirical analysis.
-- **Human-in-the-Loop EPSS Enrichment (HITL)**: Failed evaluations due to missing EPSS vectors (where Wardex assumes a "fail-close" 1.0) can now be enriched via the FIRST.org API.
-- **Strict Semantic Fail-Close**: The `0.05` fallback for unknown scores has been revoked to `0.0`. Without concrete data, Wardex assumes maximum risk.
+| Category | Meaning |
+|---|---|
+| **Covered** | Present in `implemented` layer, maturity >= 3, with operational evidence. |
+| **Paper security** | Documented only. No corresponding implemented control. (Policy Gap) |
+| **Shadow security** | Implemented but without a documented policy. |
+| **Gap** | Absent from both layers for a catalogue control. |
 
-## Usage
+The `LayerDelta` section identifies the real drift between intent (policy) and execution (code), exposing "compliance illusions".
 
-Wardex allows you to ingest policies in a simple YAML or JSON format, cross-reference vulnerabilities (e.g., Grype output) in a target file, and validate the gate:
+### With assets
+
+If your asset inventory is declared, the report produces a per-asset compliance table:
 
 ```bash
-./bin/wardex --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml
+wardex assess documented-controls.yaml implemented-controls.yaml \
+  --assets assets.yaml \
+  --framework iso27001 \
+  -o json --out-file posture.json
 ```
 
-This generates visual reports (in Markdown, CSV, or JSON) exposing the Maturity Analysis of the 4 global areas of ISO 27001 (People, Processes, Technological, and Physical) and executes decision policies (ALLOW / BLOCK / WARN) depending on the organization's calibrated risk.
+```yaml
+# assets.yaml — v1.8.0 Schema
+- id: ASSET-PAY-001
+  name: Payment API
+  type: application
+  criticality: 0.9
+  scope: [iso27001]
+  controls: [CTRL-IAM-001, CTRL-CRYPTO-002]
+  exposure:
+    internet_facing: true
+    network_zone: dmz
+    data_classification: restricted
+  threats:
+    - id: T-01
+      scenario: "API abuse"
+      likelihood: high
+  owner: platform-team
+```
 
-## GitHub Actions Integration (CI/CD)
+---
 
-Integrating **Wardex** into GitHub Actions transforms your pipeline into a real **Risk Governance** process. Wardex acts as a "Release Gate" immediately following your security scans.
+## Risk-based release gate
 
-Practical example:
+The gate evaluates vulnerabilities using the model:
+
+```
+R(v, α) = (CVSS(v)/10) × EPSS(v) × C(α) × E(α) × (1 − Φ(α))
+```
+
+CVSS is divided by 10 to normalise the scale: the product `(CVSS/10) × EPSS` lies in [0, 1], and the final output `R` in [0, 1.5]. Thresholds in `wardex-config.yaml` (`risk_appetite`, `warn_above`) are expressed on this same scale.
+
+`C` is asset criticality, `E` is effective exposure, and `Φ` is compensating control effectiveness (clamped at 0.80 — maximum 80% reduction, `1 − Φ` minimum 0.20).
+
+The result is compared against the `risk_appetite` defined in `wardex-config.yaml`. Three possible outcomes: `ALLOW`, `WARN`, `BLOCK`.
+
+### Configuration
+
+```yaml
+# wardex-config.yaml
+release_gate:
+  enabled: true
+  risk_appetite: 0.20
+  warn_above: 0.12
+  mode: any               # "any" blocks if any vuln exceeds threshold; "aggregate" uses sum
+  asset_context:
+    criticality: 0.8
+    internet_facing: true
+    requires_auth: true
+  compensating_controls:
+    - type: waf
+      effectiveness: 0.35
+```
+
+### The same CVE, four contexts
+
+The difference between ALLOW and BLOCK is not the CVE — it is the asset context.
+
+| CVE | CVSS | EPSS | [BANK] | [SAAS] | [INFRA] | [HOSP] |
+|---|---|---|---|---|---|---|
+| Log4Shell | 10.0 | 0.94 | **1.41** `BLOCK` | **0.75** `BLOCK` | **1.41** `BLOCK` | **1.13** `BLOCK` |
+| xz backdoor | 10.0 | 0.86 | **1.29** `BLOCK` | **0.69** `BLOCK` | **1.29** `BLOCK` | **1.03** `BLOCK` |
+| curl SOCKS5 | 9.8 | 0.26 | **0.38** `BLOCK` | **0.20** `WARN` | **0.38** `BLOCK` | **0.31** `BLOCK` |
+| minimist | 9.8 | 0.01 | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` |
+
+*R ∈ [0, 1.5]. Per-profile thresholds on the normalised scale — see `data/calibration.json`.*
+
+Calibrated against 237 real CVEs with live EPSS from FIRST.org (`data/dataset_2025-03-01.json`):
+
+| Profile | Appetite | BLOCK | ALLOW | % Block |
+|---|---|---|---|---|
+| Tier-1 Bank (DORA) | 0.5 | 176 | 57 | 74% |
+| Hospital (HIPAA) | 0.8 | 168 | 63 | 71% |
+| SaaS Start-up | 2.0 | 111 | 86 | 47% |
+| Energy/Utilities (NIS2) | 0.3 | 180 | 53 | 76% |
+
+### EPSS enrichment
+
+When your scanner does not include EPSS, Wardex assumes EPSS 1.0 (worst case) and blocks until explicit validation:
+
+```bash
+wardex enrich epss wardex-vulns.yaml --output epss-enrich.yaml
+wardex evaluate --epss-enrichment epss-enrich.yaml --gate vulns.yaml controls.yaml
+```
+
+Enrichment queries `api.first.org` and signs the result via HMAC-SHA256.
+
+### Format conversion
+
+```bash
+wardex convert grype results.json > vulns.yaml
+wardex convert sbom sbom.xml > vulns.yaml
+```
+
+### CI/CD integration
 
 ```yaml
 # .github/workflows/wardex-gate.yml
 jobs:
-  risk-governance:
+  risk-gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      # Secure Installation (v1.7.1)
+
       - name: Install Wardex
+        run: go install github.com/had-nu/wardex@latest
+
+      - name: Evaluate risk gate
         run: |
-          VERSION="v1.7.1"
-          curl -sSL "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" | tar -xz
-          sudo mv wardex /usr/local/bin/
-
-      # Risk Evaluation
-      - name: Evaluate Risk Gate
-        run: |
-          wardex --config ./doc/examples/wardex-config.yaml \
-                 --gate ./evidence.json \
-                 ./doc/examples/policy-nis2.yaml \
-                 --fail-above 0.9
+          wardex evaluate \
+            --config .wardex/config.yaml \
+            --gate vulns.yaml \
+            controls.yaml
+        # Exit 0 = ALLOW, Exit 10 = BLOCK, Exit 11 = compliance gap
 ```
-
-Check the example files to configure your pipeline:
-- [CI/CD Configuration (wardex-config.yaml)](doc/examples/wardex-config.yaml)
-- [Example NIS2/ISO27001 Policy (policy-nis2.yaml)](doc/examples/policy-nis2.yaml)
-
-## SDK Usage
-
-The **Wardex** architecture was designed with a strong separation of concerns (in the `pkg/` directory). This means that besides using the CLI, Wardex can be imported as a library SDK in any other Go project, such as a REST API, a GRC orchestration service, or a bot.
-
-Example of programmatic submission for *Risk-Based Release Gate* evaluation:
-
-```go
-package main
-
-import (
-	"fmt"
-
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/releasegate"
-)
-
-func main() {
-	// Configure the organization and asset context
-	gate := releasegate.Gate{
-		AssetContext: model.AssetContext{
-			Criticality:    0.9,
-			InternetFacing: true,
-			RequiresAuth:   true,
-		},
-		CompensatingControls: []model.CompensatingControl{
-			{Type: "waf", Effectiveness: 0.35},
-		},
-		RiskAppetite: 6.0,
-	}
-
-	vulns := []model.Vulnerability{
-		{CVEID: "CVE-2024-1234", CVSSBase: 9.1, EPSSScore: 0.84, Reachable: true},
-	}
-
-	// Evaluate compost risk directly within your code
-	report := gate.Evaluate(vulns)
-
-	fmt.Printf("The Gate decision for this release was: %s\n", report.OverallDecision)
-}
-```
-
-## Exception Management and Risk Acceptance
-
-When Wardex blocks a release for exceeding the allowable risk appetite, organizations can manage exceptions formally and audibility through the `wardex accept` subcommand:
-
-```bash
-# Request risk acceptance for a blocked vulnerability
-wardex accept request --report report.json --cve CVE-2024-1234 --accepted-by sec-lead@company.com --justification "Risk mitigated by external controls" --expires 30d
-
-# Verify the cryptographic integrity of all active acceptances
-wardex accept verify
-```
-
-Wardex guarantees the integrity of these exceptions using HMAC-SHA256 signatures, append-only audit logs (`JSONL`), and configuration drift detection.
-
-## Contextual Risk — Same CVE, 4 Decisions
-
-Wardex calculates: `FinalRisk = (CVSS x EPSS) x (1 - Compensation) x Criticality x Exposure`
-
-| CVE | CVSS | EPSS | [BANK] | [SAAS] | [INFRA] | [HOSP] |
-|---|---|---|---|---|---|---|
-| **Log4Shell** | 10.0 | 0.94 | **14.1** `BLOCK` | **3.5** `BLOCK` | **7.1** `BLOCK` | **11.3** `BLOCK` |
-| **xz backdoor** | 10.0 | 0.86 | **12.9** `BLOCK` | **3.2** `BLOCK` | **6.5** `BLOCK` | **10.3** `BLOCK` |
-| **curl SOCKS5** | 9.8 | 0.26 | **3.8** `BLOCK` | **1.0** `ALLOW` | **1.9** `BLOCK` | **3.1** `BLOCK` |
-| **minimist** | 9.8 | 0.01 | **0.1** `ALLOW` | **0.0** `ALLOW` | **0.1** `ALLOW` | **0.1** `ALLOW` |
-
-Validated with **237 real CVEs** and live EPSS scores from FIRST.org:
-
-| Profile | Appetite | BLOCK | ALLOW | % Block |
-|---|---|---|---|---|
-| [BANK] Tier-1 Bank (DORA) | 0.5 | **176** | 57 | 74% |
-| [HOSP] Hospital (HIPAA) | 0.8 | **168** | 63 | 71% |
-| [SAAS] Startup SaaS | 2.0 | **111** | 86 | 47% |
-| [INFRA] Utilities (NIS2) | 0.3 | **180** | 53 | 76% |
-
-Full report: [EPSS Multi-Context Stress Test Report](doc/epss-stress-test-report.md)
-
-## Local Policy Management
-
-Wardex enables granular management of compliance policies by framework and domain (e.g., ISO 27001) using a simple, validatable YAML schema. Instead of manually creating or editing large files, you can use the `policy` subcommand to safely manipulate controls via automation:
-
-```bash
-# Validates all domain YAML files, ensuring the schema remains unbroken
-wardex policy validate frameworks/iso27001/
-
-# Lists the compliance status of all controls in a readable tabular format
-wardex policy list frameworks/iso27001/
-
-# Safely upserts a single control entry without breaking manual YAML syntax
-wardex policy add \
-  --file frameworks/iso27001/technological_controls.yml \
-  --id A.8.5 \
-  --title "Secure authentication" \
-  --status partial \
-  --owner "Security Team" \
-  --note "MFA enforced; hardware tokens pending rollout"
-```
-
-This ensures policy files map structurally to the expected `wardex` schema, simplifying audit requests and native repo integration for pure Governance-as-Code.
 
 ---
-<div align="center">
-  <a href="https://github.com/had-nu/lazy.go"><img src="https://img.shields.io/badge/Powered_by-lazy.go-8A2BE2?style=flat-square" alt="Powered by lazy.go"></a>
-</div>
+
+## Risk acceptance
+
+When the gate blocks and there is a business case for proceeding, Wardex formalises the exception with a named owner, justification, and TTL. Silent expirations and configuration drift are detected automatically.
+
+```bash
+# Request acceptance
+wardex accept request \
+  --report report.json \
+  --cve CVE-2024-1234 \
+  --accepted-by sec-lead@company.com \
+  --justification "WAF mitigates the attack vector; patch scheduled for Q3" \
+  --expiry 90d
+
+# Verify integrity of all active acceptances
+wardex accept verify
+
+# List acceptances and status
+wardex accept list --active
+```
+
+Acceptances are signed with HMAC-SHA256 and recorded in an append-only log (JSONL). Wardex rejects acceptances that have expired, been tampered with, or whose `wardex-config.yaml` has drifted since signing.
+
+---
+
+## SDK
+
+```go
+import "github.com/had-nu/wardex/pkg/sdk"
+
+controls, _ := sdk.LoadControls("./controls.yaml")
+result, _   := sdk.Analyze(controls, "iso27001")
+
+fmt.Printf("Coverage: %.1f%%\n", result.Summary.GlobalCoverage)
+```
+
+For the release gate:
+
+```go
+import (
+    "github.com/had-nu/wardex/pkg/model"
+    "github.com/had-nu/wardex/pkg/releasegate"
+)
+
+gate := releasegate.Gate{
+    AssetContext: model.AssetContext{
+        Criticality:    0.9,
+        InternetFacing: true,
+        RequiresAuth:   true,
+    },
+    CompensatingControls: []model.CompensatingControl{
+        {Type: "waf", Effectiveness: 0.35},
+    },
+    RiskAppetite: 0.20,
+}
+
+report := gate.Evaluate([]model.Vulnerability{
+    {CVEID: "CVE-2024-1234", CVSSBase: 9.1, EPSSScore: 0.84, Reachable: true},
+})
+
+fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
+```
+
+---
+
+## Documentation
+
+- [Architecture and internals](doc/TECHNICAL_VIEW.md)
+- [Business context and the binary gate problem](doc/BUSINESS_VIEW.md)
+- [Playbook — use cases with full commands](doc/WARDEX_PLAYBOOK.md)
+- [GitHub Actions integration](doc/github-actions-integration.md)
+- [Exit codes](internal/doc/EXIT_CODES.md)
+- [CHANGELOG](CHANGELOG.md)
+
+---
+
+## Licensing
+
+Dual-licensed:
+
+**AGPL-3.0 (free):** use in internal CI/CD pipelines or in open-source projects that make their source available.
+
+**Commercial licence (paid):** embedding in proprietary products, SaaS platforms, or distribution without opening source. See the [Commercial Terms](doc/COMMERCIAL_LICENSE.md) or contact **andre_ataide@proton.me**.

@@ -30,11 +30,23 @@ Em vez de bloquear os pipelines por intermédio dos parâmetros estáticos do CV
 
 A resposta ao cálculo destes fatores dá-nos a ponderação global: o **Risco do Release (Release Risk)**. 
 
+### Exemplo de Normalização do Risco (v1.8.0)
+
+Com a normalização da escala [0, 1.5], os valores de risco tornam-se intuitivos e comparáveis entre diferentes perfis de ativos.
+
+| CVE | CVSS | EPSS | Perfil Banco (C=1.5) | Perfil SaaS (C=0.75) |
+|---|---|---|---|---|
+| **Log4Shell** | 10.0 | 0.94 | **1.41** `BLOCK` | **0.75** `BLOCK` |
+| **xz backdoor** | 10.0 | 0.86 | **1.29** `BLOCK` | **0.69** `BLOCK` |
+| **minimist** | 9.8 | 0.01 | **0.01** `ALLOW` | **0.01** `ALLOW` |
+
+*Nota: Valores calculados com E=1.0 e Φ=0 para demonstração. O Log4Shell num banco (C=1.5) atinge 1.41 (quase o máximo de 1.5), enquanto numa startup SaaS (C=0.75) fica em 0.75.*
+
 Um bloqueio é invocado quando este cálculo global e ajustado suplanta os critérios declarados do **Apetite de Risco** que as diretorias de Segurança das organizações definiram previamente de acordo com a sua postura contra danos tangíveis à sustentabilidade global do negócio. Deste modo, um bloqueio representa sempre e na verdade um sinal sonoro fidedigno de risco empresarial palpável e não um mero alerta puramente técnico, reduzindo os falsos positivos a uma margem nula ou razoável para a cadência evolutiva programada dos projetos.
 
 ## Transparência GRC através de Contexto Orientado a Código
 
-Enquanto o Release Gate oferece as melhorias operacionais palpáveis descritas no CI/CD, a outra componente do **Wardex** fornece visibilidade constante (Dashboarding Textual) às operações GRC na infraestrutura de Controlos de Segurança contínua imposta pela adoção do modelo rigoroso da ISO/IEC 27001:2022. Ao importar configurações já adotadas pelas equipas utilizando formatos comuns como YAML e CSV (oriundos na grande generalidade pelo output de frameworks tradicionais em ferramentas ERP / GRC), o Wardex permite gerar e mapear relatórios automáticos que demonstram o delta visível de cobertura dos controlos que faltam aplicar face aos exigidos pelas normativas reguladoras e à pontuação expectável da auditoria com rigor audível e registada a cada execução na pipeline.
+Enquanto o Release Gate oferece as melhorias operacionais palpáveis descritas no CI/CD, a outra componente do **Wardex** fornece visibilidade constante (Dashboarding Textual) às operações GRC na infraestrutura de Controlos de Segurança contínua imposta pela adoção do modelo rigoroso da ISO/IEC 27001:2022. A partir da v1.8.0, o Wardex introduz o mapeamento de controlos a activos individuais (assets), permitindo responder estruturadamente à questão: "quais os activos atendem ao compliance?". Ao importar configurações já adotadas pelas equipas utilizando formatos comuns como YAML e CSV (oriundos na grande generalidade pelo output de frameworks tradicionais em ferramentas ERP / GRC), o Wardex permite gerar e mapear relatórios automáticos que demonstram o delta visível de cobertura dos controlos que faltam aplicar face aos exigidos pelas normativas reguladoras e à pontuação expectável da auditoria com rigor audível e registada a cada execução na pipeline.
 
 Ao cruzar avaliações diárias operacionais e dinâmicas com os requisitos formais de certificação internacional, o **Wardex** materializa o conceito do "Compliance as Code". A aprovação da gestão já não requer compilações gigantescas de folhas de Excel realizadas anualmente por auditores. Ela torna-se o sub-produto transparente dos fluxos normais de auditoria constante do trabalho transacional dos Engenheiros e Developers, unindo as expectativas estratégicas e fiscais com as restrições realistas da tecnologia e das limitações das janelas de release de produto de topo.
 
