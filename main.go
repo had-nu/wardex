@@ -10,10 +10,13 @@ import (
 
 	"github.com/had-nu/wardex/cmd/aggregate"
 	"github.com/had-nu/wardex/cmd/assess"
+	"github.com/had-nu/wardex/cmd/configseal"
 	"github.com/had-nu/wardex/cmd/convert"
 	"github.com/had-nu/wardex/cmd/evaluate"
+	"github.com/had-nu/wardex/cmd/keygen"
 	"github.com/had-nu/wardex/cmd/policy"
 	"github.com/had-nu/wardex/cmd/simulate"
+	trustcmd "github.com/had-nu/wardex/cmd/trust"
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
 	"github.com/had-nu/wardex/pkg/accept"
@@ -35,7 +38,7 @@ import (
 )
 
 var (
-	Version       = "1.8.0"
+	Version       = "1.9.0"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -96,6 +99,9 @@ func init() {
 	rootCmd.AddCommand(evaluate.EvaluateCmd)
 	rootCmd.AddCommand(aggregate.AggregateCmd)
 	rootCmd.AddCommand(assess.AssessCmd)
+	rootCmd.AddCommand(keygen.KeygenCmd)
+	rootCmd.AddCommand(trustcmd.TrustCmd)
+	rootCmd.AddCommand(configseal.ConfigCmd)
 	cli.AddCommands(rootCmd, &configPath)
 	enrichCli.AddCommands(rootCmd, &configPath)
 }

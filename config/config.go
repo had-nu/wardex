@@ -86,7 +86,7 @@ func Load(path string) (*Config, error) {
 		if os.IsNotExist(err) {
 			// Return defaults
 			return &Config{
-				ReleaseGate: ReleaseGate{Mode: "any", RiskAppetite: 10.0},
+				ReleaseGate: ReleaseGate{Mode: "any", RiskAppetite: 0.0},
 			}, nil
 		}
 		return nil, fmt.Errorf("reading config file: %w", err)
