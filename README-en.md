@@ -264,6 +264,26 @@ Acceptances are signed with HMAC-SHA256 and recorded in an append-only log (JSON
 
 ---
 
+## Governance: Trust Store & Sealed Config (WexState)
+
+For **DORA** compliance and non-repudiable chains of custody, Wardex allows sealing risk policies (`wardex-config.yaml`) into a signed cryptographic envelope (`.wexstate`).
+
+*   **Strong Identity**: Based on Ed25519 keys for Admins, CISOs, and Analysts.
+*   **Sealed Config**: Prevents risk policies from being altered in CI/CD without executive approval.
+*   **Append-Only Trust Store**: Central record of authorized keys and revocations.
+
+```bash
+# Seal the policy (CISO action)
+wardex config seal --keyring ciso.wex --input config.yaml --out config.wexstate
+
+# Evaluate with mandatory seal verification
+wardex evaluate --config config.wexstate --evidence vulns.yaml --strict
+```
+
+See the [Governance Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md) for the full workflow.
+
+---
+
 ## SDK
 
 ```go
@@ -309,6 +329,7 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 - [Architecture and internals](doc/TECHNICAL_VIEW.md)
 - [Business context and the binary gate problem](doc/BUSINESS_VIEW.md)
 - [Playbook — use cases with full commands](doc/WARDEX_PLAYBOOK.md)
+- [Governance — Trust Store & Sealed Config Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md)
 - [GitHub Actions integration](doc/github-actions-integration.md)
 - [Exit codes](internal/doc/EXIT_CODES.md)
 - [CHANGELOG](CHANGELOG.md)
