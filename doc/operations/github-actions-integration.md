@@ -13,19 +13,19 @@ Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo
 
 | Comando | Estado | Propósito |
 |---------|--------|-----------|
-| `wardex [flags] <controls>` | ✅ Disponível | Gap Analysis + Release Gate |
-| `wardex convert grype <file>` | ✅ Disponível | Converte output Grype → formato Wardex |
-| `wardex convert sbom <file>` | ✅ Disponível | Converte SBOM CycloneDX → formato Wardex |
-| `wardex enrich epss <file>` | ✅ Disponível | Fetch EPSS real da FIRST.org + assina |
-| `wardex accept request` | ✅ Disponível | Cria aceitação de risco formal |
-| `wardex accept verify` | ✅ Disponível | Verifica integridade criptográfica |
-| `wardex policy validate <dir>` | ✅ Disponível | Valida schema dos ficheiros YAML |
-| `wardex policy list <dir>` | ✅ Disponível | Lista estado de conformidade |
-| `wardex policy add` | ✅ Disponível | Upsert de controlo por ID |
-| `wardex simulate` | ✅ Disponível | Simulação interactiva de risco |
-| `wardex evaluate` | ✅ Disponível | Alias focado para CI (Release Gate) |
-| `wardex aggregate` | ✅ Disponível | Agrega decisões de múltiplos frameworks |
-| `wardex policy check-expiry` | ❌ Não existe | (planeado) |
+| `wardex [flags] <controls>` | [OK] Disponível | Gap Analysis + Release Gate |
+| `wardex convert grype <file>` | [OK] Disponível | Converte output Grype → formato Wardex |
+| `wardex convert sbom <file>` | [OK] Disponível | Converte SBOM CycloneDX → formato Wardex |
+| `wardex enrich epss <file>` | [OK] Disponível | Fetch EPSS real da FIRST.org + assina |
+| `wardex accept request` | [OK] Disponível | Cria aceitação de risco formal |
+| `wardex accept verify` | [OK] Disponível | Verifica integridade criptográfica |
+| `wardex policy validate <dir>` | [OK] Disponível | Valida schema dos ficheiros YAML |
+| `wardex policy list <dir>` | [OK] Disponível | Lista estado de conformidade |
+| `wardex policy add` | [OK] Disponível | Upsert de controlo por ID |
+| `wardex simulate` | [OK] Disponível | Simulação interactiva de risco |
+| `wardex evaluate` | [OK] Disponível | Alias focado para CI (Release Gate) |
+| `wardex aggregate` | [OK] Disponível | Agrega decisões de múltiplos frameworks |
+| `wardex policy check-expiry` | [FAIL] Não existe | (planeado) |
 
 ---
 
