@@ -6,6 +6,7 @@ package evaluate
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
@@ -15,6 +16,7 @@ import (
 	"github.com/had-nu/wardex/pkg/ingestion"
 	"github.com/had-nu/wardex/pkg/model"
 	"github.com/had-nu/wardex/pkg/releasegate"
+	"github.com/had-nu/wardex/pkg/trust"
 	"github.com/had-nu/wardex/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -29,6 +31,7 @@ var (
 	outFile      string
 	profileName  string
 	failAbove    float64
+	strict       bool
 )
 
 // EvaluateCmd is the explicit release gate evaluation subcommand.
@@ -53,6 +56,8 @@ Example:
 
 Exit codes:
    0 — Gate passed (ALLOW)
+   3 — Seal integrity failure (revoked key, trust store drift, invalid sig)
+       Also returned if --strict is used with an unsealed config.
   10 — Gate blocked (BLOCK)
   11 — Compliance gap exceeded --fail-above threshold`,
 	Args: cobra.MinimumNArgs(1),
@@ -60,7 +65,7 @@ Exit codes:
 }
 
 func init() {
-	EvaluateCmd.Flags().StringVar(&configPath, "config", "./wardex-config.yaml", "Path to wardex-config.yaml")
+	EvaluateCmd.Flags().StringVar(&configPath, "config", "./wardex-config.yaml", "Path to wardex-config.yaml or wardex.wexstate")
 	EvaluateCmd.Flags().StringVar(&gateFile, "evidence", "", "Vulnerabilities file for release gate evaluation (required)")
 	EvaluateCmd.Flags().StringVar(&gateMode, "gate-mode", "any", "Gate mode: any|aggregate")
 	EvaluateCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a signed EPSS enrichment file")
@@ -68,6 +73,7 @@ func init() {
 	EvaluateCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 	EvaluateCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override profile")
 	EvaluateCmd.Flags().Float64Var(&failAbove, "fail-above", 0.0, "Exit 11 if any gap score exceeds this value")
+	EvaluateCmd.Flags().BoolVar(&strict, "strict", false, "Exit 3 if an unsealed config (.yaml) is used instead of .wexstate")
 	_ = EvaluateCmd.MarkFlagRequired("evidence")
 
 	// Allow the parent to inject the shared --config persistent flag.
@@ -75,10 +81,66 @@ func init() {
 }
 
 func runEvaluate(cmd *cobra.Command, args []string) error {
-	cfg, err := config.Load(configPath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: failed to load config from %s: %v\n", configPath, err)
+	var cfg *config.Config
+
+	// --- Sealed config verification (wexstate) ---
+	if trust.IsWexStatePath(configPath) {
+		state, err := trust.LoadWexState(configPath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(exitcodes.IntegrityFailure)
+		}
+
+		// Resolve and fetch trust store
+		ref := trust.ResolveTrustStoreRef("", "")
+		if state.TrustStoreRef != "" {
+			ref = trust.ResolveTrustStoreRef("", state.TrustStoreRef)
+		}
+		storeData, err := trust.FetchTrustStore(ref)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(exitcodes.IntegrityFailure)
+		}
+		store, err := trust.LoadStoreFromBytes(storeData)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(exitcodes.IntegrityFailure)
+		}
+
+		// Verify seal integrity
+		if err := trust.VerifySeal(state, store, storeData); err != nil {
+			fmt.Fprintf(os.Stderr, "[INTEGRITY FAILURE] %v\n", err)
+			os.Exit(exitcodes.IntegrityFailure)
+		}
+		fmt.Fprintf(os.Stderr, "[INFO] Sealed config verified — signed by %s (%s) at %s\n",
+			state.SealedBy, state.SealedByKeyID, state.SealedAt.Format("2006-01-02 15:04 UTC"))
+
+		// Deserialise the payload
 		cfg = &config.Config{}
+		if err := yaml.Unmarshal([]byte(state.Payload), cfg); err != nil {
+			fmt.Fprintf(os.Stderr, "Error: parse sealed payload: %v\n", err)
+			os.Exit(exitcodes.IntegrityFailure)
+		}
+
+		if cfg.ReleaseGate.Mode == "" {
+			cfg.ReleaseGate.Mode = "any"
+		}
+	} else {
+		// Legacy mode — load YAML directly
+		if strict {
+			fmt.Fprintf(os.Stderr, "[STRICT ENFORCEMENT] Unsealed configuration rejected. Use 'wardex config seal' to govern this policy.\n")
+			os.Exit(exitcodes.IntegrityFailure)
+		}
+
+		if isCI() {
+			fmt.Fprintf(os.Stderr, "[WARN] Using unsealed config. In production, use 'wardex config seal' for non-repudiation.\n")
+		}
+		var err error
+		cfg, err = config.Load(configPath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: failed to load config from %s: %v\n", configPath, err)
+			cfg = &config.Config{}
+		}
 	}
 
 	// RBAC profile override
@@ -115,7 +177,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	}
 
 	// Load controls for context (needed for ingestion but gate is the primary output)
-	_, err = ingestion.LoadMany(args)
+	_, err := ingestion.LoadMany(args)
 	if err != nil {
 		return fmt.Errorf("evaluate: load controls: %w", err)
 	}
@@ -253,4 +315,15 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 
 	os.Exit(exitcodes.OK)
 	return nil
+}
+
+// isCI detects common CI environments.
+func isCI() bool {
+	ciVars := []string{"CI", "GITHUB_ACTIONS", "GITLAB_CI", "JENKINS_URL", "BUILDKITE", "CIRCLECI"}
+	for _, v := range ciVars {
+		if strings.TrimSpace(os.Getenv(v)) != "" {
+			return true
+		}
+	}
+	return false
 }
