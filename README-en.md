@@ -204,7 +204,7 @@ When your scanner does not include EPSS, Wardex assumes EPSS 1.0 (worst case) an
 
 ```bash
 wardex enrich epss wardex-vulns.yaml --output epss-enrich.yaml
-wardex evaluate --epss-enrichment epss-enrich.yaml --gate vulns.yaml controls.yaml
+wardex evaluate --epss-enrichment epss-enrich.yaml --evidence vulns.yaml controls.yaml
 ```
 
 Enrichment queries `api.first.org` and signs the result via HMAC-SHA256.
@@ -233,7 +233,7 @@ jobs:
         run: |
           wardex evaluate \
             --config .wardex/config.yaml \
-            --gate vulns.yaml \
+            --evidence vulns.yaml \
             controls.yaml
         # Exit 0 = ALLOW, Exit 10 = BLOCK, Exit 11 = compliance gap
 ```
@@ -326,12 +326,12 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 
 ## Documentation
 
-- [Architecture and internals](doc/TECHNICAL_VIEW.md)
-- [Business context and the binary gate problem](doc/BUSINESS_VIEW.md)
-- [Playbook — use cases with full commands](doc/WARDEX_PLAYBOOK.md)
+- [Architecture and internals](doc/architecture/TECHNICAL_VIEW.md)
+- [Business context and the binary gate problem](doc/architecture/BUSINESS_VIEW.md)
+- [Playbook — use cases with full commands](doc/operations/WARDEX_PLAYBOOK.md)
 - [Governance — Trust Store & Sealed Config Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md)
-- [GitHub Actions integration](doc/github-actions-integration.md)
-- [Exit codes](internal/doc/EXIT_CODES.md)
+- [GitHub Actions integration](doc/operations/github-actions-integration.md)
+- [Exit codes](doc/operations/EXIT_CODES.md)
 - [CHANGELOG](CHANGELOG.md)
 
 ---

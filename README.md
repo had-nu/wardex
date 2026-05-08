@@ -204,7 +204,7 @@ Quando o scanner não inclui EPSS, o Wardex assume EPSS 1.0 (pior caso) e bloque
 
 ```bash
 wardex enrich epss wardex-vulns.yaml --output epss-enrich.yaml
-wardex evaluate --epss-enrichment epss-enrich.yaml --gate vulns.yaml controls.yaml
+wardex evaluate --epss-enrichment epss-enrich.yaml --evidence vulns.yaml controls.yaml
 ```
 
 O enriquecimento consulta `api.first.org` e assina o resultado via HMAC-SHA256.
@@ -233,7 +233,7 @@ jobs:
         run: |
           wardex evaluate \
             --config .wardex/config.yaml \
-            --gate vulns.yaml \
+            --evidence vulns.yaml \
             controls.yaml
         # Exit 0 = ALLOW, Exit 10 = BLOCK, Exit 11 = compliance gap
 ```
@@ -312,7 +312,7 @@ gate := releasegate.Gate{
     CompensatingControls: []model.CompensatingControl{
         {Type: "waf", Effectiveness: 0.35},
     },
-    RiskAppetite: 6.0,
+    RiskAppetite: 0.20,
 }
 
 report := gate.Evaluate([]model.Vulnerability{
@@ -326,12 +326,12 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 
 ## Documentação
 
-- [Arquitectura e funcionamento interno](doc/TECHNICAL_VIEW.md)
-- [Contexto de negócio e o problema do gate binário](doc/BUSINESS_VIEW.md)
-- [Playbook — casos de uso com comandos completos](doc/WARDEX_PLAYBOOK.md)
+- [Arquitectura e funcionamento interno](doc/architecture/TECHNICAL_VIEW.md)
+- [Contexto de negócio e o problema do gate binário](doc/architecture/BUSINESS_VIEW.md)
+- [Playbook — casos de uso com comandos completos](doc/operations/WARDEX_PLAYBOOK.md)
 - [Governação — Trust Store & Sealed Config Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md)
-- [Integração com GitHub Actions](doc/github-actions-integration.md)
-- [Exit codes](internal/doc/EXIT_CODES.md)
+- [Integração com GitHub Actions](doc/operations/github-actions-integration.md)
+- [Exit codes](doc/operations/EXIT_CODES.md)
 - [CHANGELOG](CHANGELOG.md)
 
 ---
