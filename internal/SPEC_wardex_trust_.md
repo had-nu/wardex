@@ -340,6 +340,13 @@ Flags:
 
 **Erro em campos PENDING:**
 ```
+> **Nota histórica (v1.9.1):** o exemplo abaixo referencia
+> `domain_weights.technological` como campo passível de ser marcado
+> `PENDING_APPROVAL`. Este campo foi removido do schema em v1.9.1
+> (ver `SPEC_v1.9.1_schema_cleanup.md`) por nunca ter sido consumido
+> pelo scorer. Para um exemplo equivalente em código vivo, usar
+> `release_gate.risk_appetite` ou `acceptance.limits.max_acceptance_days`.
+
 Error: config seal: draft contains unsettled fields:
   - release_gate.risk_appetite: "PENDING_APPROVAL"
   - domain_weights.technological: "PENDING_APPROVAL"

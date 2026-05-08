@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2026-05-08
+
+### Removed
+- `organization` block (`name`, `sector`, `scope`) — never consumed by the scorer or by `wardex assess`.
+- `domain_weights` map — placeholder for an unshipped feature.
+- `control_weights` map — placeholder for an unshipped feature.
+- `thresholds` block (`fail_above`, `warn_above`) — duplicated `release_gate.warn_above` semantically and was never read.
+- `reporting.verbose` — the CLI flag `--verbose` is the source of truth.
+
+### Fixed
+- `doc/examples/wardex-config.yaml` rewritten to mirror the live schema.
+- `test/testdata/wardex-config.yaml`: removed orphan and incorrect blocks.
+
+### Compatibility
+- YAML files written for v1.9.0 with the now-removed blocks continue to load without error.
+
+---
+
+## [1.9.0] - 2026-05-08
+
+### Added
+- **Wardex Trust Store**: New cryptographic governance layer for release gate configurations.
+- **Sealed Config (`wardex.wexstate`)**: Support for signing and verifying configuration integrity.
+- **Key Management**: `wardex keygen` for operator keypairs (ed25519).
+- **Trust Commands**: `wardex trust` (init, add, revoke) to manage authorized actors and roles.
+- **RBAC for Profiles**: `allowed_actors` field to restrict profile usage to specific identities.
+- **Signed EPSS Enrichment**: Verification of exploit probability data signatures.
+- **Remote Trust Store**: Support for fetching `wardex-trust.yaml` from remote URLs.
+
+### Changed
+- CLI banner redesign.
+- Updated exit codes: `3` for integrity failure, `10` for gate block, `11` for compliance failure.
+
+---
+
+## [1.8.1] - 2026-05-07
+
+### Fixed
+- **Build Issue**: Fixed `go:embed` path for `wardex-risk-simulator.jsx` in `test/embed.go`.
+
+---
+
 ## [1.8.0] - 2026-04-24
 
 ### Added

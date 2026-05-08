@@ -1,18 +1,7 @@
-organization:
-  name: "Exemplo Empresa SA"
-  sector: "financial_services"
-  scope: "ISMS perimeter - core banking systems"
-
-domain_weights:
-  technological: 1.8
-  organizational: 1.2
-  people: 1.0
-  physical: 0.7
-
 release_gate:
   enabled: true
   mode: "any"
-  risk_appetite: 0.6  # escala normalizada [0, 1.5] — v4
+  risk_appetite: 0.6
 
   asset_context:
     criticality: 0.9
@@ -22,14 +11,12 @@ release_gate:
     environment: "production"
 
   compensating_controls:
-    - type: "waf"
-      effectiveness: 0.35
-      justification: "ModSecurity com ruleset OWASP CRS"
-    - type: "network_segmentation"
-      effectiveness: 0.25
-      justification: "VPC isolada com security groups restritivos"
-    - type: "runtime_protection"
-      effectiveness: 0.20
-      justification: "Falco com políticas customizadas"
-accept:
-  hmac_secret_env: WARDEX_ACCEPT_SECRET
+    - id: "WAF-01"
+      name: "waf"
+      reduction: 0.35
+    - id: "SEG-01"
+      name: "network_segmentation"
+      reduction: 0.25
+    - id: "RUNTIME-01"
+      name: "runtime_protection"
+      reduction: 0.20

@@ -8,7 +8,7 @@ Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## How to Contribute
 
-### ⚠️ Contributor Licence Agreement (CLA)
+### [WARN] Contributor Licence Agreement (CLA)
 
 Wardex operates under a dual-licensing model (AGPL-3.0 and Commercial). To protect the project's IP and enable commercial sublicensing, all contributors must sign a Contributor Licence Agreement (CLA).
 

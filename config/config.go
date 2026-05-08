@@ -12,17 +12,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Organization struct {
-	Name   string `yaml:"name"`
-	Sector string `yaml:"sector"`
-	Scope  string `yaml:"scope"`
-}
-
-type ControlWeight struct {
-	Weight        float64 `yaml:"weight"`
-	Justification string  `yaml:"justification"`
-}
-
 type ReleaseGate struct {
 	Enabled              bool                        `yaml:"enabled"`
 	Mode                 string                      `yaml:"mode"` // "any" | "aggregate"
@@ -31,11 +20,6 @@ type ReleaseGate struct {
 	AggregateLimit       float64                     `yaml:"aggregate_limit"`
 	AssetContext         model.AssetContext          `yaml:"asset_context"`
 	CompensatingControls []model.CompensatingControl `yaml:"compensating_controls"`
-}
-
-type Thresholds struct {
-	FailAbove float64 `yaml:"fail_above"`
-	WarnAbove float64 `yaml:"warn_above"`
 }
 
 type Limits struct {
@@ -51,9 +35,8 @@ type AcceptanceConfig struct {
 }
 
 type ReportingConfig struct {
-	Format  string `yaml:"format"`
-	Output  string `yaml:"output"`
-	Verbose bool   `yaml:"verbose"`
+	Format string `yaml:"format"`
+	Output string `yaml:"output"`
 }
 
 type Profile struct {
@@ -63,14 +46,10 @@ type Profile struct {
 }
 
 type Config struct {
-	Organization     Organization             `yaml:"organization"`
-	DomainWeights    map[string]float64       `yaml:"domain_weights"`
-	ControlWeights   map[string]ControlWeight `yaml:"control_weights"`
-	ReleaseGate      ReleaseGate              `yaml:"release_gate"`
-	Thresholds       Thresholds               `yaml:"thresholds"`
-	AcceptanceConfig AcceptanceConfig         `yaml:"acceptance"`
-	Reporting        ReportingConfig          `yaml:"reporting"`
-	Profiles         map[string]Profile       `yaml:"profiles"`
+	ReleaseGate      ReleaseGate        `yaml:"release_gate"`
+	AcceptanceConfig AcceptanceConfig   `yaml:"acceptance"`
+	Reporting        ReportingConfig    `yaml:"reporting"`
+	Profiles         map[string]Profile `yaml:"profiles"`
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
