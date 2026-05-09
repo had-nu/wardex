@@ -35,6 +35,9 @@ release_gate:
   risk_appetite: 0.20
   warn_above: 0.12
 
+  asset_context:
+    data_class: "restricted"
+
 reporting:
   format: "markdown"
   verbose: true

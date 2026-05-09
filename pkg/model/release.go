@@ -18,7 +18,6 @@ type AssetContext struct {
 	Criticality    float64 `yaml:"criticality"` // 0.0–1.0: impacto de negócio se comprometido
 	InternetFacing bool    `yaml:"internet_facing"`
 	RequiresAuth   bool    `yaml:"requires_auth"` // Reduz exposure em 0.2 quando true
-	DataClass      string  `yaml:"data_class"`    // "public" | "internal" | "confidential" | "restricted"
 	Environment    string  `yaml:"environment"`   // "production" | "staging" | "development"
 }
 

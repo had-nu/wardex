@@ -4,21 +4,47 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.9.1] - 2026-05-08
+## [1.9.1] — 2026-05-09
 
 ### Removed
-- `organization` block (`name`, `sector`, `scope`) — never consumed by the scorer or by `wardex assess`.
+
+- `organization` block (`name`, `sector`, `scope`) — never consumed by the scorer
+  or by `wardex assess`.
 - `domain_weights` map — placeholder for an unshipped feature.
 - `control_weights` map — placeholder for an unshipped feature.
-- `thresholds` block (`fail_above`, `warn_above`) — duplicated `release_gate.warn_above` semantically and was never read.
+- `thresholds` block (`fail_above`, `warn_above`) — duplicated
+  `release_gate.warn_above` semantically and was never read. The live failure-on-gap
+  flag is `--fail-above` on `wardex evaluate` (CLI), not a YAML field.
 - `reporting.verbose` — the CLI flag `--verbose` is the source of truth.
+- `release_gate.asset_context.data_class` — declared in `model.AssetContext` but
+  never consumed by the scorer (which reads `criticality`, `internet_facing`,
+  `requires_auth`, `environment`). Re-introduction with proper scoring semantics
+  is deferred to v1.10.x.
 
 ### Fixed
-- `doc/examples/wardex-config.yaml` rewritten to mirror the live schema.
-- `test/testdata/wardex-config.yaml`: removed orphan and incorrect blocks.
+
+- `doc/examples/wardex-config.yaml` rewritten with fields verified against the live
+  structs. The previous file in v1.9.0 used a `thresholds:` block with non-existent
+  keys; the rewrite mirrors `Config`, `model.AssetContext`, and
+  `model.CompensatingControl` exactly.
+- `test/testdata/wardex-config.yaml`: `compensating_controls` now uses the correct
+  fields (`type`/`effectiveness`/`justification` instead of `id`/`name`/`reduction`);
+  `data_classification:` removed (the field was orphan and the spelling was wrong
+  for `AssetContext` anyway).
+
+### Added
+
+- `config/config_examples_test.go` (`TestPublishedExamplesMatchSchema`) — strict
+  schema validation of `doc/examples/wardex-config.yaml` and
+  `test/testdata/wardex-config.yaml` using `yaml.Decoder.KnownFields(true)`. CI
+  blocks any release where a published example diverges from the live schema.
 
 ### Compatibility
-- YAML files written for v1.9.0 with the now-removed blocks continue to load without error.
+
+YAML files written for v1.9.0 with the now-removed blocks continue to load without
+error in production code paths. The runtime `Load()` continues to accept unknown
+fields (Go YAML decoder default) to preserve backward compatibility. No migration
+script required.
 
 ---
 

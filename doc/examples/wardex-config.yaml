@@ -12,10 +12,11 @@ release_gate:
     criticality: 0.8         # Business criticality weight
     internet_facing: true    # Exposure factor
     requires_auth: true      # Exposure factor
+    environment: "production"
   compensating_controls:     # Global mitigations that reduce final risk score
-    - id: "WAF-01"
-      name: "Cloudflare WAF"
-      reduction: 0.15
+    - type: "waf"
+      effectiveness: 0.15
+      justification: "Cloudflare WAF protecting the edge"
 
 # Acceptance Configuration
 # Used by 'wardex accept' for managing risk acceptances.
