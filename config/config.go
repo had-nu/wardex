@@ -34,9 +34,16 @@ type AcceptanceConfig struct {
 	BannedJustificationPhrases []string `yaml:"banned_justification_phrases"`
 }
 
+type GateLogConfig struct {
+	Path    string   `yaml:"path"`     // default: "wardex-gate-audit.log"
+	Forward []string `yaml:"forward"`  // e.g. ["syslog"]
+	OnFail  string   `yaml:"on_fail"`  // "warn" | "block"
+}
+
 type ReportingConfig struct {
-	Format string `yaml:"format"`
-	Output string `yaml:"output"`
+	Format  string        `yaml:"format"`
+	Output  string        `yaml:"output"`
+	GateLog GateLogConfig `yaml:"gate_log"`
 }
 
 type Profile struct {

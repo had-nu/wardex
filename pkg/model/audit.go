@@ -21,4 +21,8 @@ type AuditEntry struct {
 	PrevHash      string    `json:"prev_hash,omitempty"`
 	ChangedFields []string  `json:"changed_fields,omitempty"`
 	Detail        string    `json:"detail,omitempty"`
+
+	// New in v1.9.2 for gate decision logging
+	EvidenceHash    string `json:"evidence_hash,omitempty"`
+	OverallDecision string `json:"overall_decision,omitempty"`
 }

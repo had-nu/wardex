@@ -95,11 +95,8 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	type WardexOutput struct {
-		Vulnerabilities []model.Vulnerability `yaml:"vulnerabilities"`
-	}
-
-	out := WardexOutput{
+	out := model.VulnerabilityEnvelope{
+		ConvertedBy:     "wardex-convert/" + format,
 		Vulnerabilities: vulns,
 	}
 

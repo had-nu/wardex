@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.2] — 2026-05-10
+
+### Added
+
+- **Gate Decision Log (G1)**: `wardex evaluate` now records every gate decision in
+  `wardex-gate-audit.log` (configurable via `--gate-log`). Entries include config
+  hash, evidence hash, overall decision, and risk score.
+- **Evidence Provenance (G2)**: New `converted_by` field in evidence envelopes.
+  `wardex evaluate` now warns if evidence was not canonicalised via `wardex convert`.
+- **Strict Provenance Mode**: `--strict` flag now also enforces canonicalised evidence.
+- **Log Forwarding (G3)**: Integrated gate decisions with the `Forwarder` interface.
+  Supports real-time dispatch to Syslog via `reporting.gate_log.forward` config.
+- **Data Model Extensions**: `model.AuditEntry` extended with `evidence_hash` and
+  `overall_decision`; new `model.VulnerabilityEnvelope` for provenance tracking.
+
+### Fixed
+
+- **Schema Gap**: Updated `doc/examples/wardex-config.yaml` to include the new
+  `gate_log` block, ensuring compliance with `KnownFields(true)` validation tests.
+
+---
+
 ## [1.9.1] — 2026-05-09
 
 ### Removed

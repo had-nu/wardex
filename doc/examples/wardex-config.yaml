@@ -1,4 +1,4 @@
-# Wardex Configuration Example (v1.9.1)
+# Wardex Configuration Example (v1.9.2)
 # ------------------------------------
 
 # Release Gate Context
@@ -35,6 +35,10 @@ acceptance:
 reporting:
   format: "markdown"         # markdown | json | csv
   output: "wardex-report.md" # Path to output file
+  gate_log:
+    path: "wardex-gate-audit.log"
+    forward: ["syslog"]      # Optional destinations
+    on_fail: "warn"          # "warn" | "block"
 
 # Profiles (RBAC)
 # Overrides risk appetite for specific actors in trusted environments.

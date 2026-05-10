@@ -12,6 +12,12 @@ type Vulnerability struct {
 	Reachable bool    `yaml:"reachable"`
 }
 
+// VulnerabilityEnvelope wraps vulnerabilities with provenance metadata.
+type VulnerabilityEnvelope struct {
+	ConvertedBy     string          `yaml:"converted_by,omitempty"`
+	Vulnerabilities []Vulnerability `yaml:"vulnerabilities"`
+}
+
 // AssetContext descreve o contexto do asset.
 // Cada campo preenchido aumenta o nível de maturidade do gate inferido.
 type AssetContext struct {

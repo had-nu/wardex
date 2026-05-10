@@ -81,11 +81,8 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	type WardexOutput struct {
-		Vulnerabilities []model.Vulnerability `yaml:"vulnerabilities"`
-	}
-
-	out := WardexOutput{
+	out := model.VulnerabilityEnvelope{
+		ConvertedBy:     "wardex-convert/grype",
 		Vulnerabilities: make([]model.Vulnerability, 0, len(report.Matches)),
 	}
 
