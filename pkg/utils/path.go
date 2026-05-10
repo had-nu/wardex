@@ -8,6 +8,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"crypto/sha256"
+	"encoding/hex"
+	"io"
 )
 
 // SafePath prevents path traversal outside the base directory.
@@ -27,4 +30,19 @@ func SafePath(base, input string) (string, error) {
 		return "", fmt.Errorf("path %q escapes allowed base directories (%q, %q)", input, base, os.TempDir())
 	}
 	return absInput, nil
+}
+
+// HashFile returns the SHA-256 hash of a file.
+func HashFile(path string) (string, error) {
+	f, err := os.Open(path) // #nosec G304
+	if err != nil {
+		return "", err
+	}
+	defer func() { _ = f.Close() }()
+
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
 }

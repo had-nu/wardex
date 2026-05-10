@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
@@ -32,6 +33,11 @@ var (
 	profileName  string
 	failAbove    float64
 	strict       bool
+	gateLogPath  string
+
+	// For testing
+	exitFunc = os.Exit
+	stderr   = os.Stderr
 )
 
 // EvaluateCmd is the explicit release gate evaluation subcommand.
@@ -73,7 +79,8 @@ func init() {
 	EvaluateCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 	EvaluateCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override profile")
 	EvaluateCmd.Flags().Float64Var(&failAbove, "fail-above", 0.0, "Exit 11 if any gap score exceeds this value")
-	EvaluateCmd.Flags().BoolVar(&strict, "strict", false, "Exit 3 if an unsealed config (.yaml) is used instead of .wexstate")
+	EvaluateCmd.Flags().BoolVar(&strict, "strict", false, "Exit 3 if an unsealed config (.yaml) is used or if evidence is not canonical")
+	EvaluateCmd.Flags().StringVar(&gateLogPath, "gate-log", "", "Path to gate decision audit log (overrides config)")
 	_ = EvaluateCmd.MarkFlagRequired("evidence")
 
 	// Allow the parent to inject the shared --config persistent flag.
@@ -87,8 +94,9 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	if trust.IsWexStatePath(configPath) {
 		state, err := trust.LoadWexState(configPath)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(exitcodes.IntegrityFailure)
+			fmt.Fprintf(stderr, "Error: %v\n", err)
+			exitFunc(exitcodes.IntegrityFailure)
+			return nil
 		}
 
 		// Resolve and fetch trust store
@@ -98,28 +106,32 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		}
 		storeData, err := trust.FetchTrustStore(ref)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(exitcodes.IntegrityFailure)
+			fmt.Fprintf(stderr, "Error: %v\n", err)
+			exitFunc(exitcodes.IntegrityFailure)
+			return nil
 		}
 		store, err := trust.LoadStoreFromBytes(storeData)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(exitcodes.IntegrityFailure)
+			fmt.Fprintf(stderr, "Error: %v\n", err)
+			exitFunc(exitcodes.IntegrityFailure)
+			return nil
 		}
 
 		// Verify seal integrity
 		if err := trust.VerifySeal(state, store, storeData); err != nil {
-			fmt.Fprintf(os.Stderr, "[INTEGRITY FAILURE] %v\n", err)
-			os.Exit(exitcodes.IntegrityFailure)
+			fmt.Fprintf(stderr, "[INTEGRITY FAILURE] %v\n", err)
+			exitFunc(exitcodes.IntegrityFailure)
+			return nil
 		}
-		fmt.Fprintf(os.Stderr, "[INFO] Sealed config verified — signed by %s (%s) at %s\n",
+		fmt.Fprintf(stderr, "[INFO] Sealed config verified — signed by %s (%s) at %s\n",
 			state.SealedBy, state.SealedByKeyID, state.SealedAt.Format("2006-01-02 15:04 UTC"))
 
 		// Deserialise the payload
 		cfg = &config.Config{}
 		if err := yaml.Unmarshal([]byte(state.Payload), cfg); err != nil {
-			fmt.Fprintf(os.Stderr, "Error: parse sealed payload: %v\n", err)
-			os.Exit(exitcodes.IntegrityFailure)
+			fmt.Fprintf(stderr, "Error: parse sealed payload: %v\n", err)
+			exitFunc(exitcodes.IntegrityFailure)
+			return nil
 		}
 
 		if cfg.ReleaseGate.Mode == "" {
@@ -128,17 +140,18 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	} else {
 		// Legacy mode — load YAML directly
 		if strict {
-			fmt.Fprintf(os.Stderr, "[STRICT ENFORCEMENT] Unsealed configuration rejected. Use 'wardex config seal' to govern this policy.\n")
-			os.Exit(exitcodes.IntegrityFailure)
+			fmt.Fprintf(stderr, "[STRICT ENFORCEMENT] Unsealed configuration rejected. Use 'wardex config seal' to govern this policy.\n")
+			exitFunc(exitcodes.IntegrityFailure)
+			return nil
 		}
 
 		if isCI() {
-			fmt.Fprintf(os.Stderr, "[WARN] Using unsealed config. In production, use 'wardex config seal' for non-repudiation.\n")
+			fmt.Fprintf(stderr, "[WARN] Using unsealed config. In production, use 'wardex config seal' for non-repudiation.\n")
 		}
 		var err error
 		cfg, err = config.Load(configPath)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: failed to load config from %s: %v\n", configPath, err)
+			fmt.Fprintf(stderr, "Warning: failed to load config from %s: %v\n", configPath, err)
 			cfg = &config.Config{}
 		}
 	}
@@ -161,19 +174,19 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 				}
 			}
 			if !allowed {
-				fmt.Fprintf(os.Stderr, "[RBAC VIOLATION] Actor %q is not authorized for profile %q!\n[RBAC ENFORCEMENT] Override rejected. Falling back to strict baseline configuration.\n", actor, profileName)
+				fmt.Fprintf(stderr, "[RBAC VIOLATION] Actor %q is not authorized for profile %q!\n[RBAC ENFORCEMENT] Override rejected. Falling back to strict baseline configuration.\n", actor, profileName)
 			} else {
 				cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
 				cfg.ReleaseGate.WarnAbove = p.WarnAbove
-				fmt.Fprintf(os.Stderr, "[INFO] RBAC Verified. Profile %q loaded (RiskAppetite: %.2f)\n", profileName, p.RiskAppetite)
+				fmt.Fprintf(stderr, "[INFO] RBAC Verified. Profile %q loaded (RiskAppetite: %.2f)\n", profileName, p.RiskAppetite)
 			}
 		} else {
-			fmt.Fprintf(os.Stderr, "Warning: Profile %q not found. Using defaults.\n", profileName)
+			fmt.Fprintf(stderr, "Warning: Profile %q not found. Using defaults.\n", profileName)
 		}
 	}
 
 	if !cfg.ReleaseGate.Enabled {
-		fmt.Fprintf(os.Stderr, "Warning: release_gate.enabled is false in config — gate will always ALLOW.\n")
+		fmt.Fprintf(stderr, "Warning: release_gate.enabled is false in config — gate will always ALLOW.\n")
 	}
 
 	// Load controls for context (needed for ingestion but gate is the primary output)
@@ -208,12 +221,27 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("evaluate: read evidence file: %w", err)
 	}
-	var vulnsEnvelope struct {
-		Vulnerabilities []model.Vulnerability `yaml:"vulnerabilities"`
+	// Calculate Evidence Hash (G1)
+	evidenceHash := ""
+	if h, err := utils.HashFile(safeGatePath); err == nil {
+		evidenceHash = "sha256:" + h
 	}
+
+	var vulnsEnvelope model.VulnerabilityEnvelope
 	if err := yaml.Unmarshal(vdata, &vulnsEnvelope); err != nil {
 		return fmt.Errorf("evaluate: parse evidence file: %w", err)
 	}
+
+	// Provenance Validation (G2)
+	if vulnsEnvelope.ConvertedBy == "" {
+		if strict {
+			fmt.Fprintf(stderr, "[ERROR] --strict requires canonicalised evidence. Run 'wardex convert' before evaluate.\n")
+			exitFunc(exitcodes.IntegrityFailure)
+			return nil
+		}
+		fmt.Fprintf(stderr, "[WARN] Evidence file has no 'converted_by' field. Run 'wardex convert' to canonicalise scanner output. Proceeding with defaults (reachable=true, epss=1.0).\n")
+	}
+
 	vulns := vulnsEnvelope.Vulnerabilities
 
 	// Filter accepted CVEs
@@ -231,7 +259,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 				if !acceptedMap[v.CVEID] {
 					filtered = append(filtered, v)
 				} else {
-					fmt.Fprintf(os.Stderr, "[INFO] CVE %s covered by active risk acceptance — skipped.\n", v.CVEID)
+					fmt.Fprintf(stderr, "[INFO] CVE %s covered by active risk acceptance — skipped.\n", v.CVEID)
 				}
 			}
 			vulns = filtered
@@ -254,17 +282,17 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 							for i, v := range vulns {
 								if s, ok := scoreMap[v.CVEID]; ok {
 									vulns[i].EPSSScore = s
-									fmt.Fprintf(os.Stderr, "[INFO] Applied EPSS enrichment for %s: %.6f\n", v.CVEID, s)
+									fmt.Fprintf(stderr, "[INFO] Applied EPSS enrichment for %s: %.6f\n", v.CVEID, s)
 								}
 							}
 						} else {
-							fmt.Fprintf(os.Stderr, "WARNING: EPSS enrichment signature invalid: %v\n", err)
+							fmt.Fprintf(stderr, "WARNING: EPSS enrichment signature invalid: %v\n", err)
 						}
 					}
 				}
 			}
 		} else {
-			fmt.Fprintf(os.Stderr, "WARNING: Cannot verify EPSS enrichment without WARDEX_ACCEPT_SECRET.\n")
+			fmt.Fprintf(stderr, "WARNING: Cannot verify EPSS enrichment without WARDEX_ACCEPT_SECRET.\n")
 		}
 	}
 
@@ -294,7 +322,63 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		gateReport.OverallDecision, gateReport.GateMaturityLevel,
 	)
 
-	// Check EPSS missing hint
+	if gateReport.OverallDecision == "warn" {
+		fmt.Fprintf(stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
+	}
+
+	// Decision Logging (G1) & Forwarding (G3)
+	logPath := "wardex-gate-audit.log"
+	if cfg.Reporting.GateLog.Path != "" {
+		logPath = cfg.Reporting.GateLog.Path
+	}
+	if gateLogPath != "" {
+		logPath = gateLogPath
+	}
+
+	if logPath != "/dev/null" {
+		configHash, _ := accept.ConfigHash(configPath)
+		entry := model.AuditEntry{
+			Timestamp:       time.Now().UTC(),
+			Event:           "gate.evaluated",
+			ConfigHash:      configHash,
+			EvidenceHash:    evidenceHash,
+			OverallDecision: gateReport.OverallDecision,
+			Risk:            gateReport.HighestRisk,
+			Status:          gateReport.OverallDecision,
+			Detail:          fmt.Sprintf("%d vulnerabilities evaluated; %d blocked, %d warned", len(vulns), gateReport.BlockedCount, gateReport.WarnCount),
+		}
+
+		if err := accept.AuditLog(logPath, entry); err != nil {
+			fmt.Fprintf(stderr, "Warning: failed to write gate audit log: %v\n", err)
+		} else {
+			fmt.Fprintf(stderr, "[INFO] Gate decision logged → %s\n", logPath)
+		}
+
+		// Forwarding (G3)
+		if len(cfg.Reporting.GateLog.Forward) > 0 {
+			var backends []accept.Forwarder
+			for _, f := range cfg.Reporting.GateLog.Forward {
+				if f == "syslog" {
+					// Use defaults for now as per G3 "sem novo código"
+					if b, err := accept.NewSyslogBackend("localhost:514", "udp", "local0"); err == nil {
+						backends = append(backends, b)
+					}
+				}
+			}
+			if len(backends) > 0 {
+				mux := accept.NewForwardMultiplexer(backends, cfg.Reporting.GateLog.OnFail)
+				if err := mux.Dispatch(entry); err != nil {
+					fmt.Fprintf(stderr, "Error: gate log forwarding failed: %v\n", err)
+					if cfg.Reporting.GateLog.OnFail == "block" {
+						exitFunc(exitcodes.IntegrityFailure)
+						return nil
+					}
+				}
+			}
+		}
+	}
+
+	// Check EPSS missing hint & early return for blocks
 	if gateReport.OverallDecision == "block" {
 		missingEpss := 0
 		for _, v := range vulns {
@@ -303,17 +387,14 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 			}
 		}
 		if missingEpss > 0 {
-			fmt.Fprintf(os.Stderr, "\n[HINT] %d vulnerabilities lacked EPSS and defaulted to worst-case (1.0).\n", missingEpss)
-			fmt.Fprintf(os.Stderr, "       Run 'wardex enrich epss %s' to fetch real probabilities.\n", gateFile)
+			fmt.Fprintf(stderr, "\n[HINT] %d vulnerabilities lacked EPSS and defaulted to worst-case (1.0).\n", missingEpss)
+			fmt.Fprintf(stderr, "       Run 'wardex enrich epss %s' to fetch real probabilities.\n", gateFile)
 		}
-		os.Exit(exitcodes.GateBlocked)
+		exitFunc(exitcodes.GateBlocked)
+		return nil
 	}
 
-	if gateReport.OverallDecision == "warn" {
-		fmt.Fprintf(os.Stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
-	}
-
-	os.Exit(exitcodes.OK)
+	exitFunc(exitcodes.OK)
 	return nil
 }
 
