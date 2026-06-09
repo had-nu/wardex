@@ -25,4 +25,11 @@ type AuditEntry struct {
 	// New in v1.9.2 for gate decision logging
 	EvidenceHash    string `json:"evidence_hash,omitempty"`
 	OverallDecision string `json:"overall_decision,omitempty"`
+
+	// NEW in v2.0 — CRA Article 14 audit chain and deadline tracking
+	PreviousEntryHash         string    `json:"previous_entry_hash,omitempty"`
+	ActivelyExploited         []string  `json:"actively_exploited_cves,omitempty"`
+	Art14DeadlineEarlyWarning time.Time `json:"art14_deadline_early_warning,omitempty"`
+	Art14DeadlineNotification time.Time `json:"art14_deadline_notification,omitempty"`
+	Art14NotificationArtefactPath string `json:"art14_notification_artefact_path,omitempty"`
 }

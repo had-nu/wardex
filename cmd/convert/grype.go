@@ -34,6 +34,7 @@ type GrypeReport struct {
 
 var grypeOutFile string
 var defaultEpss float64
+var kevCataloguePath string
 
 var GrypeCmd = &cobra.Command{
 	Use:   "grype <input.json>",
@@ -45,6 +46,7 @@ var GrypeCmd = &cobra.Command{
 func init() {
 	GrypeCmd.Flags().StringVarP(&grypeOutFile, "output", "o", "wardex-vulns.yaml", "Output file for Wardex YAML")
 	GrypeCmd.Flags().Float64Var(&defaultEpss, "default-epss", 0.0, "Default EPSS score (0.0 = unknown, gate assumes worst-case 1.0). Use 'wardex enrich epss' to fetch real scores.")
+	GrypeCmd.Flags().StringVar(&kevCataloguePath, "kev", "", "Path to a downloaded CISA KEV catalogue JSON snapshot. Download with:\n  curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json")
 }
 
 func runConvertGrype(cmd *cobra.Command, args []string) {
@@ -127,6 +129,35 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 			Component: comp,
 			Reachable: true,
 		})
+	}
+
+	// KEV correlation — enrich with active exploitation data if catalogue provided
+	if kevCataloguePath != "" {
+		// Check catalogue staleness
+		if warn := CheckKEVAge(kevCataloguePath, KEVMaxAgeDays); warn != "" {
+			fmt.Fprintln(os.Stderr, warn)
+		}
+
+		catalogue, err := LoadKEVCatalogue(kevCataloguePath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "[WARN] Failed to load KEV catalogue: %v. Proceeding without KEV correlation.\n", err)
+		} else {
+			out.Vulnerabilities = CorrelateKEV(out.Vulnerabilities, catalogue)
+			var exploited int
+			for _, v := range out.Vulnerabilities {
+				if v.ActivelyExploited {
+					exploited++
+				}
+			}
+			if exploited > 0 {
+				fmt.Fprintf(os.Stderr, "[WARN] %d CVE(s) found in CISA KEV catalogue and marked actively_exploited=true.\n", exploited)
+			}
+		}
+	} else {
+		fmt.Fprintf(os.Stderr,
+			"[INFO] No KEV catalogue provided. To correlate against CISA Known Exploited Vulnerabilities, download it with:\n"+
+				"       curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json\n"+
+				"       Then re-run with: wardex convert grype %s --kev kev-catalogue.json\n", inFile)
 	}
 
 	yamlData, err := yaml.Marshal(&out)

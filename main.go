@@ -17,6 +17,7 @@ import (
 	"github.com/had-nu/wardex/cmd/policy"
 	"github.com/had-nu/wardex/cmd/simulate"
 	trustcmd "github.com/had-nu/wardex/cmd/trust"
+	art14cmd "github.com/had-nu/wardex/cmd/art14"
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
 	"github.com/had-nu/wardex/pkg/accept"
@@ -38,7 +39,7 @@ import (
 )
 
 var (
-	Version       = "1.9.2"
+	Version       = "2.0.0"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -104,6 +105,7 @@ func init() {
 	rootCmd.AddCommand(configseal.ConfigCmd)
 	cli.AddCommands(rootCmd, &configPath)
 	enrichCli.AddCommands(rootCmd, &configPath)
+	rootCmd.AddCommand(art14cmd.Art14Cmd)
 }
 
 func main() {

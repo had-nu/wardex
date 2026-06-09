@@ -12,6 +12,7 @@ import (
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
 	"github.com/had-nu/wardex/pkg/accept"
+	"github.com/had-nu/wardex/pkg/art14"
 	"github.com/had-nu/wardex/pkg/epss"
 	"github.com/had-nu/wardex/pkg/exitcodes"
 	"github.com/had-nu/wardex/pkg/ingestion"
@@ -24,16 +25,17 @@ import (
 )
 
 var (
-	configPath   string
-	gateFile     string
-	gateMode     string
-	epssEnrich   string
-	outputFormat string
-	outFile      string
-	profileName  string
-	failAbove    float64
-	strict       bool
-	gateLogPath  string
+	configPath     string
+	gateFile       string
+	gateMode       string
+	epssEnrich     string
+	outputFormat   string
+	outFile        string
+	profileName    string
+	failAbove      float64
+	strict         bool
+	gateLogPath    string
+	art14OutputDir string // NEW in v2.0
 
 	// For testing
 	exitFunc = os.Exit
@@ -65,7 +67,8 @@ Exit codes:
    3 — Seal integrity failure (revoked key, trust store drift, invalid sig)
        Also returned if --strict is used with an unsealed config.
   10 — Gate blocked (BLOCK)
-  11 — Compliance gap exceeded --fail-above threshold`,
+  11 — Compliance gap exceeded --fail-above threshold
+  12 — Active exploitation detected (hard stop)`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: runEvaluate,
 }
@@ -81,6 +84,7 @@ func init() {
 	EvaluateCmd.Flags().Float64Var(&failAbove, "fail-above", 0.0, "Exit 11 if any gap score exceeds this value")
 	EvaluateCmd.Flags().BoolVar(&strict, "strict", false, "Exit 3 if an unsealed config (.yaml) is used or if evidence is not canonical")
 	EvaluateCmd.Flags().StringVar(&gateLogPath, "gate-log", "", "Path to gate decision audit log (overrides config)")
+	EvaluateCmd.Flags().StringVar(&art14OutputDir, "art14-output-dir", "", "Directory where Article 14 notification artefacts are written (overrides config)")
 	_ = EvaluateCmd.MarkFlagRequired("evidence")
 
 	// Allow the parent to inject the shared --config persistent flag.
@@ -244,6 +248,163 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 
 	vulns := vulnsEnvelope.Vulnerabilities
 
+	// CRA Article 14 Active Exploitation Hard Stop (Layer 4)
+	var activelyExploited []model.Vulnerability
+	for _, v := range vulns {
+		if v.ActivelyExploited {
+			activelyExploited = append(activelyExploited, v)
+		}
+	}
+
+	if len(activelyExploited) > 0 {
+		outDir := "."
+		if cfg.CRA.Art14.OutputDir != "" {
+			outDir = cfg.CRA.Art14.OutputDir
+		}
+		if art14OutputDir != "" {
+			outDir = art14OutputDir
+		}
+
+		// Check for undispatched previous artefacts
+		if previousArtefacts, err := art14.ListArtefacts(outDir); err == nil {
+			for _, prev := range previousArtefacts {
+				if !art14.IsDispatched(prev) {
+					for _, cve := range prev.Notification.CVEIDs {
+						for _, curr := range activelyExploited {
+							if curr.CVEID == cve {
+								fmt.Fprintf(stderr, "[WARN] Previously generated notification artefact for %s (ID: %s) has not been marked as dispatched.\n", cve, prev.ArtefactID)
+								break
+							}
+						}
+					}
+				}
+			}
+		}
+
+		var cves []string
+		for _, v := range activelyExploited {
+			cves = append(cves, v.CVEID)
+		}
+
+		// Calculate awareness timestamp
+		awarenessAt := time.Now().UTC()
+		if cfg.CRA.Art14.AwarenessSource == "envelope" {
+			var earliest time.Time
+			for _, v := range activelyExploited {
+				if !v.ActivelyExploitedSince.IsZero() {
+					if earliest.IsZero() || v.ActivelyExploitedSince.Before(earliest) {
+						earliest = v.ActivelyExploitedSince
+					}
+				}
+			}
+			if !earliest.IsZero() && earliest.Before(awarenessAt) {
+				awarenessAt = earliest.UTC()
+			}
+		}
+
+		art14Cfg := art14.Config{
+			ProductName:    cfg.CRA.Art14.ProductName,
+			ProductVersion: cfg.CRA.Art14.ProductVersion,
+			GeneratedBy:    "wardex/v2.0.0",
+			WardexActor:    os.Getenv("WARDEX_ACTOR"),
+		}
+
+		artefact, err := art14.GenerateArtefact(cves, awarenessAt, art14Cfg)
+		if err != nil {
+			return fmt.Errorf("evaluate: generate Article 14 notification artefact: %w", err)
+		}
+
+		key, keyErr := accept.ResolveSecret(*cfg)
+		if keyErr != nil {
+			fmt.Fprintln(stderr, "[WARN] WARDEX_ACCEPT_SECRET is not set. Generating artefact with an unsigned/weak HMAC.")
+			key = []byte("weak-fallback-secret-for-draft")
+		}
+		if err := art14.SignArtefact(artefact, key); err != nil {
+			return fmt.Errorf("evaluate: sign Article 14 notification artefact: %w", err)
+		}
+
+		artefactPath, err := art14.WriteArtefact(artefact, outDir)
+		if err != nil {
+			return fmt.Errorf("evaluate: write Article 14 notification artefact: %w", err)
+		}
+
+		earlyWarningDeadline := awarenessAt.Add(24 * time.Hour)
+		notificationDeadline := awarenessAt.Add(72 * time.Hour)
+
+		logPath := "wardex-gate-audit.log"
+		if cfg.Reporting.GateLog.Path != "" {
+			logPath = cfg.Reporting.GateLog.Path
+		}
+		if gateLogPath != "" {
+			logPath = gateLogPath
+		}
+
+		configHash, _ := accept.ConfigHash(configPath)
+		auditEntry := model.AuditEntry{
+			Timestamp:                     time.Now().UTC(),
+			Event:                         "active-exploit.detected",
+			ConfigHash:                    configHash,
+			EvidenceHash:                  evidenceHash,
+			OverallDecision:               "block",
+			Status:                        "block",
+			Detail:                        fmt.Sprintf("Active exploitation detected for CVE(s): %s. Article 14 notification artefact generated.", strings.Join(cves, ", ")),
+			ActivelyExploited:             cves,
+			Art14DeadlineEarlyWarning:     earlyWarningDeadline,
+			Art14DeadlineNotification:     notificationDeadline,
+			Art14NotificationArtefactPath: artefactPath,
+		}
+
+		if err := accept.ChainedAuditLog(logPath, auditEntry); err != nil {
+			fmt.Fprintf(stderr, "Warning: failed to write gate audit log: %v\n", err)
+		} else {
+			fmt.Fprintf(stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
+		}
+
+		// Forwarding (G3) including ENISA stub
+		if len(cfg.Reporting.GateLog.Forward) > 0 {
+			var backends []accept.Forwarder
+			for _, f := range cfg.Reporting.GateLog.Forward {
+				if f == "syslog" {
+					if b, err := accept.NewSyslogBackend("localhost:514", "udp", "local0"); err == nil {
+						backends = append(backends, b)
+					}
+				} else if f == "enisa" {
+					queuePath := "wardex-enisa-queue.jsonl"
+					if cfg.Reporting.ENISAQueue.Path != "" {
+						queuePath = cfg.Reporting.ENISAQueue.Path
+					}
+					fmt.Fprintf(stderr, "[INFO] ENISABackend is a stub. No data will be transmitted.\n"+
+						"       Queue path: %s\n"+
+						"       When the ENISA single reporting platform API is published,\n"+
+						"       update Wardex and configure ENISABackend.endpoint.\n", queuePath)
+					backends = append(backends, accept.NewENISABackend(queuePath))
+				}
+			}
+			if len(backends) > 0 {
+				mux := accept.NewForwardMultiplexer(backends, cfg.Reporting.GateLog.OnFail)
+				if err := mux.Dispatch(auditEntry); err != nil {
+					fmt.Fprintf(stderr, "Error: gate log forwarding failed: %v\n", err)
+					if cfg.Reporting.GateLog.OnFail == "block" {
+						exitFunc(exitcodes.IntegrityFailure)
+						return nil
+					}
+				}
+			}
+		}
+
+		// Print [BLOCK] message to stderr
+		fmt.Fprintf(stderr, "\n[BLOCK] Active exploitation detected for CVE(s): %s\n", strings.Join(cves, ", "))
+		fmt.Fprintf(stderr, "        Awareness Timestamp: %s\n", awarenessAt.Format(time.RFC3339))
+		fmt.Fprintf(stderr, "        Article 14 Deadlines:\n")
+		fmt.Fprintf(stderr, "          - Early Warning (+24h):  %s (remaining: %s)\n", earlyWarningDeadline.Format(time.RFC3339), formatDuration(time.Until(earlyWarningDeadline)))
+		fmt.Fprintf(stderr, "          - Notification (+72h):   %s (remaining: %s)\n", notificationDeadline.Format(time.RFC3339), formatDuration(time.Until(notificationDeadline)))
+		fmt.Fprintf(stderr, "          - Final Report (+14d):   14 days after corrective measures are available\n")
+		fmt.Fprintf(stderr, "        Notification Artefact: %s\n\n", artefactPath)
+
+		exitFunc(exitcodes.ActivelyExploited)
+		return nil
+	}
+
 	// Filter accepted CVEs
 	if key, err := accept.ResolveSecret(*cfg); err == nil {
 		configHash, _ := accept.ConfigHash(configPath)
@@ -363,6 +524,16 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 					if b, err := accept.NewSyslogBackend("localhost:514", "udp", "local0"); err == nil {
 						backends = append(backends, b)
 					}
+				} else if f == "enisa" {
+					queuePath := "wardex-enisa-queue.jsonl"
+					if cfg.Reporting.ENISAQueue.Path != "" {
+						queuePath = cfg.Reporting.ENISAQueue.Path
+					}
+					fmt.Fprintf(stderr, "[INFO] ENISABackend is a stub. No data will be transmitted.\n"+
+						"       Queue path: %s\n"+
+						"       When the ENISA single reporting platform API is published,\n"+
+						"       update Wardex and configure ENISABackend.endpoint.\n", queuePath)
+					backends = append(backends, accept.NewENISABackend(queuePath))
 				}
 			}
 			if len(backends) > 0 {
@@ -407,4 +578,17 @@ func isCI() bool {
 		}
 	}
 	return false
+}
+
+// formatDuration structures durations for CLI output.
+func formatDuration(d time.Duration) string {
+	if d <= 0 {
+		return "passed"
+	}
+	h := int(d.Hours())
+	m := int(d.Minutes()) % 60
+	if h >= 24 {
+		return fmt.Sprintf("%dd %dh", h/24, h%24)
+	}
+	return fmt.Sprintf("%dh %dm", h, m)
 }
