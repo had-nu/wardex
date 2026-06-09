@@ -279,4 +279,35 @@ The point of the linter is not to convince an auditor that you are honest. The p
 
 ---
 
-*This document is part of the Wardex v1.8.1 release.*
+## 9. Vulnerability Envelope (v2.0 — CRA Article 14)
+
+The vulnerability envelope YAML now supports three optional fields for CRA active exploitation classification:
+
+```yaml
+vulnerabilities:
+  - cve_id: CVE-2024-3094
+    cvss_base: 10.0
+    epss_score: 0.95
+    component: xz-utils
+    reachable: true
+    # NEW in v2.0 — CRA Article 14
+    actively_exploited: true                # classified as actively exploited
+    actively_exploited_since: "2024-03-29T00:00:00Z"  # when exploitation was confirmed
+    exploited_source: "cisa-kev"           # source of the classification
+```
+
+`actively_exploited` is set to `true` automatically when KEV correlation is enabled (`--kev` flag) and the CVE is found in the CISA KEV catalogue. It can also be set manually in the envelope for CVEs classified through other means.
+
+`exploited_source` traces the origin: `"cisa-kev"`, `"manual"`, or any custom identifier.
+
+`actively_exploited_since` records when exploitation was first confirmed (distinct from when Wardex detected it). When set via KEV, this is populated from the KEV `dateAdded` field.
+
+*This document is part of the Wardex v2.0 release.*
+
+---
+
+## 10. Reference
+
+- Spec: `SPEC_wardex_v2.0_CRA_Art14.md`
+- Changelog: `CHANGELOG.md`
+- Command reference: `wardex evaluate --help`, `wardex art14 --help`

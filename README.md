@@ -43,7 +43,7 @@ wardex assess controls.yaml --framework dora
 ## Instalação
 
 ```bash
-go install github.com/had-nu/wardex@v1.9.0
+go install github.com/had-nu/wardex@v2.0.0
 ```
 
 Requer Go ≥ 1.26. Confirma que `$(go env GOPATH)/bin` está no teu `$PATH`.
@@ -227,7 +227,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex@v1.9.0
+        run: go install github.com/had-nu/wardex@v2.0.0
 
       - name: Evaluate risk gate
         run: |
@@ -282,6 +282,51 @@ wardex evaluate --config config.wexstate --evidence vulns.yaml --strict
 
 Consulte o [Playbook de Governação](doc/operations/WARDEX_TRUST_PLAYBOOK.md) para o fluxo completo.
 
+## CRA Article 14 (v2.0)
+
+Wardex v2.0 adds support for the EU Cyber Resilience Act Article 14 reporting obligations.
+
+### KEV Correlation
+
+```bash
+# Download the CISA KEV catalogue
+curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json
+
+# Convert Grype output with KEV correlation
+wardex convert grype grype-output.json --kev kev-catalogue.json
+```
+
+### Active Exploitation Hard Stop
+
+When a vulnerability is classified as actively exploited (`actively_exploited: true`), `wardex evaluate`:
+- Exits with code **12** (`ActivelyExploited`) — distinct from the normal gate block (10)
+- Generates an Article 14 notification artefact signed with HMAC-SHA256
+- Records a chained audit entry with three CRA deadlines
+- **Cannot** be overridden by risk acceptances
+
+```bash
+wardex evaluate --evidence vulns.yaml --config wardex-config.yaml frameworks/iso27001/*.yml
+```
+
+### Artefact Lifecycle (`wardex art14`)
+
+```bash
+wardex art14 list
+wardex art14 show <artefact-id>
+wardex art14 verify <artefact-id>
+wardex art14 mark-dispatched <artefact-id> --phase early-warning
+wardex art14 finalize <artefact-id> --patch-date 2026-06-09T12:00:00Z
+```
+
+### Active Exploit Acknowledgement
+
+```bash
+wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
+```
+
+**Exit codes (v2.0):** `0` OK · `3` Integrity failure · `10` Gate blocked · `11` Compliance fail · **`12` Actively exploited**
+
+---
 ---
 
 ## SDK
