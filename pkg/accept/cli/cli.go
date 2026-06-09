@@ -16,6 +16,7 @@ import (
 
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept"
+	"github.com/had-nu/wardex/pkg/art14"
 	"github.com/had-nu/wardex/pkg/duration"
 	"github.com/had-nu/wardex/pkg/exitcodes"
 	"github.com/had-nu/wardex/pkg/model"
@@ -45,6 +46,10 @@ var (
 	revokeReason   string
 
 	expiryWarnBefore string
+
+	aeCVE          string
+	aeJustif       string
+	aeArtefactPath string
 )
 
 func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
@@ -468,6 +473,81 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	}
 	checkExpiryCmd.Flags().StringVar(&expiryWarnBefore, "warn-before", "72h", "Período de aviso: ex. 3d, 72h")
 
-	acceptCmd.AddCommand(requestCmd, listCmd, verifyCmd, verifyFwdCmd, revokeCmd, checkExpiryCmd)
+	activeExploitCmd := &cobra.Command{
+		Use:   "active-exploit",
+		Short: "Acknowledge an active exploitation for compliance trail",
+		Run: func(cmd *cobra.Command, args []string) {
+			cfg, err := config.Load(*configPathPtr)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
+				os.Exit(1)
+			}
+
+			// Validate --cve (required)
+			if aeCVE == "" {
+				fmt.Fprintf(os.Stderr, "Error: --cve is required\n")
+				os.Exit(1)
+			}
+
+			// Validate --justification (required, min 80 chars)
+			if len(aeJustif) < 80 {
+				fmt.Fprintf(os.Stderr, "Error: justification must be at least 80 characters (got %d)\n", len(aeJustif))
+				os.Exit(1)
+			}
+
+			// If --art14-artefact is provided, check if it exists and validate its HMAC
+			if aeArtefactPath != "" {
+				key, err := accept.ResolveSecret(*cfg)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Warning: WARDEX_ACCEPT_SECRET is not set, unable to verify HMAC: %v\n", err)
+				} else {
+					// Load and verify artefact
+					art, err := art14.ReadArtefact(aeArtefactPath)
+					if err != nil {
+						fmt.Fprintf(os.Stderr, "Error reading Article 14 notification artefact: %v\n", err)
+						os.Exit(1)
+					}
+					if err := art14.VerifyArtefact(art, key); err != nil {
+						fmt.Fprintf(os.Stderr, "Error: Article 14 notification artefact HMAC validation failed: %v\n", err)
+						os.Exit(1)
+					}
+				}
+			}
+
+			logPath := "wardex-gate-audit.log"
+			if cfg.Reporting.GateLog.Path != "" {
+				logPath = cfg.Reporting.GateLog.Path
+			}
+
+			configHash, _ := accept.ConfigHash(*configPathPtr)
+			entry := model.AuditEntry{
+				Timestamp:                     time.Now().UTC(),
+				Event:                         "active-exploit.acknowledged",
+				ConfigHash:                    configHash,
+				OverallDecision:               "block",
+				Status:                        "block",
+				Detail:                        fmt.Sprintf("Active exploitation acknowledged for CVE: %s. Justification: %s", aeCVE, aeJustif),
+				ActivelyExploited:             []string{aeCVE},
+				Art14NotificationArtefactPath: aeArtefactPath,
+			}
+
+			if err := accept.ChainedAuditLog(logPath, entry); err != nil {
+				fmt.Fprintf(os.Stderr, "Error writing audit log: %v\n", err)
+				os.Exit(1)
+			}
+
+			fmt.Printf("Acknowledged active exploitation for CVE %s in audit log (chained).\n", aeCVE)
+			os.Exit(exitcodes.OK)
+		},
+	}
+
+	activeExploitCmd.Flags().StringVar(&aeCVE, "cve", "", "CVE ID (required)")
+	activeExploitCmd.Flags().StringVar(&aeJustif, "justification", "", "Substantive justification (minimum 80 characters)")
+	activeExploitCmd.Flags().StringVar(&aeArtefactPath, "art14-artefact", "", "Path to the Article 14 notification artefact")
+
+	_ = activeExploitCmd.MarkFlagRequired("cve")
+	_ = activeExploitCmd.MarkFlagRequired("justification")
+
+	acceptCmd.AddCommand(requestCmd, listCmd, verifyCmd, verifyFwdCmd, revokeCmd, checkExpiryCmd, activeExploitCmd)
 	rootCmd.AddCommand(acceptCmd)
 }

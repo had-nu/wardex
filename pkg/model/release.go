@@ -3,6 +3,8 @@
 
 package model
 
+import "time"
+
 // Vulnerability representa uma vulnerabilidade a ser avaliada pelo release gate.
 type Vulnerability struct {
 	CVEID     string  `yaml:"cve_id"`
@@ -10,12 +12,18 @@ type Vulnerability struct {
 	EPSSScore float64 `yaml:"epss_score"`
 	Component string  `yaml:"component"`
 	Reachable bool    `yaml:"reachable"`
+	// NEW in v2.0 — CRA Article 14 active exploitation classification
+	ActivelyExploited      bool      `yaml:"actively_exploited,omitempty"`
+	ActivelyExploitedSince time.Time `yaml:"actively_exploited_since,omitempty"`
+	ExploitedSource        string    `yaml:"exploited_source,omitempty"` // e.g. "cisa-kev", "manual"
 }
 
 // VulnerabilityEnvelope wraps vulnerabilities with provenance metadata.
 type VulnerabilityEnvelope struct {
 	ConvertedBy     string          `yaml:"converted_by,omitempty"`
 	Vulnerabilities []Vulnerability `yaml:"vulnerabilities"`
+	// NEW in v2.0 — timestamp of when the envelope was last evaluated
+	EvaluatedAt time.Time `yaml:"evaluated_at,omitempty"`
 }
 
 // AssetContext descreve o contexto do asset.

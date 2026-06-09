@@ -6,6 +6,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.9.2] — 2026-05-10
 
+## [2.0.0] — 2026-06-10
+
+### Added
+
+- **CRA Article 14 Enablement**: Wardex now generates structured notification artefacts for the EU Cyber Resilience Act Article 14(2) three-phase reporting obligation (early warning, notification, final report).
+- **Active Exploitation Hard Stop**: `wardex evaluate` exits with code `12` (`ActivelyExploited`) when any vulnerability is marked `actively_exploited: true`. This hard stop cannot be overridden by risk acceptances.
+- **KEV Correlation (`--kev`)**: `wardex convert grype` gains a `--kev` flag that correlates CVEs against the CISA Known Exploited Vulnerabilities catalogue, setting `actively_exploited`, `exploited_source`, and `actively_exploited_since` fields.
+- **Audit Chain Integrity**: All gate audit log entries are now cryptographically chained via SHA-256 `previous_entry_hash`. `VerifyChain()` detects tampering and gaps.
+- **`wardex art14` Subcommand**: New command for lifecycle management of Article 14 artefacts: `list`, `show`, `mark-dispatched`, `finalize`, `verify`.
+- **`wardex accept active-exploit`**: Records operator awareness of active exploitation in the chained audit log for compliance trail evidence.
+- **ENISABackend (stub)**: New `enisa` forward backend writes to a local JSONL queue file. No network transmission — awaiting the ENISA Article 16 API publication.
+- **Configuration**: New `cra.art14` and `reporting.enisa_queue` blocks in `wardex-config.yaml`.
+
+### Changed
+
+- **BREAKING**: `Version` bumped to `2.0.0`.
+- **BREAKING**: `VulnerabilityEnvelope` now has an optional `evaluated_at` field.
+- **BREAKING**: `Vulnerability` gains three new optional fields: `actively_exploited`, `actively_exploited_since`, `exploited_source`.
+- **BREAKING**: `AuditEntry` gains `previous_entry_hash`, `actively_exploited_cves`, `art14_deadline_early_warning`, `art14_deadline_notification`, `art14_notification_artefact_path`.
+- New exit code `12` (`ActivelyExploited`). CI pipelines should handle this explicitly.
+
+### Fixed
+
+- `cmd/art14/art14.go:runVerify` now uses mockable `exitFunc` instead of `os.Exit`, enabling proper tampered-verification testing.
+
+---
+
+
 ### Added
 
 - **Gate Decision Log (G1)**: `wardex evaluate` now records every gate decision in

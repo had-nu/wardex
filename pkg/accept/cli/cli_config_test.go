@@ -26,7 +26,7 @@ func TestAddCommandsReceivesConfigPath(t *testing.T) {
 	}
 
 	// Verify subcommands were registered under accept
-	expectedSubs := []string{"request", "list", "verify", "verify-forwarding", "revoke", "check-expiry"}
+	expectedSubs := []string{"request", "list", "verify", "verify-forwarding", "revoke", "check-expiry", "active-exploit"}
 	for _, name := range expectedSubs {
 		found := false
 		for _, sub := range acceptCmd.Commands() {
