@@ -45,4 +45,11 @@ const (
 
 	// ComplianceFail indicates a gap score exceeded the --fail-above threshold.
 	ComplianceFail = 11
+
+	// ActivelyExploited indicates one or more CVEs in the evidence envelope are
+	// classified as actively exploited (e.g. present in the CISA KEV catalogue).
+	// This is a hard stop: unlike GateBlocked (10), it cannot be overridden by
+	// a risk acceptance. CI pipelines must treat exit code 12 explicitly.
+	// NEW in v2.0 — CRA Article 14 compliance.
+	ActivelyExploited = 12
 )

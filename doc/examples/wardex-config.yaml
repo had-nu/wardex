@@ -39,6 +39,8 @@ reporting:
     path: "wardex-gate-audit.log"
     forward: ["syslog"]      # Optional destinations
     on_fail: "warn"          # "warn" | "block"
+  enisa_queue:
+    path: "wardex-enisa-queue.jsonl" # Local queue for ENISABackend stub (v2.0)
 
 # Profiles (RBAC)
 # Overrides risk appetite for specific actors in trusted environments.
@@ -49,3 +51,13 @@ profiles:
     allowed_actors:
       - "ciso@example.com"
       - "security-lead@example.com"
+
+# CRA Article 14 Configuration (v2.0)
+# Controls CRA notification artefact generation.
+cra:
+  art14:
+    output_dir: "."                    # where artefact JSON files are written
+    awareness_source: "detection"      # "detection" | "envelope"
+    product_name: ""                   # pre-populated in artefact; operator fills
+    product_version: ""                # same
+    kev_path: ""                       # default KEV catalogue path for evaluate

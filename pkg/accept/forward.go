@@ -10,12 +10,14 @@ import (
 	"fmt"
 	"log/syslog"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
 	"time"
 
 	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 var (
@@ -264,4 +266,52 @@ func templateRenderer(path string, data any) (string, error) {
 		return "", err
 	}
 	return buf.String(), nil
+}
+
+// ENISABackend implements Forwarder for the ENISA single reporting platform.
+// In v2.0, this is a stub backend that writes to a local queue file.
+type ENISABackend struct {
+	QueuePath string
+}
+
+// NewENISABackend creates a new ENISABackend stub.
+func NewENISABackend(queuePath string) *ENISABackend {
+	if queuePath == "" {
+		queuePath = "wardex-enisa-queue.jsonl"
+	}
+	return &ENISABackend{QueuePath: queuePath}
+}
+
+// Name returns the backend name.
+func (e *ENISABackend) Name() string {
+	return "enisa"
+}
+
+// Send appends the entry to the local queue file.
+func (e *ENISABackend) Send(entry model.AuditEntry) error {
+	cwd, _ := os.Getwd()
+	safePath, err := utils.SafePath(cwd, e.QueuePath)
+	if err != nil {
+		return err
+	}
+
+	dir := filepath.Dir(safePath)
+	if err := os.MkdirAll(dir, 0750); err != nil {
+		return err
+	}
+
+	f, err := os.OpenFile(safePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600) // #nosec G304
+	if err != nil {
+		return err
+	}
+	defer func() { _ = f.Close() }()
+
+	data, err := json.Marshal(entry)
+	if err != nil {
+		return err
+	}
+	data = append(data, '\n')
+
+	_, err = f.Write(data)
+	return err
 }
