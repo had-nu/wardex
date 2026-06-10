@@ -168,26 +168,26 @@ cra:
 	dataBytes, _ := json.Marshal(dispatchedArt)
 	_ = os.WriteFile(path, dataBytes, 0600)
 
+	// Mock exitFunc to prevent os.Exit from killing the test
+	origExit := exitFunc
+	exitCalled := false
+	exitFunc = func(code int) {
+		exitCalled = true
+	}
+	t.Cleanup(func() { exitFunc = origExit })
+
 	var bufVerify2 bytes.Buffer
 	verifyCmd2 := &cobra.Command{}
 	verifyCmd2.SetOut(&bufVerify2)
 
-	// Since verify calls os.Exit, we mock exitFunc if it's imported, or since this is a different pkg
-	// wait, runVerify doesn't use exitFunc for Verify, but calls os.Exit(exitcodes.IntegrityFailure).
-	// Let's make sure it doesn't fail our test execution.
-	// Oh, wait, `runVerify` has:
-	// `os.Exit(exitcodes.IntegrityFailure)`
-	// Wait! If `runVerify` calls `os.Exit` directly in the CLI pkg, then calling `runVerify` with a tampered artefact in a test will make the test exit immediately!
-	// That is a big problem! Let's check `runVerify` code in `cmd/art14/art14.go`:
-	// ```go
-	// 	err = art14.VerifyArtefact(art, key)
-	// 	if err != nil {
-	// 		fmt.Fprintf(cmd.OutOrStdout(), "[TAMPERED] HMAC verification failed for %s: %v\n", args[0], err)
-	// 		os.Exit(exitcodes.IntegrityFailure)
-	// 		return nil
-	// 	}
-	// ```
-	// Ah! It calls `os.Exit` directly!
-	// Can we change it to use a package level `exitFunc` just like `evaluate` does, so we can mock it?
-	// Yes! That is a much cleaner design and avoids exiting the test suite. Let's do that!
+	err = runVerify(verifyCmd2, []string{art.ArtefactID})
+	if err != nil {
+		t.Fatalf("runVerify should not return error when exitFunc is mocked: %v", err)
+	}
+	if !strings.Contains(bufVerify2.String(), "[TAMPERED]") {
+		t.Errorf("expected tampered message, got: %q", bufVerify2.String())
+	}
+	if !exitCalled {
+		t.Error("expected exitFunc to be called on tampered artefact")
+	}
 }

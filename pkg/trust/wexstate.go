@@ -49,7 +49,7 @@ func SaveWexState(path string, state *WexState) error {
 	if err != nil {
 		return fmt.Errorf("wexstate: marshal: %w", err)
 	}
-	if err := os.WriteFile(path, data, 0644); err != nil {
+	if err := os.WriteFile(path, data, 0600); err != nil {
 		return fmt.Errorf("wexstate: write %q: %w", path, err)
 	}
 	return nil

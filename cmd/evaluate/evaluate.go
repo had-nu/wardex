@@ -314,10 +314,9 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("evaluate: generate Article 14 notification artefact: %w", err)
 		}
 
-		key, keyErr := accept.ResolveSecret(*cfg)
-		if keyErr != nil {
-			fmt.Fprintln(stderr, "[WARN] WARDEX_ACCEPT_SECRET is not set. Generating artefact with an unsigned/weak HMAC.")
-			key = []byte("REDACTED_WEAK_SECRET_REMOVED")
+		key, err := accept.ResolveSecret(*cfg)
+		if err != nil {
+			return fmt.Errorf("evaluate: %w. Set WARDEX_ACCEPT_SECRET to generate a signed CRA Article 14 artefact", err)
 		}
 		if err := art14.SignArtefact(artefact, key); err != nil {
 			return fmt.Errorf("evaluate: sign Article 14 notification artefact: %w", err)
