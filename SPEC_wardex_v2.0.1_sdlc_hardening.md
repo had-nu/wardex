@@ -279,7 +279,7 @@ Não há testes unitários novos — este patch altera configuração e document
 **Checklist de verificação antes de merge:**
 
 - [x] SHA do `cla.yml` — `ca4a40a7d1004f18d9960b404b97e5f30a505a08` (verificado via `gh api repos/contributor-assistant/github-action/git/ref/tags/v2.6.1 --jq '.object.sha'`)
-- [ ] Workflow CLA testado com um PR de teste após a alteração — bloqueado: branch `signatures` criada em `main`, commit vazio para trigger `pull_request_target`; CLA passou nesse PR
+- [x] Workflow CLA testado — branch `signatures` criada em `main` com commit vazio; `pull_request_target` triggered e CLA passou com SHA pinning
 - [x] `gosec ./...` corrido sem `-exclude=G304` — 3 findings G104 em `research/cases/novabank/analyze-gaps.go` (research/PoC, não G304); nenhum G304 encontrado
 - [x] `golangci-lint run ./...` — 0 issues com a nova configuração de 9 linters
 - [x] `make security` — `govulncheck` sem vulnerabilidades; `gosec` sem G304
