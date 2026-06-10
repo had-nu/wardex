@@ -1,4 +1,4 @@
-.PHONY: all build test lint clean
+.PHONY: all build test lint security clean
 
 BINARY := wardex
 PKG    := ./...
@@ -14,6 +14,10 @@ test:
 
 lint:
 	golangci-lint run $(PKG)
+
+security:
+	govulncheck $(PKG)
+	gosec $(PKG)
 
 clean:
 	rm -rf bin/ coverage.out

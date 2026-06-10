@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/had-nu/wardex/pkg/utils"
 )
 
 // SealConfig reads a draft wardex-config.yaml, verifies there are no
@@ -46,9 +48,18 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 	}
 
 	// 3. Read and validate the draft config
-	draftData, err := os.ReadFile(inputPath) // #nosec G304
+	cwd, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("config seal: read draft %q: %w", inputPath, err)
+		return fmt.Errorf("config seal: get working directory: %w", err)
+	}
+	safePath, err := utils.SafePath(cwd, inputPath)
+	if err != nil {
+		return fmt.Errorf("config seal: unsafe path %q: %w", inputPath, err)
+	}
+	// safePath was validated by SafePath above — no traversal possible
+	draftData, err := os.ReadFile(safePath) // #nosec G304
+	if err != nil {
+		return fmt.Errorf("config seal: read draft %q: %w", safePath, err)
 	}
 
 	pendingFields, err := DetectPendingApproval(draftData)

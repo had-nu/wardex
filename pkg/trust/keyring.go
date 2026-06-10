@@ -49,7 +49,7 @@ func GenerateKeypair(outPath string, force bool) (ed25519.PublicKey, error) {
 	// Write public key
 	pubPath := outPath + ".pub"
 	pubEncoded := PubKeyPrefix + base64.StdEncoding.EncodeToString(pub)
-	if err := os.WriteFile(pubPath, []byte(pubEncoded), 0644); err != nil {
+	if err := os.WriteFile(pubPath, []byte(pubEncoded), 0644); err != nil { // #nosec G306 -- public key, world-readable by design
 		return nil, fmt.Errorf("keygen: write public key: %w", err)
 	}
 
