@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.9.2] — 2026-05-10
 
+## [2.0.1] — 2026-06-10
+
+### Security
+
+- **Weak HMAC fallback removido**: `cmd/evaluate/evaluate.go` agora retorna erro se `WARDEX_ACCEPT_SECRET` não estiver definida, em vez de usar `"weak-fallback-secret-for-draft"` (CRA-critical).
+- **G304 fix — `SafePath` em `pkg/trust/seal.go`**: validação de caminho antes de `os.ReadFile` para evitar path traversal (CRA-critical).
+- **SHA pinning do CLA action**: `.github/workflows/cla.yml` usa SHA `ca4a40a7d1004f18d9960b404b97e5f30a505a08` em vez da tag `v2.6.1`.
+- **`.github/workflows/ci.yml`**: remoção do `-exclude=G304` global do gosec. Supressões inline em `analyze-gaps.go`, `wexstate.go`, `store.go`, `keyring.go`.
+- **`.golangci.yml` expandido**: 9 litters activos (staticcheck, gosec, gomodguard, misspell, exhaustive, unused, errcheck, govet, ineffassign) com configuração v2, 0 issues.
+- **`SECURITY.md` actualizado**: contacto real `andre.ataide@proton.me` e PGP fingerprint `979A C8CE 8F35 7652`.
+- **`Makefile`**: novo target `make security` (govulncheck + gosec).
+
+### Fixed
+
+- **`exitFunc` mocking em `cmd/art14/art14_test.go`**: `runVerify` com artefacto adulterado já não chama `os.Exit` directamente — usa `exitFunc` mockável, impedindo a morte do test suite.
+
+---
+
 ## [2.0.0] — 2026-06-10
 
 ### Added
