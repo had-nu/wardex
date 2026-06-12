@@ -18,11 +18,11 @@
 
 ---
 
-O **Wardex** é uma CLI e biblioteca Go que transforma decisões de segurança e conformidade em evidência auditável. Dois modos independentes — nenhum depende do outro.
+Wardex é uma CLI e biblioteca Go que transforma decisões de segurança e conformidade em evidência auditável. Opera em dois modos independentes — nenhum exige o outro.
 
-O release gate avalia cada vulnerabilidade no contexto do activo que a contém: criticidade do sistema, exposição efectiva, controlos compensatórios já activos. Em vez de um threshold CVSS estático que bloqueia tudo ou nada, o output é uma decisão (ALLOW, WARN, BLOCK) com registo assinado e com timestamp que sobrevive a uma auditoria.
+O release gate avalia cada vulnerabilidade no contexto do ativo que a contém: criticidade do sistema, exposição efectiva, controlos compensatórios já ativos. Em vez de um limiar CVSS estático que bloqueia tudo ou nada, o resultado é uma decisão com registo datado e assinado, que sobrevive a uma auditoria.
 
-A análise de gaps cruza o que o infosec declarou com o que está operacionalmente activo, contra o catálogo do framework escolhido. O resultado não é uma lista de controlos — é a separação entre cobertura real, *paper security* (existe só na política) e *shadow security* (opera sem política).
+A análise de lacunas cruza o que a função de segurança declarou com o que está operacionalmente confirmado, mapeando ambos contra o catálogo do framework escolhido. O resultado não é uma lista de controlos — é a separação entre cobertura genuína, o que existe apenas como política e o que opera fora da governação.
 
 ---
 
@@ -149,10 +149,10 @@ O report separa os resultados em quatro estados de conformidade:
 
 | Categoria | Significado |
 |---|---|
-| **Coberto** | Presente no layer `implemented`, maturidade >= 3 e com evidências operacionais. |
-| **Paper security** | Documentado apenas. Sem controlo implementado correspondente. (Policy Gap) |
-| **Shadow security** | Implementado mas sem política documentada. |
-| **Gap** | Ausente em ambos os layers para um controlo do catálogo. |
+| **Coberto** | Presente na camada `implemented`, maturidade >= 3, com evidência operacional. |
+| **Política sem execução** | Documentado apenas. Nenhum controlo implementado correspondente. |
+| **Prática sem governação** | Implementado mas sem política documentada. |
+| **Lacuna** | Ausente em ambas as camadas para um controlo do catálogo. |
 
 A secção `LayerDelta` identifica o desvio real entre a intenção (política) e a execução (código), expondo a ilusão de conformidade.
 

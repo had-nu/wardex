@@ -18,11 +18,11 @@
 
 ---
 
-**Wardex** is a CLI and Go library that turns security and compliance decisions into auditable evidence. Two independent modes — neither requires the other.
+Wardex is a CLI and Go library that turns security and compliance decisions into auditable evidence. Two independent modes — neither requires the other.
 
-The release gate evaluates each vulnerability in the context of the asset that contains it: system criticality, effective exposure, compensating controls already active. Rather than a static CVSS threshold that blocks everything or nothing, the output is a decision (ALLOW, WARN, BLOCK) with a timestamped, signed record that survives an audit.
+The release gate evaluates each vulnerability in the context of the asset that contains it: system criticality, effective exposure, compensating controls already active. Rather than a static CVSS threshold that blocks everything or nothing, the output is a decision with a timestamped, signed record that survives an audit.
 
-The gap analysis crosses what infosec declared against what is operationally active, mapped against the chosen framework catalogue. The result is not a control list — it is the separation between genuine coverage, *paper security* (exists only in policy), and *shadow security* (operates without a policy).
+The gap analysis crosses what the security function declared against what is operationally confirmed, mapped against the chosen framework catalogue. The result is not a control list — it is the separation between genuine coverage, what exists only in policy, and what operates outside of governance.
 
 ---
 
@@ -150,8 +150,8 @@ The report separates results into four compliance states:
 | Category | Meaning |
 |---|---|
 | **Covered** | Present in `implemented` layer, maturity >= 3, with operational evidence. |
-| **Paper security** | Documented only. No corresponding implemented control. (Policy Gap) |
-| **Shadow security** | Implemented but without a documented policy. |
+| **Policy without practice** | Documented only. No corresponding implemented control. |
+| **Practice without governance** | Implemented but without a documented policy. |
 | **Gap** | Absent from both layers for a catalogue control. |
 
 The `LayerDelta` section identifies the real drift between intent (policy) and execution (code), exposing compliance illusions.
