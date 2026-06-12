@@ -18,13 +18,13 @@
 
 ---
 
-O **Wardex** é uma CLI e biblioteca Go com dois propósitos distintos:
+O **Wardex** é uma CLI e biblioteca Go que transforma decisões de segurança e conformidade em evidência auditável.
 
-1. **Release gate baseado em risco** — avalia vulnerabilidades no contexto do activo (CVSS × EPSS × criticidade × exposição × controlos compensatórios) e decide ALLOW, WARN ou BLOCK. Substitui o threshold CVSS estático.
+Dois modos independentes — um sem dependência do outro:
 
-2. **Análise de gaps de conformidade** — cruza os controlos documentados pelo infosec com os controlos operacionais confirmados, e compara ambos com o catálogo do framework. Identifica o que é cobertura real, o que existe só em papel (*paper security*), e o que opera sem política (*shadow security*).
+**Release gate sensível a contexto.** Em vez de um threshold CVSS estático que bloqueia tudo ou nada, avalia cada vulnerabilidade no contexto do activo que a contém: qual a criticidade do sistema, a que está exposto, que controlos compensatórios já o protegem. O output não é um score abstracto — é uma decisão (ALLOW, WARN, BLOCK) que pode ser justificada e preservada como registo.
 
-Os dois modos são independentes. Podes usar só um deles.
+**Análise de gaps de conformidade.** A política documentada raramente corresponde ao que está operacionalmente activo. O Wardex cruza os dois planos — o que o infosec declarou versus o que realmente executa — contra o catálogo do framework (ISO 27001, SOC 2, NIS 2, DORA). O resultado separa o que é cobertura real do que é *paper security* (existe só na política) e *shadow security* (opera sem política).
 
 ---
 
@@ -146,17 +146,9 @@ wardex assess documented-controls.yaml implemented-controls.yaml \
 
 ## Release gate baseado em risco
 
-O gate avalia vulnerabilidades com o modelo:
+O gate avalia cada vulnerabilidade contra quatro eixos do contexto do activo: gravidade da vulnerabilidade, probabilidade de exploração activa, criticidade e exposição do activo, e eficácia dos controlos compensatórios existentes.
 
-```
-R(v, α) = (CVSS(v)/10) × EPSS(v) × C(α) × E(α) × (1 − Φ(α))
-```
-
-CVSS é dividido por 10 para normalizar a escala: o produto `(CVSS/10) × EPSS` fica em [0, 1], e o output final `R` em [0, 1.5]. Os thresholds em `wardex-config.yaml` (`risk_appetite`, `warn_above`) vivem nessa mesma escala.
-
-`C` é a criticidade do activo, `E` é a exposição efectiva, e `Φ` é a eficácia dos controlos compensatórios (clamped em 0.80 — máximo 80% de redução, `1 − Φ` mínimo de 0.20).
-
-O resultado é comparado com o `risk_appetite` definido em `wardex-config.yaml`. Três bandas possíveis: `ALLOW`, `WARN`, `BLOCK`.
+Cada eixo reduz ou amplia o peso relativo — um activo crítico e exposto à internet pesa mais que um serviço interno de baixa criticidade, mesmo com a mesma CVE. O resultado é comparado com o apetite de risco definido em `wardex-config.yaml`. Três bandas possíveis: `ALLOW`, `WARN`, `BLOCK`.
 
 ### Configuração
 
@@ -187,7 +179,7 @@ O que diferencia o ALLOW do BLOCK não é a CVE — é o contexto do activo.
 | curl SOCKS5 | 9.8 | 0.26 | **0.38** `BLOCK` | **0.20** `WARN` | **0.38** `BLOCK` | **0.31** `BLOCK` |
 | minimist | 9.8 | 0.01 | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` |
 
-*R ∈ [0, 1.5]. Thresholds por perfil na escala normalizada — ver `data/calibration.json`.*
+Thresholds por perfil na escala normalizada — ver `data/calibration.json`.
 
 Calibrado contra 237 CVEs reais com EPSS da FIRST.org (`data/dataset_2025-03-01.json`):
 
