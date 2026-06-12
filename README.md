@@ -14,23 +14,21 @@
 </div>
 
 > [!IMPORTANT]
-> **Supply chain hardening (TeamPCP):** Na sequência da campanha TeamPCP — que usou ferramentas de segurança como vectores de ataque em pipelines CI/CD — o Wardex antecipou o seu roadmap defensivo. As acções do GitHub usam SHA256 pinning, os workflows têm permissões mínimas declaradas explicitamente, e os payloads de enriquecimento EPSS são assinados criptograficamente antes de entrar na pipeline.
+> **CRA Article 14 (v2.0):** As obrigações de notificação por exploração activa do Cyber Resilience Act entram em vigor em setembro de 2026. O Wardex v2.0 implementa o caminho completo: correlação com o catálogo CISA KEV, exit code distinto (`12`), artefacto de notificação assinado com HMAC-SHA256, e registo de auditoria encadeado com os três prazos regulatórios. Este caminho não pode ser substituído por aceitações de risco.
 
 ---
 
-O **Wardex** é uma CLI e biblioteca Go que transforma decisões de segurança e conformidade em evidência auditável.
+O **Wardex** é uma CLI e biblioteca Go que transforma decisões de segurança e conformidade em evidência auditável. Dois modos independentes — nenhum depende do outro.
 
-Dois modos independentes — um sem dependência do outro:
+O release gate avalia cada vulnerabilidade no contexto do activo que a contém: criticidade do sistema, exposição efectiva, controlos compensatórios já activos. Em vez de um threshold CVSS estático que bloqueia tudo ou nada, o output é uma decisão (ALLOW, WARN, BLOCK) com registo assinado e com timestamp que sobrevive a uma auditoria.
 
-**Release gate sensível a contexto.** Em vez de um threshold CVSS estático que bloqueia tudo ou nada, avalia cada vulnerabilidade no contexto do activo que a contém: qual a criticidade do sistema, a que está exposto, que controlos compensatórios já o protegem. O output não é um score abstracto — é uma decisão (ALLOW, WARN, BLOCK) que pode ser justificada e preservada como registo.
-
-**Análise de gaps de conformidade.** A política documentada raramente corresponde ao que está operacionalmente activo. O Wardex cruza os dois planos — o que o infosec declarou versus o que realmente executa — contra o catálogo do framework (ISO 27001, SOC 2, NIS 2, DORA). O resultado separa o que é cobertura real do que é *paper security* (existe só na política) e *shadow security* (opera sem política).
+A análise de gaps cruza o que o infosec declarou com o que está operacionalmente activo, contra o catálogo do framework escolhido. O resultado não é uma lista de controlos — é a separação entre cobertura real, *paper security* (existe só na política) e *shadow security* (opera sem política).
 
 ---
 
 ## Frameworks suportados
 
-ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA
+ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · CRA Article 14
 
 ```bash
 wardex assess controls.yaml --framework iso27001  # predefinição
@@ -54,6 +52,52 @@ Para compilar a partir do código-fonte:
 git clone https://github.com/had-nu/wardex.git
 cd wardex && make build
 ```
+
+---
+
+## CRA Article 14 (v2.0)
+
+As obrigações de notificação por exploração activa do Regulamento Europeu de Resiliência Cibernética entram em vigor em setembro de 2026. O Wardex v2.0 implementa o caminho de reporte do Article 14.
+
+### KEV Correlation
+
+```bash
+# Descarregar o catálogo CISA KEV
+curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json
+
+# Converter output do Grype com correlação KEV
+wardex convert grype grype-output.json --kev kev-catalogue.json
+```
+
+### Active Exploitation Hard Stop
+
+Quando uma vulnerabilidade é classificada como activamente explorada (`actively_exploited: true`), o `wardex evaluate`:
+- Termina com o código **12** (`ActivelyExploited`) — distinto do bloqueio normal de gate (10)
+- Gera um artefacto de notificação Article 14 assinado com HMAC-SHA256
+- Regista uma entrada de auditoria encadeada com os três prazos CRA
+- **Não pode** ser substituído por aceitações de risco
+
+```bash
+wardex evaluate --evidence vulns.yaml --config wardex-config.yaml frameworks/iso27001/*.yml
+```
+
+### Ciclo de vida do artefacto (`wardex art14`)
+
+```bash
+wardex art14 list
+wardex art14 show <artefact-id>
+wardex art14 verify <artefact-id>
+wardex art14 mark-dispatched <artefact-id> --phase early-warning
+wardex art14 finalize <artefact-id> --patch-date 2026-06-09T12:00:00Z
+```
+
+### Reconhecimento de exploração activa
+
+```bash
+wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
+```
+
+**Exit codes (v2.0):** `0` OK · `3` Falha de integridade · `10` Gate bloqueado · `11` Falha de conformidade · **`12` Activamente explorado**
 
 ---
 
@@ -110,7 +154,7 @@ O report separa os resultados em quatro estados de conformidade:
 | **Shadow security** | Implementado mas sem política documentada. |
 | **Gap** | Ausente em ambos os layers para um controlo do catálogo. |
 
-A secção `LayerDelta` identifica o desvio real entre a intenção (política) e a execução (código), expondo a "ilusão de conformidade".
+A secção `LayerDelta` identifica o desvio real entre a intenção (política) e a execução (código), expondo a ilusão de conformidade.
 
 ### Com activos
 
@@ -146,9 +190,15 @@ wardex assess documented-controls.yaml implemented-controls.yaml \
 
 ## Release gate baseado em risco
 
-O gate avalia cada vulnerabilidade contra quatro eixos do contexto do activo: gravidade da vulnerabilidade, probabilidade de exploração activa, criticidade e exposição do activo, e eficácia dos controlos compensatórios existentes.
+O gate avalia cada vulnerabilidade com o modelo:
 
-Cada eixo reduz ou amplia o peso relativo — um activo crítico e exposto à internet pesa mais que um serviço interno de baixa criticidade, mesmo com a mesma CVE. O resultado é comparado com o apetite de risco definido em `wardex-config.yaml`. Três bandas possíveis: `ALLOW`, `WARN`, `BLOCK`.
+```
+R(v, α) = (CVSS(v)/10) × EPSS(v) × C(α) × E(α) × (1 − Φ(α))
+```
+
+`CVSS/10` normaliza o score base para [0, 1]; combinado com `EPSS`, o produto representa severidade ponderada pela probabilidade de exploração activa. `C` é a criticidade do activo, `E` a exposição efectiva, e `Φ` a eficácia dos controlos compensatórios (limitado a 0.80 — um controlo compensatório reduz o risco no máximo 80%). O `R` final situa-se em [0, 1.5]. Os thresholds em `wardex-config.yaml` usam a mesma escala.
+
+O resultado é comparado com o apetite de risco definido em `wardex-config.yaml`. Três bandas possíveis: `ALLOW`, `WARN`, `BLOCK`.
 
 ### Configuração
 
@@ -170,7 +220,7 @@ release_gate:
 
 ### A mesma CVE, quatro contextos
 
-O que diferencia o ALLOW do BLOCK não é a CVE — é o contexto do activo.
+O que diferencia o ALLOW do BLOCK não é a CVE — é o contexto do activo. `R` situa-se em [0, 1.5]; cada perfil tem um threshold `risk_appetite` distinto (ver `data/calibration.json`).
 
 | CVE | CVSS | EPSS | [BANK] | [SAAS] | [INFRA] | [HOSP] |
 |---|---|---|---|---|---|---|
@@ -178,8 +228,6 @@ O que diferencia o ALLOW do BLOCK não é a CVE — é o contexto do activo.
 | xz backdoor | 10.0 | 0.86 | **1.29** `BLOCK` | **0.69** `BLOCK` | **1.29** `BLOCK` | **1.03** `BLOCK` |
 | curl SOCKS5 | 9.8 | 0.26 | **0.38** `BLOCK` | **0.20** `WARN` | **0.38** `BLOCK` | **0.31** `BLOCK` |
 | minimist | 9.8 | 0.01 | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` |
-
-Thresholds por perfil na escala normalizada — ver `data/calibration.json`.
 
 Calibrado contra 237 CVEs reais com EPSS da FIRST.org (`data/dataset_2025-03-01.json`):
 
@@ -260,9 +308,9 @@ As aceitações são assinadas com HMAC-SHA256 e registadas em log append-only (
 
 Para conformidade **DORA** e cadeias de custódia não-repudiáveis, o Wardex permite selar as políticas de risco (`wardex-config.yaml`) num envelope criptográfico assinado (`.wexstate`).
 
-*   **Identidade forte**: Baseado em chaves Ed25519 para Admins, CISOs e Analistas.
-*   **Sealed Config**: Impede que políticas de risco sejam alteradas em CI/CD sem aprovação executiva.
-*   **Trust Store Append-Only**: Registo central de chaves autorizadas e revogações.
+- **Identidade forte**: Chaves Ed25519 para Admins, CISOs e Analistas.
+- **Sealed config**: As políticas de risco não podem ser alteradas em CI/CD sem aprovação executiva.
+- **Trust store append-only**: Registo central de chaves autorizadas e revogações.
 
 ```bash
 # Sela a política (acção do CISO)
@@ -272,53 +320,8 @@ wardex config seal --keyring ciso.wex --input config.yaml --out config.wexstate
 wardex evaluate --config config.wexstate --evidence vulns.yaml --strict
 ```
 
-Consulte o [Playbook de Governação](doc/operations/WARDEX_TRUST_PLAYBOOK.md) para o fluxo completo.
+Consulta o [Playbook de Governação](doc/operations/WARDEX_TRUST_PLAYBOOK.md) para o fluxo completo.
 
-## CRA Article 14 (v2.0)
-
-Wardex v2.0 adds support for the EU Cyber Resilience Act Article 14 reporting obligations.
-
-### KEV Correlation
-
-```bash
-# Download the CISA KEV catalogue
-curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json
-
-# Convert Grype output with KEV correlation
-wardex convert grype grype-output.json --kev kev-catalogue.json
-```
-
-### Active Exploitation Hard Stop
-
-When a vulnerability is classified as actively exploited (`actively_exploited: true`), `wardex evaluate`:
-- Exits with code **12** (`ActivelyExploited`) — distinct from the normal gate block (10)
-- Generates an Article 14 notification artefact signed with HMAC-SHA256
-- Records a chained audit entry with three CRA deadlines
-- **Cannot** be overridden by risk acceptances
-
-```bash
-wardex evaluate --evidence vulns.yaml --config wardex-config.yaml frameworks/iso27001/*.yml
-```
-
-### Artefact Lifecycle (`wardex art14`)
-
-```bash
-wardex art14 list
-wardex art14 show <artefact-id>
-wardex art14 verify <artefact-id>
-wardex art14 mark-dispatched <artefact-id> --phase early-warning
-wardex art14 finalize <artefact-id> --patch-date 2026-06-09T12:00:00Z
-```
-
-### Active Exploit Acknowledgement
-
-```bash
-wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
-```
-
-**Exit codes (v2.0):** `0` OK · `3` Integrity failure · `10` Gate blocked · `11` Compliance fail · **`12` Actively exploited**
-
----
 ---
 
 ## SDK
