@@ -15,15 +15,18 @@ import (
 
 // yamlExistingControl mirrors ExistingControl to define mapping tags
 type yamlExistingControl struct {
-	ID                  string           `yaml:"id"`
-	Name                string           `yaml:"name"`
-	Description         string           `yaml:"description"`
-	Framework           string           `yaml:"framework"`
-	Domains             []string         `yaml:"domains"`
-	Maturity            int              `yaml:"maturity"`
-	Evidences           []model.Evidence `yaml:"evidences"`
-	ContextWeight       *float64         `yaml:"context_weight"`
-	WeightJustification string           `yaml:"weight_justification"`
+	ID                  string             `yaml:"id"`
+	Name                string             `yaml:"name"`
+	Description         string             `yaml:"description"`
+	Framework           string             `yaml:"framework"`
+	Domains             []string           `yaml:"domains"`
+	Maturity            int                `yaml:"maturity"`
+	Layer               model.ControlLayer `yaml:"layer"`
+	Effectiveness       float64            `yaml:"effectiveness"`
+	ReviewRequired      bool               `yaml:"review_required"`
+	Evidences           []model.Evidence   `yaml:"evidences"`
+	ContextWeight       *float64           `yaml:"context_weight"`
+	WeightJustification string             `yaml:"weight_justification"`
 }
 
 type yamlFormat struct {
@@ -43,8 +46,14 @@ func loadYAML(path string) ([]model.ExistingControl, error) {
 
 	var parsed yamlFormat
 	decoder := yaml.NewDecoder(bytes.NewReader(data))
-	if err := decoder.Decode(&parsed); err != nil {
-		return nil, fmt.Errorf("parsing YAML: %w", err)
+	if err := decoder.Decode(&parsed); err != nil || len(parsed.Controls) == 0 {
+		// Try root list format if wrapped format fails or is empty
+		var rootList []yamlExistingControl
+		if err2 := yaml.Unmarshal(data, &rootList); err2 == nil && len(rootList) > 0 {
+			parsed.Controls = rootList
+		} else if err != nil {
+			return nil, fmt.Errorf("parsing YAML: %w", err)
+		}
 	}
 
 	var controls []model.ExistingControl
@@ -54,6 +63,11 @@ func loadYAML(path string) ([]model.ExistingControl, error) {
 			weight = *c.ContextWeight
 		}
 
+		layer := c.Layer
+		if layer == "" {
+			layer = model.LayerDocumented
+		}
+
 		mapped := model.ExistingControl{
 			ID:                  c.ID,
 			Name:                c.Name,
@@ -61,6 +75,9 @@ func loadYAML(path string) ([]model.ExistingControl, error) {
 			Framework:           c.Framework,
 			Domains:             c.Domains,
 			Maturity:            c.Maturity,
+			Layer:               layer,
+			Effectiveness:       c.Effectiveness,
+			ReviewRequired:      c.ReviewRequired,
 			Evidences:           c.Evidences,
 			ContextWeight:       weight,
 			WeightJustification: c.WeightJustification,

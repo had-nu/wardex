@@ -1,0 +1,32 @@
+# dummy_assets.yaml — minimal smoke test fixture
+# Para o teste completo usar test/testdata/assets.yaml
+
+- id: ASSET-SMOKE-001
+  name: Customer Data DB
+  type: data
+  criticality: 1.00
+  scope:
+    - iso27001
+  controls:
+    - ORG-A.5.1
+  owner: platform-team
+  exposure:
+    internet_facing: false
+    requires_auth: true
+    network_zone: internal
+    data_classification: confidential
+
+- id: ASSET-SMOKE-002
+  name: Public API
+  type: application
+  criticality: 1.50
+  scope:
+    - iso27001
+  controls:
+    - TECH-A.8.8
+  owner: platform-team
+  exposure:
+    internet_facing: true
+    requires_auth: true
+    network_zone: dmz
+    data_classification: restricted

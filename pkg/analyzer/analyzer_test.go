@@ -16,7 +16,7 @@ func TestAnalyzer_Covered(t *testing.T) {
 
 	controls := []model.ExistingControl{
 		{
-			ID: "C1", Maturity: 3,
+			ID: "C1", Maturity: 3, Layer: model.LayerImplemented,
 			Evidences: []model.Evidence{{Type: "policy", Ref: "link"}},
 		},
 	}
@@ -45,7 +45,7 @@ func TestAnalyzer_Partial_LowConfidence(t *testing.T) {
 
 	controls := []model.ExistingControl{
 		{
-			ID: "C1", Maturity: 4,
+			ID: "C1", Maturity: 4, Layer: model.LayerImplemented,
 			Evidences: []model.Evidence{{Type: "policy", Ref: "link"}},
 		},
 	}
@@ -80,5 +80,25 @@ func TestAnalyzer_Gap(t *testing.T) {
 
 	if findings[0].Status != model.StatusGap {
 		t.Errorf("expected status gap, got %s", findings[0].Status)
+	}
+}
+
+func TestAnalyzer_EffectiveMaturity(t *testing.T) {
+	cat := []model.CatalogControl{{ID: "A.1"}}
+	controls := []model.ExistingControl{
+		{ID: "C1", Maturity: 2},
+		{ID: "C2", Maturity: 4},
+	}
+	maps := []model.Mapping{
+		{ExistingControlID: "C1", CatalogControlID: "A.1"},
+		{ExistingControlID: "C2", CatalogControlID: "A.1"},
+	}
+
+	a := analyzer.New(cat, maps, controls)
+	findings, _ := a.Analyze()
+
+	// EffectiveMaturity = (2 + 4) / 2 = 3.0
+	if findings[0].EffectiveMaturity != 3.0 {
+		t.Errorf("expected effective maturity 3.0, got %f", findings[0].EffectiveMaturity)
 	}
 }

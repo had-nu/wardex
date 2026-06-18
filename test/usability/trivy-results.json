@@ -1,0 +1,167 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "fintech-backend:latest",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "OS": {
+      "Family": "debian",
+      "Name": "12.5"
+    },
+    "ImageID": "sha256:a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+    "DiffIDs": [
+      "sha256:b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3"
+    ],
+    "RepoTags": ["fintech-backend:v2.4.1"],
+    "RepoDigests": ["fintech-backend@sha256:c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4"],
+    "ImageConfig": {
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  },
+  "Results": [
+    {
+      "Target": "fintech-backend:latest (debian 12.5)",
+      "Class": "os-pkgs",
+      "Type": "debian",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-6387",
+          "PkgName": "openssh-server",
+          "InstalledVersion": "1:9.2p1-2+deb12u2",
+          "FixedVersion": "1:9.2p1-2+deb12u3",
+          "Layer": {
+            "DiffID": "sha256:b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3"
+          },
+          "SeveritySource": "nvd",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-6387",
+          "Title": "OpenSSH: regreSSHion - Race Condition in Signal Handler",
+          "Description": "A signal handler race condition was found in OpenSSH's server (sshd).",
+          "Severity": "CRITICAL",
+          "CweIDs": ["CWE-364"],
+          "CVSS": {
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.1
+            }
+          },
+          "References": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-6387",
+            "https://www.qualys.com/2024/07/01/cve-2024-6387/regresshion.txt"
+          ],
+          "PublishedDate": "2024-07-01T13:15:00Z",
+          "LastModifiedDate": "2024-07-15T14:22:00Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-4741",
+          "PkgName": "libssl3",
+          "InstalledVersion": "3.0.13-1~deb12u1",
+          "FixedVersion": "3.0.14-1~deb12u1",
+          "Layer": {
+            "DiffID": "sha256:b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3"
+          },
+          "SeveritySource": "nvd",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-4741",
+          "Title": "OpenSSL: Use After Free with SSL_free_buffers",
+          "Description": "Issue summary: Calling the OpenSSL API function SSL_free_buffers may cause memory to be accessed that was previously freed.",
+          "Severity": "HIGH",
+          "CweIDs": ["CWE-416"],
+          "CVSS": {
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 5.9
+            }
+          },
+          "References": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-4741"
+          ],
+          "PublishedDate": "2024-05-16T17:15:00Z",
+          "LastModifiedDate": "2024-06-01T09:00:00Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-2961",
+          "PkgName": "libc6",
+          "InstalledVersion": "2.36-9+deb12u4",
+          "FixedVersion": "2.36-9+deb12u7",
+          "Layer": {
+            "DiffID": "sha256:b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3"
+          },
+          "SeveritySource": "nvd",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-2961",
+          "Title": "glibc: Out of bounds write in iconv",
+          "Description": "The iconv() function in the GNU C Library versions 2.39 and older may overflow the output buffer passed to it by up to 4 bytes when converting strings to the ISO-2022-CN-EXT character set.",
+          "Severity": "HIGH",
+          "CweIDs": ["CWE-787"],
+          "CVSS": {
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 9.8
+            }
+          },
+          "References": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-2961"
+          ],
+          "PublishedDate": "2024-04-17T19:15:00Z",
+          "LastModifiedDate": "2024-05-10T12:00:00Z"
+        }
+      ]
+    },
+    {
+      "Target": "Java",
+      "Class": "lang-pkgs",
+      "Type": "jar",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-1234",
+          "PkgName": "log4j-core",
+          "InstalledVersion": "2.14.1",
+          "FixedVersion": "2.15.0",
+          "SeveritySource": "nvd",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-1234",
+          "Title": "Apache Log4j2 JNDI features do not protect against attacker-controlled LDAP",
+          "Severity": "CRITICAL",
+          "CweIDs": ["CWE-917", "CWE-502"],
+          "CVSS": {
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 9.8
+            }
+          },
+          "References": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-1234"
+          ],
+          "PublishedDate": "2024-01-15T00:00:00Z",
+          "LastModifiedDate": "2024-02-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "Target": "Node.js",
+      "Class": "lang-pkgs",
+      "Type": "node-pkg",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-9012",
+          "PkgName": "axios",
+          "InstalledVersion": "1.3.4",
+          "FixedVersion": "1.6.0",
+          "SeveritySource": "nvd",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-9012",
+          "Title": "axios: SSRF via protocol-relative URL",
+          "Severity": "HIGH",
+          "CweIDs": ["CWE-918"],
+          "CVSS": {
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            }
+          },
+          "References": [
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-9012"
+          ],
+          "PublishedDate": "2024-03-10T00:00:00Z",
+          "LastModifiedDate": "2024-03-25T00:00:00Z"
+        }
+      ]
+    }
+  ]
+}

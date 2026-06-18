@@ -1,0 +1,325 @@
+{
+  "matches": [
+    {
+      "vulnerability": {
+        "id": "CVE-2024-1234",
+        "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2024-1234",
+        "namespace": "nvd:cpe",
+        "severity": "Critical",
+        "cvss": [
+          {
+            "version": "3.1",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "metrics": {
+              "baseScore": 9.8,
+              "exploitabilityScore": 3.9,
+              "impactScore": 5.9
+            },
+            "vendorMetadata": {}
+          }
+        ],
+        "fix": {
+          "versions": ["2.1.1"],
+          "state": "fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [],
+      "matchDetails": [
+        {
+          "type": "exact-indirect-match",
+          "matcher": "java-matcher",
+          "searchedBy": {
+            "namespace": "nvd:cpe",
+            "cpes": ["cpe:2.3:a:apache:log4j:2.14.1:*:*:*:*:*:*:*"]
+          },
+          "found": {
+            "versionConstraint": "< 2.15.0 (jvm)"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "8a2f3c4d5e6f",
+        "name": "log4j-core",
+        "version": "2.14.1",
+        "type": "java-archive",
+        "language": "java",
+        "cpes": ["cpe:2.3:a:apache:log4j:2.14.1:*:*:*:*:*:*:*"],
+        "purl": "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.1",
+        "upstreams": []
+      }
+    },
+    {
+      "vulnerability": {
+        "id": "CVE-2024-5678",
+        "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2024-5678",
+        "namespace": "nvd:cpe",
+        "severity": "Critical",
+        "cvss": [
+          {
+            "version": "3.1",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+            "metrics": {
+              "baseScore": 10.0,
+              "exploitabilityScore": 3.9,
+              "impactScore": 6.0
+            },
+            "vendorMetadata": {}
+          }
+        ],
+        "fix": {
+          "versions": [],
+          "state": "not-fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [],
+      "matchDetails": [
+        {
+          "type": "exact-direct-match",
+          "matcher": "java-matcher",
+          "searchedBy": {
+            "namespace": "nvd:cpe",
+            "cpes": ["cpe:2.3:a:springframework:spring-core:5.3.27:*:*:*:*:*:*:*"]
+          },
+          "found": {
+            "versionConstraint": "< 5.3.28 (jvm)"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "1b2c3d4e5f6a",
+        "name": "spring-core",
+        "version": "5.3.27",
+        "type": "java-archive",
+        "language": "java",
+        "cpes": ["cpe:2.3:a:springframework:spring-core:5.3.27:*:*:*:*:*:*:*"],
+        "purl": "pkg:maven/org.springframework/spring-core@5.3.27",
+        "upstreams": []
+      }
+    },
+    {
+      "vulnerability": {
+        "id": "CVE-2024-9012",
+        "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2024-9012",
+        "namespace": "nvd:cpe",
+        "severity": "High",
+        "cvss": [
+          {
+            "version": "3.1",
+            "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+            "metrics": {
+              "baseScore": 7.4,
+              "exploitabilityScore": 2.2,
+              "impactScore": 5.2
+            },
+            "vendorMetadata": {}
+          }
+        ],
+        "fix": {
+          "versions": ["3.0.1"],
+          "state": "fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [],
+      "matchDetails": [
+        {
+          "type": "exact-direct-match",
+          "matcher": "javascript-matcher",
+          "searchedBy": {
+            "namespace": "nvd:cpe",
+            "cpes": ["cpe:2.3:a:axios:axios:1.3.4:*:*:*:*:node.js:*:*"]
+          },
+          "found": {
+            "versionConstraint": "< 1.6.0 (npm)"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "2c3d4e5f6a7b",
+        "name": "axios",
+        "version": "1.3.4",
+        "type": "npm",
+        "language": "javascript",
+        "cpes": ["cpe:2.3:a:axios:axios:1.3.4:*:*:*:*:node.js:*:*"],
+        "purl": "pkg:npm/axios@1.3.4",
+        "upstreams": []
+      }
+    },
+    {
+      "vulnerability": {
+        "id": "CVE-2024-3456",
+        "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2024-3456",
+        "namespace": "nvd:cpe",
+        "severity": "High",
+        "cvss": [
+          {
+            "version": "3.1",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+            "metrics": {
+              "baseScore": 6.5,
+              "exploitabilityScore": 2.8,
+              "impactScore": 3.6
+            },
+            "vendorMetadata": {}
+          }
+        ],
+        "fix": {
+          "versions": ["4.2.0"],
+          "state": "fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [],
+      "matchDetails": [
+        {
+          "type": "exact-direct-match",
+          "matcher": "go-module-matcher",
+          "searchedBy": {
+            "namespace": "nvd:cpe",
+            "cpes": ["cpe:2.3:a:golang:crypto:0.0.0-20230321033359:*:*:*:*:*:*:*"]
+          },
+          "found": {
+            "versionConstraint": "< 0.17.0 (go)"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "3d4e5f6a7b8c",
+        "name": "golang.org/x/crypto",
+        "version": "0.0.0-20230321033359-cfb23ab7f73",
+        "type": "go-module",
+        "language": "go",
+        "cpes": ["cpe:2.3:a:golang:crypto:0.0.0-20230321033359:*:*:*:*:*:*:*"],
+        "purl": "pkg:golang/golang.org/x/crypto@0.0.0-20230321033359-cfb23ab7f73",
+        "upstreams": []
+      }
+    },
+    {
+      "vulnerability": {
+        "id": "CVE-2024-7890",
+        "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2024-7890",
+        "namespace": "nvd:cpe",
+        "severity": "Medium",
+        "cvss": [
+          {
+            "version": "3.1",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N",
+            "metrics": {
+              "baseScore": 5.4,
+              "exploitabilityScore": 2.8,
+              "impactScore": 2.5
+            },
+            "vendorMetadata": {}
+          }
+        ],
+        "fix": {
+          "versions": ["4.17.21"],
+          "state": "fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [],
+      "matchDetails": [
+        {
+          "type": "exact-direct-match",
+          "matcher": "javascript-matcher",
+          "searchedBy": {
+            "namespace": "nvd:cpe",
+            "cpes": ["cpe:2.3:a:lodash:lodash:4.17.20:*:*:*:*:node.js:*:*"]
+          },
+          "found": {
+            "versionConstraint": "< 4.17.21 (npm)"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "4e5f6a7b8c9d",
+        "name": "lodash",
+        "version": "4.17.20",
+        "type": "npm",
+        "language": "javascript",
+        "cpes": ["cpe:2.3:a:lodash:lodash:4.17.20:*:*:*:*:node.js:*:*"],
+        "purl": "pkg:npm/lodash@4.17.20",
+        "upstreams": []
+      }
+    },
+    {
+      "vulnerability": {
+        "id": "CVE-2024-2233",
+        "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2024-2233",
+        "namespace": "nvd:cpe",
+        "severity": "Low",
+        "cvss": [
+          {
+            "version": "3.1",
+            "vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:N",
+            "metrics": {
+              "baseScore": 2.5,
+              "exploitabilityScore": 1.0,
+              "impactScore": 1.4
+            },
+            "vendorMetadata": {}
+          }
+        ],
+        "fix": {
+          "versions": ["1.2.9"],
+          "state": "fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [],
+      "matchDetails": [
+        {
+          "type": "exact-direct-match",
+          "matcher": "go-module-matcher",
+          "searchedBy": {
+            "namespace": "nvd:cpe",
+            "cpes": ["cpe:2.3:a:yaml:yaml:3.0.0:*:*:*:*:*:*:*"]
+          },
+          "found": {
+            "versionConstraint": "< 3.0.1 (go)"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "5f6a7b8c9d0e",
+        "name": "gopkg.in/yaml.v3",
+        "version": "3.0.0",
+        "type": "go-module",
+        "language": "go",
+        "cpes": ["cpe:2.3:a:yaml:yaml:3.0.0:*:*:*:*:*:*:*"],
+        "purl": "pkg:golang/gopkg.in/yaml.v3@3.0.0",
+        "upstreams": []
+      }
+    }
+  ],
+  "source": {
+    "type": "directory",
+    "target": {
+      "path": "/app"
+    }
+  },
+  "distro": {
+    "name": "debian",
+    "version": "12",
+    "idLike": ["debian"]
+  },
+  "descriptor": {
+    "name": "grype",
+    "version": "0.74.0",
+    "configuration": {
+      "db": {
+        "auto-update": true,
+        "validate-by-hash-on-start": false
+      }
+    },
+    "db": {
+      "built": "2026-05-01T00:00:00Z",
+      "schemaVersion": 5,
+      "location": "~/.cache/grype/db/5",
+      "checksum": "sha256:abc123def456"
+    }
+  }
+}

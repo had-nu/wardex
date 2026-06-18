@@ -1,20 +1,63 @@
-# Wardex Configuration Example for CI/CD
-# Best practices for v1.7.2+
+# Wardex Configuration Example (v1.9.2)
+# ------------------------------------
 
-# Global Thresholds
-thresholds:
-  critical_vulnerabilities: 0
-  high_vulnerabilities: 2
-  
-# Output Settings
-output:
-  format: "markdown"
-  file: "wardex-report.md"
-  roadmap_limit: 15
+# Release Gate Context
+# This block defines how Wardex evaluates vulnerabilities.
+release_gate:
+  enabled: true
+  risk_appetite: 0.20        # Normalized scale [0, 1.5]. Block if any risk > this.
+  warn_above: 0.12           # Warning threshold.
+  mode: "any"                # "any" (single vuln) | "aggregate" (sum of risks)
+  asset_context:
+    criticality: 0.8         # Business criticality weight
+    internet_facing: true    # Exposure factor
+    requires_auth: true      # Exposure factor
+    environment: "production"
+  compensating_controls:     # Global mitigations that reduce final risk score
+    - type: "waf"
+      effectiveness: 0.15
+      justification: "Cloudflare WAF protecting the edge"
 
-# Security Settings
-security:
-  # Enforce cryptographic trust for actors in CI
-  enforce_actor_trust: true
-  # Fallback risk for unknown vectors (Safe-path)
-  fail_close_default: 1.0
+# Acceptance Configuration
+# Used by 'wardex accept' for managing risk acceptances.
+acceptance:
+  signing_secret_file: "wardex-accept.key" # Only used if WARDEX_ACCEPT_SECRET is not set
+  limits:
+    max_acceptance_days: 90
+    min_justification_chars: 20
+    max_report_age_hours: 24
+  banned_justification_phrases:
+    - "legacy code"
+    - "no time to fix"
+    - "low priority"
+
+# Reporting Settings
+reporting:
+  format: "markdown"         # markdown | json | csv
+  output: "wardex-report.md" # Path to output file
+  gate_log:
+    path: "wardex-gate-audit.log"
+    forward: ["syslog"]      # Optional destinations
+    on_fail: "warn"          # "warn" | "block"
+  enisa_queue:
+    path: "wardex-enisa-queue.jsonl" # Local queue for ENISABackend stub (v2.0)
+
+# Profiles (RBAC)
+# Overrides risk appetite for specific actors in trusted environments.
+profiles:
+  emergency:
+    risk_appetite: 0.50
+    warn_above: 0.30
+    allowed_actors:
+      - "ciso@example.com"
+      - "security-lead@example.com"
+
+# CRA Article 14 Configuration (v2.0)
+# Controls CRA notification artefact generation.
+cra:
+  art14:
+    output_dir: "."                    # where artefact JSON files are written
+    awareness_source: "detection"      # "detection" | "envelope"
+    product_name: ""                   # pre-populated in artefact; operator fills
+    product_version: ""                # same
+    kev_path: ""                       # default KEV catalogue path for evaluate

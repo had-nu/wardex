@@ -22,9 +22,14 @@ const (
 	// GenericError indicates a general application error.
 	GenericError = 1
 
-	// Tampered indicates an HMAC signature validation failure.
-	// An acceptance record may have been modified outside Wardex.
-	Tampered = 3
+	// IntegrityFailure indicates a cryptographic integrity violation.
+	// This covers both acceptance HMAC tampering and wexstate seal
+	// verification failures (revoked key, trust store drift, invalid sig).
+	IntegrityFailure = 3
+
+	// Tampered is a legacy alias for IntegrityFailure.
+	// Deprecated: use IntegrityFailure instead.
+	Tampered = IntegrityFailure
 
 	// StoreInconsistent indicates a mismatch between the store
 	// file and the audit log (entries missing from the YAML file).
@@ -40,4 +45,11 @@ const (
 
 	// ComplianceFail indicates a gap score exceeded the --fail-above threshold.
 	ComplianceFail = 11
+
+	// ActivelyExploited indicates one or more CVEs in the evidence envelope are
+	// classified as actively exploited (e.g. present in the CISA KEV catalogue).
+	// This is a hard stop: unlike GateBlocked (10), it cannot be overridden by
+	// a risk acceptance. CI pipelines must treat exit code 12 explicitly.
+	// NEW in v2.0 — CRA Article 14 compliance.
+	ActivelyExploited = 12
 )

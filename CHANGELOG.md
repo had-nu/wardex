@@ -4,6 +4,163 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.2] — 2026-05-10
+
+## [2.0.1] — 2026-06-10
+
+### Security
+
+- **Weak HMAC fallback removido**: `cmd/evaluate/evaluate.go` agora retorna erro se `WARDEX_ACCEPT_SECRET` não estiver definida, em vez de usar `"weak-fallback-secret-for-draft"` (CRA-critical).
+- **G304 fix — `SafePath` em `pkg/trust/seal.go`**: validação de caminho antes de `os.ReadFile` para evitar path traversal (CRA-critical).
+- **SHA pinning do CLA action**: `.github/workflows/cla.yml` usa SHA `ca4a40a7d1004f18d9960b404b97e5f30a505a08` em vez da tag `v2.6.1`.
+- **`.github/workflows/ci.yml`**: remoção do `-exclude=G304` global do gosec. Supressões inline em `analyze-gaps.go`, `wexstate.go`, `store.go`, `keyring.go`.
+- **`.golangci.yml` expandido**: 9 litters activos (staticcheck, gosec, gomodguard, misspell, exhaustive, unused, errcheck, govet, ineffassign) com configuração v2, 0 issues.
+- **`SECURITY.md` actualizado**: contacto real `andre.ataide@proton.me` e PGP fingerprint `979A C8CE 8F35 7652`.
+- **`Makefile`**: novo target `make security` (govulncheck + gosec).
+
+### Fixed
+
+- **`exitFunc` mocking em `cmd/art14/art14_test.go`**: `runVerify` com artefacto adulterado já não chama `os.Exit` directamente — usa `exitFunc` mockável, impedindo a morte do test suite.
+
+---
+
+## [2.0.0] — 2026-06-10
+
+### Added
+
+- **CRA Article 14 Enablement**: Wardex now generates structured notification artefacts for the EU Cyber Resilience Act Article 14(2) three-phase reporting obligation (early warning, notification, final report).
+- **Active Exploitation Hard Stop**: `wardex evaluate` exits with code `12` (`ActivelyExploited`) when any vulnerability is marked `actively_exploited: true`. This hard stop cannot be overridden by risk acceptances.
+- **KEV Correlation (`--kev`)**: `wardex convert grype` gains a `--kev` flag that correlates CVEs against the CISA Known Exploited Vulnerabilities catalogue, setting `actively_exploited`, `exploited_source`, and `actively_exploited_since` fields.
+- **Audit Chain Integrity**: All gate audit log entries are now cryptographically chained via SHA-256 `previous_entry_hash`. `VerifyChain()` detects tampering and gaps.
+- **`wardex art14` Subcommand**: New command for lifecycle management of Article 14 artefacts: `list`, `show`, `mark-dispatched`, `finalize`, `verify`.
+- **`wardex accept active-exploit`**: Records operator awareness of active exploitation in the chained audit log for compliance trail evidence.
+- **ENISABackend (stub)**: New `enisa` forward backend writes to a local JSONL queue file. No network transmission — awaiting the ENISA Article 16 API publication.
+- **Configuration**: New `cra.art14` and `reporting.enisa_queue` blocks in `wardex-config.yaml`.
+
+### Changed
+
+- **BREAKING**: `Version` bumped to `2.0.0`.
+- **BREAKING**: `VulnerabilityEnvelope` now has an optional `evaluated_at` field.
+- **BREAKING**: `Vulnerability` gains three new optional fields: `actively_exploited`, `actively_exploited_since`, `exploited_source`.
+- **BREAKING**: `AuditEntry` gains `previous_entry_hash`, `actively_exploited_cves`, `art14_deadline_early_warning`, `art14_deadline_notification`, `art14_notification_artefact_path`.
+- New exit code `12` (`ActivelyExploited`). CI pipelines should handle this explicitly.
+
+### Fixed
+
+- `cmd/art14/art14.go:runVerify` now uses mockable `exitFunc` instead of `os.Exit`, enabling proper tampered-verification testing.
+
+---
+
+
+### Added
+
+- **Gate Decision Log (G1)**: `wardex evaluate` now records every gate decision in
+  `wardex-gate-audit.log` (configurable via `--gate-log`). Entries include config
+  hash, evidence hash, overall decision, and risk score.
+- **Evidence Provenance (G2)**: New `converted_by` field in evidence envelopes.
+  `wardex evaluate` now warns if evidence was not canonicalised via `wardex convert`.
+- **Strict Provenance Mode**: `--strict` flag now also enforces canonicalised evidence.
+- **Log Forwarding (G3)**: Integrated gate decisions with the `Forwarder` interface.
+  Supports real-time dispatch to Syslog via `reporting.gate_log.forward` config.
+- **Data Model Extensions**: `model.AuditEntry` extended with `evidence_hash` and
+  `overall_decision`; new `model.VulnerabilityEnvelope` for provenance tracking.
+
+### Fixed
+
+- **Schema Gap**: Updated `doc/examples/wardex-config.yaml` to include the new
+  `gate_log` block, ensuring compliance with `KnownFields(true)` validation tests.
+
+---
+
+## [1.9.1] — 2026-05-09
+
+### Removed
+
+- `organization` block (`name`, `sector`, `scope`) — never consumed by the scorer
+  or by `wardex assess`.
+- `domain_weights` map — placeholder for an unshipped feature.
+- `control_weights` map — placeholder for an unshipped feature.
+- `thresholds` block (`fail_above`, `warn_above`) — duplicated
+  `release_gate.warn_above` semantically and was never read. The live failure-on-gap
+  flag is `--fail-above` on `wardex evaluate` (CLI), not a YAML field.
+- `reporting.verbose` — the CLI flag `--verbose` is the source of truth.
+- `release_gate.asset_context.data_class` — declared in `model.AssetContext` but
+  never consumed by the scorer (which reads `criticality`, `internet_facing`,
+  `requires_auth`, `environment`). Re-introduction with proper scoring semantics
+  is deferred to v1.10.x.
+
+### Fixed
+
+- `doc/examples/wardex-config.yaml` rewritten with fields verified against the live
+  structs. The previous file in v1.9.0 used a `thresholds:` block with non-existent
+  keys; the rewrite mirrors `Config`, `model.AssetContext`, and
+  `model.CompensatingControl` exactly.
+- `test/testdata/wardex-config.yaml`: `compensating_controls` now uses the correct
+  fields (`type`/`effectiveness`/`justification` instead of `id`/`name`/`reduction`);
+  `data_classification:` removed (the field was orphan and the spelling was wrong
+  for `AssetContext` anyway).
+
+### Added
+
+- `config/config_examples_test.go` (`TestPublishedExamplesMatchSchema`) — strict
+  schema validation of `doc/examples/wardex-config.yaml` and
+  `test/testdata/wardex-config.yaml` using `yaml.Decoder.KnownFields(true)`. CI
+  blocks any release where a published example diverges from the live schema.
+
+### Compatibility
+
+YAML files written for v1.9.0 with the now-removed blocks continue to load without
+error in production code paths. The runtime `Load()` continues to accept unknown
+fields (Go YAML decoder default) to preserve backward compatibility. No migration
+script required.
+
+---
+
+## [1.9.0] - 2026-05-08
+
+### Added
+- **Wardex Trust Store**: New cryptographic governance layer for release gate configurations.
+- **Sealed Config (`wardex.wexstate`)**: Support for signing and verifying configuration integrity.
+- **Key Management**: `wardex keygen` for operator keypairs (ed25519).
+- **Trust Commands**: `wardex trust` (init, add, revoke) to manage authorized actors and roles.
+- **RBAC for Profiles**: `allowed_actors` field to restrict profile usage to specific identities.
+- **Signed EPSS Enrichment**: Verification of exploit probability data signatures.
+- **Remote Trust Store**: Support for fetching `wardex-trust.yaml` from remote URLs.
+
+### Changed
+- CLI banner redesign.
+- Updated exit codes: `3` for integrity failure, `10` for gate block, `11` for compliance failure.
+
+---
+
+## [1.8.1] - 2026-05-07
+
+### Fixed
+- **Build Issue**: Fixed `go:embed` path for `wardex-risk-simulator.jsx` in `test/embed.go`.
+
+---
+
+## [1.8.0] - 2026-04-24
+
+### Added
+- **Orchestration Command (`wardex assess`)**: A unified command for multi-layer compliance and asset-based assessment.
+- **Layer Delta Analysis**: Automatic identification of "Paper Security" (documented only) and "Shadow Security" (implemented only).
+- **Asset Compliance Models**: Context-aware scoring for individual business systems (Criticality, Exposure, Threats).
+- **Risk-Based Scoring v2**: New roadmap prioritization formula incorporating `ContextWeight` and `Effectiveness`.
+- **Flexible Ingestion**: Support for root-level lists in YAML/JSON control and asset definitions.
+
+### Changed
+- **BREAKING: Architectural Flattening**: Consolidated `pkg/accept` into a unified high-performance package.
+- **Coverage Strictness**: The global coverage metric now requires the `implemented` layer for a `Covered` status.
+- **Documentation Overhaul**: Updated Playbook and Technical View for the RPO Platform transition.
+- **Cleanup**: Purged legacy PoCs and non-essential artifacts; reorganized research data.
+
+### Fixed
+- **Deduplication Logic**: `LoadMany` now correctly handles same-ID controls across different layers (ID|Layer).
+- **Model Inconsistency**: Updated `Asset` schema to support advanced exposure context and threat scenarios.
+
+---
+
 ## [1.7.2] - 2026-04-21
 
 ### Added
@@ -29,134 +186,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal docs moved to `/internal/doc/` for cleaner public clone
 
 ---
-
-## [1.7.1] - Unreleased
-
-### Added
-- **Governance Commands (Automation Ready)**:
-  - Added `wardex evaluate` for focused, CI-optimized gate checks.
-  - Added `wardex aggregate` to combine multiple framework decisions into one final gate.
-  - Added `wardex policy check-expiry` to identify expired compliance exceptions in YAML policies.
-- **Empirical Risk Calibration**:
-  - Re-calibrated default `Criticality` and `Exposure` parameters for Hospital (1.5), Startup (0.75), and Infrastructure (1.5) profiles based on NAICS 22 and NVD/EPSS empirical analysis (PR #35).
-- **Security Hardening (Team PCP Response)**:
-  - Implementation of immutable GitHub Actions pinning via SHA256.
-  - Strict `permissions: read-all` enforcement for `pull_request_target` workflows.
-  - Subresource Integrity (SRI) for all simulation dashboard CDN dependencies.
-  - Enhanced cryptographic provenance and range validation for EPSS enrichment data.
-  - Introduction of `signature_version` in acceptance schemas for safe key rotation.
-  - Integrated `cosign` and artifacts signing in `.goreleaser.yaml`.
-
-## [1.7.0] - 2026-03-27
-
-### Added
-- **Human-in-the-Loop EPSS API Enrichment**: Added the `wardex enrich epss` command to securely fetch omitted EPSS scores from `api.first.org` and emit a cryptographically sealed HMAC override record. Injecting `--epss-enrichment record.yaml` supersedes the gate's `1.0` fallback, preventing pipeline brittleness without compromising non-repudiation (G-23).
-- **Multi-Context Stress Test Report**: Validated 237 real CVEs with live FIRST.org EPSS data across 4 organizational profiles (Bank/DORA, Hospital/HIPAA, SaaS Startup, Dev Sandbox). Full report at `doc/epss-stress-test-report.md`.
-
-### Changed
-- **BREAKING: `wardex convert grype` default-epss 0.05 → 0.0**: The converter no longer silently assumes a permissive 5% exploitation probability for unknown EPSS scores. Unknown scores are now `0.0`, causing the release gate to assume worst-case (`1.0`) until the analyst explicitly runs `wardex enrich epss`. This enforces Wardex's fail-close philosophy.
-
-
-## [1.6.1] - 2026-03-01
-
-### Added
-- **OpenVEX Native Suppressions**: Ingests standalone JSON-LD OpenVEX documents mapping `not_affected` and `false_positive` into suppression outcomes (N-05).
-- **SIEM Telemetry Date Filters**: The `verify-forwarding` CLI command now actually parses JSONL audit trails, enforcing the `--since` flag to quantify exact events queued for dispatch (N-03).
-- **Code Coverage CI Guarding**: Re-enabled strict pipeline protections to block any PR dipping below 70% unit test coverage thresholds. Visible README badges enabled (N-06).
-
-### Changed
-- **Legal Compliance Documentation**: Filled out final `[JURISDICTION]` and `[domain]` boilerplate in `COMMERCIAL_LICENSE.md`. Documented the cryptographic bypass limitations of the `--profile` flag acting on local environments (N-01, N-02).
-- **SPDX Scans Recognition**: Registered `LicenseRef-Wardex-Commercial` across the repository to properly tag the proprietary split of the repo during Enterprise SBOM ingestion (N-04).
-
-## [1.6.0] - 2026-03-01
-
-### Added
-- **Real SIEM Telemetry Verification**: Upgraded `verify-forwarding` to use verified TCP/HTTP connection checks with real drop statuses (`exit 1`) to ensure SLA observability for Splunk/Datadog forwarders (G-07).
-- **True RBAC Context Enforcement**: `--profile` usage is now verified against an `AllowedActors` array evaluated directly from continuous integration identity (`WARDEX_ACTOR` or `GITHUB_ACTOR`). Any profile mismatches block overrides and enforce the strictest baselines (G-15).
-- **Audit-Ready Architecture Strategy**: Added comprehensive documentation on Risk Gate cryptographic non-repudiation and non-repudiation controls. Essential for SOC 2 Type II and ISO 27001 readiness. Wardex now legally protects commercial integration via an enhanced AGPL-3.0 and Commercial dual-license strategy protected by automated CLA rules (G-20, G-21).
-
-## [1.5.0] - 2026-03-01
-
-### Added
-
-- **Multi-Framework Governance Engine**: Substantial architectural expansion natively transforming Wardex from an ISO 27001-only tool into a multi-framework engine.
-- **`--framework` Flag**: A new root flag allowing dynamic policy checking. Replaces the hardcoded Annex A library. Supports:
-  - `--framework iso27001` (Default)
-  - `--framework soc2` (COSO / Trust Services Criteria constraints)
-  - `--framework nis2` (EU Directive 2022/2555 cybersecurity objectives)
-  - `--framework dora` (Digital Operational Resilience Act ICT risk management)
-
-### Changed
-- Abstracted `model.AnnexAControl` schema components functionally into `model.CatalogControl` across `pkg/catalog/` and metrics engines to serve generalized mappings. Backward compatibility for generated `JSON` historical reports is robust.
-
-## [1.4.0] - 2026-03-01
-
-### Added
-
-- **SIEM Forwarding Verification**: Added `wardex accept verify-forwarding` command to validate that local audit trails (`wardex-accept-audit.log`) are healthy and formatted correctly for remote SIEM ingestion agents like Splunk or Datadog.
-- **`WARN` Gate Threshold Observable Context**: The gate now explicitly surfaces the `[!] WARN` tag and `exit 0` output naturally when an evaluated pipeline risk falls between the `warn_above` and `risk_appetite` thresholds.
-- **Configurable Snapshot File Path**: Replaced the hardcoded `.wardex_snapshot.json` tracker. Monorepo pipelines can now use the `--snapshot-file` flag to securely isolate their gap analysis states.
-- **VEX Suppressions**: The CycloneDX SBOM importer natively parses the `analysis` object. Components with a state of `false_positive` or `not_affected` are automatically safely bypassed by the engine, preventing false alarms.
-
-## [1.3.0] - 2026-03-01
-
-### Added
-
-- **Native SBOM Ingestion**: `wardex convert sbom` directly parses CycloneDX and SPDX JSON files into Wardex's native YAML format.
-- **RBAC Capabilities**: Added the `--profile` flag to dynamically switch Risk Appetite and Warn Above thresholds per-team.
-- **Cryptographic Signatures**: Integrated HMAC-SHA256 signatures to ensure Risk Acceptances are immune to tampering and replay attacks (`pkg/accept/signer`).
-
-### Changed
-
-- Expanded PoC scenarios to include SBOM ingestion and exact threshold blocking simulations.
-## [1.2.0] - 2026-03-01
-
-### Added
-
-- **Interactive Risk Simulator**: Added `wardex simulate` to instantly spin up an offline web dashboard.
-
-- **Grype Converter**: Added `wardex convert grype` to natively transform Grype JSON vulnerability scanner output into Wardex natively.
-
-- **`WARN` Risk Band**: Added the `warn_above` configuration threshold.
-
-- **JSON & CSV Export for Acceptances**: The `wardex accept list` command now supports `--output json` and `--output csv`.
-
-- **Configurable Roadmap Limit**: Removed the hardcoded 10-item limit for the maturity roadmap via `--roadmap-limit`.
-
-- **SDK Documentation**: Fully annotated the `pkg/` directories with standard GoDoc API references.
-
-- **Dynamic Versioning**: Added the `--version` flag, and the ASCII banner now prints the dynamically injected build version.
-
-
-### Changed
-
-- Refactored codebase to abolish emojis and use cleaner ASCII tags (`[PASS]`, `[FAIL]`, `[INFO]`, `[WARN]`).
-
-- Cleaned up overly verbose inline tutorial comments from core files.
-
-- Improved validation of banned justification phrases to catch them anywhere within a sentence.
-
-
-
-## [1.1.1] - 2026-03-01
-### Fixed
-- **G-01**: `time.ParseDuration` day syntax: Added `pkg/duration` with `ParseExtended()` to support `d` suffix (`30d`, `3d`). Fixed bugs in `--expires` and `--warn-before` flags.
-- **G-02**: Config propagation: Fixed `wardex accept` subcommands ignoring the `--config` flag by passing configuration correctly from the root command.
-- **G-03**: Multi-CVE acceptance: Refactored request handler to create 1 distinct acceptance record per CVE passed via repeatable `--cve` flags, instead of silently discarding all but the first.
-- **G-04**: Exit codes: Replaced POSIX-conflicting magic exit codes (like `os.Exit(2)`) with a dedicated `pkg/exitcodes` package containing semantic named constants (`GateBlocked=10`, `ComplianceFail=11`, etc.).
-
-### Changed
-- Changed default `--warn-before` for expirations from `"3d"` to `"72h"` as a safer fallback.
-
-## [1.1.0] - 2026-02-28
-### Added
-- **Risk Acceptance Engine**: New `wardex accept` subcommands (`request`, `list`, `verify`, `revoke`, `check-expiry`) to handle formalized acceptances for gate-blocked releases.
-- **Cryptography & Integrity**: Added HMAC-SHA256 signatures, `JSONL` append-only audit logs, and configuration drift detection for exceptions.
-- **POC**: Fixed end-to-end Proof of Concept with 4 validated scenarios and documentation.
-- Comprehensive technical documentation and specifications for the new risk acceptance capabilities.
-- Localized READMEs (English, Spanish, French, Portuguese) with new badges and headers.
-
-### Fixed
-- `gosec` G304 and G302 file permission issues (updated to 0750/0600).
-- Misspell typos across the codebase.
-- Unchecked errors reported by linters.
+... [rest of the file remains unchanged]

@@ -71,6 +71,33 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 			d.Domain, d.CoveredCount, d.TotalControls, d.PartialCount, d.GapCount, d.MaturityScore)
 	}
 
+	if report.LayerDelta != nil {
+		_, _ = fmt.Fprintf(f, "\n---\n\n## Layer Delta\n\n")
+		_, _ = fmt.Fprintf(f, "| Metric | Value |\n|---|---|\n")
+		_, _ = fmt.Fprintf(f, "| Documented Controls | %d |\n", report.LayerDelta.DocumentedCount)
+		_, _ = fmt.Fprintf(f, "| Implemented Controls | %d |\n", report.LayerDelta.ImplementedCount)
+		_, _ = fmt.Fprintf(f, "| Active Coverage (Paper ∩ Code) | %d |\n", len(report.LayerDelta.ActiveCoverage))
+		_, _ = fmt.Fprintf(f, "| Policy Gap (Paper Security) | %d |\n", len(report.LayerDelta.PolicyGap))
+		_, _ = fmt.Fprintf(f, "| Shadow Security (Implemented only) | %d |\n", len(report.LayerDelta.ImplementedOnly))
+
+		if len(report.LayerDelta.PolicyGap) > 0 {
+			_, _ = fmt.Fprintf(f, "\n**Top Policy Gaps (Paper only):** %v\n", report.LayerDelta.PolicyGap)
+		}
+	}
+
+	if len(report.AssetCompliance) > 0 {
+		_, _ = fmt.Fprintf(f, "\n---\n\n## Asset Compliance\n\n")
+		_, _ = fmt.Fprintf(f, "| Asset | Score | Status | Missing |\n|---|---|---|---|\n")
+		for _, ac := range report.AssetCompliance {
+			missingStr := "none"
+			if len(ac.MissingControls) > 0 {
+				missingStr = fmt.Sprintf("%d controls", len(ac.MissingControls))
+			}
+			_, _ = fmt.Fprintf(f, "| %s | %.1f%% | %s | %s |\n",
+				ac.AssetName, ac.ComplianceScore*100.0, ac.Status, missingStr)
+		}
+	}
+
 	if report.Gate != nil {
 		_, _ = fmt.Fprintf(f, "\n---\n\n## Release Gate — Decision Breakdown\n\n")
 		_, _ = fmt.Fprintf(f, "| CVE | CVSS | EPSS | Release Risk | Decision |\n|---|---|---|---|---|\n")

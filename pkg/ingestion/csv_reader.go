@@ -94,6 +94,21 @@ func loadCSV(path string) ([]model.ExistingControl, error) {
 
 		wj := get("weight_justification")
 
+		layerStr := get("layer")
+		layer := model.LayerDocumented
+		if strings.ToLower(layerStr) == "implemented" {
+			layer = model.LayerImplemented
+		}
+
+		effStr := get("effectiveness")
+		eff := 0.0
+		if effStr != "" {
+			eff, _ = strconv.ParseFloat(effStr, 64)
+		}
+
+		revReqStr := get("review_required")
+		revReq := strings.ToLower(revReqStr) == "true" || revReqStr == "1"
+
 		mapped := model.ExistingControl{
 			ID:                  id,
 			Name:                name,
@@ -101,6 +116,9 @@ func loadCSV(path string) ([]model.ExistingControl, error) {
 			Framework:           framework,
 			Domains:             domains,
 			Maturity:            maturity,
+			Layer:               layer,
+			Effectiveness:       eff,
+			ReviewRequired:      revReq,
 			Evidences:           evidences,
 			ContextWeight:       cw,
 			WeightJustification: wj,

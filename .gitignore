@@ -6,11 +6,11 @@ bin/
 *.so
 *.dylib
 wardex
-specs/
 
 # Test artifacts
 *.test
 *.out
+*.html
 coverage.out
 coverage.html
 .wardex_snapshot.json
@@ -59,6 +59,8 @@ wardex-acceptances.yaml
 wardex-epss-enrichment.yaml
 wardex-snapshot.json
 wardex-erd.md.resolved
+specs/
+benchmarks/ 
 
 # Stress Test Outputs
 stress-enrich.yaml
@@ -76,21 +78,13 @@ test/tuning/reports/
 research/
 research/.venv/
 
-# Internal Documentation (not for public clone)
-# Exception: allow tracking internal docs locally
-!/internal/doc/
-internal/doc/
-
 # Internal skills and notes
 SKILL-*.md
 
-# Internal Benchmark & Stress Reports (Specific Files)
-doc/TESTING_RESILIENCE.md
-doc/epss-stress-test-report.md
-doc/wardex-benchmark-v161.md
-doc/wardex-gap-delta.docx
-
 # Python Test & Calibration scripts
 test/test_calibration_*.py
-test/wardex-risk-simulator.jsx
 test/wardex_test_prompt.md
+
+# Legacy Documentation
+README-es.md
+README-fr.md

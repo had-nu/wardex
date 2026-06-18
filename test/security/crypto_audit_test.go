@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/pkg/accept/signer"
+	"github.com/had-nu/wardex/pkg/accept"
 	"github.com/had-nu/wardex/pkg/model"
 )
 
@@ -32,12 +32,12 @@ func TestCryptoAudit_Determinism(t *testing.T) {
 	acc := generateBaseAcceptance()
 	key := []byte("a-very-secure-256-bit-key-here-!")
 
-	sig1, err := signer.Sign(acc, key)
+	sig1, err := accept.Sign(acc, key)
 	if err != nil {
 		t.Fatalf("Signing failed: %v", err)
 	}
 
-	sig2, err := signer.Sign(acc, key)
+	sig2, err := accept.Sign(acc, key)
 	if err != nil {
 		t.Fatalf("Signing failed: %v", err)
 	}
@@ -52,10 +52,10 @@ func TestCryptoAudit_Verification(t *testing.T) {
 	acc := generateBaseAcceptance()
 	key := []byte("a-very-secure-256-bit-key-here-!")
 
-	sig, _ := signer.Sign(acc, key)
+	sig, _ := accept.Sign(acc, key)
 	acc.Signature = sig
 
-	if err := signer.Verify(acc, key); err != nil {
+	if err := accept.Verify(acc, key); err != nil {
 		t.Errorf("Valid signature failed verification: %v", err)
 	}
 }
@@ -66,27 +66,27 @@ func TestCryptoAudit_TamperingAttacks(t *testing.T) {
 
 	// Generate baseline
 	acc := generateBaseAcceptance()
-	sig, _ := signer.Sign(acc, key)
+	sig, _ := accept.Sign(acc, key)
 	acc.Signature = sig
 
 	// Attack 1: CVE Tampering
 	attack1 := acc
 	attack1.CVE = "CVE-2024-0000" // Hacker swaps CVE
-	if err := signer.Verify(attack1, key); err != signer.ErrTampered {
+	if err := accept.Verify(attack1, key); err != accept.ErrTampered {
 		t.Errorf("Failed to detect CVE tampering")
 	}
 
 	// Attack 2: Expiration Tampering
 	attack2 := acc
 	attack2.ExpiresAt = time.Date(2099, 1, 1, 0, 0, 0, 0, time.UTC) // Hacker pushes out expiration
-	if err := signer.Verify(attack2, key); err != signer.ErrTampered {
+	if err := accept.Verify(attack2, key); err != accept.ErrTampered {
 		t.Errorf("Failed to detect Expiration tampering")
 	}
 
 	// Attack 3: Report Hash / Replay Tampering
 	attack3 := acc
 	attack3.ReportHash = "fakehash" // Hacker replays to different environment
-	if err := signer.Verify(attack3, key); err != signer.ErrTampered {
+	if err := accept.Verify(attack3, key); err != accept.ErrTampered {
 		t.Errorf("Failed to detect ReportHash tampering")
 	}
 }
@@ -97,10 +97,10 @@ func TestCryptoAudit_KeyIsolation(t *testing.T) {
 	keyProd := []byte("production-secure-256-bit-key-!!")
 	keyDev := []byte("development-secure-256-bit-key-!")
 
-	sigDev, _ := signer.Sign(acc, keyDev)
+	sigDev, _ := accept.Sign(acc, keyDev)
 	acc.Signature = sigDev
 
-	if err := signer.Verify(acc, keyProd); err != signer.ErrTampered {
+	if err := accept.Verify(acc, keyProd); err != accept.ErrTampered {
 		t.Errorf("Production environment verified a Dev signature. Key isolation failed.")
 	}
 }
@@ -113,12 +113,12 @@ func TestCryptoAudit_LengthExtension(t *testing.T) {
 	key := []byte("key")
 
 	acc.Justification = "test|pipe"
-	sig1, _ := signer.Sign(acc, key)
+	sig1, _ := accept.Sign(acc, key)
 
 	acc2 := generateBaseAcceptance()
 	acc2.Justification = "test"
 	acc2.Ticket = "pipe" + acc.Ticket // Trying to inject a pipe to shift fields
-	sig2, _ := signer.Sign(acc2, key)
+	sig2, _ := accept.Sign(acc2, key)
 
 	// Since we format using "%s|%s", "test|pipe"+"JIRA" is mathematically identical to "test"+"pipeJIRA" in string
 	// IF the parser naively appended strings. BUT because they occupy different structural fields,
@@ -132,7 +132,7 @@ func TestCryptoAudit_LengthExtension(t *testing.T) {
 func TestCryptoAudit_SignatureFormat(t *testing.T) {
 	acc := generateBaseAcceptance()
 	key := []byte("key")
-	sig, _ := signer.Sign(acc, key)
+	sig, _ := accept.Sign(acc, key)
 
 	if !strings.HasPrefix(sig, "sha256:") {
 		t.Errorf("Signature lacks 'sha256:' algorithm prefix")

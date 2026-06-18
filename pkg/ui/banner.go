@@ -5,40 +5,23 @@ package ui
 
 import (
 	"fmt"
-	"time"
 )
 
-// ANSI color codes for the aesthetic
 const (
-	dim       = "\033[38;5;236m"
-	dimLine   = "\033[38;5;235m" // Very dark gray for separator lines
-	dimPurple = "\033[38;5;55m"
-	purple    = "\033[38;2;170;0;255m"
-	grey      = "\033[38;2;170;170;170m"
-	pink      = "\033[38;2;255;0;127m"
-	cyan      = "\033[38;5;51m"
-	green     = "\033[38;5;46m"
-	yellow    = "\033[38;5;226m"
-	white     = "\033[38;5;255m"
-	reset     = "\033[0m"
+	clrPurple = "\033[38;2;111;66;193m"
+	clrMuted  = "\033[38;2;110;118;129m"
+	clrWhite  = "\033[37m"
+	clrBold   = "\033[1m"
+	clrReset  = "\033[0m"
 )
 
-
-// PrintBanner outputs a professional, minimalist Wardex header.
+// PrintBanner outputs the professional branding for Wardex.
 func PrintBanner(version string) {
-	now := time.Now().Format("2006-01-02 15:04:05")
-
-	// Colors
-	p := pink
-	c := cyan
-	g := green
-	r := reset
-	d := dim
-
-	line := fmt.Sprintf("%s────────────────────────────────────────────────────────────────────────────────%s", d, r)
-
-	fmt.Printf("\n%s\n", line)
-	fmt.Printf("  %s◈ WARDEX%s v%s  %s|%s  Status: %sACTIVE%s  %s|%s  Threshold: %s0.72%s  %s|%s  %s%s%s\n",
-		p, r, version, d, r, g, r, d, r, c, r, d, r, d, now, r)
-	fmt.Printf("%s\n\n", line)
+	fmt.Printf("\n %s(●───────────────────────)%s  %s%sWARDEX%s  %s·%s  %srisk-based release gate%s  %sv%s%s\n\n",
+		clrPurple, clrReset,
+		clrBold, clrWhite, clrReset,
+		clrMuted, clrReset,
+		clrPurple, clrReset,
+		clrWhite, version, clrReset)
 }
+
