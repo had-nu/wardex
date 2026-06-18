@@ -1,0 +1,225 @@
+# implemented-controls.yaml
+# Layer: implemented — controlos operacionalmente activos e evidenciados.
+# Produzido por inventário manual ou ferramentas de normalização (ex: Bridgr).
+#
+# Cenário deliberado para teste:
+#
+# COBERTURA:
+#   technological  → 5 controlos implementados (full overlap com documented)
+#   physical       → 3 controlos implementados SEM documentação (shadow security)
+#   organizational → 3 controlos implementados (gap: DOC-ORG-003 e DOC-ORG-005 não implementados)
+#   people         → 2 controlos implementados (gap: DOC-PPL-003 e DOC-PPL-004 não implementados)
+#
+# POLICY GAP (paper security — documentado, não implementado):
+#   DOC-ORG-003: Incident Management declarado, sem evidência operacional
+#   DOC-ORG-005: BCP em draft, não operacional
+#   DOC-PPL-003: Cláusulas contratuais sem verificação de enforcement
+#   DOC-PPL-004: Processo disciplinar sem registo de aplicação
+#
+# SHADOW SECURITY (implementado sem política documentada):
+#   IMPL-PHY-001: Data centre access logs activos, sem política formal
+#   IMPL-PHY-002: CCTV operacional, sem procedimento documentado
+#   IMPL-PHY-003: Controlo de visitantes por badge, sem registo formal
+
+- id: DOC-ORG-001
+  name: Information Security Policies
+  description: >
+    ISP v3.2 operationally enforced. Annual review completed 2025-01.
+    Acknowledged by all staff via LMS.
+  layer: implemented
+  domains: [organizational]
+  maturity: 4
+  effectiveness: 0.85
+  evidences:
+    - type: log
+      ref: lms-policy-acknowledgement-2025-01
+
+- id: DOC-ORG-002
+  name: Supplier and Third-Party Risk Management
+  description: >
+    Vendor assessments completed for 18 of 22 critical suppliers.
+    Remaining 4 scheduled for Q2 2025.
+  layer: implemented
+  domains: [organizational]
+  maturity: 3
+  effectiveness: 0.70
+  review_required: false
+  evidences:
+    - type: test_result
+      ref: vendor-assessment-tracker-2025-q1
+
+- id: DOC-ORG-004
+  name: Risk Assessment and Treatment
+  description: >
+    Risk register updated Q1 2025. 43 risks assessed, 12 with active
+    treatment plans in progress.
+  layer: implemented
+  domains: [organizational]
+  maturity: 4
+  effectiveness: 0.90
+  evidences:
+    - type: log
+      ref: jira:risk-register-q1-2025-43-items
+
+# DOC-ORG-003 (Incident Response) — NOT implemented: plan exists but no
+# operational runbooks, no SIEM playbooks, no tabletop exercise conducted.
+# → PolicyGap
+
+# DOC-ORG-005 (BCP) — NOT implemented: document is a draft, RTO/RPO not
+# tested, no DR exercise on record.
+# → PolicyGap
+
+- id: DOC-PPL-001
+  name: Security Awareness Training Programme
+  description: >
+    94% completion rate Q1 2025. Phishing simulation run March 2025.
+    3.2% click rate, down from 7.8% in Q1 2024.
+  layer: implemented
+  domains: [people]
+  maturity: 4
+  effectiveness: 0.88
+  evidences:
+    - type: test_result
+      ref: lms-completion-q1-2025
+    - type: test_result
+      ref: phishing-sim-march-2025-3.2pct-click
+
+- id: DOC-PPL-002
+  name: Pre-Employment Screening
+  description: >
+    Background checks completed for all hires in 2024-2025.
+    Sterling platform used. Results stored in HR system.
+  layer: implemented
+  domains: [people]
+  maturity: 3
+  effectiveness: 0.80
+  evidences:
+    - type: log
+      ref: sterling-bg-check-2024-2025-all-clear
+
+# DOC-PPL-003 (Contract clauses) — NOT implemented: clauses exist in
+# template but no audit of signed contracts conducted. Enforcement unverified.
+# → PolicyGap
+
+# DOC-PPL-004 (Disciplinary process) — NOT implemented: process documented
+# but no record of application in security violation context.
+# → PolicyGap
+
+- id: DOC-TECH-001
+  name: Vulnerability Management — Scanner and Triage
+  description: >
+    Grype in CI, 100% pipeline coverage. Trivy scans container registry
+    weekly. Jira backlog: 8 critical open, 23 high, SLA tracked.
+  layer: implemented
+  domains: [technological]
+  maturity: 3
+  effectiveness: 0.75
+  evidences:
+    - type: test_result
+      ref: grype-ci-100pct-2025
+    - type: log
+      ref: jira:vuln-sla-tracker-2025-q1
+
+- id: DOC-TECH-002
+  name: Identity and Access Management — MFA
+  description: >
+    MFA enforced for all 312 production accounts. Zero exceptions.
+    FIDO2 keys for privileged accounts (PAM via CyberArk).
+  layer: implemented
+  domains: [technological]
+  maturity: 5
+  effectiveness: 0.95
+  evidences:
+    - type: log
+      ref: okta-mfa-100pct-production-2025
+    - type: log
+      ref: cyberark-pam-coverage-report
+
+- id: DOC-TECH-003
+  name: Cryptography and Key Management
+  description: >
+    AWS KMS managing 47 data keys. Key rotation enforced by policy.
+    TLS 1.3 enforced at ALB and Cloudflare.
+  layer: implemented
+  domains: [technological]
+  maturity: 4
+  effectiveness: 0.90
+  evidences:
+    - type: log
+      ref: aws-kms-key-inventory-2025-03
+    - type: architecture
+      ref: cloudflare-tls-config-2025
+
+- id: DOC-TECH-004
+  name: Network Security — Segmentation and Perimeter
+  description: >
+    VPC with 4 isolated subnets. WAF (Cloudflare) blocking 1.2k
+    malicious requests/day. Security groups audited 2025-02.
+  layer: implemented
+  domains: [technological]
+  maturity: 4
+  effectiveness: 0.85
+  evidences:
+    - type: test_result
+      ref: cloudflare-waf-dashboard-2025-03
+    - type: log
+      ref: sg-audit-results-2025-02
+
+- id: DOC-TECH-005
+  name: SAST and DAST Integration
+  description: >
+    Semgrep in all 14 active repositories. 0 critical findings open >7d.
+    DAST run against staging post-release.
+  layer: implemented
+  domains: [technological]
+  maturity: 3
+  effectiveness: 0.78
+  evidences:
+    - type: test_result
+      ref: semgrep-findings-summary-2025-q1
+    - type: test_result
+      ref: dast-staging-report-2025-03
+
+# --- SHADOW SECURITY — physical controls operational without documented policy ---
+
+- id: IMPL-PHY-001
+  name: Data Centre Physical Access Logs
+  description: >
+    Badge access logs for co-location data centre retained 90 days.
+    Alerts on after-hours access. Operated by facilities team.
+  layer: implemented
+  domains: [physical]
+  maturity: 3
+  effectiveness: 0.80
+  review_required: true
+  evidences:
+    - type: log
+      ref: dc-badge-access-log-q1-2025
+
+- id: IMPL-PHY-002
+  name: CCTV Physical Monitoring
+  description: >
+    CCTV covering server room and perimeter. 30-day retention.
+    Monitored by co-lo provider. No formal procedure in-house.
+  layer: implemented
+  domains: [physical]
+  maturity: 2
+  effectiveness: 0.65
+  review_required: true
+  evidences:
+    - type: log
+      ref: colo-cctv-config-2024
+
+- id: IMPL-PHY-003
+  name: Visitor Control and Escort Policy
+  description: >
+    Visitor badges issued at reception. Escort required in server areas.
+    Sign-in log maintained by co-lo. No internal procedure documented.
+  layer: implemented
+  domains: [physical]
+  maturity: 2
+  effectiveness: 0.60
+  review_required: true
+  evidences:
+    - type: log
+      ref: colo-visitor-log-access-2025

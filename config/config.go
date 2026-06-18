@@ -12,17 +12,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Organization struct {
-	Name   string `yaml:"name"`
-	Sector string `yaml:"sector"`
-	Scope  string `yaml:"scope"`
-}
-
-type ControlWeight struct {
-	Weight        float64 `yaml:"weight"`
-	Justification string  `yaml:"justification"`
-}
-
 type ReleaseGate struct {
 	Enabled              bool                        `yaml:"enabled"`
 	Mode                 string                      `yaml:"mode"` // "any" | "aggregate"
@@ -31,11 +20,6 @@ type ReleaseGate struct {
 	AggregateLimit       float64                     `yaml:"aggregate_limit"`
 	AssetContext         model.AssetContext          `yaml:"asset_context"`
 	CompensatingControls []model.CompensatingControl `yaml:"compensating_controls"`
-}
-
-type Thresholds struct {
-	FailAbove float64 `yaml:"fail_above"`
-	WarnAbove float64 `yaml:"warn_above"`
 }
 
 type Limits struct {
@@ -50,10 +34,23 @@ type AcceptanceConfig struct {
 	BannedJustificationPhrases []string `yaml:"banned_justification_phrases"`
 }
 
+type GateLogConfig struct {
+	Path    string   `yaml:"path"`    // default: "wardex-gate-audit.log"
+	Forward []string `yaml:"forward"` // e.g. ["syslog", "enisa"]
+	OnFail  string   `yaml:"on_fail"` // "warn" | "block"
+}
+
+// ENISAQueueConfig configures the local queue file for the ENISABackend stub.
+// No data is transmitted — the queue is a local JSONL file awaiting operator dispatch.
+type ENISAQueueConfig struct {
+	Path string `yaml:"path"` // default: "wardex-enisa-queue.jsonl"
+}
+
 type ReportingConfig struct {
-	Format  string `yaml:"format"`
-	Output  string `yaml:"output"`
-	Verbose bool   `yaml:"verbose"`
+	Format     string          `yaml:"format"`
+	Output     string          `yaml:"output"`
+	GateLog    GateLogConfig   `yaml:"gate_log"`
+	ENISAQueue ENISAQueueConfig `yaml:"enisa_queue"` // NEW in v2.0
 }
 
 type Profile struct {
@@ -62,15 +59,43 @@ type Profile struct {
 	AllowedActors []string `yaml:"allowed_actors"`
 }
 
+// Art14Config controls the CRA Article 14 notification artefact generation.
+type Art14Config struct {
+	// OutputDir is the directory where artefact JSON files are written.
+	// Defaults to "." (working directory). In CI, set to a mounted persistent volume.
+	OutputDir string `yaml:"output_dir"`
+
+	// AwarenessSource determines the timestamp used as the Article 14 awareness timestamp.
+	// "detection": time.Now() at wardex evaluate time (default).
+	// "envelope":  actively_exploited_since from the vulnerability envelope (if set and earlier).
+	AwarenessSource string `yaml:"awareness_source"` // "detection" | "envelope"
+
+	// ProductName and ProductVersion pre-populate the notification artefact.
+	// If empty, Wardex writes "[OPERATOR: complete before dispatch]" as the field value.
+	ProductName    string `yaml:"product_name"`
+	ProductVersion string `yaml:"product_version"`
+
+	// KEVPath is the default path to a downloaded CISA KEV catalogue JSON snapshot.
+	// When set, wardex evaluate will correlate the envelope against the KEV without
+	// requiring the --kev flag on every invocation.
+	KEVPath string `yaml:"kev_path"`
+
+	// KEVMaxAgeDays emits a [WARN] if the KEV catalogue file mtime exceeds this value.
+	// Defaults to 7. Set to 0 to disable the age check.
+	KEVMaxAgeDays int `yaml:"kev_max_age_days"`
+}
+
+// CRAConfig groups all Cyber Resilience Act compliance settings.
+type CRAConfig struct {
+	Art14 Art14Config `yaml:"art14"`
+}
+
 type Config struct {
-	Organization     Organization             `yaml:"organization"`
-	DomainWeights    map[string]float64       `yaml:"domain_weights"`
-	ControlWeights   map[string]ControlWeight `yaml:"control_weights"`
-	ReleaseGate      ReleaseGate              `yaml:"release_gate"`
-	Thresholds       Thresholds               `yaml:"thresholds"`
-	AcceptanceConfig AcceptanceConfig         `yaml:"acceptance"`
-	Reporting        ReportingConfig          `yaml:"reporting"`
-	Profiles         map[string]Profile       `yaml:"profiles"`
+	ReleaseGate      ReleaseGate        `yaml:"release_gate"`
+	AcceptanceConfig AcceptanceConfig   `yaml:"acceptance"`
+	Reporting        ReportingConfig    `yaml:"reporting"`
+	Profiles         map[string]Profile `yaml:"profiles"`
+	CRA              CRAConfig          `yaml:"cra"` // NEW in v2.0
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
@@ -86,7 +111,7 @@ func Load(path string) (*Config, error) {
 		if os.IsNotExist(err) {
 			// Return defaults
 			return &Config{
-				ReleaseGate: ReleaseGate{Mode: "any", RiskAppetite: 10.0},
+				ReleaseGate: ReleaseGate{Mode: "any", RiskAppetite: 0.0},
 			}, nil
 		}
 		return nil, fmt.Errorf("reading config file: %w", err)

@@ -15,12 +15,8 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/accept/audit"
-	"github.com/had-nu/wardex/pkg/accept/configaudit"
-	"github.com/had-nu/wardex/pkg/accept/reporter"
-	"github.com/had-nu/wardex/pkg/accept/signer"
-	"github.com/had-nu/wardex/pkg/accept/store"
-	"github.com/had-nu/wardex/pkg/accept/validator"
+	"github.com/had-nu/wardex/pkg/accept"
+	"github.com/had-nu/wardex/pkg/art14"
 	"github.com/had-nu/wardex/pkg/duration"
 	"github.com/had-nu/wardex/pkg/exitcodes"
 	"github.com/had-nu/wardex/pkg/model"
@@ -50,6 +46,10 @@ var (
 	revokeReason   string
 
 	expiryWarnBefore string
+
+	aeCVE          string
+	aeJustif       string
+	aeArtefactPath string
 )
 
 func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
@@ -68,14 +68,14 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				os.Exit(1)
 			}
 
-			key, err := signer.ResolveSecret(*cfg)
+			key, err := accept.ResolveSecret(*cfg)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
 				os.Exit(1)
 			}
 
 			// Validate GateReport
-			blockedCVEs, reportHash, err := reporter.Read(reqReport, cfg.AcceptanceConfig.Limits.MaxReportAgeHours)
+			blockedCVEs, reportHash, err := accept.ReadReport(reqReport, cfg.AcceptanceConfig.Limits.MaxReportAgeHours)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Report error: %v\n", err)
 				os.Exit(1)
@@ -105,7 +105,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				expiresAt = time.Now().Add(dur)
 			}
 
-			currentConfigHash, _ := configaudit.Hash(*configPathPtr)
+			currentConfigHash, _ := accept.ConfigHash(*configPathPtr)
 			baseID := fmt.Sprintf("acc-%s-%d", time.Now().Format("20060102"), time.Now().Unix())
 
 			var createdIDs []string
@@ -125,12 +125,12 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 					ReportHash:    reportHash,
 				}
 
-				if err := validator.ValidateBusinessRules(acceptance, cfg.AcceptanceConfig); err != nil {
+				if err := accept.ValidateBusinessRules(acceptance, cfg.AcceptanceConfig); err != nil {
 					fmt.Fprintf(os.Stderr, "Validation error for %s: %v\n", cve, err)
 					os.Exit(1)
 				}
 
-				_ = audit.Log("wardex-accept-audit.log", model.AuditEntry{
+				_ = accept.AuditLog("wardex-accept-audit.log", model.AuditEntry{
 					Event:       "acceptance.created",
 					ID:          id,
 					CVEID:       cve,
@@ -139,10 +139,10 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 					ConfigHash:  currentConfigHash,
 				})
 
-				sig, _ := signer.Sign(acceptance, key)
+				sig, _ := accept.Sign(acceptance, key)
 				acceptance.Signature = sig
 
-				if err := store.Append("wardex-acceptances.yaml", acceptance); err != nil {
+				if err := accept.Append("wardex-acceptances.yaml", acceptance); err != nil {
 					fmt.Fprintf(os.Stderr, "Storage error for %s: %v\n", cve, err)
 					os.Exit(1)
 				}
@@ -177,22 +177,22 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				os.Exit(1)
 			}
 
-			key, err := signer.ResolveSecret(*cfg)
+			key, err := accept.ResolveSecret(*cfg)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
 				os.Exit(1)
 			}
 
-			currentConfigHash, _ := configaudit.Hash(*configPathPtr)
+			currentConfigHash, _ := accept.ConfigHash(*configPathPtr)
 
 			// Load checks validity under the hood
-			acceptances, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
+			acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
 			if err != nil {
-				if errors.Is(err, store.ErrTampered) {
+				if errors.Is(err, accept.ErrTampered) {
 					fmt.Fprintf(os.Stderr, "Tampered acceptance detected: %v\n", err)
 					os.Exit(exitcodes.Tampered)
 				}
-				if errors.Is(err, store.ErrStoreInconsistent) {
+				if errors.Is(err, accept.ErrStoreInconsistent) {
 					fmt.Fprintf(os.Stderr, "Store inconsistent: %v\n", err)
 					os.Exit(exitcodes.StoreInconsistent)
 				}
@@ -250,21 +250,21 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				os.Exit(1)
 			}
 
-			key, err := signer.ResolveSecret(*cfg)
+			key, err := accept.ResolveSecret(*cfg)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
 				os.Exit(1)
 			}
 
-			currentConfigHash, _ := configaudit.Hash(*configPathPtr)
+			currentConfigHash, _ := accept.ConfigHash(*configPathPtr)
 
-			_, err = store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
+			_, err = accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
 			if err != nil {
-				if errors.Is(err, store.ErrTampered) {
+				if errors.Is(err, accept.ErrTampered) {
 					fmt.Fprintf(os.Stderr, "Tampered validation check failed: %v\n", err)
 					os.Exit(exitcodes.Tampered)
 				}
-				if errors.Is(err, store.ErrStoreInconsistent) {
+				if errors.Is(err, accept.ErrStoreInconsistent) {
 					fmt.Fprintf(os.Stderr, "Store trace validation failed: %v\n", err)
 					os.Exit(exitcodes.StoreInconsistent)
 				}
@@ -391,7 +391,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				os.Exit(1)
 			}
 
-			key, err := signer.ResolveSecret(*cfg)
+			key, err := accept.ResolveSecret(*cfg)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
 				os.Exit(1)
@@ -403,7 +403,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				Reason:    revokeReason,
 			}
 
-			if err := store.UpdateStatus("wardex-acceptances.yaml", revokeID, "revoked", revocation, key); err != nil {
+			if err := accept.UpdateStatus("wardex-acceptances.yaml", revokeID, "revoked", revocation, key); err != nil {
 				fmt.Fprintf(os.Stderr, "Failed to revoke: %v\n", err)
 				os.Exit(1)
 			}
@@ -434,14 +434,14 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 				os.Exit(1)
 			}
 
-			key, err := signer.ResolveSecret(*cfg)
+			key, err := accept.ResolveSecret(*cfg)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
 				os.Exit(1)
 			}
 
-			currentConfigHash, _ := configaudit.Hash(*configPathPtr)
-			acceptances, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
+			currentConfigHash, _ := accept.ConfigHash(*configPathPtr)
+			acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Load error: %v\n", err)
 				os.Exit(1)
@@ -473,6 +473,81 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	}
 	checkExpiryCmd.Flags().StringVar(&expiryWarnBefore, "warn-before", "72h", "Período de aviso: ex. 3d, 72h")
 
-	acceptCmd.AddCommand(requestCmd, listCmd, verifyCmd, verifyFwdCmd, revokeCmd, checkExpiryCmd)
+	activeExploitCmd := &cobra.Command{
+		Use:   "active-exploit",
+		Short: "Acknowledge an active exploitation for compliance trail",
+		Run: func(cmd *cobra.Command, args []string) {
+			cfg, err := config.Load(*configPathPtr)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
+				os.Exit(1)
+			}
+
+			// Validate --cve (required)
+			if aeCVE == "" {
+				fmt.Fprintf(os.Stderr, "Error: --cve is required\n")
+				os.Exit(1)
+			}
+
+			// Validate --justification (required, min 80 chars)
+			if len(aeJustif) < 80 {
+				fmt.Fprintf(os.Stderr, "Error: justification must be at least 80 characters (got %d)\n", len(aeJustif))
+				os.Exit(1)
+			}
+
+			// If --art14-artefact is provided, check if it exists and validate its HMAC
+			if aeArtefactPath != "" {
+				key, err := accept.ResolveSecret(*cfg)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Warning: WARDEX_ACCEPT_SECRET is not set, unable to verify HMAC: %v\n", err)
+				} else {
+					// Load and verify artefact
+					art, err := art14.ReadArtefact(aeArtefactPath)
+					if err != nil {
+						fmt.Fprintf(os.Stderr, "Error reading Article 14 notification artefact: %v\n", err)
+						os.Exit(1)
+					}
+					if err := art14.VerifyArtefact(art, key); err != nil {
+						fmt.Fprintf(os.Stderr, "Error: Article 14 notification artefact HMAC validation failed: %v\n", err)
+						os.Exit(1)
+					}
+				}
+			}
+
+			logPath := "wardex-gate-audit.log"
+			if cfg.Reporting.GateLog.Path != "" {
+				logPath = cfg.Reporting.GateLog.Path
+			}
+
+			configHash, _ := accept.ConfigHash(*configPathPtr)
+			entry := model.AuditEntry{
+				Timestamp:                     time.Now().UTC(),
+				Event:                         "active-exploit.acknowledged",
+				ConfigHash:                    configHash,
+				OverallDecision:               "block",
+				Status:                        "block",
+				Detail:                        fmt.Sprintf("Active exploitation acknowledged for CVE: %s. Justification: %s", aeCVE, aeJustif),
+				ActivelyExploited:             []string{aeCVE},
+				Art14NotificationArtefactPath: aeArtefactPath,
+			}
+
+			if err := accept.ChainedAuditLog(logPath, entry); err != nil {
+				fmt.Fprintf(os.Stderr, "Error writing audit log: %v\n", err)
+				os.Exit(1)
+			}
+
+			fmt.Printf("Acknowledged active exploitation for CVE %s in audit log (chained).\n", aeCVE)
+			os.Exit(exitcodes.OK)
+		},
+	}
+
+	activeExploitCmd.Flags().StringVar(&aeCVE, "cve", "", "CVE ID (required)")
+	activeExploitCmd.Flags().StringVar(&aeJustif, "justification", "", "Substantive justification (minimum 80 characters)")
+	activeExploitCmd.Flags().StringVar(&aeArtefactPath, "art14-artefact", "", "Path to the Article 14 notification artefact")
+
+	_ = activeExploitCmd.MarkFlagRequired("cve")
+	_ = activeExploitCmd.MarkFlagRequired("justification")
+
+	acceptCmd.AddCommand(requestCmd, listCmd, verifyCmd, verifyFwdCmd, revokeCmd, checkExpiryCmd, activeExploitCmd)
 	rootCmd.AddCommand(acceptCmd)
 }

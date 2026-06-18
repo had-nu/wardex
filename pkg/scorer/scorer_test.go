@@ -10,37 +10,56 @@ import (
 	"github.com/had-nu/wardex/pkg/scorer"
 )
 
-func TestScoreWeightClamping(t *testing.T) {
+func TestScoreFormula(t *testing.T) {
 	annex := model.CatalogControl{BaseScore: 5.0}
 
-	// Test high clamping
-	extHigh := model.ExistingControl{ID: "C1", ContextWeight: 3.0}
-	score := scorer.Score(annex, []model.Mapping{{ExistingControlID: "C1"}}, []model.ExistingControl{extHigh})
-	// Weight should be clamped to 2.0 -> 5.0 * 2.0 = 10.0
-	if score != 10.0 {
-		t.Errorf("expected score 10.0 due to upper clamping, got %f", score)
-	}
-
-	// Test low clamping
-	extLow := model.ExistingControl{ID: "C2", ContextWeight: 0.1}
-	score = scorer.Score(annex, []model.Mapping{{ExistingControlID: "C2"}}, []model.ExistingControl{extLow})
-	// Weight should be clamped to 0.5 -> 5.0 * 0.5 = 2.5
-	if score != 2.5 {
-		t.Errorf("expected score 2.5 due to lower clamping, got %f", score)
-	}
-
-	// Test valid range
-	extValid := model.ExistingControl{ID: "C3", ContextWeight: 1.5}
-	score = scorer.Score(annex, []model.Mapping{{ExistingControlID: "C3"}}, []model.ExistingControl{extValid})
-	// 5.0 * 1.5 = 7.5
-	if score != 7.5 {
-		t.Errorf("expected score 7.5, got %f", score)
-	}
-
-	// Test missing control (defaults to 1.0)
-	score = scorer.Score(annex, []model.Mapping{}, nil)
+	// Case 1: Gap
+	// score = BaseScore × weight × 1.0 (implementedCoverage = 0)
+	score := scorer.Score(annex, nil, nil, model.StatusGap)
 	if score != 5.0 {
-		t.Errorf("expected score 5.0, got %f", score)
+		t.Errorf("Gap: expected score 5.0, got %f", score)
+	}
+
+	// Case 2: Gap with high ContextWeight
+	extHigh := model.ExistingControl{ID: "C1", ContextWeight: 1.8}
+	score = scorer.Score(annex, []model.Mapping{{ExistingControlID: "C1"}}, []model.ExistingControl{extHigh}, model.StatusGap)
+	// 5.0 * 1.8 * 1.0 = 9.0
+	if score != 9.0 {
+		t.Errorf("Gap with weight: expected score 9.0, got %f", score)
+	}
+
+	// Case 3: Partial (Paper Security)
+	// base_score=5, weight=1.0, status=partial -> 5 * 1.0 * (1 - 0.5) = 2.5
+	score = scorer.Score(annex, nil, nil, model.StatusPartial)
+	if score != 2.5 {
+		t.Errorf("Partial: expected score 2.5, got %f", score)
+	}
+
+	// Case 4: Partial with Effectiveness
+	// base_score=5, weight=1.0, status=partial, effectiveness=0.80
+	// implementedCoverage = 0.5 * 0.8 = 0.4
+	// score = 5 * 1.0 * (1 - 0.4) = 3.0
+	extEff := model.ExistingControl{ID: "C2", Layer: model.LayerImplemented, Effectiveness: 0.8}
+	score = scorer.Score(annex, []model.Mapping{{ExistingControlID: "C2"}}, []model.ExistingControl{extEff}, model.StatusPartial)
+	if score != 3.0 {
+		t.Errorf("Partial with effectiveness: expected score 3.0, got %f", score)
+	}
+
+	// Case 5: Covered (Full Effectiveness)
+	// score = 5 * 1.0 * (1 - 1.0) = 0.0
+	score = scorer.Score(annex, nil, nil, model.StatusCovered)
+	if score != 0.0 {
+		t.Errorf("Covered: expected score 0.0, got %f", score)
+	}
+
+	// Case 6: Covered with low Effectiveness
+	// base_score=5, weight=1.0, status=covered, effectiveness=0.5
+	// implementedCoverage = 1.0 * 0.5 = 0.5
+	// score = 5 * 1.0 * (1 - 0.5) = 2.5
+	extLowEff := model.ExistingControl{ID: "C3", Layer: model.LayerImplemented, Effectiveness: 0.5}
+	score = scorer.Score(annex, []model.Mapping{{ExistingControlID: "C3"}}, []model.ExistingControl{extLowEff}, model.StatusCovered)
+	if score != 2.5 {
+		t.Errorf("Covered with low effectiveness: expected score 2.5, got %f", score)
 	}
 }
 

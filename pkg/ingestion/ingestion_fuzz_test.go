@@ -13,7 +13,13 @@ func FuzzParseYAML(f *testing.F) {
 	f.Add([]byte(`controls:
   - id: "CTRL-01"
     name: "Valid"
-    maturity: 3`))
+    maturity: 3
+    layer: documented`))
+	f.Add([]byte(`controls:
+  - id: "CTRL-02"
+    name: "Implemented"
+    maturity: 5
+    layer: implemented`))
 	f.Add([]byte(`invalid yaml`))
 
 	f.Fuzz(func(t *testing.T, data []byte) {

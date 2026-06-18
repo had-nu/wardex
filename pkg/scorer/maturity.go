@@ -24,7 +24,6 @@ func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 		}
 	}
 
-	domainMaturitySum := make(map[string]int)
 
 	for _, f := range findings {
 		d := f.Control.Domain
@@ -44,12 +43,8 @@ func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 			s.GapCount++
 		}
 
-		// Calculate maturity contribution
-		// In a real scenario, finding maturity is max(maturity of all mapping controls)
-		// For now we aggregate if covered.
-		// If gate practice exists, we could use GateMaturity.
-		// The exact formula for MaturityScore: média ponderada da maturidade dos controls cobertos / total do domínio
-		// For this implementation, let's defer exact computation or do a simple version based on findings if we pass maturity in finding.
+		// Calculate maturity contribution using the v1.8.0 EffectiveMaturity
+		s.MaturityScore += f.EffectiveMaturity
 	}
 
 	var result []model.DomainSummary
@@ -57,10 +52,7 @@ func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 		s := summaries[d]
 		if s.TotalControls > 0 {
 			s.CoveragePercent = float64(s.CoveredCount) / float64(s.TotalControls) * 100.0
-			// s.MaturityScore = float64(domainMaturitySum[d]) / float64(s.TotalControls)
-			// Wait, finding doesn't hold maturity directly right now. It'll be computed in Analyzer.
-			// Let's rely on finding holding maturity info, or we just leave MaturitySum 0.0 for now until Analyzer defines finding maturity.
-			_ = domainMaturitySum
+			s.MaturityScore = s.MaturityScore / float64(s.TotalControls)
 		}
 		result = append(result, *s)
 	}

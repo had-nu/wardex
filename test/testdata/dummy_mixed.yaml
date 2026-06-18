@@ -1,0 +1,25 @@
+# dummy_mixed.yaml — minimal smoke test fixture
+# Mantido para compatibilidade com o smoke test existente.
+# Para testes completos de LayerDelta e AssetCompliance, usar:
+#   wardex assess documented-controls.yaml implemented-controls.yaml --assets assets.yaml
+
+- id: ORG-A.5.1
+  name: Information Security Policies
+  description: Top-level information security policy approved by management.
+  layer: documented
+  domains: [organizational]
+  maturity: 4
+  evidences:
+    - type: policy
+      ref: isp-v3.0
+
+- id: TECH-A.8.8
+  name: Management of Technical Vulnerabilities
+  description: Vulnerability scanner integrated in CI pipeline with triage process.
+  layer: implemented
+  domains: [technological]
+  maturity: 3
+  effectiveness: 0.75
+  evidences:
+    - type: test_result
+      ref: grype-ci-integration-2025

@@ -1,19 +1,59 @@
-version: "3"
-run:
-  timeout: 5m
-  go: "1.26"
+version: "2"
 
 linters:
-  disable-all: true
-  enable:
+  enabled:
     - errcheck
     - govet
     - ineffassign
-
-linters-settings:
-  errcheck:
-    check-type-assertions: true
-    check-blank: true
-
-issues:
-  exclude-use-default: false
+    - staticcheck
+    - unused
+    - gosec
+    - gomodguard
+    - misspell
+    - exhaustive
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    gosec:
+      severity: medium
+      confidence: medium
+    exhaustive:
+      default-signifies-exhaustive: true
+    misspell:
+      locale: US
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - errcheck
+          - gosec
+          - unused
+      - path: research/
+        linters:
+          - errcheck
+          - gosec
+          - unused
+          - staticcheck
+      - linters:
+          - errcheck
+        text: "Error return value of `fmt\\.Fprint` is not checked"
+      - linters:
+          - errcheck
+        text: "Error return value of `fmt\\.Fprintf` is not checked"
+      - linters:
+          - errcheck
+        text: "Error return value of `fmt\\.Fprintln` is not checked"
+      - linters:
+          - staticcheck
+        text: "QF1003"
+      - linters:
+          - errcheck
+        source: "\\s+_\\s+:="
+      - linters:
+          - errcheck
+        source: "\\s+_\\s+="
+      - linters:
+          - errcheck
+        text: "Error return value is not checked"
+        source: "\\.\\(ed25519\\.PublicKey\\)"

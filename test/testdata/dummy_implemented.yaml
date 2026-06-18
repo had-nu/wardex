@@ -1,0 +1,22 @@
+# Wardex Test Data - Implemented Controls
+controls:
+  - id: "TECH-A.8.8"
+    name: "SCA Scanning Pipeline"
+    framework: "iso27001"
+    domains: ["technological"]
+    maturity: 5
+    layer: implemented
+    effectiveness: 0.9
+    evidences:
+      - type: "github_action"
+        ref: ".github/workflows/security.yml"
+  - id: "ORG-A.5.1"
+    name: "Infosec Policy Document"
+    framework: "iso27001"
+    domains: ["organizational"]
+    maturity: 4
+    layer: implemented
+    effectiveness: 1.0
+    evidences:
+      - type: "policy_doc"
+        ref: "docs/policy/infosec.md"

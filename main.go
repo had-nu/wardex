@@ -9,15 +9,18 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/cmd/aggregate"
+	"github.com/had-nu/wardex/cmd/assess"
+	"github.com/had-nu/wardex/cmd/configseal"
 	"github.com/had-nu/wardex/cmd/convert"
 	"github.com/had-nu/wardex/cmd/evaluate"
+	"github.com/had-nu/wardex/cmd/keygen"
 	"github.com/had-nu/wardex/cmd/policy"
 	"github.com/had-nu/wardex/cmd/simulate"
+	trustcmd "github.com/had-nu/wardex/cmd/trust"
+	art14cmd "github.com/had-nu/wardex/cmd/art14"
 	"github.com/had-nu/wardex/config"
 	"github.com/had-nu/wardex/pkg/accept/cli"
-	"github.com/had-nu/wardex/pkg/accept/configaudit"
-	"github.com/had-nu/wardex/pkg/accept/signer"
-	"github.com/had-nu/wardex/pkg/accept/store"
+	"github.com/had-nu/wardex/pkg/accept"
 	"github.com/had-nu/wardex/pkg/analyzer"
 	"github.com/had-nu/wardex/pkg/catalog"
 	"github.com/had-nu/wardex/pkg/correlator"
@@ -36,7 +39,7 @@ import (
 )
 
 var (
-	Version       = "1.7.2"
+	Version       = "2.0.0"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -96,8 +99,13 @@ func init() {
 	rootCmd.AddCommand(policy.PolicyCmd)
 	rootCmd.AddCommand(evaluate.EvaluateCmd)
 	rootCmd.AddCommand(aggregate.AggregateCmd)
+	rootCmd.AddCommand(assess.AssessCmd)
+	rootCmd.AddCommand(keygen.KeygenCmd)
+	rootCmd.AddCommand(trustcmd.TrustCmd)
+	rootCmd.AddCommand(configseal.ConfigCmd)
 	cli.AddCommands(rootCmd, &configPath)
 	enrichCli.AddCommands(rootCmd, &configPath)
+	rootCmd.AddCommand(art14cmd.Art14Cmd)
 }
 
 func main() {
@@ -284,9 +292,9 @@ func runWardex(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 
-		if key, err := signer.ResolveSecret(*cfg); err == nil {
-			configHash, _ := configaudit.Hash(configPath)
-			if accs, err := store.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
+		if key, err := accept.ResolveSecret(*cfg); err == nil {
+			configHash, _ := accept.ConfigHash(configPath)
+			if accs, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
 				acceptedMap := make(map[string]bool)
 				for _, a := range accs {
 					if !a.Revoked {
@@ -306,7 +314,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 		}
 
 		if epssEnrich != "" {
-			if key, err := signer.ResolveSecret(*cfg); err == nil {
+			if key, err := accept.ResolveSecret(*cfg); err == nil {
 				cwd, _ := os.Getwd()
 				safePathStr, err := utils.SafePath(cwd, epssEnrich)
 				if err != nil {
