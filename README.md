@@ -80,7 +80,7 @@ go install github.com/had-nu/wardex@latest
 
 # Para builds locais (ex: escolher uma tag específica)
 git fetch --tags
-git checkout v1.7.1
+git checkout v1.7.2
 make build
 ```
 
@@ -110,7 +110,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # Instalação Segura (v1.7.1)
+      # Instalação Segura (v1.7.2)
       - name: Install Wardex
         run: |
           VERSION="v1.7.2"
@@ -226,7 +226,7 @@ Validado com **237 CVEs reais** e scores EPSS ao vivo da FIRST.org:
 | [SAAS] Startup SaaS | 2.0 | **111** | 86 | 47% |
 | [INFRA] Energia/Águas (NIS2) | 0.3 | **180** | 53 | 76% |
 
-Relatorio completo: [EPSS Multi-Context Stress Test Report](doc/epss-stress-test-report.md)
+Relatório de calibração disponível no [Manual de Implementação](doc/WARDEX_PLAYBOOK.md).
 
 ## Gestão de Políticas Locais (Local Policy Management)
 
