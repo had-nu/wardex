@@ -43,7 +43,7 @@ wardex assess controls.yaml --framework dora
 ## Instalação
 
 ```bash
-go install github.com/had-nu/wardex@v2.0.0
+go install github.com/had-nu/wardex@95eed886
 ```
 
 Requer Go ≥ 1.26. Confirma que `$(go env GOPATH)/bin` está no teu `$PATH`.
@@ -286,7 +286,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex@v2.0.0
+        run: go install github.com/had-nu/wardex@95eed886
 
       - name: Evaluate risk gate
         run: |
