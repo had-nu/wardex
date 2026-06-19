@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wardex — Risk-Based Release Gate for CRA, NIS2 & DORA</title>
+    <meta name="description" content="Wardex is a risk-driven release gate and compliance gap analyser for CRA Article 14, NIS2, DORA, ISO 27001, and SOC 2. KEV correlation, HMAC-signed audit trails, and asset-context-aware gating.">
+    <meta name="author" content="André Ataíde">
+    <meta property="og:title" content="Wardex — Risk-Based Release Gate">
+    <meta property="og:description" content="CRA-ready release gating with KEV correlation, SBOM analysis, and cryptographically chained audit evidence.">
+    <meta property="og:url" content="https://had-nu.github.io/wardex/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://had-nu.github.io/wardex/assets/og-image.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --muted: #888888;
+            --border: #e5e5e5;
+            --max-width: 720px;
+            --pad: 2rem;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+            font-size: 1rem;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; }
+        main {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 3rem var(--pad);
+        }
+        .badge-row {
+            display: flex;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+        .badge-row img { height: 20px; }
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+        }
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.5;
+        }
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 3rem 0 0.75rem;
+            padding-top: 0.5rem;
+        }
+        h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.5rem;
+        }
+        p { margin-bottom: 1rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .card {
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            border-radius: 2px;
+        }
+        .card h3 {
+            font-size: 0.9375rem;
+            margin-bottom: 0.4rem;
+        }
+        .card p {
+            font-size: 0.8125rem;
+            color: var(--muted);
+            margin-bottom: 0;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            margin: 0 0 1rem;
+            overflow-x: auto;
+            border-radius: 2px;
+            font-size: 0.8125rem;
+            line-height: 1.5;
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+        }
+        code {
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+            font-size: 0.8125rem;
+            background: #f5f5f5;
+            padding: 0.1rem 0.3rem;
+            border-radius: 2px;
+        }
+        pre code { background: none; padding: 0; }
+        .features {
+            list-style: none;
+            margin: 0 0 1rem;
+        }
+        .features li {
+            padding: 0.3rem 0;
+            font-size: 0.9375rem;
+        }
+        .features li::before {
+            content: "→ ";
+            color: var(--muted);
+        }
+        .links {
+            margin: 2rem 0;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .links a {
+            font-size: 0.875rem;
+            color: var(--muted);
+            text-decoration: underline;
+            text-underline-offset: 0.2em;
+        }
+        .links a:hover { color: var(--text); }
+        .cta {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--text);
+            font-size: 0.875rem;
+            text-decoration: none;
+            border-radius: 2px;
+            margin-right: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .cta:hover { background: var(--text); color: var(--bg); }
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2.5rem 0;
+        }
+        footer {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem var(--pad) 3rem;
+            font-size: 0.8125rem;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+        }
+        @media (max-width: 600px) {
+            :root { --pad: 1.25rem; }
+            .grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<main>
+
+<div class="badge-row">
+    <img src="https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go">
+    <img src="https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square" alt="Go Report Card">
+    <img src="https://github.com/had-nu/wardex/actions/workflows/ci.yml/badge.svg" alt="CI">
+    <img src="https://img.shields.io/badge/License-AGPL_v3_|_Commercial-8A2BE2.svg?style=flat-square" alt="License">
+</div>
+
+<h1>Wardex</h1>
+<p class="subtitle">Risk-driven release gate and compliance gap analyser. Turns vulnerability scanners into CRA-compliant audit evidence.</p>
+
+<div class="links">
+    <a href="https://github.com/had-nu/wardex">GitHub</a>
+    <a href="https://github.com/had-nu/wardex/blob/main/CHANGELOG.md">Changelog</a>
+    <a href="cra/">CRA Article 14</a>
+</div>
+
+<a class="cta" href="#install">Install</a>
+<a class="cta" href="#quickstart">Quickstart</a>
+
+<h2>What it does</h2>
+
+<ul class="features">
+    <li>Correlates scanner output against the CISA KEV catalogue to identify actively exploited CVEs</li>
+    <li>Generates signed CRA Article 14 notification artifacts with HMAC-SHA256 audit chain</li>
+    <li>Evaluates release risk per asset context — the same CVE can ALLOW, WARN, or BLOCK depending on criticality, exposure, and compensating controls</li>
+    <li>Cross-references documented vs implemented controls against ISO 27001, NIS2, DORA, and SOC 2 catalogues</li>
+    <li>Returns distinct exit codes for each outcome: gate block (10), compliance gap (11), active exploitation (12)</li>
+</ul>
+
+<h2>Supported frameworks</h2>
+
+<div class="grid">
+    <div class="card">
+        <h3>ISO/IEC 27001:2022</h3>
+        <p>Annex A control mapping with maturity scoring and evidence classification.</p>
+    </div>
+    <div class="card">
+        <h3>NIS 2</h3>
+        <p>Cyber hygiene, supply chain, and incident reporting controls for essential entities.</p>
+    </div>
+    <div class="card">
+        <h3>DORA</h3>
+        <p>ICT risk management, digital operational resilience, and third-party oversight.</p>
+    </div>
+    <div class="card">
+        <h3>SOC 2</h3>
+        <p>Trust services criteria mapped to documented and implemented control layers.</p>
+    </div>
+</div>
+
+<h2 id="quickstart">Quickstart</h2>
+
+<pre># Install
+go install github.com/had-nu/wardex@v2.0.0
+
+# Convert scanner output to Wardex format
+wardex convert grype test/usability/grype-results.json > vulns.yaml
+
+# Evaluate with asset context
+wardex evaluate \
+  --evidence vulns.yaml \
+  --config doc/examples/wardex-config.yaml</pre>
+
+<p>Exit codes: <code>0</code> ALLOW · <code>10</code> BLOCK · <code>11</code> Compliance Gap · <code>12</code> Active Exploitation</p>
+
+<h2 id="install">Install</h2>
+
+<p>Requires Go ≥ 1.26.</p>
+
+<pre>go install github.com/had-nu/wardex@v2.0.0</pre>
+
+<p>Or build from source:</p>
+
+<pre>git clone https://github.com/had-nu/wardex.git
+cd wardex && make build</pre>
+
+<h2>CRA Article 14</h2>
+
+<p>CRA Article 14 notification obligations enter force September 2026. Wardex implements the full notification pipeline with KEV correlation, distinct exit code 12, and HMAC-SHA256 signed artifacts.</p>
+
+<p><a href="cra/" class="cta">Read the CRA guide →</a></p>
+
+<h2>Documentation</h2>
+
+<div class="grid">
+    <div class="card">
+        <h3><a href="https://github.com/had-nu/wardex/blob/main/doc/architecture/TECHNICAL_VIEW.md">Architecture</a></h3>
+        <p>Internal design, model specification, and cryptographic chain layout.</p>
+    </div>
+    <div class="card">
+        <h3><a href="https://github.com/had-nu/wardex/blob/main/doc/operations/WARDEX_PLAYBOOK.md">Playbook</a></h3>
+        <p>Complete command flows for each use case with expected output.</p>
+    </div>
+    <div class="card">
+        <h3><a href="https://github.com/had-nu/wardex/blob/main/doc/operations/EXIT_CODES.md">Exit codes</a></h3>
+        <p>Reference for all exit codes and their meaning in CI/CD.</p>
+    </div>
+    <div class="card">
+        <h3><a href="https://github.com/had-nu/wardex/blob/main/doc/operations/github-actions-integration.md">GitHub Actions</a></h3>
+        <p>Step-by-step integration guide with workflow YAML examples.</p>
+    </div>
+</div>
+
+<hr>
+
+<p>Wardex is dual-licensed under AGPL-3.0 and a commercial licence. <a href="https://github.com/had-nu/wardex">View on GitHub →</a></p>
+
+</main>
+
+<footer>
+    <p>Wardex · <a href="https://github.com/had-nu/wardex">github.com/had-nu/wardex</a> · <a href="https://had-nu.github.io/">André Ataíde</a></p>
+</footer>
+
+</body>
+</html>

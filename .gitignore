@@ -11,6 +11,7 @@ wardex
 *.test
 *.out
 *.html
+!docs/**/*.html
 coverage.out
 coverage.html
 .wardex_snapshot.json

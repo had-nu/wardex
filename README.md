@@ -1,3 +1,5 @@
+<h1 align="center">Wardex — The CRA-Ready Release Gate for NIS2 &amp; DORA</h1>
+
 <div align="center">
 
 ![Wardex Lockup](pkg/ui/wardex-lockup.svg)
@@ -55,6 +57,24 @@ cd wardex && make build
 
 ---
 
+## Quickstart
+
+Testa o Wardex com os ficheiros de exemplo incluídos no repositório:
+
+```bash
+# Converter output do Grype para formato Wardex
+wardex convert grype test/usability/grype-results.json > vulns.yaml
+
+# Avaliar com contexto do activo
+wardex evaluate \
+  --evidence vulns.yaml \
+  --config doc/examples/wardex-config.yaml
+
+# Exit codes: 0 (ALLOW) · 10 (BLOCK) · 11 (Gap) · 12 (Exploração activa)
+```
+
+---
+
 ## CRA Article 14 (v2.0)
 
 As obrigações de notificação por exploração activa do Regulamento Europeu de Resiliência Cibernética entram em vigor em setembro de 2026. O Wardex v2.0 implementa o caminho de reporte do Article 14.
@@ -100,7 +120,6 @@ wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-a
 **Exit codes (v2.0):** `0` OK · `3` Falha de integridade · `10` Gate bloqueado · `11` Falha de conformidade · **`12` Activamente explorado**
 
 ---
-
 ## Análise de gaps de conformidade
 
 O Wardex compara o que o infosec declarou com o que está operacionalmente activo, e identifica o delta em relação ao framework.
