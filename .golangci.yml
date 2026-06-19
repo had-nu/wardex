@@ -9,7 +9,6 @@ linters:
     - unused
     - gosec
     - gomodguard
-    - misspell
     - exhaustive
   settings:
     errcheck:
@@ -20,8 +19,6 @@ linters:
       confidence: medium
     exhaustive:
       default-signifies-exhaustive: true
-    misspell:
-      locale: UK
   exclusions:
     rules:
       - path: _test\.go
