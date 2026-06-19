@@ -1,0 +1,284 @@
+- id: GV.OC
+  name: "Organizational Context — Mission, stakeholder expectations, legal/regulatory obligations"
+  domain: "organizational"
+  base_score: 7.0
+  keywords:
+    - organizational context
+    - mission
+    - legal obligations
+    - regulatory
+- id: GV.RM
+  name: "Risk Management Strategy — Enterprise risk appetite and tolerance"
+  domain: "organizational"
+  base_score: 8.0
+  keywords:
+    - risk appetite
+    - risk tolerance
+    - enterprise risk management
+- id: GV.RR
+  name: "Roles, Responsibilities, and Authorities — Cybersecurity roles defined and assigned"
+  domain: "organizational"
+  base_score: 7.5
+  keywords:
+    - roles
+    - responsibilities
+    - raci
+    - governance structure
+- id: GV.PO
+  name: "Policy and Oversight — Cybersecurity policy approved and reviewed"
+  domain: "organizational"
+  base_score: 7.0
+  keywords:
+    - policy
+    - oversight
+    - board reporting
+- id: GV.OV
+  name: "Oversight — Independent review of cybersecurity program"
+  domain: "organizational"
+  base_score: 6.5
+  keywords:
+    - audit
+    - independent review
+    - assurance
+- id: GV.SC
+  name: "Supply Chain Risk Management Strategy"
+  domain: "organizational"
+  base_score: 8.5
+  keywords:
+    - supply chain
+    - vendor risk
+    - third party
+  practices:
+    - id: PR.GV.SC.1
+      name: "Enforce SBOM and attestation for third-party components"
+      min_maturity: 3
+      gate_relevant: true
+- id: ID.AM
+  name: "Asset Management — Inventories of hardware, software, data, and external systems"
+  domain: "technological"
+  base_score: 8.0
+  keywords:
+    - asset inventory
+    - asset management
+    - cmdb
+    - hardware inventory
+    - software inventory
+- id: ID.RA
+  name: "Risk Assessment — Threat identification, vulnerability analysis, likelihood and impact"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - risk assessment
+    - threat modeling
+    - vulnerability assessment
+    - risk analysis
+- id: ID.IM
+  name: "Improvement — Lessons learned from incidents incorporated into risk assessment"
+  domain: "process"
+  base_score: 6.0
+  keywords:
+    - lessons learned
+    - post-incident review
+    - continuous improvement
+- id: ID.SC
+  name: "Supply Chain Risk Assessment — Third-party risk identification and prioritisation"
+  domain: "organizational"
+  base_score: 8.5
+  keywords:
+    - third-party assessment
+    - vendor due diligence
+    - supplier risk
+- id: ID.GV
+  name: "Governance and Risk Management Context — Risk management integrated into enterprise processes"
+  domain: "organizational"
+  base_score: 7.0
+  keywords:
+    - integrated risk
+    - erm
+    - governance
+- id: PR.AA
+  name: "Identity Management, Authentication, and Access Control"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - iam
+    - authentication
+    - mfa
+    - access control
+    - identity
+  practices:
+    - id: PR.PR.AA.1
+      name: "Enforce MFA for all administrative access"
+      min_maturity: 3
+      gate_relevant: false
+- id: PR.AW
+  name: "Awareness and Training — Cybersecurity awareness program and role-based training"
+  domain: "people"
+  base_score: 7.0
+  keywords:
+    - training
+    - awareness
+    - phishing
+    - security education
+- id: PR.DS
+  name: "Data Security — Encryption at rest and in transit, data classification, DLP"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - encryption
+    - data protection
+    - dlp
+    - data classification
+    - crypto
+- id: PR.PS
+  name: "Platform Security — Secure configuration, hardening, vulnerability management"
+  domain: "technological"
+  base_score: 8.5
+  keywords:
+    - hardening
+    - secure configuration
+    - os hardening
+    - container security
+  practices:
+    - id: PR.PR.PS.1
+      name: "Run automated vulnerability scanning in CI/CD"
+      min_maturity: 3
+      gate_relevant: true
+- id: PR.AT
+  name: "Technology Infrastructure Resilience — Redundancy, capacity, SLA-backed uptime"
+  domain: "technological"
+  base_score: 7.0
+  keywords:
+    - redundancy
+    - high availability
+    - capacity planning
+    - sla
+- id: PR.MA
+  name: "Maintenance — Scheduled patching, update management, end-of-life planning"
+  domain: "technological"
+  base_score: 7.5
+  keywords:
+    - patching
+    - maintenance
+    - update management
+    - eol
+- id: PR.PM
+  name: "Protective Technology — Least privilege, network segmentation, firewalls, WAF"
+  domain: "technological"
+  base_score: 8.0
+  keywords:
+    - network segmentation
+    - firewall
+    - waf
+    - least privilege
+    - zero trust
+- id: DE.CM
+  name: "Continuous Monitoring — SIEM, endpoint detection, network monitoring"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - monitoring
+    - siem
+    - edr
+    - network monitoring
+    - soc
+- id: DE.AE
+  name: "Adversary Analysis — Threat intelligence, attack surface analysis"
+  domain: "process"
+  base_score: 7.5
+  keywords:
+    - threat intelligence
+    - attack surface
+    - adversary
+    - cti
+- id: DE.DP
+  name: "Detection Processes — Alert triage, detection engineering, false positive tuning"
+  domain: "process"
+  base_score: 7.0
+  keywords:
+    - alert triage
+    - detection engineering
+    - false positive
+- id: DE.MI
+  name: "Missions and Impact — Detection events mapped to business impact"
+  domain: "process"
+  base_score: 6.0
+  keywords:
+    - business impact
+    - critical service
+    - mission
+- id: RS.MA
+  name: "Incident Management — Incident response plan, IR team, communication plan"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - incident response
+    - ir plan
+    - csirt
+    - soc
+    - incident handling
+- id: RS.AN
+  name: "Incident Analysis — Root cause, forensic analysis, containment"
+  domain: "process"
+  base_score: 8.0
+  keywords:
+    - forensics
+    - root cause
+    - containment
+    - analysis
+- id: RS.CO
+  name: "Incident Coordination — Internal and external stakeholder communication"
+  domain: "process"
+  base_score: 7.0
+  keywords:
+    - communication
+    - stakeholder
+    - notification
+- id: RS.MI
+  name: "Incident Mitigation — Containment, eradication, recovery procedures"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - containment
+    - eradication
+    - mitigation
+    - recovery
+- id: RS.IM
+  name: "Improvement — Post-incident analysis and control updates"
+  domain: "process"
+  base_score: 6.5
+  keywords:
+    - post-mortem
+    - lessons learned
+    - improvement
+- id: RS.SC
+  name: "Supply Chain Incident Coordination — Third-party incident notification and response"
+  domain: "process"
+  base_score: 7.5
+  keywords:
+    - supply chain incident
+    - vendor notification
+    - third-party ir
+- id: RC.RP
+  name: "Recovery Planning — BC/DR plans tested and maintained"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - bcp
+    - drp
+    - business continuity
+    - disaster recovery
+- id: RC.IM
+  name: "Recovery Improvement — Lessons learned applied to recovery procedures"
+  domain: "process"
+  base_score: 6.0
+  keywords:
+    - recovery improvement
+    - bcp lessons
+- id: RC.CO
+  name: "Recovery Communications — Recovery status communicated to stakeholders"
+  domain: "process"
+  base_score: 6.5
+  keywords:
+    - recovery communication
+    - stakeholder update
