@@ -27,6 +27,8 @@ func Load(framework string) []model.CatalogControl {
 		filename = "nis2.yaml"
 	case "dora":
 		filename = "dora.yaml"
+	case "nist_csf":
+		filename = "nist_csf.yaml"
 	default:
 		log.Fatalf("unsupported framework: %s", framework)
 	}
