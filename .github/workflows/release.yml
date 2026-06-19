@@ -41,7 +41,7 @@ jobs:
         run: go run ./cmd/gen-sbom/ wardex-${{ github.ref_name }}.sbom.json
 
       - name: Upload SBOM
-        uses: actions/upload-artifact@65c4c4a1ddce5f7f3d7f6de4d45ea3c70a2cca2f # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: sbom
           path: wardex-*.sbom.json
