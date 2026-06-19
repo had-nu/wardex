@@ -272,7 +272,7 @@ The point of the linter is not to convince an auditor that you are honest. The p
 
 ## 8. Reference
 
-- Spec: `SPEC_wardex_v1.8.1_lint.md`
+- Rule catalogue: `pkg/lint/rules.go`
 - Rule catalogue: `pkg/lint/rules.go`
 - Inspect a specific rule: `wardex lint --explain LINT-XXX`
 - Command reference: `wardex assess --help`

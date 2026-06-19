@@ -187,7 +187,7 @@ wardex assess documented-controls.yaml implemented-controls.yaml \
 ```
 
 ```yaml
-# assets.yaml — v1.8.0 Schema
+# assets.yaml — v2.0.0 Schema
 - id: ASSET-PAY-001
   name: Payment API
   type: application
