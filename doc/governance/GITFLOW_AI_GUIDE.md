@@ -16,14 +16,14 @@ This document defines the mandatory workflow and quality standards for any AI Ag
 
 Wardex follows a simplified Git Flow:
 - **main**: The stable, production-ready branch. All releases are tagged from here.
-- **dev**: The integration branch. New features are developed here before being merged to main.
+- **dev** (historical): Previously the integration branch. Default branch is now `main`; feature branches merge directly to `main`.
 
 **Agent Workflow:**
 1.  Verify the current branch and local state.
 2.  Perform changes.
-3.  Commit to `main` (if authorized for direct hotfixes/doc updates) or `dev`.
+3.  Commit to `main` (if authorized for direct hotfixes/doc updates) or feature branches.
 4.  **MANDATORY**: Whenever `main` is updated, immediately synchronize `dev` using:
-    `git push origin main:dev --force`
+    `git checkout dev && git merge main && git push origin dev`
 
 ---
 

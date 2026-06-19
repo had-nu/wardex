@@ -31,7 +31,7 @@ A análise de lacunas cruza o que a função de segurança declarou com o que es
 
 ## Frameworks suportados
 
-ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · CRA Article 14
+ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · CRA Article 14 · NIST CSF 2.0
 
 ```bash
 wardex assess controls.yaml --framework iso27001  # predefinição
@@ -402,4 +402,4 @@ Duplo licenciamento:
 
 **AGPL-3.0 (gratuito):** uso em pipelines CI/CD internas ou em projectos open-source que disponibilizem o código-fonte.
 
-**Licença comercial (pago):** integração em produtos proprietários, plataformas SaaS, ou distribuição sem abertura do código-fonte. Consulta os [Termos Comerciais](doc/COMMERCIAL_LICENSE.md) ou contacta **andre_ataide@proton.me**.
+**Licença comercial (pago):** integração em produtos proprietários, plataformas SaaS, ou distribuição sem abertura do código-fonte. Consulta os [Termos Comerciais](doc/governance/COMMERCIAL_LICENSE.md) ou contacta **andre_ataide@proton.me**.
