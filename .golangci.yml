@@ -21,7 +21,7 @@ linters:
     exhaustive:
       default-signifies-exhaustive: true
     misspell:
-      locale: US
+      locale: UK
   exclusions:
     rules:
       - path: _test\.go
