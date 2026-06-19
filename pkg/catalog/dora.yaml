@@ -1,13 +1,41 @@
 - id: DORA.Art5
-  name: "Governance and ICT Risk Management Framework"
+  name: "Governance and ICT Risk Management Framework — Board accountability, strategy, and structure"
   domain: "organizational"
   base_score: 10.0
   keywords:
     - board accountability
     - structure
     - strategy
+    - governance
+- id: DORA.Art6
+  name: "ICT Risk Management Framework — Policies, procedures, and control environment"
+  domain: "organizational"
+  base_score: 9.5
+  keywords:
+    - risk management framework
+    - policy
+    - control environment
+    - icrf
+- id: DORA.Art7
+  name: "ICT Risk Identification and Classification — Asset inventory, critical functions, dependency mapping"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - asset inventory
+    - critical function
+    - dependency mapping
+    - business process
+- id: DORA.Art8
+  name: "ICT Risk Assessment — Threat scenarios, impact analysis, residual risk evaluation"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - risk assessment
+    - threat scenario
+    - impact analysis
+    - residual risk
 - id: DORA.Art9
-  name: "Protection and Prevention"
+  name: "Protection and Prevention — Encryption, access control, segmentation, hardening"
   domain: "technological"
   base_score: 9.5
   keywords:
@@ -21,23 +49,126 @@
       min_maturity: 4
       gate_relevant: true
 - id: DORA.Art10
-  name: "Detection"
+  name: "Detection — Anomaly detection, SIEM, monitoring, alerting"
   domain: "technological"
   base_score: 8.5
   keywords:
     - anomaly detection
     - siem
     - monitoring
+    - alerting
 - id: DORA.Art11
-  name: "Response and Recovery"
+  name: "Response and Recovery — Incident response plans, DR, business continuity"
   domain: "process"
   base_score: 9.0
   keywords:
     - incident
     - recovery
     - bcp
+    - drp
+- id: DORA.Art12
+  name: "Backup and Restoration — Frequency, off-site, integrity testing"
+  domain: "process"
+  base_score: 8.0
+  keywords:
+    - backup
+    - restoration
+    - off-site
+    - integrity test
+- id: DORA.Art13
+  name: "Communication Plans and Crisis Communication"
+  domain: "process"
+  base_score: 7.0
+  keywords:
+    - crisis communication
+    - stakeholder notification
+    - press
+- id: DORA.Art14
+  name: "Incident Classification and Reporting Obligations — Timelines, competent authorities"
+  domain: "process"
+  base_score: 10.0
+  keywords:
+    - incident reporting
+    - classification
+    - notification
+    - competent authority
+    - esc
+- id: DORA.Art15
+  name: "Voluntary Notification — Optional early warning to authorities"
+  domain: "process"
+  base_score: 5.0
+  keywords:
+    - voluntary notification
+    - early warning
+- id: DORA.Art16
+  name: "ICT Third-Party Risk Management — Vendor due diligence, contractual oversight"
+  domain: "organizational"
+  base_score: 9.0
+  keywords:
+    - third party
+    - vendor due diligence
+    - contractual
+    - ict outsourcing
+- id: DORA.Art17
+  name: "Key Contractual Provisions — Audit rights, SLA, termination, location of data"
+  domain: "organizational"
+  base_score: 8.5
+  keywords:
+    - contractual
+    - audit rights
+    - sla
+    - data location
+- id: DORA.Art18
+  name: "Register of Information — ICT third-party register maintained and reviewed"
+  domain: "organizational"
+  base_score: 8.0
+  keywords:
+    - third-party register
+    - vendor inventory
+    - register
+- id: DORA.Art19
+  name: "Concentration Risk — Identification of critical single points of failure in third-party dependencies"
+  domain: "organizational"
+  base_score: 8.0
+  keywords:
+    - concentration risk
+    - single point of failure
+    - dependency
+- id: DORA.Art20
+  name: "ICT Third-Party Risk Assessment — Ongoing monitoring and reassessment"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - ongoing monitoring
+    - reassessment
+    - tprm
+- id: DORA.Art21
+  name: "Subcontracting Oversight — End-to-end visibility of subcontractor chain"
+  domain: "organizational"
+  base_score: 7.5
+  keywords:
+    - subcontractor
+    - sub-contracting
+    - supply chain visibility
+- id: DORA.Art22
+  name: "Information Sharing Arrangements — Threat intelligence sharing"
+  domain: "process"
+  base_score: 6.0
+  keywords:
+    - threat intelligence
+    - information sharing
+    - tisp
+- id: DORA.Art23
+  name: "ICT Risk Management Reporting — Regular reporting to management and board"
+  domain: "organizational"
+  base_score: 8.0
+  keywords:
+    - reporting
+    - board report
+    - management
+    - dashboards
 - id: DORA.Art24
-  name: "Digital Operational Resilience Testing"
+  name: "Digital Operational Resilience Testing — TLPT, pentest, vulnerability scanning"
   domain: "technological"
   base_score: 7.5
   keywords:
@@ -51,3 +182,52 @@
       name: "Execute continuous DAST and SAST scanning"
       min_maturity: 3
       gate_relevant: true
+- id: DORA.Art25
+  name: "Threat-Led Penetration Testing (TLPT) — Mandatory threat-intelligence-guided testing"
+  domain: "technological"
+  base_score: 7.0
+  keywords:
+    - tlap
+    - threat-led pentest
+    - tlpt
+    - advanced testing
+- id: DORA.Art26
+  name: "ICT Incident Response Testing — Regular testing of IR capabilities"
+  domain: "process"
+  base_score: 7.5
+  keywords:
+    - ir testing
+    - tabletop
+    - simulation
+- id: DORA.Art27
+  name: "ICT Risk Management Review and Audit — Independent review cycle"
+  domain: "organizational"
+  base_score: 8.0
+  keywords:
+    - audit
+    - independent review
+    - internal audit
+- id: DORA.Art28
+  name: "Learning and Evolution — Lessons learned from incidents and testing"
+  domain: "process"
+  base_score: 6.0
+  keywords:
+    - lessons learned
+    - improvement
+    - corrective action
+- id: DORA.Art29
+  name: "ICT Incident Response Plan and Post-Incident Review"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - post-incident review
+    - corrective action
+    - ir plan
+- id: DORA.Art30
+  name: "Financial Impact Reporting — Reporting of incident financial impact"
+  domain: "process"
+  base_score: 7.0
+  keywords:
+    - financial impact
+    - cost
+    - incident cost
