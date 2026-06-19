@@ -1,0 +1,45 @@
+name: 'Wardex Release Gate'
+description: >
+  Risk-based release gate for CRA Article 14, NIS2, DORA, and ISO 27001.
+  Consumes vulnerability scanner output (Grype, Trivy, SBOM), evaluates
+  risk in asset context, and blocks deployments that exceed policy appetite.
+branding:
+  icon: 'shield'
+  color: 'purple'
+inputs:
+  evidence:
+    description: >
+      Vulnerability evidence file (YAML/JSON).
+      Generate with: `wardex convert grype <file>` or `wardex convert sbom <file>`.
+    required: true
+  config:
+    description: 'Path to wardex-config.yaml.'
+    default: 'wardex-config.yaml'
+    required: false
+  framework:
+    description: 'Compliance framework: iso27001 | nis2 | dora | soc2.'
+    default: 'iso27001'
+    required: false
+  output-format:
+    description: 'Report format: markdown | json | csv | html.'
+    default: 'markdown'
+    required: false
+  output-file:
+    description: 'Path for the generated report.'
+    default: 'wardex-report.md'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - evaluate
+    - --evidence
+    - ${{ inputs.evidence }}
+    - --config
+    - ${{ inputs.config }}
+    - --framework
+    - ${{ inputs.framework }}
+    - -o
+    - ${{ inputs.output-format }}
+    - --out-file
+    - ${{ inputs.output-file }}
