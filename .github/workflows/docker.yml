@@ -1,0 +1,87 @@
+name: Docker
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - dev
+      - main
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build & Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Go
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version: "1.26.x"
+          cache: true
+
+      - name: Build binary (verify)
+        run: go build -trimpath -ldflags="-s -w" ./...
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@9788ef4f7be51c8f15b8c2c64e7b2c3b5d0f86c # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@c117c53b9db1a819af14c2fe221b2d4dd07b31d9 # v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=ref,event=branch
+            type=sha,format=long
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@7e5e893751ffd0f5e8b9b9a75113f74b0d2d539e # v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: VERSION=${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Generate SBOM for image
+        uses: anchore/sbom-action@e8615d4fa3c9d3b73e5f9c20bf3e5cf94e2e5b7a # v0.17
+        with:
+          image: ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}
+          format: cyclonedx-json
+          output-file: wardex-image.sbom.json
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@4a6eb2c850aaccc1f422ecc9c04a0d103a854440 # v0.24
+        with:
+          image-ref: ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          exit-code: 1
+
+      - name: Upload Trivy results
+        if: always()
+        uses: actions/upload-artifact@65c4c4a1ddce5f7f3d7f6de4d45ea3c70a2cca2f # v4
+        with:
+          name: trivy-results
+          path: trivy-results.sarif
+
+      - name: Sign image with cosign keyless
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          cosign sign ghcr.io/${{ github.repository }}@${{ steps.build.outputs.digest }} --yes
