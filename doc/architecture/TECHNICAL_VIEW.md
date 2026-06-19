@@ -13,7 +13,7 @@ As rotinas foram concebidas adotando mapeamento de modelos padronizados, por for
 * A avaliação procede a uma análise dupla entre "Correlação Elevada (High)" e "Correlação de Nível Deduzido (Low)". Se uma organização usa "NIST", mas o Wardex utiliza a ISO 27001 como matriz de avaliação, o Correlacionador usa a interseção de domínios para alta confiança e o método `strings.Contains` em palavras-chave para as correlações de baixo nível. O resultado não bloqueia a compatibilidade internacional da infraestrutura GRC independente caso os domínios divirjam pontualmente, embora assinale explicitamente que a correlação exige curadoria extra para validação humana através das restrições de "Partial Coverages". 
 
 ### 2. Máquina Analítica e de Classificação (`pkg/scorer`, `pkg/analyzer`)
-Na etapa avaliativa, o Scorer traduz instâncias isoladas em maturidade baseada em domínios ISO (A.5 à A.8). A pontuação de maturidade por domínio é calculada na v1.8.0 como a média da maturidade efectiva (`EffectiveMaturity`) dos controlos cobertos, permitindo uma visão realista da postura técnica.
+Na etapa avaliativa, o Scorer traduz instâncias isoladas em maturidade baseada em domínios ISO (A.5 à A.8). A pontuação de maturidade por domínio é calculada como a média da maturidade efectiva (`EffectiveMaturity`) dos controlos cobertos, permitindo uma visão realista da postura técnica.
 * **Layer Delta (`ComputeLayerDelta`)**: Identifica o desvio entre o que o infosec declarou (Paper Security) e o que os scanners/ferramentas confirmaram (Shadow Security).
 * **Asset Assessment (`AssessAssets`)**: Mapeia controlos a activos específicos, permitindo auditorias contextuais por unidade de negócio ou sistema crítico.
 
@@ -57,7 +57,7 @@ Para validar em profundidade o comportamento criptográfico da aceitação de ri
 
 1. **Geração do *Dummy Report* Base**: O *Gate* avalia vulnerabilidades passadas como argumento (ex. via Grype) com a matriz de políticas YAML da sua empresa. Execute primeiro a validação primária:
    ```bash
-    wardex assess --config=test/testdata/wardex-config.yaml --gate=test/testdata/vulnerabilities.yaml test/testdata/dummy_controls.yaml --output=json --out-file=report.json
+    wardex evaluate --evidence test/testdata/vulnerabilities.yaml --config test/testdata/wardex-config.yaml -o json --out-file report.json
    ```
 
 2. **Injetar Segredo de Assinatura via Config e EnvVars**: O mecanismo obriga à verificação do `hmac_secret_env` contido na policy original da organização para proibir *bypasses* estáticos:

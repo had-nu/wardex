@@ -4,28 +4,32 @@ Wardex é um **release gate**, não um scanner. Não encontra vulnerabilidades �
 
 Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo GitHub Actions.
 
-> **Versão de referência:** v1.7.2  
-> **Todos os comandos neste documento foram verificados contra o código fonte actual.**
+> **Versão de referência:** v2.0.0  
+> **Instalação:** `go install github.com/had-nu/wardex@95eed886`
 
 ---
 
-## Mapa de Comandos (v1.7.2)
+## Mapa de Comandos (v2.0.0)
 
-| Comando | Estado | Propósito |
-|---------|--------|-----------|
-| `wardex [flags] <controls>` | [OK] Disponível | Gap Analysis + Release Gate |
-| `wardex convert grype <file>` | [OK] Disponível | Converte output Grype → formato Wardex |
-| `wardex convert sbom <file>` | [OK] Disponível | Converte SBOM CycloneDX → formato Wardex |
-| `wardex enrich epss <file>` | [OK] Disponível | Fetch EPSS real da FIRST.org + assina |
-| `wardex accept request` | [OK] Disponível | Cria aceitação de risco formal |
-| `wardex accept verify` | [OK] Disponível | Verifica integridade criptográfica |
-| `wardex policy validate <dir>` | [OK] Disponível | Valida schema dos ficheiros YAML |
-| `wardex policy list <dir>` | [OK] Disponível | Lista estado de conformidade |
-| `wardex policy add` | [OK] Disponível | Upsert de controlo por ID |
-| `wardex simulate` | [OK] Disponível | Simulação interactiva de risco |
-| `wardex evaluate` | [OK] Disponível | Alias focado para CI (Release Gate) |
-| `wardex aggregate` | [OK] Disponível | Agrega decisões de múltiplos frameworks |
-| `wardex policy check-expiry` | [FAIL] Não existe | (planeado) |
+| Comando | Propósito |
+|---------|-----------|
+| `wardex evaluate --evidence <file> --config <file>` | Release Gate com contexto de activo |
+| `wardex assess <doc> <imp> --framework <name>` | Gap Analysis + LayerDelta |
+| `wardex convert grype <file>` | Converte output Grype → formato Wardex |
+| `wardex convert sbom <file>` | Converte SBOM CycloneDX → formato Wardex |
+| `wardex enrich epss <file>` | Fetch EPSS real da FIRST.org + assina |
+| `wardex accept request` | Cria aceitação de risco formal |
+| `wardex accept verify` | Verifica integridade criptográfica |
+| `wardex art14 list \| show \| finalize` | CRA Article 14 — ciclo de vida do artefacto |
+| `wardex policy validate <dir>` | Valida schema dos ficheiros YAML |
+| `wardex policy list <dir>` | Lista estado de conformidade |
+| `wardex policy add` | Upsert de controlo por ID |
+| `wardex policy check-expiry` | Verifica aceitações a expirar |
+| `wardex simulate` | Simulação interactiva de risco |
+| `wardex aggregate` | Agrega decisões de múltiplos frameworks |
+| `wardex keygen` | Gera par de chaves Ed25519 |
+| `wardex trust add \| revoke \| list` | Gerencia trust store |
+| `wardex config seal` | Sela configuração em `.wexstate` |
 
 ---
 
@@ -63,14 +67,9 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
           grype dir:. -o json > grype-output.json
 
-      # Passo 2: Instalar Wardex
+      # Passo 2: Instalar Wardex (SHA-pinned)
       - name: Install Wardex
-        run: |
-          VERSION="v1.7.2"
-          curl -sSL \
-            "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" \
-            | tar -xz
-          sudo mv wardex /usr/local/bin/
+        run: go install github.com/had-nu/wardex@95eed886
 
       # Passo 3: Validar que os policy files estão bem formados
       - name: Validate policy files
@@ -92,14 +91,10 @@ jobs:
           WARDEX_ACCEPT_SECRET: ${{ secrets.WARDEX_ACCEPT_SECRET }}
           WARDEX_ACTOR: ${{ github.actor }}
         run: |
-          wardex \
-            --config ./wardex-config.yaml \
-            --gate wardex-vulns.yaml \
+          wardex evaluate \
+            --evidence wardex-vulns.yaml \
             --epss-enrichment epss-enriched.yaml \
-            --framework iso27001 \
-            --output markdown \
-            --out-file wardex-report.md \
-            ./frameworks/iso27001/*.yml
+            --config ./wardex-config.yaml
 
       # Passo 7: Publicar relatório como artefacto
       - name: Upload security report
@@ -120,12 +115,10 @@ Um gate que nunca pode ser ultrapassado não é governança — é um interrupto
 
 ```bash
 # 1. Gerar relatório JSON com as decisões
-wardex \
+wardex evaluate \
+  --evidence wardex-vulns.yaml \
   --config wardex-config.yaml \
-  --gate wardex-vulns.yaml \
-  --output json \
-  --out-file report.json \
-  ./frameworks/iso27001/*.yml
+  -o json --out-file report.json
 
 # 2. Solicitar aceitação formal (CISO aprova)
 WARDEX_ACCEPT_SECRET=${{ secrets.WARDEX_ACCEPT_SECRET }} \
@@ -137,10 +130,9 @@ WARDEX_ACCEPT_SECRET=${{ secrets.WARDEX_ACCEPT_SECRET }} \
     --expires 30d
 
 # 3. Na pipeline seguinte, a CVE aceite é automaticamente ignorada
-wardex \
-  --config wardex-config.yaml \
-  --gate wardex-vulns.yaml \
-  ./frameworks/iso27001/*.yml
+wardex evaluate \
+  --evidence wardex-vulns.yaml \
+  --config wardex-config.yaml
 # [INFO] CVE CVE-2024-1234 is covered by an active risk acceptance and will be ignored.
 ```
 
@@ -174,13 +166,11 @@ Alguns ambientes precisam de satisfazer múltiplos frameworks em simultâneo. Co
         env:
           WARDEX_ACCEPT_SECRET: ${{ secrets.WARDEX_ACCEPT_SECRET }}
         run: |
-          wardex \
+          wardex evaluate \
+            --evidence wardex-vulns.yaml \
             --config wardex-config.yaml \
-            --gate wardex-vulns.yaml \
             --framework iso27001 \
-            --output json \
-            --out-file iso-result.json \
-            ./frameworks/iso27001/*.yml
+            -o json --out-file iso-result.json
           echo "iso_exit=$?" >> $GITHUB_ENV
 
       - name: Evaluate NIS2 gate
@@ -189,13 +179,11 @@ Alguns ambientes precisam de satisfazer múltiplos frameworks em simultâneo. Co
         env:
           WARDEX_ACCEPT_SECRET: ${{ secrets.WARDEX_ACCEPT_SECRET }}
         run: |
-          wardex \
+          wardex evaluate \
+            --evidence wardex-vulns.yaml \
             --config wardex-config.yaml \
-            --gate wardex-vulns.yaml \
             --framework nis2 \
-            --output json \
-            --out-file nis2-result.json \
-            ./frameworks/iso27001/*.yml
+            -o json --out-file nis2-result.json
           echo "nis2_exit=$?" >> $GITHUB_ENV
 
       - name: Fail if any framework blocked
@@ -266,11 +254,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install Wardex
-        run: |
-          VERSION="v1.7.2"
-          curl -sSL \
-            "https://github.com/had-nu/wardex/releases/download/${VERSION}/wardex_Linux_x86_64.tar.gz" \
-            | tar -xz && sudo mv wardex /usr/local/bin/
+        run: go install github.com/had-nu/wardex@95eed886
 
       - name: Validate all framework policy files
         run: |
@@ -281,12 +265,11 @@ jobs:
 
       - name: Generate compliance snapshot and delta report
         run: |
-          wardex \
+          wardex assess \
+            documented-controls.yaml implemented-controls.yaml \
             --config wardex-config.yaml \
-            --snapshot-file .wardex_snapshot.json \
-            --output markdown \
-            --out-file compliance-report.md \
-            ./frameworks/iso27001/*.yml
+            --framework iso27001 \
+            -o markdown --out-file compliance-report.md
 
       - name: Upload compliance report
         if: always()
@@ -331,25 +314,25 @@ A estrutura de directórios espelha a hierarquia de secções do framework. Quan
 
 ---
 
-## Exit Codes Reais (v1.7.2)
+## Exit Codes (v2.0.0)
 
 | Código | Constante | Quando ocorre |
 |--------|-----------|---------------|
-| `0` | `exitcodes.OK` | Gate passou / validação limpa |
-| `10` | `exitcodes.GateBlocked` | Gate bloqueou — risco excede `risk_appetite` |
-| `11` | `exitcodes.ComplianceFail` | Gap excede `--fail-above` |
-| `1` | (erro Go) | Erro de configuração / ficheiro inválido / panic |
+| `0` | `ALLOW` | Gate passou / validação limpa |
+| `3` | `IntegrityFailure` | Configuração adulterada — selo `.wexstate` não corresponde |
+| `10` | `GateBlocked` | Gate bloqueou — risco excede `risk_appetite` |
+| `11` | `ComplianceFail` | Gap excede `--fail-above` |
+| `12` | `ActivelyExploited` | CRA Article 14 — CVE no catálogo CISA KEV |
 
 ```bash
-wardex --config wardex-config.yaml --gate vulns.yaml controls.yaml
+wardex evaluate --evidence vulns.yaml --config wardex-config.yaml
 exit_code=$?
 
 case $exit_code in
   0) echo "Gate passed — deploy authorized" ;;
   10) echo "Gate BLOCKED — review risk report and consider wardex accept" ;;
   11) echo "Compliance gap exceeds threshold — update controls" ;;
+  12) echo "ACTIVE EXPLOITATION — CRA Article 14 notification required" ;;
   *) echo "Unexpected error (exit $exit_code) — check stderr" ;;
 esac
 ```
-
-> [NOTE] Nota: o ficheiro `github-actions-risk-gate.md` original (movido para este documento) continha exit codes e comandos incorrectos (`wardex evaluate`, `wardex aggregate`, `--output sarif`, exit code 1 para gate blocked). Todos foram corrigidos aqui para corresponder ao código fonte real da v1.7.2.
