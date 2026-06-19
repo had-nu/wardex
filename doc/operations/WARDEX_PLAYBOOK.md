@@ -9,15 +9,16 @@ Guia operacional para release gates baseados em risco, análise de gaps de confo
 ## Índice
 
 1. [Quick Start](#1-quick-start)
-2. [Compliance Gap Analysis](#2-compliance-gap-analysis)
-3. [Risk-Based Release Gate](#3-risk-based-release-gate)
-4. [CRA Article 14 — Active Exploitation](#4-cra-article-14--active-exploitation)
-5. [EPSS Enrichment](#5-epss-enrichment)
-6. [Risk Acceptance & Audit Chain](#6-risk-acceptance--audit-chain)
-7. [Governance: Trust Store & Sealed Config](#7-governance-trust-store--sealed-config)
-8. [CI/CD Integration](#8-cicd-integration)
-9. [Exit Codes Reference](#9-exit-codes-reference)
-10. [Troubleshooting](#10-troubleshooting)
+2. [Framework Use Cases](#2-framework-use-cases)
+3. [Compliance Gap Analysis](#3-compliance-gap-analysis)
+4. [Risk-Based Release Gate](#4-risk-based-release-gate)
+5. [CRA Article 14 — Active Exploitation](#5-cra-article-14--active-exploitation)
+6. [EPSS Enrichment](#6-epss-enrichment)
+7. [Risk Acceptance & Audit Chain](#7-risk-acceptance--audit-chain)
+8. [Governance: Trust Store & Sealed Config](#8-governance-trust-store--sealed-config)
+9. [CI/CD Integration](#9-cicd-integration)
+10. [Exit Codes Reference](#10-exit-codes-reference)
+11. [Troubleshooting](#11-troubleshooting)
 
 ---
 
@@ -43,7 +44,155 @@ wardex assess documented.yaml implemented.yaml \
 
 ---
 
-## 2. Compliance Gap Analysis
+## 2. Framework Use Cases
+
+Casos de uso organizados por framework regulatório. Cada framework tem duas perspectivas: técnica (o engenheiro executa) e de negócio (o decisor avalia).
+
+---
+
+### DORA — Digital Operational Resilience Test
+
+**Caso técnico: selar política de risco para aprovação executiva**
+
+O CISO define o `risk_appetite`, gera o key pair, sela a configuração, e a equipa de plataforma só consegue alterar o ficheiro `.wexstate` com aprovação do CISO:
+
+```bash
+# CISO gera identidade
+wardex keygen --keyring ciso.wex
+wardex trust add --keyring ciso.wex --role admin
+
+# CISO sela a política
+wardex config seal \
+  --keyring ciso.wex \
+  --input wardex-config.yaml \
+  --out config.wexstate
+
+# Pipeline corre com selo verificado
+wardex evaluate \
+  --config config.wexstate \
+  --evidence vulns.yaml \
+  --strict
+```
+
+**Caso de negócio: auditoria de terceiros (ICT third-party risk)**
+
+O regulador DORA exige que operadores críticos mapeiem e auditem controlos de terceiros. Com o Wardex, documentas os controlos do teu SaaS provider como `documented` e os teus controlos internos como `implemented`. O `LayerDelta` mostra o que o terceiro diz que faz vs o que conseguiste verificar:
+
+```bash
+wardex assess saas-provider-documented.yaml internal-implemented.yaml \
+  --framework dora \
+  -o markdown \
+  --out-file third-party-audit.md
+```
+
+O report produz evidência para o regulador de que existe um processo de verificação de controlos de terceiros — e onde o terceiro está a operar fora da tua governação.
+
+---
+
+### NIS2 — Network and Information Systems
+
+**Caso técnico: release gate para operador de serviços essenciais**
+
+Um operador de energia (NIS2 essential entity) corre o gate em cada deploy de sistema SCADA. O `risk_appetite` é 0.3 — o mais baixo do portefólio. Cada deploy é avaliado com contexto de activo (internet-facing, criticality 0.9, sem controlos compensatórios):
+
+```bash
+wardex evaluate \
+  --evidence scada-vulns.yaml \
+  --config nis2-essential-config.yaml
+```
+
+Se alguma vulnerabilidade excede, o pipeline bloqueia com exit 10. A aceitação de risco só é possível com assinatura do responsável de segurança e prazo de validade:
+
+```bash
+wardex accept request \
+  --report report.json \
+  --cve CVE-2024-5678 \
+  --accepted-by ciso@energia.pt \
+  --justification "Sistema isolado em rede OT; patch na janela de manutenção de Julho" \
+  --expiry 30d
+```
+
+**Caso de negócio: report de postura para o board**
+
+O CISO precisa de apresentar ao conselho de administração a evolução trimestral da postura de segurança. Com snapshots, o Wardex mostra a diferença entre trimestres:
+
+```bash
+wardex assess Q1-documented.yaml Q1-implemented.yaml \
+  --assets assets.yaml \
+  --framework nis2 \
+  -o json --out-file Q1-posture.json
+
+wardex assess Q2-documented.yaml Q2-implemented.yaml \
+  --assets assets.yaml \
+  --framework nis2 \
+  -o json --out-file Q2-posture.json
+```
+
+O board vê: "Cobertura de controlos subiu de 62% para 71%", "Paper security reduziu de 18% para 11%", e "3 activos críticos saíram de shadow security". Não são métricas de vaidade — é o LayerDelta que o NIS2 exige.
+
+---
+
+### CRA — Cyber Resilience Act
+
+**Caso técnico: pipeline de notificação Article 14**
+
+Um fabricante de software incorpora o gate no CI/CD para detectar exploração activa antes de cada release. Quando uma CVE está no catálogo CISA KEV, o pipeline falha com exit 12 e gera automaticamente o artefacto de notificação:
+
+```bash
+# CI step: correlacionar com KEV
+wardex convert grype grype-output.json --kev kev-catalogue.json
+
+# CI step: avaliar e gerar artefacto
+wardex evaluate --evidence vulns.yaml --config config.yaml
+
+# Se exit 12: inspeccionar artefacto
+wardex art14 show <artifact-id>
+wardex art14 mark-dispatched <artifact-id> --phase early-warning
+```
+
+**Caso de negócio: evidência para notificação à ENISA**
+
+Quando o regulador notifica o fabricante e pede o registo de notificações Article 14 dos últimos 12 meses, a equipa de compliance executa:
+
+```bash
+wardex art14 list --since 2025-09-01 --format json
+```
+
+O output é um JSON com cada artefacto, respectivo HMAC, timestamps de detecção e dispatch, CVE, e componente afectado. É evidência formatada para entregar ao regulador sem ter de abrir um JIRA. O HMAC prova que os artefactos não foram alterados desde a sua criação, cumprindo o requisito de integridade da cadeia de custódia.
+
+---
+
+### ISO/IEC 27001:2022
+
+**Caso técnico: gap analysis com inventário de activos**
+
+O responsável de segurança executa a análise de gaps trimestral, cruzando a matriz de controlos documentados com os operacionais:
+
+```bash
+wardex assess iso27001-documented.yaml iso27001-implemented.yaml \
+  --assets iso27001-assets.yaml \
+  --framework iso27001 \
+  -o markdown --out-file iso27001-gap-analysis.md
+```
+
+Identifica que o controlo A.8.12 (Information disposal) está documentado na política mas sem implementação em 3 dos 5 activos classificados. O roadmap prioriza automaticamente as acções correctivas.
+
+**Caso de negócio: evidência para auditoria de recertificação**
+
+Na auditoria externa ISO 27001, o auditor pede evidência de melhoria contínua (cláusula 10). A equipa de compliance apresenta o relatório de delta entre a avaliação anterior e a actual:
+
+```bash
+wardex assess Q1-controls.yaml Q2-controls.yaml \
+  --assets assets.yaml \
+  --framework iso27001 \
+  -o markdown
+```
+
+O report mostra: "Global Coverage: 58% → 74%", "LayerDelta: Paper security reduziu de 32% para 18%". O auditor vê que a organização não só tem controlos documentados, como os está a implementar e a medir a evolução — exactamente o que a cláusula 10 exige.
+
+---
+
+## 3. Compliance Gap Analysis
 
 Cruz o que a equipa de segurança declarou como política com o que está operacionalmente implementado, e compara ambos com o catálogo do framework.
 
@@ -110,7 +259,7 @@ Produz uma tabela de conformidade por activo com criticidade, exposição, e own
 
 ---
 
-## 3. Risk-Based Release Gate
+## 4. Risk-Based Release Gate
 
 O gate avalia cada vulnerabilidade no contexto do activo que a contém. O mesmo CVE pode ser ALLOW, WARN, ou BLOCK conforme o contexto.
 
@@ -176,7 +325,7 @@ Calibrado contra 237 CVEs reais com EPSS da FIRST.org:
 
 ---
 
-## 4. CRA Article 14 — Active Exploitation
+## 5. CRA Article 14 — Active Exploitation
 
 Entra em vigor em Setembro de 2026. O Wardex implementa o pipeline completo de notificação.
 
@@ -230,7 +379,7 @@ Cada artefacto é encadeado criptograficamente ao anterior, produzindo um audit 
 
 ---
 
-## 5. EPSS Enrichment
+## 6. EPSS Enrichment
 
 Quando o scanner não inclui EPSS, o Wardex assume EPSS 1.0 (pior caso) e bloqueia até validação explícita:
 
@@ -247,7 +396,7 @@ O enriquecimento consulta `api.first.org` e assina cada resultado via HMAC-SHA25
 
 ---
 
-## 6. Risk Acceptance & Audit Chain
+## 7. Risk Acceptance & Audit Chain
 
 Quando o gate bloqueia e existe caso de negócio para prosseguir:
 
@@ -271,7 +420,7 @@ Aceitações são assinadas com HMAC-SHA256 e registadas em log append-only (JSO
 
 ---
 
-## 7. Governance: Trust Store & Sealed Config
+## 8. Governance: Trust Store & Sealed Config
 
 Para conformidade DORA e cadeias de custódia não-repudiáveis, o Wardex permite selar as políticas de risco num envelope criptográfico assinado (`.wexstate`).
 
@@ -317,7 +466,7 @@ wardex trust revoke --key-id <key-id>
 
 ---
 
-## 8. CI/CD Integration
+## 9. CI/CD Integration
 
 ### GitHub Actions
 
@@ -369,7 +518,7 @@ wardex policy validate wardex-config.yaml || exit 1
 
 ---
 
-## 9. Exit Codes Reference
+## 10. Exit Codes Reference
 
 | Code | Nome | Acção |
 |---|---|---|
@@ -383,7 +532,7 @@ Os exit codes 10-12 devem ser tratados explicitamente na pipeline. O código 12 
 
 ---
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 | Problema | Sintoma | Solução |
 |---|---|---|
