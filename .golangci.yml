@@ -1,7 +1,7 @@
 version: "2"
 
 linters:
-  enabled:
+  enable:
     - errcheck
     - govet
     - ineffassign
