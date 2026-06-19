@@ -1,128 +1,400 @@
-# Wardex Implementation Playbook
+# Wardex Playbook v2.0
 
-**Version:** v1.8.0
-**Status:** Official Operational Guide
-**Audience:** CISO, DevSecOps Leads, Compliance Officers, Platform Engineers
+Guia operacional para release gates baseados em risco, análise de gaps de conformidade, e notificação CRA Article 14.
 
----
-
-## Foundations: The Wardex Philosophy
-
-Wardex is not a compliance checklist; it is a **Risk-Contextualized Decision Engine**. It operates on three core principles:
-1.  **Context Over Severity**: A CVSS 10.0 in a sandbox is less critical than a CVSS 7.0 in a production authentication service.
-2.  **Adaptive Security**: Existing controls (WAF, Segmentation) should actively reduce the risk score of vulnerabilities.
-3.  **Intelligence-Driven**: Compliance is a data point; security posture is a trend.
+**Versão:** v2.0.0 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
 
 ---
 
-## The Plays
+## Índice
 
-### [Compliance Play 1] Initial Baseline Assessment
-**Objective:** Determine the current state of ISO 27001 compliance.
-**Execution:**
+1. [Quick Start](#1-quick-start)
+2. [Compliance Gap Analysis](#2-compliance-gap-analysis)
+3. [Risk-Based Release Gate](#3-risk-based-release-gate)
+4. [CRA Article 14 — Active Exploitation](#4-cra-article-14--active-exploitation)
+5. [EPSS Enrichment](#5-epss-enrichment)
+6. [Risk Acceptance & Audit Chain](#6-risk-acceptance--audit-chain)
+7. [Governance: Trust Store & Sealed Config](#7-governance-trust-store--sealed-config)
+8. [CI/CD Integration](#8-cicd-integration)
+9. [Exit Codes Reference](#9-exit-codes-reference)
+10. [Troubleshooting](#10-troubleshooting)
+
+---
+
+## 1. Quick Start
+
 ```bash
-wardex assess --framework iso27001 ./my-current-controls.yaml
+# Instalar (SHA-pinned)
+go install github.com/had-nu/wardex@95eed886
+
+# Converter output do Grype
+wardex convert grype grype-results.json > vulns.yaml
+
+# Avaliar com contexto de activo
+wardex evaluate \
+  --evidence vulns.yaml \
+  --config wardex-config.yaml
+
+# Analisar gaps de conformidade
+wardex assess documented.yaml implemented.yaml \
+  --framework iso27001 \
+  -o markdown
 ```
-**Analyst's Insight:** Focus on the **Roadmap** section. Wardex prioritizes gaps not just by "missing item", but by the `BaseScore` impact. Address the top 3 items to maximize compliance gain with minimum effort.
 
 ---
 
-### [Engineering Play 2] The Hard Stop (Release Gate)
-**Objective:** Prevent high-risk deployments in CI/CD.
-**Execution:**
+## 2. Compliance Gap Analysis
+
+Cruz o que a equipa de segurança declarou como política com o que está operacionalmente implementado, e compara ambos com o catálogo do framework.
+
+### Input
+
+Dois ficheiros YAML com o campo `layer` a identificar a origem:
+
+```yaml
+# documented-controls.yaml — políticas declaradas
+- id: CTRL-IAM-001
+  name: Multi-Factor Authentication
+  layer: documented
+  domains: [access_control]
+  maturity: 4
+  evidences:
+    - type: policy
+      ref: https://wiki.internal/sec/mfa-policy
+
+# implemented-controls.yaml — controlos operacionais confirmados
+- id: CTRL-IAM-001
+  name: Multi-Factor Authentication
+  layer: implemented
+  domains: [access_control]
+  maturity: 4
+  effectiveness: 0.90
+  evidences:
+    - type: tool
+      ref: okta-mfa-config-2026
+```
+
+O mesmo ID em ambos os ficheiros é o caso esperado. IDs presentes apenas num dos lados são o que interessa.
+
+### Execução
+
 ```bash
-./bin/wardex --config config.yaml --gate vulns.json ./controls.yaml
+wardex assess documented.yaml implemented.yaml \
+  --framework iso27001 \
+  -o markdown
 ```
-**Analyst's Insight:** If the gate returns `Exit Code 2`, the risk exceeds your `risk_appetite`. Do not "bypass" the gate; instead, look for **Compensating Controls** (Play 3) or **Risk Acceptance** (Play 5).
 
----
+### Output
 
-### [Engineering Play 3] Adaptive Security (Compensating Controls)
-**Objective:** Allow a deployment with known vulnerabilities by proving mitigation.
-**Execution:**
-Add a `waf` or `runtime_protection` to your `wardex-config.yaml` with an `effectiveness` score (max 0.80).
-**Analyst's Insight:** This play demonstrates that security is a system. A vulnerability is a hole, but a compensating control is a patch that doesn't require a code change.
+O report separa os resultados em quatro estados:
 
----
+| Estado | Significado |
+|---|---|
+| **Coberto** | Documentado e implementado com evidência operacional |
+| **Paper security** | Documentado apenas — sem controlo implementado |
+| **Shadow security** | Implementado sem política documentada |
+| **Gap** | Ausente em ambas as camadas |
 
-### [Intelligence Play 4] Human-in-the-Loop (EPSS Enrichment)
-**Objective:** Reduce false positives by using real-world exploit probability.
-**Execution:**
+A secção `LayerDelta` quantifica o desvio entre intenção e execução.
+
+### Com inventário de activos
+
 ```bash
-wardex enrich epss scanner-output.yaml --output enriched.yaml
+wardex assess documented.yaml implemented.yaml \
+  --assets assets.yaml \
+  --framework nis2 \
+  -o json --out-file posture.json
 ```
-**Analyst's Insight:** EPSS is the "Intelligence" in Wardex. Many "Critical" CVSS vulnerabilities have < 1% exploit probability. Enriching data allows you to focus on what hackers are *actually* attacking.
+
+Produz uma tabela de conformidade por activo com criticidade, exposição, e owner.
 
 ---
 
-### [Intelligence Play 5] Formal Risk Acceptance
-**Objective:** Documented, time-bound approval for a specific risk.
-**Execution:**
+## 3. Risk-Based Release Gate
+
+O gate avalia cada vulnerabilidade no contexto do activo que a contém. O mesmo CVE pode ser ALLOW, WARN, ou BLOCK conforme o contexto.
+
+### Modelo de risco
+
+```
+R(v, α) = (CVSS/10) × EPSS × C(α) × E(α) × (1 − Φ(α))
+```
+
+Onde:
+- **C(α)** — criticidade do activo [0, 1]
+- **E(α)** — exposição (internet-facing, requires_auth, etc.)
+- **Φ(α)** — eficácia dos controlos compensatórios (cap 0.80, mínimo `1 − Φ` de 0.20)
+
+R situa-se em [0, 1.5]. Thresholds definidos no `wardex-config.yaml`.
+
+### Configuração
+
+```yaml
+# wardex-config.yaml
+release_gate:
+  enabled: true
+  risk_appetite: 0.20        # Acima disto → BLOCK
+  warn_above: 0.12           # Entre warn_above e risk_appetite → WARN
+  mode: any                  # "any" | "aggregate"
+  asset_context:
+    criticality: 0.8
+    internet_facing: true
+    requires_auth: true
+  compensating_controls:
+    - type: waf
+      effectiveness: 0.35
+```
+
+### Execução
+
 ```bash
-wardex accept request --cve CVE-2024-XXXX --expires 30d --justification "Legacy system"
+wardex evaluate \
+  --evidence vulns.yaml \
+  --config wardex-config.yaml
 ```
-**Analyst's Insight:** Risk acceptance is not "ignoring". It is a cryptographic commitment (HMAC-SHA256) that a human has reviewed the risk and accepted it until a specific date.
+
+### Interpretação do resultado
+
+O gate produz uma decisão por vulnerabilidade com três bandas:
+
+| Resultado | Exit code | Acção CI/CD |
+|---|---|---|
+| ALLOW | 0 | Pipeline prossegue |
+| WARN | 0 | Pipeline prossegue com alerta |
+| BLOCK | 10 | Pipeline falha — risco excede apetite |
+
+### Calibração
+
+Calibrado contra 237 CVEs reais com EPSS da FIRST.org:
+
+| Perfil | Apetite | BLOCK | ALLOW |
+|---|---|---|---|
+| Banco Tier-1 (DORA) | 0.5 | 176 | 57 |
+| Hospital (HIPAA) | 0.8 | 168 | 63 |
+| Startup SaaS | 2.0 | 111 | 86 |
+| Energia/Águas (NIS2) | 0.3 | 180 | 53 |
 
 ---
 
-### [Compliance Play 8] GitOps Policy Management
-**Objective:** Maintain "Compliance-as-Code" via Git.
-**Execution:**
-Use `wardex policy validate` as a pre-commit hook.
-**Analyst's Insight:** By versioning your YAML policies, you get a full audit trail of who changed which control status and why, directly in your Git history.
+## 4. CRA Article 14 — Active Exploitation
 
----
+Entra em vigor em Setembro de 2026. O Wardex implementa o pipeline completo de notificação.
 
-### [Compliance Play 9] Audit Readiness (Snapshots & Deltas)
-**Objective:** Prove "Continuous Improvement" to external auditors.
-**Execution:**
+### KEV Correlation
+
+Correlaciona qualquer output de scanner contra o catálogo CISA Known Exploited Vulnerabilities:
+
 ```bash
-wardex --snapshot-file jan-snapshot.json ./controls.yaml
-# (3 months later)
-wardex --snapshot-file jan-snapshot.json ./controls-new.yaml
+curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json \
+  -o kev-catalogue.json
+
+wardex convert grype grype-output.json --kev kev-catalogue.json
 ```
-**Analyst's Insight:** Auditors love the **Delta Section**. It shows objective growth in maturity (e.g., +15% Global Coverage), which satisfies ISO 27001 Clause 10.
 
----
+O output anota cada vulnerabilidade com `actively_exploited`, `dateAdded`, e notas CISA.
 
-### [Intelligence Play 11] Security Posture Assessment (v1.8.0)
-**Objective:** Generate an executive-level intelligence report on organizational posture.
-**Execution:**
+### Hard Stop (exit code 12)
+
+Quando uma vulnerabilidade está activamente a ser explorada, o Wardex:
+
 ```bash
-wardex assess documented-controls.yaml implemented-controls.yaml --assets assets.yaml
+wardex evaluate --evidence vulns.yaml --config wardex-config.yaml
+# Exit code: 12 (ActivelyExploited)
 ```
-**Analyst's Insight:** Use the **Layer Delta** to identify "Paper Security" (documented but not implemented). Use **Asset Compliance** to see which specific business units or systems are falling behind.
+
+O código 12 é distinto do BLOCK normal (10) porque:
+- Gera um artefacto de notificação Article 14 assinado com HMAC-SHA256
+- Regista entrada de auditoria encadeada com os três prazos CRA
+- Não pode ser substituído por aceitação de risco
+
+### Ciclo de vida do artefacto
+
+```bash
+# Listar artefactos
+wardex art14 list
+
+# Inspeccionar artefacto
+wardex art14 show <artifact-id>
+
+# Verificar integridade HMAC
+wardex art14 verify <artifact-id>
+
+# Marcar early-warning como despachado
+wardex art14 mark-dispatched <artifact-id> --phase early-warning
+
+# Fechar o caso com confirmação de patch
+wardex art14 finalize <artifact-id> --patch-date 2026-06-09T12:00:00Z
+```
+
+Cada artefacto é encadeado criptograficamente ao anterior, produzindo um audit trail append-only.
 
 ---
 
-## Appendix A: Troubleshooting Guide
+## 5. EPSS Enrichment
 
-| Issue | Symptom | Solution |
-|-------|---------|----------|
-| **HMAC Mismatch** | `error: invalid signature on enrichment file` | The `WARDEX_ACCEPT_SECRET` used to sign the file does not match the one in the current environment. |
-| **Catalog Not Found** | `fatal: unsupported framework: xyz` | Ensure you are using one of the supported identifiers: `iso27001`, `soc2`, `nis2`, `dora`. |
-| **Empty Roadmap** | Roadmap section is missing from report | All controls in the catalog are already covered by your input. Congratulations! |
-| **Fail-Close Gate** | Gate blocks even with low CVSS | Check if EPSS is missing. Wardex defaults to 1.0 (Fail-Close) if no EPSS is provided. Run `enrich epss`. |
+Quando o scanner não inclui EPSS, o Wardex assume EPSS 1.0 (pior caso) e bloqueia até validação explícita:
+
+```bash
+wardex enrich epss vulns.yaml --output epss-enrich.yaml
+
+wardex evaluate \
+  --evidence vulns.yaml \
+  --epss-enrichment epss-enrich.yaml \
+  --config wardex-config.yaml
+```
+
+O enriquecimento consulta `api.first.org` e assina cada resultado via HMAC-SHA256, prevenindo adulteração das probabilidades que afectam decisões de gate.
+
+---
+
+## 6. Risk Acceptance & Audit Chain
+
+Quando o gate bloqueia e existe caso de negócio para prosseguir:
+
+```bash
+# Solicitar aceitação
+wardex accept request \
+  --report report.json \
+  --cve CVE-2024-1234 \
+  --accepted-by sec-lead@company.com \
+  --justification "WAF mitiga o vector; patch previsto para Q3" \
+  --expiry 90d
+
+# Verificar integridade de todas as aceitações activas
+wardex accept verify
+
+# Listar aceitações activas
+wardex accept list --active
+```
+
+Aceitações são assinadas com HMAC-SHA256 e registadas em log append-only (JSONL). O Wardex rejeita aceitações expiradas, adulteradas, ou cujo `wardex-config.yaml` sofreu drift desde a assinatura.
 
 ---
 
-## Appendix B: Governance & Risk Management Guide
+## 7. Governance: Trust Store & Sealed Config
 
-### 1. Defining Risk Appetite
-Risk Appetite is the threshold where Wardex triggers a `BLOCK`. Scale is [0, 1.5].
-- **High (0.1 - 0.3)**: Critical Infrastructure (DORA, NIS2).
-- **Moderate (0.4 - 0.7)**: Banking, Healthcare, FinTech.
-- **Low (0.8 - 1.5)**: B2B SaaS, E-commerce, Internal tools.
+Para conformidade DORA e cadeias de custódia não-repudiáveis, o Wardex permite selar as políticas de risco num envelope criptográfico assinado (`.wexstate`).
 
-### 2. Review Cycles
-- **Quarterly**: Full Gap Analysis and Snapshot generation.
-- **Monthly**: Review of expired Risk Acceptances (`wardex policy check-expiry`).
-- **On-Push**: Release Gate execution for every production-bound commit.
+### Gerar chaves
 
-### 3. Roles and Responsibilities
-- **CISO/CRO**: Approves the `risk_appetite` value in the config.
-- **Security Team**: Performs `enrich` and `accept` operations using the secret key.
-- **DevOps/Engineers**: Manage the implementation of controls and respond to Gate blocks.
+```bash
+# Gerar key pair para o CISO
+wardex keygen --keyring ciso.wex
+
+# Adicionar à trust store
+wardex trust add --keyring ciso.wex --role admin
+
+# Listar chaves autorizadas
+wardex trust list
+```
+
+### Selar a configuração
+
+```bash
+# O CISO sela a política de risco
+wardex config seal \
+  --keyring ciso.wex \
+  --input wardex-config.yaml \
+  --out config.wexstate
+```
+
+### Avaliar com verificação do selo
+
+```bash
+wardex evaluate \
+  --config config.wexstate \
+  --evidence vulns.yaml \
+  --strict
+```
+
+Com `--strict`, o Wardex rejeita qualquer configuração cujo selo não corresponda à trust store. Isto impede que alguém altere as políticas de risco em CI/CD sem aprovação executiva.
+
+### Revogação
+
+```bash
+wardex trust revoke --key-id <key-id>
+```
 
 ---
-*Generated by Wardex Posture Engine. [wardex.io](https://github.com/had-nu/wardex)*
+
+## 8. CI/CD Integration
+
+### GitHub Actions
+
+```yaml
+# .github/workflows/wardex-gate.yml
+name: Wardex Release Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  risk-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Wardex
+        run: go install github.com/had-nu/wardex@95eed886
+
+      - name: Evaluate risk gate
+        run: |
+          wardex evaluate \
+            --config .wardex/config.yaml \
+            --evidence vulns.yaml \
+            controls.yaml
+        # Exit 0 = ALLOW, Exit 10 = BLOCK, Exit 12 = Active exploitation
+```
+
+### GitLab CI
+
+```yaml
+wardex-gate:
+  image: golang:1.26
+  script:
+    - go install github.com/had-nu/wardex@95eed886
+    - wardex evaluate --config .wardex/config.yaml --evidence vulns.yaml controls.yaml
+  only:
+    - merge_requests
+```
+
+### Pre-commit hook
+
+```bash
+#!/bin/sh
+# .git/hooks/pre-commit
+wardex policy validate wardex-config.yaml || exit 1
+```
+
+---
+
+## 9. Exit Codes Reference
+
+| Code | Nome | Acção |
+|---|---|---|
+| 0 | ALLOW | Pipeline prossegue |
+| 3 | Integrity failure | Pipeline interrompe — configuração adulterada |
+| 10 | Gate blocked | Pipeline falha — risco excede apetite |
+| 11 | Compliance gap | Pipeline falha — cobertura de controlos insuficiente |
+| 12 | Active exploitation | Pipeline falha — notificação CRA Article 14 necessária |
+
+Os exit codes 10-12 devem ser tratados explicitamente na pipeline. O código 12 requer um path de notificação diferente de 10 — não podem ser tratados como o mesmo estado.
+
+---
+
+## 10. Troubleshooting
+
+| Problema | Sintoma | Solução |
+|---|---|---|
+| HMAC mismatch | `invalid signature on enrichment file` | O `WARDEX_ACCEPT_SECRET` usado para assinar difere do ambiente actual |
+| Framework não encontrado | `unsupported framework: xyz` | Usa um dos: `iso27001`, `nis2`, `dora` |
+| Roadmap vazio | Secção Roadmap ausente do report | Todos os controlos do catálogo já estão cobertos — parabéns |
+| Gate bloqueia tudo | BLOCK mesmo com CVSS baixo | EPSS em falta — Wardex assume 1.0 (fail-close). Corre `wardex enrich epss` |
+| Selo rejeitado | `wexstate signature mismatch` | A configuração foi alterada desde que o CISO a selou. Reabrir approval |
+| Exit code 12 inesperado | Pipeline falha com 12 | Executar `wardex art14 show` para inspeccionar o artefacto gerado |
+
+---
+
+*Wardex v2.0.0 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
+
