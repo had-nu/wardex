@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRA Article 14 — Wardex Release Gate Guide</title>
+    <meta name="description" content="CRA Article 14 notification obligations explained. How Wardex implements KEV correlation, signed artifacts, and audit chaining for September 2026 compliance.">
+    <meta name="author" content="André Ataíde">
+    <meta property="og:title" content="CRA Article 14 — Wardex Guide">
+    <meta property="og:description" content="Active exploitation notification, KEV correlation, and HMAC-SHA256 audit trails for Cyber Resilience Act compliance.">
+    <meta property="og:url" content="https://had-nu.github.io/wardex/cra/">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --muted: #888888;
+            --border: #e5e5e5;
+            --max-width: 720px;
+            --pad: 2rem;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+            font-size: 1rem;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; }
+        nav {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 1.5rem var(--pad) 0;
+        }
+        nav a {
+            font-size: 0.875rem;
+            color: var(--muted);
+            text-decoration: none;
+        }
+        nav a:hover { color: var(--text); text-decoration: underline; }
+        main {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem var(--pad) 3rem;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 2.5rem 0 0.75rem;
+            padding-top: 0.5rem;
+        }
+        h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.5rem;
+        }
+        p { margin-bottom: 1rem; }
+        ul, ol { margin: 0 0 1rem 1.25rem; line-height: 1.7; }
+        li { margin-bottom: 0.4rem; }
+        pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            margin: 0 0 1rem;
+            overflow-x: auto;
+            border-radius: 2px;
+            font-size: 0.8125rem;
+            line-height: 1.5;
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+        }
+        code {
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+            font-size: 0.8125rem;
+            background: #f5f5f5;
+            padding: 0.1rem 0.3rem;
+            border-radius: 2px;
+        }
+        pre code { background: none; padding: 0; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            margin: 1rem 0;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        th { font-weight: 500; }
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+        .note {
+            background: #fafafa;
+            border-left: 3px solid var(--text);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-size: 0.875rem;
+        }
+        footer {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem var(--pad) 3rem;
+            font-size: 0.8125rem;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+        }
+        @media (max-width: 600px) {
+            :root { --pad: 1.25rem; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../">← Wardex</a>
+</nav>
+
+<main>
+
+<h1>CRA Article 14</h1>
+<p class="subtitle">Active exploitation notification, KEV correlation, and cryptographically chained audit evidence for the Cyber Resilience Act.</p>
+
+<div class="note">
+    <strong>September 2026 deadline.</strong> CRA Article 14 enters force in September 2026. If your software ships to the EU market, you need a demonstrable notification pipeline for actively exploited vulnerabilities — not just a policy, but evidence of detection, assessment, and decision.
+</div>
+
+<h2>What the regulation requires</h2>
+
+<p>Article 14 of the EU Cyber Resilience Act obligates manufacturers of products with digital elements to:</p>
+
+<ol>
+    <li>Monitor for actively exploited vulnerabilities affecting their products</li>
+    <li>Notify ENISA within 72 hours of confirmed active exploitation (early warning)</li>
+    <li>Submit a detailed report within the regulatory deadline</li>
+    <li>Maintain an audit trail of all decisions and notifications</li>
+</ol>
+
+<p>The key operational challenge is not detecting the CVE — it is proving, on paper, that you detected it, assessed it, and acted within the regulatory windows.</p>
+
+<h2>KEV correlation</h2>
+
+<p>Wardex correlates any scanner output against the CISA Known Exploited Vulnerabilities catalogue:</p>
+
+<pre>curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json \
+    -o kev-catalogue.json
+
+wardex convert grype grype-output.json --kev kev-catalogue.json</pre>
+
+<p>The output is a structured YAML file with each vulnerability annotated with <code>actively_exploited</code>, KEV <code>dateAdded</code>, and CISA notes — ready for gate evaluation.</p>
+
+<h2>Active exploitation hard stop</h2>
+
+<p>When a vulnerability is actively exploited, Wardex exits with code <strong>12</strong>:</p>
+
+<pre>wardex evaluate --evidence vulns.yaml --config wardex-config.yaml
+
+# Exit code: 12 (ActivelyExploited)</pre>
+
+<p>The <code>12</code> exit code is distinct from the normal gate block (<code>10</code>). It triggers a different CI/CD path because the regulatory clock has started:</p>
+
+<ul>
+    <li>Generates a CRA Article 14 notification artifact signed with HMAC-SHA256</li>
+    <li>Records a chained audit entry tracking the three CRA deadlines</li>
+    <li>Cannot be overridden by risk acceptance — the regulation does not permit it</li>
+</ul>
+
+<h2>Artifact lifecycle</h2>
+
+<pre># List all artifacts
+wardex art14 list
+
+# Show a specific artifact
+wardex art14 show &lt;artifact-id&gt;
+
+# Verify HMAC integrity
+wardex art14 verify &lt;artifact-id&gt;
+
+# Mark early-warning notification as dispatched
+wardex art14 mark-dispatched &lt;artifact-id&gt; --phase early-warning
+
+# Close the case with patch confirmation
+wardex art14 finalize &lt;artifact-id&gt; --patch-date 2026-06-09T12:00:00Z</pre>
+
+<p>Each artifact is cryptographically chained to the previous one using HMAC-SHA256, producing an append-only audit trail. This is what a regulator asks for — not a Jira screenshot, but a chain of custody from detection to patch confirmation.</p>
+
+<h2>Exit codes</h2>
+
+<table>
+    <tr><th>Code</th><th>Meaning</th><th>CI/CD action</th></tr>
+    <tr><td>0</td><td>ALLOW</td><td>Pipeline proceeds</td></tr>
+    <tr><td>3</td><td>Integrity failure</td><td>Halt — configuration tampered</td></tr>
+    <tr><td>10</td><td>Gate blocked</td><td>Pipeline fails — risk exceeds appetite</td></tr>
+    <tr><td>11</td><td>Compliance gap</td><td>Pipeline fails — control coverage missing</td></tr>
+    <tr><td>12</td><td>Active exploitation</td><td>Pipeline fails — CRA notification required</td></tr>
+</table>
+
+<h2>Getting started</h2>
+
+<pre>go install github.com/had-nu/wardex@v2.0.0
+
+# Full flow: scanner output to signed artifact
+wardex convert grype test/usability/grype-results.json > vulns.yaml
+wardex evaluate --evidence vulns.yaml --config doc/examples/wardex-config.yaml</pre>
+
+<p>See the <a href="https://github.com/had-nu/wardex/blob/main/doc/operations/WARDEX_PLAYBOOK.md">playbook</a> for complete command flows and expected output.</p>
+
+<hr>
+
+<p><a href="https://github.com/had-nu/wardex">Wardex on GitHub</a> · <a href="../">Back to homepage</a></p>
+
+</main>
+
+<footer>
+    <p>Wardex · <a href="https://github.com/had-nu/wardex">github.com/had-nu/wardex</a></p>
+</footer>
+
+</body>
+</html>
