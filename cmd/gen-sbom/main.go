@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -119,6 +120,7 @@ func main() {
 	if len(os.Args) > 1 {
 		outPath = os.Args[1]
 	}
+	outPath = filepath.Clean(outPath)
 	if err := os.WriteFile(outPath, out, 0600); err != nil {
 		fmt.Fprintf(os.Stderr, "error: failed to write SBOM: %v\n", err)
 		os.Exit(1)
