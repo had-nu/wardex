@@ -89,3 +89,9 @@ test/wardex_test_prompt.md
 # Legacy Documentation
 README-es.md
 README-fr.md
+
+# Generated binaries
+gen-sbom
+
+# Third-party integrations (downloaded archives)
+integrations/

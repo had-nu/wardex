@@ -4,12 +4,12 @@ Wardex é um **release gate**, não um scanner. Não encontra vulnerabilidades �
 
 Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo GitHub Actions.
 
-> **Versão de referência:** v2.0.0  
+> **Versão de referência:** v2.1.0  
 > **Instalação:** `go install github.com/had-nu/wardex@95eed886`
 
 ---
 
-## Mapa de Comandos (v2.0.0)
+## Mapa de Comandos (v2.1.0)
 
 | Comando | Propósito |
 |---------|-----------|
@@ -314,7 +314,7 @@ A estrutura de directórios espelha a hierarquia de secções do framework. Quan
 
 ---
 
-## Exit Codes (v2.0.0)
+## Exit Codes (v2.1.0)
 
 | Código | Constante | Quando ocorre |
 |--------|-----------|---------------|
