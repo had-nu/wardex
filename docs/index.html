@@ -193,7 +193,7 @@
     <li>Correlates scanner output against the CISA KEV catalogue to identify actively exploited CVEs</li>
     <li>Generates signed CRA Article 14 notification artifacts with HMAC-SHA256 audit chain</li>
     <li>Evaluates release risk per asset context — the same CVE can ALLOW, WARN, or BLOCK depending on criticality, exposure, and compensating controls</li>
-    <li>Cross-references documented vs implemented controls against ISO 27001, NIS2, DORA, and SOC 2 catalogues</li>
+    <li>Cross-references documented vs implemented controls against ISO 27001, NIS2, DORA, and CRA Article 14 catalogues</li>
     <li>Returns distinct exit codes for each outcome: gate block (10), compliance gap (11), active exploitation (12)</li>
 </ul>
 
@@ -213,15 +213,15 @@
         <p>ICT risk management, digital operational resilience, and third-party oversight.</p>
     </div>
     <div class="card">
-        <h3>SOC 2</h3>
-        <p>Trust services criteria mapped to documented and implemented control layers.</p>
+        <h3>CRA Article 14</h3>
+        <p>Active exploitation notification, KEV correlation, and HMAC-SHA256 signed audit trail for EU Cyber Resilience Act.</p>
     </div>
 </div>
 
 <h2 id="quickstart">Quickstart</h2>
 
 <pre># Install
-go install github.com/had-nu/wardex@v2.0.0
+go install github.com/had-nu/wardex@95eed886
 
 # Convert scanner output to Wardex format
 wardex convert grype test/usability/grype-results.json > vulns.yaml
@@ -237,7 +237,7 @@ wardex evaluate \
 
 <p>Requires Go ≥ 1.26.</p>
 
-<pre>go install github.com/had-nu/wardex@v2.0.0</pre>
+<pre>go install github.com/had-nu/wardex@95eed886</pre>
 
 <p>Or build from source:</p>
 
