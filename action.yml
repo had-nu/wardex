@@ -1,7 +1,7 @@
 name: 'Wardex Release Gate'
 description: >
-  Risk-based release gate for CRA Art 14, NIS2, DORA, and ISO 27001.
-  Evaluates vulns against risk appetite and blocks risky deployments.
+  Risk-based release gate for CRA, NIS2, DORA and ISO 27001.
+  Evaluates vulns against risk appetite and blocks deployments.
 branding:
   icon: 'shield'
   color: 'purple'
