@@ -8,11 +8,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log/syslog"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 	"text/template"
 	"time"
 
@@ -64,92 +62,6 @@ func (m *ForwardMultiplexer) Dispatch(entry model.AuditEntry) error {
 	}
 
 	return nil
-}
-
-// SyslogBackend implements Forwarder for Syslog.
-type SyslogBackend struct {
-	Address  string
-	Protocol string
-	Facility syslog.Priority
-	writer   *syslog.Writer
-}
-
-func parseFacility(fac string) syslog.Priority {
-	switch strings.ToLower(fac) {
-	case "kern":
-		return syslog.LOG_KERN
-	case "user":
-		return syslog.LOG_USER
-	case "mail":
-		return syslog.LOG_MAIL
-	case "daemon":
-		return syslog.LOG_DAEMON
-	case "auth":
-		return syslog.LOG_AUTH
-	case "syslog":
-		return syslog.LOG_SYSLOG
-	case "lpr":
-		return syslog.LOG_LPR
-	case "news":
-		return syslog.LOG_NEWS
-	case "uucp":
-		return syslog.LOG_UUCP
-	case "cron":
-		return syslog.LOG_CRON
-	case "authpriv":
-		return syslog.LOG_AUTHPRIV
-	case "ftp":
-		return syslog.LOG_FTP
-	case "local0":
-		return syslog.LOG_LOCAL0
-	case "local1":
-		return syslog.LOG_LOCAL1
-	case "local2":
-		return syslog.LOG_LOCAL2
-	case "local3":
-		return syslog.LOG_LOCAL3
-	case "local4":
-		return syslog.LOG_LOCAL4
-	case "local5":
-		return syslog.LOG_LOCAL5
-	case "local6":
-		return syslog.LOG_LOCAL6
-	case "local7":
-		return syslog.LOG_LOCAL7
-	}
-	return syslog.LOG_LOCAL0
-}
-
-// NewSyslogBackend creates a new SyslogBackend that connects to the given
-// syslog server using the specified protocol (tcp/udp) and facility.
-func NewSyslogBackend(address, protocol, facility string) (*SyslogBackend, error) {
-	fac := parseFacility(facility)
-	writer, err := syslog.Dial(protocol, address, fac|syslog.LOG_INFO, "wardex-accept")
-	if err != nil {
-		return nil, err
-	}
-
-	return &SyslogBackend{
-		Address:  address,
-		Protocol: protocol,
-		Facility: fac,
-		writer:   writer,
-	}, nil
-}
-
-// Name returns the backend identifier "syslog".
-func (b *SyslogBackend) Name() string {
-	return "syslog"
-}
-
-// Send marshals the audit entry to JSON and forwards it via syslog.
-func (b *SyslogBackend) Send(entry model.AuditEntry) error {
-	payload, err := json.Marshal(entry)
-	if err != nil {
-		return err
-	}
-
-	return b.writer.Info(string(payload))
 }
 
 // NotificationEvent represents an event that triggers a notification.
