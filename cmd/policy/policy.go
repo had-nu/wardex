@@ -11,9 +11,9 @@ import (
 
 	"time"
 
-	"github.com/had-nu/wardex/internal/policy"
-	"github.com/had-nu/wardex/pkg/exitcodes"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/internal/policy"
+	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )

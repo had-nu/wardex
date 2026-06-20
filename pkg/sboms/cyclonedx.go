@@ -10,8 +10,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // CycloneDXReport represents the minimal structure of a CycloneDX 1.5 SBOM

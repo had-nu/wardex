@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/had-nu/wardex/pkg/trust"
+	"github.com/had-nu/wardex/v2/pkg/trust"
 	"github.com/spf13/cobra"
 )
 

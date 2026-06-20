@@ -4,7 +4,7 @@
 package snapshot
 
 import (
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // Diff computes the variation between the current report and the previous snapshot.

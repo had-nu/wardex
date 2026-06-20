@@ -16,11 +16,13 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 var (
+	// ErrForwardFailed is returned when audit log forwarding to an external
+	// system fails and the configured on_fail policy is "block".
 	ErrForwardFailed = errors.New("failed to forward audit log to external system")
 )
 
@@ -36,6 +38,9 @@ type ForwardMultiplexer struct {
 	onFail   string // "block" | "warn" | "best_effort"
 }
 
+// NewForwardMultiplexer creates a multiplexer that sends each audit entry
+// to all configured backends. The onFail policy ("block", "warn",
+// "best_effort") controls behaviour when a backend returns an error.
 func NewForwardMultiplexer(backends []Forwarder, onFail string) *ForwardMultiplexer {
 	if onFail == "" {
 		onFail = "warn"
@@ -115,6 +120,8 @@ func parseFacility(fac string) syslog.Priority {
 	return syslog.LOG_LOCAL0
 }
 
+// NewSyslogBackend creates a new SyslogBackend that connects to the given
+// syslog server using the specified protocol (tcp/udp) and facility.
 func NewSyslogBackend(address, protocol, facility string) (*SyslogBackend, error) {
 	fac := parseFacility(facility)
 	writer, err := syslog.Dial(protocol, address, fac|syslog.LOG_INFO, "wardex-accept")
@@ -130,10 +137,12 @@ func NewSyslogBackend(address, protocol, facility string) (*SyslogBackend, error
 	}, nil
 }
 
+// Name returns the backend identifier "syslog".
 func (b *SyslogBackend) Name() string {
 	return "syslog"
 }
 
+// Send marshals the audit entry to JSON and forwards it via syslog.
 func (b *SyslogBackend) Send(entry model.AuditEntry) error {
 	payload, err := json.Marshal(entry)
 	if err != nil {
@@ -162,6 +171,8 @@ type NotifyMultiplexer struct {
 	notifiers []Notifier
 }
 
+// NewNotifyMultiplexer creates a multiplexer that dispatches notification
+// events to all configured notifier channels.
 func NewNotifyMultiplexer(channels []Notifier) *NotifyMultiplexer {
 	return &NotifyMultiplexer{notifiers: channels}
 }
@@ -185,6 +196,8 @@ type WebhookNotifier struct {
 	client      *http.Client
 }
 
+// NewWebhookNotifier creates a new WebhookNotifier that sends HTTP POST
+// requests with rendered templates for the specified event types.
 func NewWebhookNotifier(url, tmplDir string, events []string) *WebhookNotifier {
 	evMap := make(map[string]bool)
 	for _, e := range events {
@@ -199,10 +212,13 @@ func NewWebhookNotifier(url, tmplDir string, events []string) *WebhookNotifier {
 	}
 }
 
+// Name returns the notifier identifier "webhook".
 func (w *WebhookNotifier) Name() string {
 	return "webhook"
 }
 
+// Notify sends a templated HTTP POST notification for the given event.
+// Returns nil if the event type is not in the configured event set.
 func (w *WebhookNotifier) Notify(event NotificationEvent) error {
 	if !w.Events[event.EventName] {
 		return nil

@@ -6,7 +6,7 @@ package scorer
 import (
 	"sort"
 
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // Roadmap returns a sorted list of findings that are not fully covered, prioritized by risk/score.

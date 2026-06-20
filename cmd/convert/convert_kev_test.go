@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 func TestKEVCorrelation(t *testing.T) {

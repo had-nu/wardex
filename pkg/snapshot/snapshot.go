@@ -1,6 +1,8 @@
 // Copyright (c) 2025–2026 André Gustavo Leão de Melo Ataíde (had-nu). All rights reserved.
 // SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Wardex-Commercial
 
+// Package snapshot provides save, load, and diff operations for compliance
+// posture snapshots, enabling before/after comparisons across assessments.
 package snapshot
 
 import (
@@ -8,8 +10,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // Save writes the current GapReport to the snapshot file.
