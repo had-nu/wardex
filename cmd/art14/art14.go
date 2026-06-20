@@ -11,11 +11,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/accept"
-	"github.com/had-nu/wardex/pkg/art14"
-	"github.com/had-nu/wardex/pkg/exitcodes"
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v2/pkg/accept"
+	"github.com/had-nu/wardex/v2/pkg/art14"
+	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/spf13/cobra"
 )
 

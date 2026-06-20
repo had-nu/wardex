@@ -6,8 +6,8 @@ package sdk_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/sdk"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/sdk"
 )
 
 func TestSDK_Analyze(t *testing.T) {

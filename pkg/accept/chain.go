@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // ChainGap represents a verification failure in the audit log chain.

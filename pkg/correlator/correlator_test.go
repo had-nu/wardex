@@ -6,8 +6,8 @@ package correlator_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/pkg/correlator"
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/correlator"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 func TestMatchHighConfidence(t *testing.T) {

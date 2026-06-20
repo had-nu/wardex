@@ -9,8 +9,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/had-nu/wardex/pkg/exitcodes"
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/spf13/cobra"
 )
 

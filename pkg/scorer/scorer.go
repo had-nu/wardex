@@ -4,7 +4,7 @@
 package scorer
 
 import (
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // Score calculates the roadmap priority score for a catalog control.

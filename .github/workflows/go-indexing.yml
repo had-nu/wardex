@@ -1,0 +1,63 @@
+name: Index Go Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Specific tag to index (e.g., v1.2.3). Leave empty to index recent tags.'
+        required: false
+        type: string
+      max_tags:
+        description: 'Number of recent tags to index (used when tag is empty)'
+        required: false
+        default: '5'
+        type: string
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Resolve tags to index
+        id: tags
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ inputs.tag }}" ]]; then
+            TAGS="${{ inputs.tag }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            TAGS="${{ github.ref_name }}"
+          else
+            TAGS=$(git tag --sort=-v:refname | head -n ${{ inputs.max_tags || '5' }} | tr '\n' ' ')
+          fi
+          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger Go proxy indexing
+        run: |
+          for tag in ${{ steps.tags.outputs.tags }}; do
+            echo "---"
+            major="${tag%%.*}"; major="${major#v}"
+
+            if [ "$major" -ge 2 ] 2>/dev/null; then
+              MODULE_PATH="github.com/had-nu/wardex/v2"
+            else
+              MODULE_PATH="github.com/had-nu/wardex"
+            fi
+
+            echo "Indexing ${MODULE_PATH}@${tag}"
+
+            echo "proxy.golang.org ..."
+            curl -s -o /dev/null -w "  HTTP %{http_code}\n" \
+              "https://proxy.golang.org/${MODULE_PATH}/@v/${tag}.info"
+
+            echo "pkg.go.dev ..."
+            curl -s -o /dev/null -w "  HTTP %{http_code}\n" \
+              "https://pkg.go.dev/fetch/${MODULE_PATH}@${tag}"
+          done
