@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/accept"
@@ -18,6 +19,18 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/spf13/cobra"
 )
+
+const (
+	ansiReset = "\033[0m"
+	ansiRed   = "\033[31m"
+	ansiGreen = "\033[32m"
+	ansiYellow = "\033[33m"
+	ansiCyan  = "\033[36m"
+	ansiGray  = "\033[90m"
+	ansiBold  = "\033[1m"
+)
+
+func color(s string, c string) string { return c + s + ansiReset }
 
 var (
 	configPath     string
@@ -101,6 +114,73 @@ func getOutputDir(cfg *config.Config) string {
 	return "."
 }
 
+func shortID(id string) string {
+	if len(id) > 7 {
+		return id[:7]
+	}
+	return id
+}
+
+func shortHMAC(h string) string {
+	if len(h) > 8 {
+		return h[len(h)-8:]
+	}
+	return h
+}
+
+func statusColor(status string) string {
+	switch {
+	case strings.HasPrefix(status, "dispatched"):
+		return ansiGreen
+	case status == "draft":
+		return ansiYellow
+	default:
+		return ansiRed
+	}
+}
+
+func fmtTime(t time.Time) string {
+	if t.IsZero() {
+		return "—"
+	}
+	return t.UTC().Format("2006-01-02 15:04 UTC")
+}
+
+func deadlineOverdue(deadline time.Time, status string) bool {
+	if deadline.IsZero() {
+		return false
+	}
+	if strings.HasPrefix(status, "dispatched") {
+		return false
+	}
+	return time.Now().UTC().After(deadline)
+}
+
+func visibleLen(s string) int {
+	n := 0
+	for i := 0; i < len(s); {
+		if s[i] == '\033' {
+			for i < len(s) && s[i] != 'm' {
+				i++
+			}
+			i++ // skip 'm'
+			continue
+		}
+		_, sz := utf8.DecodeRuneInString(s[i:])
+		i += sz
+		n++
+	}
+	return n
+}
+
+func padANSI(s string, w int) string {
+	v := visibleLen(s)
+	if v >= w {
+		return s
+	}
+	return s + strings.Repeat(" ", w-v)
+}
+
 func runList(cmd *cobra.Command, args []string) error {
 	cfg, err := config.Load(configPath)
 	if err != nil {
@@ -118,15 +198,81 @@ func runList(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), "ID\t\t\t\t\tCVEs\t\tStatus\t\tGenerated At\n")
-	fmt.Fprintf(cmd.OutOrStdout(), "--\t\t\t\t\t----\t\t------\t\t------------\n")
-	for _, a := range artefacts {
-		cves := strings.Join(a.Notification.CVEIDs, ", ")
-		if len(cves) > 20 {
-			cves = cves[:17] + "..."
-		}
-		fmt.Fprintf(cmd.OutOrStdout(), "%s\t%s\t%s\t%s\n", a.ArtefactID, cves, a.Status, a.GeneratedAt.Local().Format("2006-01-02 15:04"))
+	w := cmd.OutOrStdout()
+
+	hdr := func(s string, w int) string {
+		return padANSI(color(s, ansiCyan+ansiBold), w)
 	}
+
+	const (
+		wID    = 10
+		wCVE   = 18
+		wDet   = 21
+		wEW    = 21
+		wNotif = 21
+		wStat  = 22
+		wHMAC  = 10
+	)
+
+	fill := func(r rune, n int) string {
+		return strings.Repeat(string(r), n)
+	}
+
+	fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
+		hdr("ID", wID), hdr("CVE", wCVE), hdr("Detected", wDet),
+		hdr("Early Warning", wEW), hdr("Notification", wNotif),
+		hdr("Status", wStat), hdr("HMAC", wHMAC))
+	fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
+		color(fill('─', wID), ansiGray),
+		color(fill('─', wCVE), ansiGray),
+		color(fill('─', wDet), ansiGray),
+		color(fill('─', wEW), ansiGray),
+		color(fill('─', wNotif), ansiGray),
+		color(fill('─', wStat), ansiGray),
+		color(fill('─', wHMAC), ansiGray))
+
+	for _, a := range artefacts {
+		id := shortID(a.ArtefactID)
+		cves := strings.Join(a.Notification.CVEIDs, ", ")
+		if len(cves) > 16 {
+			cves = cves[:13] + "..."
+		}
+		detected := fmtTime(a.EarlyWarning.AwarenessTimestamp)
+		ewDeadline := fmtTime(a.EarlyWarning.Deadline)
+		notifDeadline := fmtTime(a.Notification.Deadline)
+
+		statusStr := a.Status
+		sc := statusColor(a.Status)
+		switch statusStr {
+		case "draft":
+			statusStr = "draft"
+		case "dispatched:early-warning":
+			statusStr = "EW"
+		case "dispatched:notification":
+			statusStr = "NT"
+		case "dispatched:final-report":
+			statusStr = "FR"
+		}
+
+		hmacShort := shortHMAC(a.HMAC)
+
+		if deadlineOverdue(a.EarlyWarning.Deadline, a.Status) {
+			ewDeadline = color(ewDeadline, ansiRed)
+		}
+		if deadlineOverdue(a.Notification.Deadline, a.Status) {
+			notifDeadline = color(notifDeadline, ansiRed)
+		}
+
+		fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
+			padANSI(id, wID),
+			padANSI(cves, wCVE),
+			padANSI(detected, wDet),
+			padANSI(ewDeadline, wEW),
+			padANSI(notifDeadline, wNotif),
+			padANSI(color(statusStr, sc), wStat),
+			padANSI(color(hmacShort, ansiGray), wHMAC))
+	}
+
 	return nil
 }
 

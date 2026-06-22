@@ -68,8 +68,8 @@ cra:
 	}
 
 	listOut := bufList.String()
-	if !strings.Contains(listOut, art.ArtefactID) {
-		t.Errorf("expected artefact ID %s in list output, got %q", art.ArtefactID, listOut)
+	if !strings.Contains(listOut, art.ArtefactID[:7]) {
+		t.Errorf("expected artefact ID prefix %s in list output, got %q", art.ArtefactID[:7], listOut)
 	}
 
 	// 2. Test Show
