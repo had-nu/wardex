@@ -1,0 +1,20 @@
+# Low-security posture — internal tooling / low-criticality service.
+# High risk appetite, compensating controls, no WARN threshold.
+release_gate:
+  enabled: true
+  mode: "any"
+  risk_appetite: 1.2
+
+  asset_context:
+    criticality: 0.9
+    internet_facing: false
+    requires_auth: true
+    environment: "development"
+
+  compensating_controls:
+    - type: "waf"
+      effectiveness: 0.30
+      justification: "WAF-01"
+    - type: "network_segmentation"
+      effectiveness: 0.20
+      justification: "SEG-01"

@@ -20,7 +20,7 @@ func TestEvaluateWritesGateAuditLog(t *testing.T) {
 	evidence := model.VulnerabilityEnvelope{
 		ConvertedBy: "test-converter",
 		Vulnerabilities: []model.Vulnerability{
-			{CVEID: "CVE-2024-0001", CVSSBase: 5.0},
+			{CVEID: "CVE-2024-0001", CVSSBase: 5.0, EPSSScore: 0.5},
 		},
 	}
 	data, _ := yaml.Marshal(evidence)
