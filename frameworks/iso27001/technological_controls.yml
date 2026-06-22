@@ -7,7 +7,10 @@ reviewed_by: "hadnu"
 
 controls:
   - id: A.8.1
-    title: "User endpoint devices"
+    name: "User endpoint devices"
+    maturity: 4
+    layer: implemented
+    domains: ["technological"]
     status: compliant
     owner: "IT Operations"
     implementation_note: "MDM policy enforced via Intune. Encryption at rest enabled."
@@ -18,7 +21,10 @@ controls:
     exceptions: []
 
   - id: A.8.2
-    title: "Privileged access rights"
+    name: "Privileged access rights"
+    maturity: 3
+    layer: implemented
+    domains: ["technological"]
     status: partial
     owner: "Security Team"
     implementation_note: "PAM solution deployed. Review cycle pending for legacy systems."
@@ -31,7 +37,10 @@ controls:
         approved_by: "CISO"
 
   - id: A.8.3
-    title: "Information access restriction"
+    name: "Information access restriction"
+    maturity: 1
+    layer: documented
+    domains: ["technological"]
     status: non_compliant
     owner: "IT Operations"
     implementation_note: "RBAC model under design. No enforcement yet."
@@ -40,7 +49,10 @@ controls:
     exceptions: []
 
   - id: A.8.4
-    title: "Access to source code"
+    name: "Access to source code"
+    maturity: 5
+    layer: implemented
+    domains: ["technological"]
     status: not_applicable
     owner: ""
     implementation_note: "Organisation does not develop software in scope."
