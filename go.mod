@@ -2,12 +2,6 @@ module github.com/had-nu/wardex/v2
 
 go 1.26.0
 
-retract (
-	v2.1.0 // Module path missing /v2 suffix — use v2.1.1+
-	v2.0.1 // Module path missing /v2 suffix — use v2.1.1+
-	v2.0.0 // Module path missing /v2 suffix — use v2.1.1+
-)
-
 require (
 	github.com/had-nu/wardex v1.9.2
 	github.com/spf13/cobra v1.10.2
