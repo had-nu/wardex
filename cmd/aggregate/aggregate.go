@@ -11,6 +11,7 @@ import (
 
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -96,21 +97,30 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 	_, _ = fmt.Fprintln(w, "")
 	_, _ = fmt.Fprintln(w, "## Wardex — Aggregate Gate Decision")
 	_, _ = fmt.Fprintln(w, "")
-	_, _ = fmt.Fprintln(w, "| File | Decision | Blocked | Allowed | Warned |")
-	_, _ = fmt.Fprintln(w, "|------|----------|---------|---------|--------|")
+
+	t := ui.NewTable(
+		[]string{"File", "Decision", "Blocked", "Allowed", "Warned"},
+		[]int{40, 10, 8, 8, 8},
+	)
+
 	for _, r := range results {
-		icon := "[OK]"
+		label := strings.ToUpper(r.decision)
+		var decBg string
 		switch r.decision {
 		case "block":
-			icon = "[FAIL]"
+			decBg = ui.BgRed
 		case "warn":
-			icon = "[WARN]"
+			decBg = ui.BgYellow
+		default:
+			decBg = ui.BgGreen
 		}
-		_, _ = fmt.Fprintf(w, "| %s | %s %s | %d | %d | %d |\n",
-			r.file, icon, strings.ToUpper(r.decision),
-			r.blocked, r.allowed, r.warned,
+		t.AddRowStyled(
+			[]string{r.file, label, fmt.Sprintf("%d", r.blocked), fmt.Sprintf("%d", r.allowed), fmt.Sprintf("%d", r.warned)},
+			nil,
+			[]string{"", decBg, "", "", ""},
 		)
 	}
+	t.Render(w)
 
 	// Determine combined decision
 	blockCount := 0

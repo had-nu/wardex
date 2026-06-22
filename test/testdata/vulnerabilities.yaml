@@ -1,8 +1,44 @@
 vulnerabilities:
+  - cve_id: "CVE-2024-BLOCK1"
+    cvss_base: 10.0
+    epss_score: 1.00
+    component: "org.apache:log4j:2.17.0"
+    reachable: true
+
+  - cve_id: "CVE-2024-BLOCK2"
+    cvss_base: 10.0
+    epss_score: 0.95
+    component: "fortios:7.4.0"
+    reachable: true
+
+  - cve_id: "CVE-2024-BLOCK3"
+    cvss_base: 9.8
+    epss_score: 0.99
+    component: "com.example:auth-lib:2.1.0"
+    reachable: true
+
   - cve_id: "CVE-2024-1234"
     cvss_base: 9.1
     epss_score: 0.84
-    component: "com.example:auth-lib:2.1.0"
+    component: "org.example:web-core:4.2.0"
+    reachable: true
+
+  - cve_id: "CVE-2024-WARN1"
+    cvss_base: 8.0
+    epss_score: 0.80
+    component: "python:3.12.0"
+    reachable: true
+
+  - cve_id: "CVE-2024-WARN2"
+    cvss_base: 7.5
+    epss_score: 0.65
+    component: "openssl:3.2.0"
+    reachable: true
+
+  - cve_id: "CVE-2024-ALLOW1"
+    cvss_base: 5.0
+    epss_score: 0.50
+    component: "curl:8.6.0"
     reachable: true
 
   - cve_id: "CVE-2024-5678"
@@ -16,3 +52,9 @@ vulnerabilities:
     epss_score: 0.03
     component: "org.example:log-lib:3.2.1"
     reachable: true
+
+  - cve_id: "CVE-2024-ALLOW2"
+    cvss_base: 3.0
+    epss_score: 0.20
+    component: "stdlib:1.23.0"
+    reachable: false

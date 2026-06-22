@@ -20,6 +20,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/duration"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -229,11 +230,27 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 			}
 
 			// Provide table output
-			// Minimal printing logic for now
-			fmt.Println("ID\tCVE\tAccepted By\tExpires At\tLogic Status")
+			t := ui.NewTable(
+				[]string{"ID", "CVE", "Accepted By", "Expires At", "Logic Status"},
+				[]int{36, 16, 20, 14, 14},
+			)
 			for _, a := range filtered {
-				fmt.Printf("%s\t%s\t%s\t%s\t[VÁLIDA]\n", a.ID, a.CVE, a.AcceptedBy, a.ExpiresAt.Format("2006-01-02"))
+				status := "VALID"
+				statusColor := ui.Green
+				if time.Now().After(a.ExpiresAt) {
+					status = "EXPIRED"
+					statusColor = ui.Red
+				} else if a.ExpiresAt.Before(time.Now().Add(30 * 24 * time.Hour)) {
+					status = "EXPIRING"
+					statusColor = ui.Yellow
+				}
+				t.AddRowStyled(
+					[]string{a.ID, a.CVE, a.AcceptedBy, a.ExpiresAt.Format("2006-01-02"), status},
+					nil,
+					[]string{"", "", "", "", statusColor},
+				)
 			}
+			t.Render(os.Stdout)
 		},
 	}
 	listCmd.Flags().BoolVar(&listActive, "active", false, "Apenas aceitações activas")

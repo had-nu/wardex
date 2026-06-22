@@ -4,11 +4,12 @@
 package evaluate
 
 import (
+	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
 	"time"
-	"unicode/utf8"
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
@@ -20,6 +21,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/releasegate"
 	"github.com/had-nu/wardex/v2/pkg/trust"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -42,43 +44,6 @@ var (
 	exitFunc = os.Exit
 	stderr   = os.Stderr
 )
-
-const (
-	ansiReset  = "\033[0m"
-	ansiRed    = "\033[31m"
-	ansiGreen  = "\033[32m"
-	ansiYellow = "\033[33m"
-	ansiCyan   = "\033[36m"
-	ansiGray   = "\033[90m"
-	ansiBold   = "\033[1m"
-)
-
-func color(s string, c string) string { return c + s + ansiReset }
-
-func visibleLen(s string) int {
-	n := 0
-	for i := 0; i < len(s); {
-		if s[i] == '\033' {
-			for i < len(s) && s[i] != 'm' {
-				i++
-			}
-			i++
-			continue
-		}
-		_, sz := utf8.DecodeRuneInString(s[i:])
-		i += sz
-		n++
-	}
-	return n
-}
-
-func padANSI(s string, w int) string {
-	v := visibleLen(s)
-	if v >= w {
-		return s
-	}
-	return s + strings.Repeat(" ", w-v)
-}
 
 // EvaluateCmd is the explicit release gate evaluation subcommand.
 // It validates the gate decision without performing gap analysis,
@@ -513,72 +478,73 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 
 	gateReport := gate.Evaluate(vulns)
 
-	// Emit gate decision table to stdout with color and fixed-width
+	// Emit gate decision table with colour and fixed-width
 	w := cmd.OutOrStdout()
-	_, _ = fmt.Fprintln(w, "")
-	_, _ = fmt.Fprintln(w, "## Release Gate — Evaluation")
-	_, _ = fmt.Fprintln(w, "")
 
-	riskApp := cfg.ReleaseGate.RiskAppetite
-	warnAbove := cfg.ReleaseGate.WarnAbove
+	suppressTable := outputFormat != "markdown" && outFile == "stdout"
 
-	wCVE := 20
-	wCVSS := 6
-	wEPSS := 6
-	wRisk := 10
-	wDec := 14
-	sep := strings.Repeat("─", wCVE) + "  " +
-		strings.Repeat("─", wCVSS) + "  " +
-		strings.Repeat("─", wEPSS) + "  " +
-		strings.Repeat("─", wRisk) + "  " +
-		strings.Repeat("─", wDec)
+	if !suppressTable {
+		_, _ = fmt.Fprintln(w, "")
+		_, _ = fmt.Fprintln(w, "## Release Gate — Evaluation")
+		_, _ = fmt.Fprintln(w, "")
+		riskApp := cfg.ReleaseGate.RiskAppetite
+		warnAbove := cfg.ReleaseGate.WarnAbove
 
-	header := padANSI(
-		color("CVE", ansiCyan+ansiBold), wCVE) + "  " +
-		padANSI(color("CVSS", ansiCyan+ansiBold), wCVSS) + "  " +
-		padANSI(color("EPSS", ansiCyan+ansiBold), wEPSS) + "  " +
-		padANSI(color("Risk", ansiCyan+ansiBold), wRisk) + "  " +
-		padANSI(color("Decision", ansiCyan+ansiBold), wDec)
+		t := ui.NewTable(
+			[]string{"CVE ID", "Component", "Reachable", "CVSS", "EPSS", "Exposure", "Compensating", "Criticality", "Release Risk", "Decision"},
+			[]int{18, 35, 9, 6, 8, 10, 14, 12, 12, 12},
+		)
 
-	_, _ = fmt.Fprintln(w, header)
-	_, _ = fmt.Fprintln(w, color(sep, ansiGray))
+		for _, d := range gateReport.Decisions {
+			var decFg string
+			label := "ALLOW"
+			switch d.Decision {
+			case "block":
+				decFg = ui.Red + ui.Bold
+				label = "BLOCK"
+			case "warn":
+				decFg = ui.Yellow + ui.Bold
+				label = "WARN"
+			default:
+				decFg = ui.Green + ui.Bold
+			}
+			riskColor := ui.Green
+			if d.ReleaseRisk >= riskApp {
+				riskColor = ui.Red
+			} else if warnAbove > 0 && d.ReleaseRisk >= warnAbove {
+				riskColor = ui.Yellow
+			}
 
-	for _, d := range gateReport.Decisions {
-		// Decision color
-		var decColor string
-		label := "ALLOW"
-		switch d.Decision {
-		case "block":
-			decColor = ansiRed
-			label = "BLOCK"
-		case "warn":
-			decColor = ansiYellow
-			label = "WARN"
-		default:
-			decColor = ansiGreen
+			reachStr := "no"
+			if d.Vulnerability.Reachable {
+				reachStr = "yes"
+			}
+
+			t.AddRowStyled(
+				[]string{
+					d.Vulnerability.CVEID,
+					d.Vulnerability.Component,
+					reachStr,
+					fmt.Sprintf("%.1f", d.Vulnerability.CVSSBase),
+					fmt.Sprintf("%.4f", d.Vulnerability.EPSSScore),
+					fmt.Sprintf("%.2f", d.Breakdown.ExposureFactor),
+					fmt.Sprintf("%.2f", d.Breakdown.CompensatingEffect),
+					fmt.Sprintf("%.2f", d.Breakdown.AssetCriticality),
+					fmt.Sprintf("%.1f", d.ReleaseRisk),
+					label,
+				},
+				[]string{"", "", "", "", "", "", "", "", riskColor, decFg},
+				nil,
+			)
 		}
-		// Risk color
-		riskColor := ansiGreen
-		if d.ReleaseRisk >= riskApp {
-			riskColor = ansiRed
-		} else if warnAbove > 0 && d.ReleaseRisk >= warnAbove {
-			riskColor = ansiYellow
-		}
-
-		_, _ = fmt.Fprintf(w, "%s  %s  %s  %s  %s\n",
-			padANSI(d.Vulnerability.CVEID, wCVE),
-			padANSI(fmt.Sprintf("%.1f", d.Vulnerability.CVSSBase), wCVSS),
-			padANSI(fmt.Sprintf("%.4f", d.Vulnerability.EPSSScore), wEPSS),
-			padANSI(color(fmt.Sprintf("%.1f", d.ReleaseRisk), riskColor), wRisk),
-			padANSI(color(label, decColor), wDec),
+		t.Render(w)
+		_, _ = fmt.Fprintf(w, "\n%s  Gate Maturity: Level %d\n\n",
+			ui.Colorize("Overall Decision: "+strings.ToUpper(gateReport.OverallDecision), ui.Bold),
+			gateReport.GateMaturityLevel,
 		)
 	}
-	_, _ = fmt.Fprintf(w, "\n%s  Gate Maturity: Level %d\n\n",
-		color("Overall Decision: "+strings.ToUpper(gateReport.OverallDecision), ansiBold),
-		gateReport.GateMaturityLevel,
-	)
 
-	if gateReport.OverallDecision == "warn" {
+	if gateReport.OverallDecision == "warn" && !suppressTable {
 		fmt.Fprintf(stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
 	}
 
@@ -640,6 +606,59 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 						return nil
 					}
 				}
+			}
+		}
+	}
+
+	// Structured output (--output json|csv)
+	if outputFormat != "" && outputFormat != "markdown" {
+		dest := os.Stdout
+		if outFile != "stdout" {
+			f, err := os.Create(outFile)
+			if err != nil {
+				fmt.Fprintf(stderr, "Error: cannot create output file %s: %v\n", outFile, err)
+				exitFunc(exitcodes.GenericError)
+				return nil
+			}
+			defer f.Close()
+			dest = f
+		}
+
+		switch outputFormat {
+		case "json":
+			enc := json.NewEncoder(dest)
+			enc.SetIndent("", "  ")
+			if err := enc.Encode(map[string]any{"Gate": gateReport}); err != nil {
+				fmt.Fprintf(stderr, "Error: write JSON output: %v\n", err)
+				exitFunc(exitcodes.GenericError)
+				return nil
+			}
+		case "csv":
+			wr := csv.NewWriter(dest)
+			_ = wr.Write([]string{"cve_id", "component", "reachable", "cvss", "epss", "exposure", "compensating", "criticality", "release_risk", "decision"})
+			for _, d := range gateReport.Decisions {
+				reachStr := "no"
+				if d.Vulnerability.Reachable {
+					reachStr = "yes"
+				}
+				_ = wr.Write([]string{
+					d.Vulnerability.CVEID,
+					d.Vulnerability.Component,
+					reachStr,
+					fmt.Sprintf("%.1f", d.Vulnerability.CVSSBase),
+					fmt.Sprintf("%.4f", d.Vulnerability.EPSSScore),
+					fmt.Sprintf("%.2f", d.Breakdown.ExposureFactor),
+					fmt.Sprintf("%.2f", d.Breakdown.CompensatingEffect),
+					fmt.Sprintf("%.2f", d.Breakdown.AssetCriticality),
+					fmt.Sprintf("%.1f", d.ReleaseRisk),
+					d.Decision,
+				})
+			}
+			wr.Flush()
+			if err := wr.Error(); err != nil {
+				fmt.Fprintf(stderr, "Error: write CSV output: %v\n", err)
+				exitFunc(exitcodes.GenericError)
+				return nil
 			}
 		}
 	}

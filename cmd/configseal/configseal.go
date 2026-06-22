@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/had-nu/wardex/v2/pkg/trust"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -60,16 +61,14 @@ func runConfigSeal(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), `Config sealed successfully.
-  Input   : %s
-  Output  : %s
-  Trust   : %s
-
-The sealed config can now be used with:
-  wardex evaluate --config %s --evidence vulns.yaml controls.yaml
-
-Commit the .wexstate file (not the draft yaml) to your repository.
-`, inputPath, outPath, trust.ResolveTrustStoreRef(trustRef, ""), outPath)
+	w := cmd.OutOrStdout()
+	fmt.Fprintln(w, "Config sealed successfully.")
+	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Input:", ui.Gray), inputPath)
+	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Output:", ui.Gray), outPath)
+	fmt.Fprintf(w, "  %s %s\n\n", ui.Colorize("Trust:", ui.Gray), trust.ResolveTrustStoreRef(trustRef, ""))
+	fmt.Fprintf(w, "The sealed config can now be used with:\n")
+	fmt.Fprintf(w, "  wardex evaluate --config %s --evidence vulns.yaml controls.yaml\n\n", outPath)
+	fmt.Fprintf(w, "Commit the .wexstate file (not the draft yaml) to your repository.\n")
 
 	return nil
 }

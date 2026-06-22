@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/had-nu/wardex/v2/pkg/trust"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -126,19 +127,18 @@ func runTrustInit(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), `Trust store initialised.
-  File    : %s
-  Admin   : %s
-  Key ID  : %s
-
-NEXT STEPS — do not skip:
-  1. git add %s
-  2. git commit -m "chore: wardex trust bootstrap"
-  3. Configure branch protection on this repository:
-       - Require pull request reviews before merging
-       - Restrict who can push to the default branch
-     Without branch protection, this file can be overwritten by any contributor.
-`, initOut, initActor, store.Keys[0].ID, initOut)
+	w := cmd.OutOrStdout()
+	fmt.Fprintln(w, "Trust store initialised.")
+	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("File:", ui.Gray), initOut)
+	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Admin:", ui.Gray), initActor)
+	fmt.Fprintf(w, "  %s %s\n\n", ui.Colorize("Key ID:", ui.Gray), store.Keys[0].ID)
+	fmt.Fprintf(w, "NEXT STEPS — do not skip:\n")
+	fmt.Fprintf(w, "  1. git add %s\n", initOut)
+	fmt.Fprintf(w, "  2. git commit -m \"chore: wardex trust bootstrap\"\n")
+	fmt.Fprintf(w, "  3. Configure branch protection on this repository:\n")
+	fmt.Fprintf(w, "       - Require pull request reviews before merging\n")
+	fmt.Fprintf(w, "       - Restrict who can push to the default branch\n")
+	fmt.Fprintf(w, "     Without branch protection, this file can be overwritten by any contributor.\n")
 
 	if !isInsideGitRepo(initOut) {
 		fmt.Fprintf(cmd.OutOrStdout(), "\nWarning: %s is not inside a Git repository.\n"+
@@ -182,16 +182,15 @@ func runTrustAdd(cmd *cobra.Command, args []string) error {
 
 	newEntry := store.Keys[len(store.Keys)-1]
 
-	fmt.Fprintf(cmd.OutOrStdout(), `Key added to trust store.
-  Key ID  : %s
-  Actor   : %s
-  Role    : %s
-  Added by: verified admin
-
-Commit and merge via PR:
-  git add %s
-  git commit -m "chore: trust add — %s (%s)"
-`, newEntry.ID, addActor, addRole, trustPath, addActor, addRole)
+	w := cmd.OutOrStdout()
+	fmt.Fprintln(w, "Key added to trust store.")
+	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Key ID:", ui.Gray), newEntry.ID)
+	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Actor:", ui.Gray), addActor)
+	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Role:", ui.Gray), addRole)
+	fmt.Fprintf(w, "  %s verified admin\n\n", ui.Colorize("Added by:", ui.Gray))
+	fmt.Fprintf(w, "Commit and merge via PR:\n")
+	fmt.Fprintf(w, "  git add %s\n", trustPath)
+	fmt.Fprintf(w, "  git commit -m \"chore: trust add — %s (%s)\"\n", addActor, addRole)
 
 	return nil
 }
@@ -201,15 +200,13 @@ func runTrustRevoke(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), `Key revoked.
-  Key ID  : %s
-  Reason  : %s
-
-WARNING: Any sealed configs referencing this key will be rejected
-         by wardex evaluate until re-sealed.
-
-%s updated. Commit and merge via PR.
-`, revokeID, revokeReason, trustPath)
+	w := cmd.OutOrStdout()
+	fmt.Fprintln(w, "Key revoked.")
+	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Key ID:", ui.Gray), revokeID)
+	fmt.Fprintf(w, "  %s %s\n\n", ui.Colorize("Reason:", ui.Gray), revokeReason)
+	fmt.Fprintf(w, "WARNING: Any sealed configs referencing this key will be rejected\n")
+	fmt.Fprintf(w, "         by wardex evaluate until re-sealed.\n\n")
+	fmt.Fprintf(w, "%s updated. Commit and merge via PR.\n", trustPath)
 
 	return nil
 }
