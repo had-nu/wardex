@@ -1,0 +1,22 @@
+converted_by: "wardex-convert/grype@v2.1.1"
+evaluated_at: "2026-06-22T10:00:00Z"
+vulnerabilities:
+
+  # All actively exploited — CRA Art.14 hard stop scenario
+  - cve_id: CVE-2024-3094
+    cvss_base: 10.0
+    epss_score: 0.989
+    component: "liblzma:5.6.1"
+    reachable: true
+    actively_exploited: true
+    actively_exploited_since: "2024-03-29T00:00:00Z"
+    exploited_source: "cisa-kev"
+
+  - cve_id: CVE-2023-44487
+    cvss_base: 7.5
+    epss_score: 0.955
+    component: "golang.org/x/net:http2"
+    reachable: true
+    actively_exploited: true
+    actively_exploited_since: "2023-10-10T00:00:00Z"
+    exploited_source: "cisa-kev"

@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
@@ -41,6 +42,43 @@ var (
 	exitFunc = os.Exit
 	stderr   = os.Stderr
 )
+
+const (
+	ansiReset  = "\033[0m"
+	ansiRed    = "\033[31m"
+	ansiGreen  = "\033[32m"
+	ansiYellow = "\033[33m"
+	ansiCyan   = "\033[36m"
+	ansiGray   = "\033[90m"
+	ansiBold   = "\033[1m"
+)
+
+func color(s string, c string) string { return c + s + ansiReset }
+
+func visibleLen(s string) int {
+	n := 0
+	for i := 0; i < len(s); {
+		if s[i] == '\033' {
+			for i < len(s) && s[i] != 'm' {
+				i++
+			}
+			i++
+			continue
+		}
+		_, sz := utf8.DecodeRuneInString(s[i:])
+		i += sz
+		n++
+	}
+	return n
+}
+
+func padANSI(s string, w int) string {
+	v := visibleLen(s)
+	if v >= w {
+		return s
+	}
+	return s + strings.Repeat(" ", w-v)
+}
 
 // EvaluateCmd is the explicit release gate evaluation subcommand.
 // It validates the gate decision without performing gap analysis,
@@ -456,30 +494,88 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		}
 	}
 
+	// Mandatory EPSS enrichment check — CRA Art.14 compliance
+	var missingEpss []string
+	for _, v := range vulns {
+		if v.EPSSScore == 0.0 {
+			missingEpss = append(missingEpss, v.CVEID)
+		}
+	}
+	if len(missingEpss) > 0 {
+		fmt.Fprintf(stderr, "\n[BLOCK] %d vulnerabilities lack real EPSS probability scores.\n", len(missingEpss))
+		fmt.Fprintf(stderr, "        CVEs: %s\n", strings.Join(missingEpss, ", "))
+		fmt.Fprintf(stderr, "        CRA Article 14 requires accurate vulnerability assessment.\n")
+		fmt.Fprintf(stderr, "        Run 'wardex enrich epss <evidence-file>' to fetch and sign scores,\n")
+		fmt.Fprintf(stderr, "        then pass the enrichment file with --epss-enrichment.\n\n")
+		exitFunc(exitcodes.ComplianceFail)
+		return nil
+	}
+
 	gateReport := gate.Evaluate(vulns)
 
-	// Emit concise gate decision table to stdout
+	// Emit gate decision table to stdout with color and fixed-width
 	w := cmd.OutOrStdout()
 	_, _ = fmt.Fprintln(w, "")
 	_, _ = fmt.Fprintln(w, "## Release Gate — Evaluation")
 	_, _ = fmt.Fprintln(w, "")
-	_, _ = fmt.Fprintln(w, "| CVE | CVSS | EPSS | Release Risk | Decision |")
-	_, _ = fmt.Fprintln(w, "|-----|------|------|--------------|----------|")
+
+	riskApp := cfg.ReleaseGate.RiskAppetite
+	warnAbove := cfg.ReleaseGate.WarnAbove
+
+	wCVE := 20
+	wCVSS := 6
+	wEPSS := 6
+	wRisk := 10
+	wDec := 14
+	sep := strings.Repeat("─", wCVE) + "  " +
+		strings.Repeat("─", wCVSS) + "  " +
+		strings.Repeat("─", wEPSS) + "  " +
+		strings.Repeat("─", wRisk) + "  " +
+		strings.Repeat("─", wDec)
+
+	header := padANSI(
+		color("CVE", ansiCyan+ansiBold), wCVE) + "  " +
+		padANSI(color("CVSS", ansiCyan+ansiBold), wCVSS) + "  " +
+		padANSI(color("EPSS", ansiCyan+ansiBold), wEPSS) + "  " +
+		padANSI(color("Risk", ansiCyan+ansiBold), wRisk) + "  " +
+		padANSI(color("Decision", ansiCyan+ansiBold), wDec)
+
+	_, _ = fmt.Fprintln(w, header)
+	_, _ = fmt.Fprintln(w, color(sep, ansiGray))
+
 	for _, d := range gateReport.Decisions {
-		icon := "[OK]"
+		// Decision color
+		var decColor string
+		label := "ALLOW"
 		switch d.Decision {
 		case "block":
-			icon = "[BLOCK]"
+			decColor = ansiRed
+			label = "BLOCK"
 		case "warn":
-			icon = "[WARN]"
+			decColor = ansiYellow
+			label = "WARN"
+		default:
+			decColor = ansiGreen
 		}
-		_, _ = fmt.Fprintf(w, "| %s | %.1f | %.2f | **%.1f** | %s %s |\n",
-			d.Vulnerability.CVEID, d.Vulnerability.CVSSBase, d.Vulnerability.EPSSScore,
-			d.ReleaseRisk, icon, d.Decision,
+		// Risk color
+		riskColor := ansiGreen
+		if d.ReleaseRisk >= riskApp {
+			riskColor = ansiRed
+		} else if warnAbove > 0 && d.ReleaseRisk >= warnAbove {
+			riskColor = ansiYellow
+		}
+
+		_, _ = fmt.Fprintf(w, "%s  %s  %s  %s  %s\n",
+			padANSI(d.Vulnerability.CVEID, wCVE),
+			padANSI(fmt.Sprintf("%.1f", d.Vulnerability.CVSSBase), wCVSS),
+			padANSI(fmt.Sprintf("%.4f", d.Vulnerability.EPSSScore), wEPSS),
+			padANSI(color(fmt.Sprintf("%.1f", d.ReleaseRisk), riskColor), wRisk),
+			padANSI(color(label, decColor), wDec),
 		)
 	}
-	_, _ = fmt.Fprintf(w, "\n**Overall Decision:** %s  |  Gate Maturity: Level %d\n\n",
-		gateReport.OverallDecision, gateReport.GateMaturityLevel,
+	_, _ = fmt.Fprintf(w, "\n%s  Gate Maturity: Level %d\n\n",
+		color("Overall Decision: "+strings.ToUpper(gateReport.OverallDecision), ansiBold),
+		gateReport.GateMaturityLevel,
 	)
 
 	if gateReport.OverallDecision == "warn" {
