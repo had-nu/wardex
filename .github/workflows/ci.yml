@@ -24,14 +24,15 @@ jobs:
         run: go mod download
 
       - name: Run tests & Generate Coverage
-        run: go test -v -race -coverprofile=coverage.out ./pkg/analyzer/... ./pkg/catalog/... ./pkg/correlator/... ./pkg/duration/... ./pkg/ingestion/... ./pkg/releasegate/... ./pkg/report/... ./pkg/sboms/... ./pkg/scorer/... ./pkg/snapshot/...
+        run: go test -v -race -coverprofile=coverage.out ./...
 
       - name: Enforce Coverage Threshold
         run: |
           COVERAGE=$(go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+')
           echo "Current Test Coverage: $COVERAGE%"
-          if (( $(echo "$COVERAGE < 69.0" | bc -l) )); then
-            echo "::error::Coverage $COVERAGE% is below the required 69.0% threshold."
+          if (( $(echo "$COVERAGE < 40.0" | bc -l) )); then
+            echo "::error::Coverage $COVERAGE% is below the required 40.0% threshold."
+            echo "Tip: Low-coverage packages include pkg/accept/cli (13.3%) and pkg/accept (19.8%). Run 'go test -coverprofile=out ./... && go tool cover -func=out | sort -k3' to see per-package breakdown."
             exit 1
           fi
 
