@@ -10,27 +10,15 @@ import (
 	"os"
 	"strings"
 	"time"
-	"unicode/utf8"
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/accept"
 	"github.com/had-nu/wardex/v2/pkg/art14"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
-
-const (
-	ansiReset = "\033[0m"
-	ansiRed   = "\033[31m"
-	ansiGreen = "\033[32m"
-	ansiYellow = "\033[33m"
-	ansiCyan  = "\033[36m"
-	ansiGray  = "\033[90m"
-	ansiBold  = "\033[1m"
-)
-
-func color(s string, c string) string { return c + s + ansiReset }
 
 var (
 	configPath     string
@@ -131,11 +119,11 @@ func shortHMAC(h string) string {
 func statusColor(status string) string {
 	switch {
 	case strings.HasPrefix(status, "dispatched"):
-		return ansiGreen
+		return ui.Green
 	case status == "draft":
-		return ansiYellow
+		return ui.Yellow
 	default:
-		return ansiRed
+		return ui.Red
 	}
 }
 
@@ -154,31 +142,6 @@ func deadlineOverdue(deadline time.Time, status string) bool {
 		return false
 	}
 	return time.Now().UTC().After(deadline)
-}
-
-func visibleLen(s string) int {
-	n := 0
-	for i := 0; i < len(s); {
-		if s[i] == '\033' {
-			for i < len(s) && s[i] != 'm' {
-				i++
-			}
-			i++ // skip 'm'
-			continue
-		}
-		_, sz := utf8.DecodeRuneInString(s[i:])
-		i += sz
-		n++
-	}
-	return n
-}
-
-func padANSI(s string, w int) string {
-	v := visibleLen(s)
-	if v >= w {
-		return s
-	}
-	return s + strings.Repeat(" ", w-v)
 }
 
 func runList(cmd *cobra.Command, args []string) error {
@@ -201,7 +164,7 @@ func runList(cmd *cobra.Command, args []string) error {
 	w := cmd.OutOrStdout()
 
 	hdr := func(s string, w int) string {
-		return padANSI(color(s, ansiCyan+ansiBold), w)
+		return ui.PadANSI(ui.Colorize(s, ui.Cyan+ui.Bold), w)
 	}
 
 	const (
@@ -223,13 +186,13 @@ func runList(cmd *cobra.Command, args []string) error {
 		hdr("Early Warning", wEW), hdr("Notification", wNotif),
 		hdr("Status", wStat), hdr("HMAC", wHMAC))
 	fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
-		color(fill('─', wID), ansiGray),
-		color(fill('─', wCVE), ansiGray),
-		color(fill('─', wDet), ansiGray),
-		color(fill('─', wEW), ansiGray),
-		color(fill('─', wNotif), ansiGray),
-		color(fill('─', wStat), ansiGray),
-		color(fill('─', wHMAC), ansiGray))
+		ui.Colorize(fill('─', wID), ui.Gray),
+		ui.Colorize(fill('─', wCVE), ui.Gray),
+		ui.Colorize(fill('─', wDet), ui.Gray),
+		ui.Colorize(fill('─', wEW), ui.Gray),
+		ui.Colorize(fill('─', wNotif), ui.Gray),
+		ui.Colorize(fill('─', wStat), ui.Gray),
+		ui.Colorize(fill('─', wHMAC), ui.Gray))
 
 	for _, a := range artefacts {
 		id := shortID(a.ArtefactID)
@@ -257,20 +220,20 @@ func runList(cmd *cobra.Command, args []string) error {
 		hmacShort := shortHMAC(a.HMAC)
 
 		if deadlineOverdue(a.EarlyWarning.Deadline, a.Status) {
-			ewDeadline = color(ewDeadline, ansiRed)
+			ewDeadline = ui.Colorize(ewDeadline, ui.Red)
 		}
 		if deadlineOverdue(a.Notification.Deadline, a.Status) {
-			notifDeadline = color(notifDeadline, ansiRed)
+			notifDeadline = ui.Colorize(notifDeadline, ui.Red)
 		}
 
 		fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
-			padANSI(id, wID),
-			padANSI(cves, wCVE),
-			padANSI(detected, wDet),
-			padANSI(ewDeadline, wEW),
-			padANSI(notifDeadline, wNotif),
-			padANSI(color(statusStr, sc), wStat),
-			padANSI(color(hmacShort, ansiGray), wHMAC))
+			ui.PadANSI(id, wID),
+			ui.PadANSI(cves, wCVE),
+			ui.PadANSI(detected, wDet),
+			ui.PadANSI(ewDeadline, wEW),
+			ui.PadANSI(notifDeadline, wNotif),
+			ui.PadANSI(ui.Colorize(statusStr, sc), wStat),
+			ui.PadANSI(ui.Colorize(hmacShort, ui.Gray), wHMAC))
 	}
 
 	return nil

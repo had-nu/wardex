@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/had-nu/wardex/v2/pkg/trust"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -43,12 +44,11 @@ func runKeygen(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), `Keypair generated.
-  Private key : %s     (mode 0400 — do not copy)
-  Public key  : %s.pub (send this to your admin)
-
-This keypair has no role until an admin adds it to the trust store.
-`, outPath, outPath)
+	w := cmd.OutOrStdout()
+	fmt.Fprintln(w, "Keypair generated.")
+	fmt.Fprintf(w, "  %s %s     (mode 0400 — do not copy)\n", ui.Colorize("Private key:", ui.Gray), outPath)
+	fmt.Fprintf(w, "  %s %s.pub (send this to your admin)\n\n", ui.Colorize("Public key:", ui.Gray), outPath)
+	fmt.Fprintf(w, "This keypair has no role until an admin adds it to the trust store.\n")
 
 	return nil
 }
