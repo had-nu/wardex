@@ -11,16 +11,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/pkg/accept/cli"
 	"github.com/had-nu/wardex/v2/pkg/accept"
+	"github.com/had-nu/wardex/v2/pkg/accept/cli"
 	"github.com/had-nu/wardex/v2/pkg/art14"
 	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/ingestion"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/releasegate"
-	"github.com/had-nu/wardex/v2/pkg/trust"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
@@ -97,101 +95,11 @@ func init() {
 }
 
 func runEvaluate(cmd *cobra.Command, args []string) error {
-	var cfg *config.Config
-
-	// --- Sealed config verification (wexstate) ---
-	if trust.IsWexStatePath(configPath) {
-		state, err := trust.LoadWexState(configPath)
-		if err != nil {
-			fmt.Fprintf(stderr, "Error: %v\n", err)
-			exitFunc(exitcodes.IntegrityFailure)
-			return nil
-		}
-
-		// Resolve and fetch trust store
-		ref := trust.ResolveTrustStoreRef("", "")
-		if state.TrustStoreRef != "" {
-			ref = trust.ResolveTrustStoreRef("", state.TrustStoreRef)
-		}
-		storeData, err := trust.FetchTrustStore(ref)
-		if err != nil {
-			fmt.Fprintf(stderr, "Error: %v\n", err)
-			exitFunc(exitcodes.IntegrityFailure)
-			return nil
-		}
-		store, err := trust.LoadStoreFromBytes(storeData)
-		if err != nil {
-			fmt.Fprintf(stderr, "Error: %v\n", err)
-			exitFunc(exitcodes.IntegrityFailure)
-			return nil
-		}
-
-		// Verify seal integrity
-		if err := trust.VerifySeal(state, store, storeData); err != nil {
-			fmt.Fprintf(stderr, "[INTEGRITY FAILURE] %v\n", err)
-			exitFunc(exitcodes.IntegrityFailure)
-			return nil
-		}
-		fmt.Fprintf(stderr, "[INFO] Sealed config verified — signed by %s (%s) at %s\n",
-			state.SealedBy, state.SealedByKeyID, state.SealedAt.Format("2006-01-02 15:04 UTC"))
-
-		// Deserialise the payload
-		cfg = &config.Config{}
-		if err := yaml.Unmarshal([]byte(state.Payload), cfg); err != nil {
-			fmt.Fprintf(stderr, "Error: parse sealed payload: %v\n", err)
-			exitFunc(exitcodes.IntegrityFailure)
-			return nil
-		}
-
-		if cfg.ReleaseGate.Mode == "" {
-			cfg.ReleaseGate.Mode = "any"
-		}
-	} else {
-		// Legacy mode — load YAML directly
-		if strict {
-			fmt.Fprintf(stderr, "[STRICT ENFORCEMENT] Unsealed configuration rejected. Use 'wardex config seal' to govern this policy.\n")
-			exitFunc(exitcodes.IntegrityFailure)
-			return nil
-		}
-
-		if isCI() {
-			fmt.Fprintf(stderr, "[WARN] Using unsealed config. In production, use 'wardex config seal' for non-repudiation.\n")
-		}
-		var err error
-		cfg, err = config.Load(configPath)
-		if err != nil {
-			fmt.Fprintf(stderr, "Warning: failed to load config from %s: %v\n", configPath, err)
-			cfg = &config.Config{}
-		}
-	}
-
-	// RBAC profile override
-	if profileName != "" {
-		if p, ok := cfg.Profiles[profileName]; ok {
-			actor := os.Getenv("WARDEX_ACTOR")
-			if actor == "" {
-				actor = os.Getenv("GITHUB_ACTOR")
-			}
-			if actor == "" {
-				actor = os.Getenv("USER")
-			}
-			allowed := len(p.AllowedActors) == 0
-			for _, a := range p.AllowedActors {
-				if a == "*" || a == actor {
-					allowed = true
-					break
-				}
-			}
-			if !allowed {
-				fmt.Fprintf(stderr, "[RBAC VIOLATION] Actor %q is not authorized for profile %q!\n[RBAC ENFORCEMENT] Override rejected. Falling back to strict baseline configuration.\n", actor, profileName)
-			} else {
-				cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
-				cfg.ReleaseGate.WarnAbove = p.WarnAbove
-				fmt.Fprintf(stderr, "[INFO] RBAC Verified. Profile %q loaded (RiskAppetite: %.2f)\n", profileName, p.RiskAppetite)
-			}
-		} else {
-			fmt.Fprintf(stderr, "Warning: Profile %q not found. Using defaults.\n", profileName)
-		}
+	cfg, err := loadEvalConfig(configPath, strict, profileName)
+	if err != nil {
+		fmt.Fprintf(stderr, "Error: %v\n", err)
+		exitFunc(exitcodes.IntegrityFailure)
+		return nil
 	}
 
 	if !cfg.ReleaseGate.Enabled {
@@ -199,7 +107,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	}
 
 	// Load controls for context (needed for ingestion but gate is the primary output)
-	_, err := ingestion.LoadMany(args)
+	_, err = ingestion.LoadMany(args)
 	if err != nil {
 		return fmt.Errorf("evaluate: load controls: %w", err)
 	}
@@ -222,36 +130,10 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	}
 
 	cwd, _ := os.Getwd()
-	safeGatePath, err := utils.SafePath(cwd, gateFile)
+	vulns, evidenceHash, err := loadEvidence(gateFile, cwd, strict)
 	if err != nil {
-		return fmt.Errorf("evaluate: evidence path: %w", err)
+		return fmt.Errorf("evaluate: %w", err)
 	}
-	vdata, err := os.ReadFile(safeGatePath) // #nosec G304
-	if err != nil {
-		return fmt.Errorf("evaluate: read evidence file: %w", err)
-	}
-	// Calculate Evidence Hash (G1)
-	evidenceHash := ""
-	if h, err := utils.HashFile(safeGatePath); err == nil {
-		evidenceHash = "sha256:" + h
-	}
-
-	var vulnsEnvelope model.VulnerabilityEnvelope
-	if err := yaml.Unmarshal(vdata, &vulnsEnvelope); err != nil {
-		return fmt.Errorf("evaluate: parse evidence file: %w", err)
-	}
-
-	// Provenance Validation (G2)
-	if vulnsEnvelope.ConvertedBy == "" {
-		if strict {
-			fmt.Fprintf(stderr, "[ERROR] --strict requires canonicalised evidence. Run 'wardex convert' before evaluate.\n")
-			exitFunc(exitcodes.IntegrityFailure)
-			return nil
-		}
-		fmt.Fprintf(stderr, "[WARN] Evidence file has no 'converted_by' field. Run 'wardex convert' to canonicalise scanner output. Proceeding with defaults (reachable=true, epss=1.0).\n")
-	}
-
-	vulns := vulnsEnvelope.Vulnerabilities
 
 	// CRA Article 14 Active Exploitation Hard Stop (Layer 4)
 	var activelyExploited []model.Vulnerability
@@ -711,28 +593,4 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 
 	exitFunc(exitcodes.OK)
 	return nil
-}
-
-// isCI detects common CI environments.
-func isCI() bool {
-	ciVars := []string{"CI", "GITHUB_ACTIONS", "GITLAB_CI", "JENKINS_URL", "BUILDKITE", "CIRCLECI"}
-	for _, v := range ciVars {
-		if strings.TrimSpace(os.Getenv(v)) != "" {
-			return true
-		}
-	}
-	return false
-}
-
-// formatDuration structures durations for CLI output.
-func formatDuration(d time.Duration) string {
-	if d <= 0 {
-		return "passed"
-	}
-	h := int(d.Hours())
-	m := int(d.Minutes()) % 60
-	if h >= 24 {
-		return fmt.Sprintf("%dd %dh", h/24, h%24)
-	}
-	return fmt.Sprintf("%dh %dm", h, m)
 }
