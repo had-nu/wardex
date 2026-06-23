@@ -1,0 +1,6 @@
+enrichments: []
+provenance:
+    api_endpoint: api.first.org
+    tls_peer_cert_sha256: 20b6d9b633e8b23b24d83852ce949a270154e884c7d313ebd3e556d54ecd059f
+signature: sha256:a413841097d6395c03b7003790eaf4454ab79353241e7149eb923c85f4f62548
+generated_at: "2026-06-22T15:11:11Z"
