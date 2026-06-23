@@ -1,0 +1,22 @@
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "wardex.pvcName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "wardex.labels" . | nindent 4 }}
+  annotations:
+    # Keep the PVC on helm uninstall — audit logs and Art14 artefacts
+    # must survive chart lifecycle. Delete manually when legally permitted.
+    helm.sh/resource-policy: keep
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+  {{- with .Values.persistence.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+{{- end }}
