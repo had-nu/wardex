@@ -1,0 +1,206 @@
+{{/*
+Bundles the four supported framework control files as a ConfigMap.
+The evaluate Job mounts the selected framework at /frameworks/<framework>/.
+Operators can override individual controls by editing this ConfigMap
+or by supplying a custom extraVolume that shadows the mount.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "wardex.frameworksConfigMapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "wardex.labels" . | nindent 4 }}
+data:
+  # -------------------------------------------------------------------------
+  # ISO/IEC 27001:2022 — Annex A.8 Technological Controls
+  # -------------------------------------------------------------------------
+  iso27001-technological_controls.yml: |
+    framework: iso27001
+    version: "2022"
+    domain: technological_controls
+    annex: "A.8"
+    last_reviewed: "2025-03-01"
+    reviewed_by: "hadnu"
+
+    controls:
+      - id: A.8.1
+        title: "User endpoint devices"
+        status: compliant
+        owner: "IT Operations"
+        implementation_note: "MDM policy enforced via Intune. Encryption at rest enabled."
+        evidence_refs:
+          - "docs/evidence/A.8.1-mdm-config.pdf"
+          - "docs/evidence/A.8.1-endpoint-policy.pdf"
+        last_assessed: "2025-02-15"
+        exceptions: []
+
+      - id: A.8.2
+        title: "Privileged access rights"
+        status: partial
+        owner: "Security Team"
+        implementation_note: "PAM solution deployed. Review cycle pending for legacy systems."
+        evidence_refs:
+          - "docs/evidence/A.8.2-pam-screenshot.png"
+        last_assessed: "2025-01-10"
+        exceptions:
+          - reason: "Legacy system X requires shared admin account pending migration"
+            expiry: "2025-09-01"
+            approved_by: "CISO"
+
+      - id: A.8.3
+        title: "Information access restriction"
+        status: non_compliant
+        owner: "IT Operations"
+        implementation_note: "RBAC model under design. No enforcement yet."
+        evidence_refs: []
+        last_assessed: "2025-01-10"
+        exceptions: []
+
+      - id: A.8.4
+        title: "Access to source code"
+        status: not_applicable
+        owner: ""
+        implementation_note: "Organisation does not develop software in scope."
+        evidence_refs: []
+        last_assessed: "2025-01-10"
+        exceptions: []
+
+  # -------------------------------------------------------------------------
+  # NIS2 — Article 21 Cyber Hygiene
+  # -------------------------------------------------------------------------
+  nis2-cyber_hygiene.yml: |
+    framework: "nis2"
+    annex: "Article 21"
+    domain: "cyber_hygiene"
+    controls:
+      - id: "NIS2.21.2.a"
+        title: "Policies on Risk Analysis"
+        status: "compliant"
+        maturity: 4
+        implementation_note: "Formal Risk Analysis policy reviewed annually by Board."
+        last_assessed: "2026-01-10"
+
+      - id: "NIS2.21.2.b"
+        title: "Incident Handling"
+        status: "compliant"
+        maturity: 5
+        implementation_note: "24/7 SOC powered by Sentinel and automated IR playbooks."
+        last_assessed: "2026-03-15"
+
+      - id: "NIS2.21.2.c"
+        title: "Business Continuity"
+        status: "partial"
+        maturity: 2
+        implementation_note: "Backup management in place; DR testing for tier-2 apps pending."
+        last_assessed: "2026-02-28"
+
+      - id: "NIS2.21.2.d"
+        title: "Supply Chain Security"
+        status: "compliant"
+        maturity: 3
+        implementation_note: "SBOM validation required for all new software ingestion."
+        last_assessed: "2026-04-01"
+
+      - id: "NIS2.21.2.e"
+        title: "Security in Acquisition"
+        status: "non_compliant"
+        maturity: 1
+        implementation_note: "Vulnerability disclosure policy not yet public."
+        last_assessed: "2026-04-02"
+
+  # -------------------------------------------------------------------------
+  # DORA — Chapter II Resilience Controls
+  # -------------------------------------------------------------------------
+  dora-resilience_controls.yml: |
+    framework: "dora"
+    annex: "Chapter II"
+    domain: "resilience_controls"
+    controls:
+      - id: "DORA.Art5"
+        title: "Governance and ICT Risk"
+        status: "compliant"
+        maturity: 5
+        owner: "Board of Directors"
+        implementation_note: "Annual ICT Risk Management Framework review and approval."
+        last_assessed: "2026-01-20"
+
+      - id: "DORA.Art9"
+        title: "Protection and Prevention"
+        status: "compliant"
+        maturity: 4
+        owner: "Security Ops"
+        implementation_note: "Segmentation via micro-services and zero-trust proxy."
+        last_assessed: "2026-03-22"
+
+      - id: "DORA.Art10"
+        title: "Detection"
+        status: "partial"
+        maturity: 3
+        owner: "SOC"
+        implementation_note: "SIEM covers all Tier-1 assets; expanding to Tier-2 by Q2."
+        last_assessed: "2026-04-03"
+
+      - id: "DORA.Art11"
+        title: "Response and Recovery"
+        status: "compliant"
+        maturity: 4
+        owner: "Business Continuity"
+        implementation_note: "Comprehensive ICT-related incident response and recovery plan."
+        last_assessed: "2026-02-15"
+
+      - id: "DORA.Art24"
+        title: "Digital Operational Resilience Testing"
+        status: "non_compliant"
+        maturity: 1
+        owner: "Internal Audit"
+        implementation_note: "Digital operational resilience testing (purple team) scheduled for Q4."
+        last_assessed: "2026-04-04"
+
+  # -------------------------------------------------------------------------
+  # SOC 2 Type II — Trust Services Criteria
+  # -------------------------------------------------------------------------
+  soc2-trust_services.yml: |
+    framework: "soc2"
+    version: "2017"
+    domain: "trust_services_criteria"
+    annex: "CC"
+    controls:
+      - id: "CC1.1"
+        title: "COSO Principle 1: Integrity and Ethical Values"
+        status: "compliant"
+        owner: "People/HR"
+        implementation_note: "Code of conduct signed by all employees during onboarding."
+        last_assessed: "2026-01-15"
+
+      - id: "CC2.1"
+        title: "COSO Principle 6: Specifies Suitable Objectives"
+        status: "compliant"
+        owner: "Risk Management"
+        implementation_note: "Annual risk assessment and objective setting complete."
+        last_assessed: "2026-02-10"
+
+      - id: "CC6.1"
+        title: "Logical Access Security"
+        status: "partial"
+        owner: "IT Security"
+        implementation_note: "MFA enforced for cloud admin; legacy on-prem systems pending migration."
+        last_assessed: "2026-03-01"
+        exceptions:
+          - reason: "Legacy CRM requires VPN + single factor until Q3 migration."
+            expiry: "2026-09-01"
+            approved_by: "CISO"
+
+      - id: "CC6.6"
+        title: "External Threat Protection"
+        status: "compliant"
+        owner: "IT Ops"
+        implementation_note: "WAF and perimeter firewalls active and monitored."
+        last_assessed: "2026-03-20"
+
+      - id: "CC8.1"
+        title: "Change Management"
+        status: "compliant"
+        owner: "DevOps"
+        implementation_note: "Strict PR reviews and wardex gate in CI/CD."
+        last_assessed: "2026-04-01"
