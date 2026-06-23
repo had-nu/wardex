@@ -74,7 +74,7 @@ func runVerify(cmd *cobra.Command, args []string) {
 			fmt.Fprintf(stderr, "Error generating verification report: %v\n", err)
 			exitFunc(1)
 		}
-		if err := os.WriteFile(verifyOutput, data, 0644); err != nil {
+		if err := os.WriteFile(verifyOutput, data, 0600); err != nil {
 			fmt.Fprintf(stderr, "Error writing verification report: %v\n", err)
 			exitFunc(1)
 		}
