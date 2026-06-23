@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/report"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/report"
 )
 
 func TestReportGeneration(t *testing.T) {

@@ -1,8 +1,9 @@
-module github.com/had-nu/wardex
+module github.com/had-nu/wardex/v2
 
 go 1.26.0
 
 require (
+	github.com/had-nu/wardex v1.9.2
 	github.com/spf13/cobra v1.10.2
 	gopkg.in/yaml.v3 v3.0.1
 )

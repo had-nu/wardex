@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // Load detects the file format by extension and delegates routing.

@@ -17,7 +17,7 @@ const (
 
 // PrintBanner outputs the professional branding for Wardex.
 func PrintBanner(version string) {
-	fmt.Printf("\n %s(●───────────────────────)%s  %s%sWARDEX%s  %s·%s  %srisk-based release gate%s  %sv%s%s\n\n",
+	fmt.Printf("\n %s(⬡───────────────────────)%s  %s%sWARDEX%s  %s·%s  %srisk-based release gate%s  %sv%s%s\n\n",
 		clrPurple, clrReset,
 		clrBold, clrWhite, clrReset,
 		clrMuted, clrReset,

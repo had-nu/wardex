@@ -8,11 +8,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/accept"
-	"github.com/had-nu/wardex/pkg/epss"
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v2/pkg/accept"
+	"github.com/had-nu/wardex/v2/pkg/epss"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )

@@ -96,3 +96,6 @@ gen-sbom
 
 # Third-party integrations (downloaded archives)
 integrations/
+
+# Blueprint (internal architecture document)
+wardex-blueprint.html

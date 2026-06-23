@@ -7,7 +7,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // LoadDomain reads and validates a single domain YAML file.

@@ -8,19 +8,19 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log/syslog"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 	"text/template"
 	"time"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 var (
+	// ErrForwardFailed is returned when audit log forwarding to an external
+	// system fails and the configured on_fail policy is "block".
 	ErrForwardFailed = errors.New("failed to forward audit log to external system")
 )
 
@@ -36,6 +36,9 @@ type ForwardMultiplexer struct {
 	onFail   string // "block" | "warn" | "best_effort"
 }
 
+// NewForwardMultiplexer creates a multiplexer that sends each audit entry
+// to all configured backends. The onFail policy ("block", "warn",
+// "best_effort") controls behaviour when a backend returns an error.
 func NewForwardMultiplexer(backends []Forwarder, onFail string) *ForwardMultiplexer {
 	if onFail == "" {
 		onFail = "warn"
@@ -61,88 +64,6 @@ func (m *ForwardMultiplexer) Dispatch(entry model.AuditEntry) error {
 	return nil
 }
 
-// SyslogBackend implements Forwarder for Syslog.
-type SyslogBackend struct {
-	Address  string
-	Protocol string
-	Facility syslog.Priority
-	writer   *syslog.Writer
-}
-
-func parseFacility(fac string) syslog.Priority {
-	switch strings.ToLower(fac) {
-	case "kern":
-		return syslog.LOG_KERN
-	case "user":
-		return syslog.LOG_USER
-	case "mail":
-		return syslog.LOG_MAIL
-	case "daemon":
-		return syslog.LOG_DAEMON
-	case "auth":
-		return syslog.LOG_AUTH
-	case "syslog":
-		return syslog.LOG_SYSLOG
-	case "lpr":
-		return syslog.LOG_LPR
-	case "news":
-		return syslog.LOG_NEWS
-	case "uucp":
-		return syslog.LOG_UUCP
-	case "cron":
-		return syslog.LOG_CRON
-	case "authpriv":
-		return syslog.LOG_AUTHPRIV
-	case "ftp":
-		return syslog.LOG_FTP
-	case "local0":
-		return syslog.LOG_LOCAL0
-	case "local1":
-		return syslog.LOG_LOCAL1
-	case "local2":
-		return syslog.LOG_LOCAL2
-	case "local3":
-		return syslog.LOG_LOCAL3
-	case "local4":
-		return syslog.LOG_LOCAL4
-	case "local5":
-		return syslog.LOG_LOCAL5
-	case "local6":
-		return syslog.LOG_LOCAL6
-	case "local7":
-		return syslog.LOG_LOCAL7
-	}
-	return syslog.LOG_LOCAL0
-}
-
-func NewSyslogBackend(address, protocol, facility string) (*SyslogBackend, error) {
-	fac := parseFacility(facility)
-	writer, err := syslog.Dial(protocol, address, fac|syslog.LOG_INFO, "wardex-accept")
-	if err != nil {
-		return nil, err
-	}
-
-	return &SyslogBackend{
-		Address:  address,
-		Protocol: protocol,
-		Facility: fac,
-		writer:   writer,
-	}, nil
-}
-
-func (b *SyslogBackend) Name() string {
-	return "syslog"
-}
-
-func (b *SyslogBackend) Send(entry model.AuditEntry) error {
-	payload, err := json.Marshal(entry)
-	if err != nil {
-		return err
-	}
-
-	return b.writer.Info(string(payload))
-}
-
 // NotificationEvent represents an event that triggers a notification.
 type NotificationEvent struct {
 	EventName  string
@@ -162,6 +83,8 @@ type NotifyMultiplexer struct {
 	notifiers []Notifier
 }
 
+// NewNotifyMultiplexer creates a multiplexer that dispatches notification
+// events to all configured notifier channels.
 func NewNotifyMultiplexer(channels []Notifier) *NotifyMultiplexer {
 	return &NotifyMultiplexer{notifiers: channels}
 }
@@ -185,6 +108,8 @@ type WebhookNotifier struct {
 	client      *http.Client
 }
 
+// NewWebhookNotifier creates a new WebhookNotifier that sends HTTP POST
+// requests with rendered templates for the specified event types.
 func NewWebhookNotifier(url, tmplDir string, events []string) *WebhookNotifier {
 	evMap := make(map[string]bool)
 	for _, e := range events {
@@ -199,10 +124,13 @@ func NewWebhookNotifier(url, tmplDir string, events []string) *WebhookNotifier {
 	}
 }
 
+// Name returns the notifier identifier "webhook".
 func (w *WebhookNotifier) Name() string {
 	return "webhook"
 }
 
+// Notify sends a templated HTTP POST notification for the given event.
+// Returns nil if the event type is not in the configured event set.
 func (w *WebhookNotifier) Notify(event NotificationEvent) error {
 	if !w.Events[event.EventName] {
 		return nil

@@ -4,7 +4,7 @@
 package scorer
 
 import (
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // MaturityByDomain calculates maturity scores aggregated by the 4 Annex A domains.

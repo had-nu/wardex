@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/had-nu/wardex/test"
+	"github.com/had-nu/wardex/v2/test"
 	"github.com/spf13/cobra"
 )
 

@@ -7,13 +7,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"text/tabwriter"
-
 	"time"
 
-	"github.com/had-nu/wardex/internal/policy"
-	"github.com/had-nu/wardex/pkg/exitcodes"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/internal/policy"
+	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -75,24 +74,52 @@ var policyListCmd = &cobra.Command{
 	RunE:  runPolicyList,
 }
 
+func statusColor(s policy.Status) string {
+	switch s {
+	case policy.StatusCompliant:
+		return ui.Green
+	case policy.StatusPartial:
+		return ui.Yellow
+	case policy.StatusNonCompliant:
+		return ui.Red
+	default:
+		return ui.Gray
+	}
+}
+
+func assessedColor(dateStr string) string {
+	t, err := time.Parse("2006-01-02", dateStr)
+	if err != nil || t.IsZero() {
+		return ""
+	}
+	if time.Since(t) > 365*24*time.Hour {
+		return ui.Red
+	}
+	return ""
+}
+
 func runPolicyList(cmd *cobra.Command, args []string) error {
 	domains, err := policy.LoadFramework(args[0])
 	if err != nil {
 		return err
 	}
 
-	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
-	_, _ = fmt.Fprintln(w, "ID\tTITLE\tSTATUS\tOWNER\tLAST ASSESSED")
-	_, _ = fmt.Fprintln(w, "--\t-----\t------\t-----\t-------------")
+	t := ui.NewTable(
+		[]string{"ID", "TITLE", "STATUS", "OWNER", "LAST ASSESSED"},
+		[]int{12, 50, 16, 16, 16},
+	)
 
 	for _, d := range domains {
 		for _, c := range d.Controls {
-			_, _ = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n",
-				c.ID, c.Title, c.Status, c.Owner, c.LastAssessed,
+			t.AddRowStyled(
+				[]string{c.ID, c.Title, string(c.Status), c.Owner, c.LastAssessed},
+				[]string{"", "", statusColor(c.Status), "", assessedColor(c.LastAssessed)},
+				nil,
 			)
 		}
 	}
-	return w.Flush()
+	t.Render(cmd.OutOrStdout())
+	return nil
 }
 // ── check-expiry ─────────────────────────────────────────────────────────────
 
@@ -112,9 +139,10 @@ func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
 	now := time.Now()
 	expiredCount := 0
 
-	w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
-	_, _ = fmt.Fprintln(w, "ID\tDOMAIN\tEXPIRY\tREASON")
-	_, _ = fmt.Fprintln(w, "--\t------\t------\t------")
+	t := ui.NewTable(
+		[]string{"ID", "DOMAIN", "EXPIRY", "REASON"},
+		[]int{12, 20, 14, 50},
+	)
 
 	for _, d := range domains {
 		for _, c := range d.Controls {
@@ -127,8 +155,10 @@ func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
 					continue
 				}
 				if expiry.Before(now) {
-					_, _ = fmt.Fprintf(w, "%s\t%s\t%s\t%s\n",
-						c.ID, d.Domain, e.Expiry, e.Reason,
+					t.AddRowStyled(
+						[]string{c.ID, d.Domain, e.Expiry, e.Reason},
+						[]string{"", "", ui.Red, ui.Red},
+						nil,
 					)
 					expiredCount++
 				}
@@ -137,7 +167,7 @@ func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
 	}
 
 	if expiredCount > 0 {
-		_ = w.Flush()
+		t.Render(cmd.OutOrStdout())
 		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "\n[FAIL] Found %d expired exception(s) in %q\n", expiredCount, args[0])
 		os.Exit(exitcodes.ComplianceFail)
 	}

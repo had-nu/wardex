@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // Generate delegates reporting based on the requested format.

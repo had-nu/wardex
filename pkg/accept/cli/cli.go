@@ -46,6 +46,8 @@ var (
 	aeArtefactPath string
 )
 
+// AddCommands registers all risk acceptance subcommands (request, list,
+// verify, revoke, active-exploit) on the given cobra root command.
 func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	acceptCfgPath = configPathPtr
 	acceptCmd := &cobra.Command{
