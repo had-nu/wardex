@@ -1,0 +1,193 @@
+# Wardex Helm Chart — values.yaml
+# ---------------------------------
+# Principle: enable, never execute. Wardex prepares the artefact;
+# the operator pulls the trigger.
+
+# -- Container image
+image:
+  repository: ghcr.io/had-nu/wardex
+  tag: ""  # defaults to .Chart.appVersion
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+# -- WARDEX_ACCEPT_SECRET
+# Used to sign risk acceptances and Art14 artefacts (HMAC-SHA256).
+# Must be at least 32 characters. Never set this in plain values —
+# use --set-string or an external secret manager.
+acceptSecret:
+  # If create is true, the chart creates a Secret from .value.
+  # Set create: false and name: <existing-secret> to use an external Secret.
+  create: true
+  name: ""            # leave empty to use the chart-generated name
+  key: WARDEX_ACCEPT_SECRET
+  value: ""           # override via --set-string acceptSecret.value=<secret>
+
+# -- Wardex configuration (rendered into a ConfigMap as wardex-config.yaml)
+config:
+  release_gate:
+    enabled: true
+    risk_appetite: 0.20
+    warn_above: 0.12
+    mode: "any"           # any | aggregate
+    asset_context:
+      criticality: 0.8
+      internet_facing: true
+      requires_auth: true
+      environment: "production"
+    compensating_controls:
+      - type: "waf"
+        effectiveness: 0.15
+        justification: "Edge WAF in place"
+
+  acceptance:
+    limits:
+      max_acceptance_days: 90
+      min_justification_chars: 80
+      max_report_age_hours: 24
+    banned_justification_phrases:
+      - "legacy code"
+      - "no time to fix"
+      - "low priority"
+
+  reporting:
+    format: "markdown"
+    output: "/data/wardex-report.md"
+    gate_log:
+      path: "/data/wardex-gate-audit.log"
+      on_fail: "warn"
+    enisa_queue:
+      path: "/data/wardex-enisa-queue.jsonl"
+
+  profiles:
+    emergency:
+      risk_appetite: 0.50
+      warn_above: 0.30
+      allowed_actors: []
+
+  cra:
+    art14:
+      output_dir: "/data/art14"
+      awareness_source: "detection"
+      product_name: ""
+      product_version: ""
+
+# -- Framework controls to mount and pass to wardex evaluate.
+# Supported: iso27001 | nis2 | dora | soc2
+# The corresponding bundled YAML is mounted at /frameworks/<framework>/
+framework: iso27001
+
+# -- Evidence source: where wardex-vulns.yaml comes from.
+# "pvc"       — mount an existing PVC that already contains the evidence file.
+# "configmap" — embed evidence directly (useful for testing; not for production).
+# "grype"     — init container runs `wardex convert grype` against a grype JSON
+#               mounted from a separate PVC or ConfigMap.
+evidence:
+  source: "pvc"        # pvc | configmap | grype
+
+  # For source: pvc — name of the existing PVC
+  pvcName: ""
+  pvcSubPath: "wardex-vulns.yaml"
+
+  # For source: configmap — raw YAML content
+  inline: |
+    vulnerabilities: []
+
+  # For source: grype — path to grype JSON on the grype PVC
+  grypePvcName: ""
+  grypeSubPath: "grype-results.json"
+
+# -- KEV catalogue init container.
+# Downloads the CISA KEV catalogue before evaluate runs.
+# Requires outbound HTTPS to www.cisa.gov from the cluster.
+# Disable if your cluster has no egress or if you pre-populate via a separate Job.
+kev:
+  enabled: true
+  url: "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+  # Path inside the shared /tmp volume where the catalogue is written.
+  # wardex convert grype and wardex evaluate --kev both read from here.
+  path: "/tmp/kev-catalogue.json"
+  image:
+    repository: curlimages/curl
+    tag: "8.11.1"
+    pullPolicy: IfNotPresent
+
+# -- Persistence for audit log, gate report, and Art14 artefacts.
+persistence:
+  enabled: true
+  storageClass: ""     # leave empty to use the cluster default
+  size: 2Gi
+  accessMode: ReadWriteOnce
+  # Set existingClaim to reuse a pre-existing PVC.
+  existingClaim: ""
+
+# -- Job: one-shot wardex evaluate (runs on helm install/upgrade).
+job:
+  enabled: true
+  # Restart policy: OnFailure lets Kubernetes retry on transient errors.
+  # Never is correct for auditable one-shot runs (each attempt is a new pod).
+  restartPolicy: Never
+  backoffLimit: 0      # no retries — each run must be explicit
+  ttlSecondsAfterFinished: 3600
+  # Additional arguments passed verbatim to wardex evaluate.
+  extraArgs: []
+  # Resource requests and limits for the wardex container.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  # Node selector, tolerations, affinity.
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  # Annotations added to the Job (e.g. for ArgoCD sync waves).
+  annotations: {}
+  podAnnotations: {}
+
+# -- CronJob: scheduled re-evaluation (e.g. daily KEV refresh check).
+cronjob:
+  enabled: false
+  schedule: "0 6 * * *"   # 06:00 UTC daily
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  # Inherits job.resources, job.nodeSelector, job.tolerations, job.affinity.
+
+# -- Extra environment variables injected into the wardex container.
+extraEnv: []
+# - name: WARDEX_ACTOR
+#   value: "ci-pipeline@your-org.com"
+
+# -- Extra volume mounts and volumes (for custom evidence, signing keys, etc.)
+extraVolumeMounts: []
+extraVolumes: []
+
+# -- Pod-level security context (distroless nonroot: uid 65532)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+# -- Container-level security context
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# -- Service account
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+  automountServiceAccountToken: false
+
+# -- Name overrides
+nameOverride: ""
+fullnameOverride: ""
