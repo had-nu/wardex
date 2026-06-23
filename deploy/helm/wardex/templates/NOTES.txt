@@ -1,0 +1,73 @@
+Wardex {{ .Chart.AppVersion }} installed in namespace {{ .Release.Namespace }}.
+
+PRINCIPLE: Enable, never execute. Wardex prepares the artefact; the operator pulls the trigger.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ EVALUATE JOB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{- if .Values.job.enabled }}
+A wardex evaluate Job was created. Check its outcome:
+
+  kubectl get jobs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }},app.kubernetes.io/component=evaluate
+
+Exit codes:
+   0  — Gate passed (ALLOW). Deploy.
+  10  — Gate blocked (BLOCK). Review findings; use wardex accept request to record a risk acceptance.
+  11  — Compliance gap exceeded fail-above threshold.
+  12  — Active exploitation detected. CRA Art14 notification artefact generated at /data/art14/.
+         Run: wardex art14 list --dir /data/art14
+   3  — Integrity failure (config tampered or revoked key).
+{{- else }}
+The evaluate Job is disabled (job.enabled: false).
+Enable it with: --set job.enabled=true
+{{- end }}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ART14 LIFECYCLE (CRA ARTICLE 14)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+If exit code 12 was returned, inspect and advance the notification artefact:
+
+  # Open a shell against the data PVC via a debug pod, then:
+  wardex art14 list  --dir /data/art14
+  wardex art14 show  <id>
+  wardex art14 verify <id>
+  wardex art14 mark-dispatched <id> --phase early-warning
+  wardex art14 finalize <id> --patch-date <RFC3339>
+
+Deadlines (from detection):
+  Early warning    24 h
+  Notification     72 h
+  Final report     14 days after patch available
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ SCHEDULED EVALUATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{- if .Values.cronjob.enabled }}
+CronJob scheduled at: {{ .Values.cronjob.schedule }}
+{{- else }}
+Scheduled re-evaluation is disabled (cronjob.enabled: false).
+Enable with: --set cronjob.enabled=true --set cronjob.schedule="0 6 * * *"
+{{- end }}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ AUDIT LOG AND ARTEFACTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Persistent data (helm.sh/resource-policy: keep — survives helm uninstall):
+  PVC : {{ include "wardex.pvcName" . }}
+  Logs : /data/wardex-gate-audit.log
+  Art14: /data/art14/
+
+Do NOT delete the PVC without legal clearance. The audit log is append-only
+and constitutes the chain of custody for all release decisions.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  https://had-nu.github.io/wardex/
+  https://github.com/had-nu/wardex

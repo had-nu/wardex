@@ -4,7 +4,47 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.9.2] — 2026-05-10
+## [2.1.2] — 2026-06-22
+
+### Added
+
+- **Module path `/v2`**: Module renamed to `github.com/had-nu/wardex/v2`. All SDK imports and `go install` now use the `/v2` path.
+- **`pkg/ui/` package**: Wardex lockup SVG (`wardex-lockup.svg`) for branding in documentation and artefacts.
+- **Syslog forwarding**: Structured RFC 5424 dispatch of gate decisions, acceptances, and Art14 lifecycle events via `WARDEX_SYSLOG_ENDPOINT` (TCP/UDP/TLS). Opt-in at startup.
+- **Syslog stub**: Test double for syslog forwarding without a real server.
+- **Dry-run mode**: `wardex evaluate --dry-run` prints what *would* happen without writing artefacts or producing exit codes.
+- **`accept verify --output`**: Export verification report as JSON artefact.
+- **PKI mode**: Ed25519 CA for certificate-based identity (`wardex pki init`, `wardex pki issue`). Sealed configs carry X.509 chain.
+- **Helm chart**: `deploy/helm/wardex/` (v0.1.0, appVersion 2.1.2) — Job, CronJob, KEV init container, PVC, Seccomp, distroless nonroot.
+- **docker-compose.yml**: PostgreSQL (audit store), MinIO (artefact bucket), Wardex API stub for local dev.
+- **`.github/` PR/issue templates**: Bug report, feature request, pull request templates.
+- **Coverage HTML artefact**: CI uploads HTML coverage report as build artefact.
+- **Exit code `4` (`Tampered`/`StoreInconsistent`)**: Distinguishes tampered acceptances from store inconsistency.
+- **`catalog.Load()` error return**: Callers must now check `([]model.CatalogControl, error)`.
+- **`sdk.LoadFramework()` error return**: SDK consumers receive framework load errors.
+
+### Changed
+
+- **CLI refactoring**: 7 `Run` handlers extracted to `cmd/evaluate/cli_handlers.go` (156 → 458 lines). `cli.go` now uses `exitFunc` (mockable), `stderr` (io.Writer), and `acceptCfgPath` global.
+- **Evaluate refactoring**: `loadEvalConfig`, `loadEvidence`, `isCI`, `formatDuration` extracted to `cmd/evaluate/evaluate_helpers.go` (615 → 460 inline lines).
+- **SDK test coverage**: 46% → 91% (20 new tests across `pkg/sdk/`).
+- **CLI test coverage**: 13.3% → 35.8% (13 new execution tests for panic/recover in `pkg/accept/cli/`).
+- **CI**: Test scope changed from 10-package list to `./...`, coverage threshold 40%, HTML artefact upload.
+- **Lint**: golangci-lint config expanded, `make lint` targets refactored.
+- **Flags split** into Core / Advanced groups in `wardex evaluate --help`.
+
+### Fixed
+
+- **`catalog.Load` lack of error checking**: Load errors now propagate to callers.
+- **`signer.go` HMAC secret hint**: Clearer message when `WARDEX_ACCEPT_SECRET` is missing.
+- **UX hints**: `main.go` adds `[HINT]` messages for common misconfigurations.
+
+### Security
+
+- **GPGSigned merge**: `main` branch commits GPG-signed with key `979AC8CE8F357652`; `commit.gpgsign true` enabled.
+- **Distroless nonroot**: Helm chart defaults to `runAsUser: 65532`, read-only root filesystem, all capabilities dropped.
+
+---
 
 ## [2.0.1] — 2026-06-10
 

@@ -526,13 +526,13 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	if outputFormat != "" && outputFormat != "markdown" {
 		dest := os.Stdout
 		if outFile != "stdout" {
-			f, err := os.Create(outFile)
+			f, err := os.Create(outFile) // #nosec G304 — user-chosen output path via --out-file flag
 			if err != nil {
 				fmt.Fprintf(stderr, "Error: cannot create output file %s: %v\n", outFile, err)
 				exitFunc(exitcodes.GenericError)
 				return nil
 			}
-			defer f.Close()
+			defer func() { _ = f.Close() }()
 			dest = f
 		}
 

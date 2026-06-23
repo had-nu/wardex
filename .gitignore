@@ -60,6 +60,8 @@ wardex-gate-audit.log
 wardex-acceptances.yaml
 wardex-epss-enrichment.yaml
 wardex-snapshot.json
+wardex-helm-chart.zip
+epss-enrich.yaml
 wardex-erd.md.resolved
 specs/
 benchmarks/ 
@@ -82,6 +84,9 @@ research/.venv/
 
 # Internal skills and notes
 SKILL-*.md
+
+# Spec documents (local drafts)
+SPEC-*.md
 
 # Python Test & Calibration scripts
 test/test_calibration_*.py

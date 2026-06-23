@@ -4,12 +4,12 @@ Wardex é um **release gate**, não um scanner. Não encontra vulnerabilidades �
 
 Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo GitHub Actions.
 
-> **Versão de referência:** v2.1.0  
-> **Instalação:** `go install github.com/had-nu/wardex@95eed886`
+> **Versão de referência:** v2.1.2  
+> **Instalação:** `go install github.com/had-nu/wardex/v2@latest`
 
 ---
 
-## Mapa de Comandos (v2.1.0)
+## Mapa de Comandos (v2.1.2)
 
 | Comando | Propósito |
 |---------|-----------|
@@ -69,7 +69,7 @@ jobs:
 
       # Passo 2: Instalar Wardex (SHA-pinned)
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex@95eed886
+        run: go install github.com/had-nu/wardex/v2@latest
 
       # Passo 3: Validar que os policy files estão bem formados
       - name: Validate policy files
@@ -254,7 +254,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex@95eed886
+        run: go install github.com/had-nu/wardex/v2@latest
 
       - name: Validate all framework policy files
         run: |
@@ -314,12 +314,13 @@ A estrutura de directórios espelha a hierarquia de secções do framework. Quan
 
 ---
 
-## Exit Codes (v2.1.0)
+## Exit Codes (v2.1.2)
 
 | Código | Constante | Quando ocorre |
 |--------|-----------|---------------|
 | `0` | `ALLOW` | Gate passou / validação limpa |
-| `3` | `IntegrityFailure` | Configuração adulterada — selo `.wexstate` não corresponde |
+| `3` | `IntegrityFailure` / `Tampered` | Configuração adulterada — selo `.wexstate` não corresponde |
+| `4` | `StoreInconsistent` | Armazém de aceitações inconsistente |
 | `10` | `GateBlocked` | Gate bloqueou — risco excede `risk_appetite` |
 | `11` | `ComplianceFail` | Gap excede `--fail-above` |
 | `12` | `ActivelyExploited` | CRA Article 14 — CVE no catálogo CISA KEV |
@@ -330,6 +331,8 @@ exit_code=$?
 
 case $exit_code in
   0) echo "Gate passed — deploy authorized" ;;
+  3) echo "Integrity failure / Tampered — sealed config mismatch or acceptance tampered" ;;
+  4) echo "Store inconsistent — acceptance store mismatch, run wardex accept verify" ;;
   10) echo "Gate BLOCKED — review risk report and consider wardex accept" ;;
   11) echo "Compliance gap exceeds threshold — update controls" ;;
   12) echo "ACTIVE EXPLOITATION — CRA Article 14 notification required" ;;
