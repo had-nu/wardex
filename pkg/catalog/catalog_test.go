@@ -6,7 +6,7 @@ package catalog_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/pkg/catalog"
+	"github.com/had-nu/wardex/v2/pkg/catalog"
 )
 
 func TestCatalogLoad(t *testing.T) {

@@ -3,10 +3,16 @@
 
 package model
 
+// ControlLayer distinguishes documented policies from implemented controls
+// in the compliance gap analysis.
 type ControlLayer string
 
 const (
-	LayerDocumented  ControlLayer = "documented"
+	// LayerDocumented identifies a control declared in security policies but
+	// not yet confirmed as operationally implemented (paper security risk).
+	LayerDocumented ControlLayer = "documented"
+	// LayerImplemented identifies a control that is confirmed as operationally
+	// active, regardless of whether a formal policy exists.
 	LayerImplemented ControlLayer = "implemented"
 )
 

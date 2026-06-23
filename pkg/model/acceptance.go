@@ -1,6 +1,9 @@
 // Copyright (c) 2025–2026 André Gustavo Leão de Melo Ataíde (had-nu). All rights reserved.
 // SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Wardex-Commercial
 
+// Package model defines the core data types used across all Wardex subsystems:
+// compliance gap analysis, release gate evaluation, asset context, acceptance,
+// audit logging, and CRA Article 14 notification artefacts.
 package model
 
 import "time"

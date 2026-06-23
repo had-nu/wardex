@@ -1,6 +1,8 @@
 // Copyright (c) 2025–2026 André Gustavo Leão de Melo Ataíde (had-nu). All rights reserved.
 // SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Wardex-Commercial
 
+// Package utils provides shared utility functions for safe path resolution
+// and cryptographic hashing used across Wardex subsystems.
 package utils
 
 import (

@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/spf13/cobra"
-	"github.com/had-nu/wardex/pkg/exitcodes"
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v2/pkg/model"
 	"gopkg.in/yaml.v3"
 )
 
@@ -30,7 +30,7 @@ func TestEvaluateProvenance(t *testing.T) {
 
 	t.Run("WarnOnMissingConvertedBy", func(t *testing.T) {
 		// Non-canonical evidence (raw list)
-		vulns := []model.Vulnerability{{CVEID: "CVE-1", CVSSBase: 5.0}}
+		vulns := []model.Vulnerability{{CVEID: "CVE-1", CVSSBase: 5.0, EPSSScore: 0.5}}
 		data, _ := yaml.Marshal(map[string]any{"vulnerabilities": vulns})
 		_ = os.WriteFile(evidenceFile, data, 0600)
 
@@ -58,7 +58,7 @@ func TestEvaluateProvenance(t *testing.T) {
 	t.Run("PassOnCanonicalEvidence", func(t *testing.T) {
 		evidence := model.VulnerabilityEnvelope{
 			ConvertedBy:     "wardex-convert/test",
-			Vulnerabilities: []model.Vulnerability{{CVEID: "CVE-1", CVSSBase: 5.0}},
+			Vulnerabilities: []model.Vulnerability{{CVEID: "CVE-1", CVSSBase: 5.0, EPSSScore: 0.5}},
 		}
 		data, _ := yaml.Marshal(evidence)
 		_ = os.WriteFile(evidenceFile, data, 0600)

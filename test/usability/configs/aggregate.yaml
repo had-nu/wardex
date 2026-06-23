@@ -1,0 +1,12 @@
+# Aggregate mode — total portfolio risk must stay under limit.
+release_gate:
+  enabled: true
+  mode: "aggregate"
+  risk_appetite: 0.5
+  aggregate_limit: 2.0
+
+  asset_context:
+    criticality: 1.0
+    internet_facing: true
+    requires_auth: false
+    environment: "production"

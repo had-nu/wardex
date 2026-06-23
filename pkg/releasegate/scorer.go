@@ -3,7 +3,7 @@
 
 package releasegate
 
-import "github.com/had-nu/wardex/pkg/model"
+import "github.com/had-nu/wardex/v2/pkg/model"
 
 // scoreNorm normaliza o output para a escala [0, 1.5] do paper v4 (§IV.A — Proposição 2).
 // R_normalizado = R_absoluto / scoreNorm, com CVSS_max/10 = 1.

@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/snapshot"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/snapshot"
 )
 
 func TestSnapshotSaveLoad(t *testing.T) {

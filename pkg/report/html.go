@@ -1,3 +1,5 @@
+// Package report generates compliance gap analysis and release gate evaluation
+// outputs in Markdown, HTML, JSON, and CSV formats.
 package report
 
 import (
@@ -8,8 +10,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 //go:embed templates/report.html

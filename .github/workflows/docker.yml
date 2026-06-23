@@ -82,6 +82,9 @@ jobs:
           name: trivy-results
           path: trivy-results.sarif
 
+      - name: Install cosign
+        uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb # v3.8.2
+
       - name: Sign image with cosign keyless
         if: startsWith(github.ref, 'refs/tags/')
         run: |

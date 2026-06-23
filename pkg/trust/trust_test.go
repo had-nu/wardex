@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/pkg/trust"
+	"github.com/had-nu/wardex/v2/pkg/trust"
 )
 
 func TestKeypairGeneration(t *testing.T) {
