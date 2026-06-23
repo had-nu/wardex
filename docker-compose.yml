@@ -1,0 +1,30 @@
+name: wardex-dev
+
+services:
+  dev:
+    image: golang:1.26-alpine
+    working_dir: /wardex
+    entrypoint: ["go"]
+    volumes:
+      - .:/wardex
+      - gomod:/go/pkg/mod
+    environment:
+      - WARDEX_ACCEPT_SECRET
+      - CI
+      - GITHUB_ACTOR
+    command: ["run", "./cmd/wardex", "--help"]
+
+  test:
+    image: golang:1.26-alpine
+    working_dir: /wardex
+    entrypoint: ["go", "test"]
+    volumes:
+      - .:/wardex
+      - gomod:/go/pkg/mod
+    environment:
+      - WARDEX_ACCEPT_SECRET
+      - CI
+    command: ["./...", "-count=1", "-cover"]
+
+volumes:
+  gomod:

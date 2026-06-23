@@ -8,38 +8,39 @@ import (
 	"os"
 	"time"
 
-	"github.com/had-nu/wardex/cmd/aggregate"
-	"github.com/had-nu/wardex/cmd/assess"
-	"github.com/had-nu/wardex/cmd/configseal"
-	"github.com/had-nu/wardex/cmd/convert"
-	"github.com/had-nu/wardex/cmd/evaluate"
-	"github.com/had-nu/wardex/cmd/keygen"
-	"github.com/had-nu/wardex/cmd/policy"
-	"github.com/had-nu/wardex/cmd/simulate"
-	trustcmd "github.com/had-nu/wardex/cmd/trust"
-	art14cmd "github.com/had-nu/wardex/cmd/art14"
-	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/accept/cli"
-	"github.com/had-nu/wardex/pkg/accept"
-	"github.com/had-nu/wardex/pkg/analyzer"
-	"github.com/had-nu/wardex/pkg/catalog"
-	"github.com/had-nu/wardex/pkg/correlator"
-	enrichCli "github.com/had-nu/wardex/pkg/enrich/cli"
-	"github.com/had-nu/wardex/pkg/epss"
-	"github.com/had-nu/wardex/pkg/exitcodes"
-	"github.com/had-nu/wardex/pkg/ingestion"
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/releasegate"
-	"github.com/had-nu/wardex/pkg/report"
-	"github.com/had-nu/wardex/pkg/snapshot"
-	"github.com/had-nu/wardex/pkg/ui"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/cmd/aggregate"
+	"github.com/had-nu/wardex/v2/cmd/assess"
+	"github.com/had-nu/wardex/v2/cmd/configseal"
+	"github.com/had-nu/wardex/v2/cmd/convert"
+	"github.com/had-nu/wardex/v2/cmd/evaluate"
+	"github.com/had-nu/wardex/v2/cmd/keygen"
+	"github.com/had-nu/wardex/v2/cmd/policy"
+	"github.com/had-nu/wardex/v2/cmd/simulate"
+	trustcmd "github.com/had-nu/wardex/v2/cmd/trust"
+	art14cmd "github.com/had-nu/wardex/v2/cmd/art14"
+	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v2/pkg/accept/cli"
+	"github.com/had-nu/wardex/v2/pkg/accept"
+	"github.com/had-nu/wardex/v2/pkg/analyzer"
+	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v2/pkg/correlator"
+	enrichCli "github.com/had-nu/wardex/v2/pkg/enrich/cli"
+	"github.com/had-nu/wardex/v2/pkg/epss"
+	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v2/pkg/ingestion"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/releasegate"
+	"github.com/had-nu/wardex/v2/pkg/report"
+	"github.com/had-nu/wardex/v2/pkg/snapshot"
+	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"gopkg.in/yaml.v3"
 )
 
 var (
-	Version       = "2.0.0"
+	Version       = "2.1.2"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -54,6 +55,12 @@ var (
 	snapshotFile  string
 	frameworkName string
 	epssEnrich    string
+
+	// Core flags are shown first in --help; everything else is "advanced"
+	coreFlagNames = map[string]bool{
+		"config": true, "gate": true, "output": true, "framework": true,
+		"fail-above": true,
+	}
 )
 
 var convertCmd = &cobra.Command{
@@ -77,7 +84,65 @@ var rootCmd = &cobra.Command{
 	Run: runWardex,
 }
 
+// defaultHelpFunc stores the original cobra help function so we can delegate to it for subcommands.
+var defaultHelpFunc func(*cobra.Command, []string)
+
+func groupedHelpFunc(cmd *cobra.Command, args []string) {
+	if cmd != rootCmd {
+		defaultHelpFunc(cmd, args)
+		return
+	}
+	fmt.Fprintf(cmd.OutOrStdout(), "Usage:\n  %s\n\n", cmd.UseLine())
+	fmt.Fprint(cmd.OutOrStdout(), "Core Flags:\n")
+	coreOut, advOut := "", ""
+	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		if f.Hidden {
+			return
+		}
+		line := fmt.Sprintf("  --%-18s %s", f.Name, f.Usage)
+		if f.DefValue != "" && f.DefValue != "false" && f.DefValue != "0" {
+			line += fmt.Sprintf(" (default %s)", f.DefValue)
+		}
+		line += "\n"
+		if coreFlagNames[f.Name] {
+			coreOut += line
+		} else {
+			advOut += line
+		}
+	})
+	if cmd.HasPersistentFlags() {
+		cmd.PersistentFlags().VisitAll(func(f *pflag.Flag) {
+			if f.Hidden || coreFlagNames[f.Name] {
+				return
+			}
+			line := fmt.Sprintf("  --%-18s %s", f.Name, f.Usage)
+			if f.DefValue != "" && f.DefValue != "false" && f.DefValue != "0" {
+				line += fmt.Sprintf(" (default %s)", f.DefValue)
+			}
+			line += "\n"
+			advOut += line
+		})
+	}
+	fmt.Fprint(cmd.OutOrStdout(), coreOut)
+	if advOut != "" {
+		fmt.Fprint(cmd.OutOrStdout(), "\nAdvanced Flags:\n")
+		fmt.Fprint(cmd.OutOrStdout(), advOut)
+	}
+	if cmd.HasAvailableSubCommands() {
+		fmt.Fprint(cmd.OutOrStdout(), "\nAvailable Commands:\n")
+		for _, sub := range cmd.Commands() {
+			if sub.IsAvailableCommand() || sub.Name() == "help" {
+				fmt.Fprintf(cmd.OutOrStdout(), "  %-30s %s\n", sub.Name(), sub.Short)
+			}
+		}
+	}
+	fmt.Fprintf(cmd.OutOrStdout(), "\nUse \"%s [command] --help\" for more information about a command.\n", cmd.CommandPath())
+}
+
 func init() {
+	defaultHelpFunc = rootCmd.HelpFunc()
+	rootCmd.SetHelpFunc(groupedHelpFunc)
+
 	rootCmd.PersistentFlags().StringVar(&configPath, "config", "./wardex-config.yaml", "Path to wardex-config.yaml")
 	rootCmd.Flags().StringVarP(&outputFormat, "output", "o", "markdown", "Output format: markdown|json|csv")
 	rootCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
@@ -164,7 +229,11 @@ func runWardex(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	cat := catalog.Load(frameworkName)
+	cat, err := catalog.Load(frameworkName)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Erro: %v\n[HINT] Use --framework para especificar um framework válido.\n", err)
+		os.Exit(1)
+	}
 	corr := correlator.New(cat)
 	mappings, err := corr.Correlate(extControls)
 	if err != nil {

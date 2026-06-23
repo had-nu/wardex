@@ -12,12 +12,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 var (
-	ErrTampered      = errors.New("acceptance signature invalid: content may have been tampered")
+	// ErrTampered indicates the acceptance HMAC signature does not match,
+	// meaning the content has been modified since signing.
+	ErrTampered = errors.New("acceptance signature invalid: content may have been tampered")
+	// ErrLiteralSecret is returned when the signing secret is provided as
+	// a literal value in config instead of via environment variable or file.
 	ErrLiteralSecret = errors.New("signing secret must not be a literal value in config; use WARDEX_ACCEPT_SECRET env var or signing_secret_file")
 )
 
@@ -74,5 +78,5 @@ func ResolveSecret(cfg config.Config) ([]byte, error) {
 		return []byte(strings.TrimSpace(secret)), nil
 	}
 
-	return nil, errors.New("missing WARDEX_ACCEPT_SECRET environment variable")
+	return nil, errors.New("missing WARDEX_ACCEPT_SECRET environment variable. [HINT] Gere uma chave com: openssl rand -base64 32. Depois exporte: export WARDEX_ACCEPT_SECRET=\"$(openssl rand -base64 32)\"")
 }

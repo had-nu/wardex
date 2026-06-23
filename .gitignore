@@ -56,6 +56,7 @@ report.json
 report.md
 report.csv
 wardex-accept-audit.log
+wardex-gate-audit.log
 wardex-acceptances.yaml
 wardex-epss-enrichment.yaml
 wardex-snapshot.json
@@ -89,3 +90,12 @@ test/wardex_test_prompt.md
 # Legacy Documentation
 README-es.md
 README-fr.md
+
+# Generated binaries
+gen-sbom
+
+# Third-party integrations (downloaded archives)
+integrations/
+
+# Blueprint (internal architecture document)
+wardex-blueprint.html

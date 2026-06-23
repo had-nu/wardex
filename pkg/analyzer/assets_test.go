@@ -6,7 +6,7 @@ package analyzer
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 func TestAssessAssets(t *testing.T) {

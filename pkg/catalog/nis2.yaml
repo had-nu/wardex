@@ -7,7 +7,7 @@
     - policy
     - isms
 - id: NIS2.21.2.b
-  name: "Incident Handling"
+  name: "Incident Handling — Reporting, escalation, and CERT/CSIRT capability"
   domain: "process"
   base_score: 9.5
   keywords:
@@ -15,6 +15,7 @@
     - incident response
     - cert
     - csirt
+    - incident handling
 - id: NIS2.21.2.c
   name: "Business Continuity, Backup Management and Disaster Recovery"
   domain: "process"
@@ -25,7 +26,7 @@
     - backup
     - recovery
 - id: NIS2.21.2.d
-  name: "Supply Chain Security"
+  name: "Supply Chain Security — Vendor assessment, SBOM, third-party risk"
   domain: "organizational"
   base_score: 10.0
   keywords:
@@ -39,13 +40,41 @@
       min_maturity: 2
       gate_relevant: true
 - id: NIS2.21.2.e
-  name: "Security in Network and Information Systems Acquisition"
+  name: "Security in Network and Information Systems Acquisition — Secure SDLC, vuln handling"
   domain: "technological"
   base_score: 8.0
   keywords:
     - vulnerability handling
     - patching
     - vulnerability disclosure
+    - sdlc
+- id: NIS2.21.2.f
+  name: "Cryptography and Encryption — Use of strong encryption, key management"
+  domain: "technological"
+  base_score: 8.5
+  keywords:
+    - encryption
+    - cryptography
+    - key management
+    - tls
+- id: NIS2.21.2.g
+  name: "Human Resources Security — Background checks, role-based access, offboarding"
+  domain: "people"
+  base_score: 7.0
+  keywords:
+    - background check
+    - offboarding
+    - hr security
+    - role-based access
+- id: NIS2.21.2.h
+  name: "Access Control — Least privilege, MFA, identity management"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - access control
+    - mfa
+    - least privilege
+    - iam
 - id: NIS2.21.2.i
   name: "Basic Computer Hygiene Practices and Cybersecurity Training"
   domain: "people"
@@ -54,3 +83,148 @@
     - training
     - phishing
     - awareness
+    - hygiene
+- id: NIS2.21.2.j
+  name: "Use of Multi-Factor Authentication and Secure Communication"
+  domain: "technological"
+  base_score: 8.5
+  keywords:
+    - mfa
+    - secure communication
+    - vpn
+    - encryption
+- id: NIS2.21.2.k
+  name: "Logging and Log Management — Retention, integrity, monitoring"
+  domain: "technological"
+  base_score: 8.0
+  keywords:
+    - logging
+    - log retention
+    - audit trail
+    - log integrity
+- id: NIS2.21.2.l
+  name: "Vulnerability Handling and Disclosure — Coordinated disclosure process"
+  domain: "process"
+  base_score: 8.0
+  keywords:
+    - vulnerability disclosure
+    - coordinated disclosure
+    - cve
+    - bug bounty
+- id: NIS2.21.2.m
+  name: "Incident Classification and Reporting Obligations — Incident severity, reporting to competent authority"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - incident reporting
+    - notification
+    - competent authority
+    - severity
+- id: NIS2.21.2.n
+  name: "Security Testing — Pentesting, vulnerability scanning, red team exercises"
+  domain: "technological"
+  base_score: 7.5
+  keywords:
+    - pentest
+    - vulnerability scanning
+    - red team
+    - security testing
+- id: NIS2.21.2.o
+  name: "Physical and Environmental Security"
+  domain: "organizational"
+  base_score: 6.5
+  keywords:
+    - physical security
+    - data center
+    - environmental
+- id: NIS2.21.2.p
+  name: "Asset Management — Asset inventory, classification, ownership"
+  domain: "organizational"
+  base_score: 7.0
+  keywords:
+    - asset inventory
+    - asset management
+    - classification
+- id: NIS2.21.2.q
+  name: "Network Security — Segmentation, firewalls, IDS/IPS, zero trust"
+  domain: "technological"
+  base_score: 8.5
+  keywords:
+    - network security
+    - segmentation
+    - firewall
+    - ids
+    - ips
+- id: NIS2.21.2.r
+  name: "Identity and Access Governance — Review cycles, recertification, privileged access"
+  domain: "technological"
+  base_score: 8.0
+  keywords:
+    - privileged access
+    - pam
+    - access review
+    - identity governance
+- id: NIS2.21.2.s
+  name: "Change Management — Authorisation, testing, documentation of changes"
+  domain: "process"
+  base_score: 7.5
+  keywords:
+    - change management
+    - change control
+    - cab
+- id: NIS2.21.2.t
+  name: "Third-Party Service Provider Oversight — SLAs, monitoring, termination"
+  domain: "organizational"
+  base_score: 8.5
+  keywords:
+    - third party
+    - service provider
+    - sla
+    - vendor oversight
+- id: NIS2.21.2.u
+  name: "Incident Response Exercise — Tabletop, simulation, lessons learned"
+  domain: "process"
+  base_score: 7.5
+  keywords:
+    - tabletop
+    - exercise
+    - simulation
+    - incident drill
+- id: NIS2.21.2.v
+  name: "Cybersecurity Insurance and Risk Transfer"
+  domain: "organizational"
+  base_score: 5.0
+  keywords:
+    - insurance
+    - risk transfer
+    - cyber insurance
+- id: NIS2.21.2.w
+  name: "Regulatory Compliance and Reporting — Record-keeping, audit evidence"
+  domain: "organizational"
+  base_score: 8.0
+  keywords:
+    - compliance
+    - audit
+    - evidence
+    - record keeping
+- id: NIS2.21.2.x
+  name: "Penetration Testing Programme — Regular internal/external pentests, remediation tracking"
+  domain: "technological"
+  base_score: 7.5
+  keywords:
+    - pentest
+    - external test
+    - remediation
+  practices:
+    - id: PR.NIS2.21.2.x.1
+      name: "Automate DAST in CI/CD pipeline"
+      min_maturity: 3
+      gate_relevant: true
+- id: NIS2.21.2.y
+  name: "Security Architecture Review — Periodic review of ICT architecture against threats"
+  domain: "technological"
+  base_score: 7.0
+  keywords:
+    - architecture review
+    - threat modeling
+    - security architecture

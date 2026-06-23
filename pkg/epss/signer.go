@@ -12,9 +12,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
+// ErrTampered indicates the EPSS enrichment HMAC signature does not match,
+// meaning the enrichment data has been modified since signing.
 var ErrTampered = errors.New("epss enrichment signature invalid: content may have been tampered")
 
 // hashPayload generates a canonical string for the HMAC payload

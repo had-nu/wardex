@@ -1,31 +1,86 @@
+converted_by: "wardex-convert/grype@v2.1.1"
+evaluated_at: "2026-06-22T10:00:00Z"
 vulnerabilities:
-    - cve_id: CVE-2024-1234
-      cvss_base: 9.8
-      epss_score: 0
-      component: log4j-core
-      reachable: true
-    - cve_id: CVE-2024-5678
-      cvss_base: 10
-      epss_score: 0
-      component: spring-core
-      reachable: true
-    - cve_id: CVE-2024-9012
-      cvss_base: 7.4
-      epss_score: 0
-      component: axios
-      reachable: true
-    - cve_id: CVE-2024-3456
-      cvss_base: 6.5
-      epss_score: 0
-      component: golang.org/x/crypto
-      reachable: true
-    - cve_id: CVE-2024-7890
-      cvss_base: 5.4
-      epss_score: 0
-      component: lodash
-      reachable: true
-    - cve_id: CVE-2024-2233
-      cvss_base: 2.5
-      epss_score: 0
-      component: gopkg.in/yaml.v3
-      reachable: true
+
+  # ── Tier 1: Critical CVSS + high EPSS + reachable → BLOCK (low appetite) ──
+  - cve_id: CVE-2024-47575
+    cvss_base: 9.8
+    epss_score: 0.943
+    component: "fortios:7.4.0"
+    reachable: true
+
+  - cve_id: CVE-2024-27198
+    cvss_base: 9.8
+    epss_score: 0.842
+    component: "teamcity:2023.11.3"
+    reachable: true
+
+  - cve_id: CVE-2024-4577
+    cvss_base: 9.8
+    epss_score: 0.622
+    component: "php:8.2.18"
+    reachable: true
+
+  # ── Tier 2: High CVSS + medium EPSS → WARN/BLOCK at boundary ──
+  - cve_id: CVE-2024-6387
+    cvss_base: 8.1
+    epss_score: 0.541
+    component: "openssh:9.7p1"
+    reachable: true
+
+  - cve_id: CVE-2024-38077
+    cvss_base: 9.8
+    epss_score: 0.284
+    component: "windows-server:2022"
+    reachable: true
+
+  - cve_id: CVE-2024-0012
+    cvss_base: 9.3
+    epss_score: 0.112
+    component: "pan-os:10.2.0"
+    reachable: false
+
+  # ── Tier 3: Medium CVSS + low EPSS → ALLOW always ──
+  - cve_id: CVE-2024-31497
+    cvss_base: 7.5
+    epss_score: 0.019
+    component: "putty:0.80"
+    reachable: false
+
+  - cve_id: CVE-2024-22222
+    cvss_base: 6.5
+    epss_score: 0.008
+    component: "openssl:3.2.0"
+    reachable: true
+
+  - cve_id: CVE-2024-33333
+    cvss_base: 5.5
+    epss_score: 0.002
+    component: "python:3.12.0"
+    reachable: false
+
+  # ── Tier 4: Negligible → always ALLOW ──
+  - cve_id: CVE-2024-11111
+    cvss_base: 4.3
+    epss_score: 0.0005
+    component: "curl:8.6.0"
+    reachable: false
+
+  - cve_id: CVE-2024-00001
+    cvss_base: 2.5
+    epss_score: 0.0003
+    component: "gopkg.in/yaml.v3:3.0.1"
+    reachable: false
+
+  # ── Tier 5: Zero-day (EPSS unknown → defaults to 1.0) ──
+  - cve_id: CVE-2026-00001
+    cvss_base: 9.8
+    epss_score: 0.0
+    component: "wardex-core:2.1.0"
+    reachable: true
+
+  - cve_id: CVE-2026-00002
+    cvss_base: 7.5
+    epss_score: 0.0
+    component: "wardex-auth:2.1.0"
+    reachable: true

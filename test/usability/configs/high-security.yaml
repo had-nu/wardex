@@ -1,0 +1,13 @@
+# High-security posture — Bank / critical infrastructure profile.
+# Low risk appetite, no compensating controls, maximum exposure.
+release_gate:
+  enabled: true
+  mode: "any"
+  risk_appetite: 0.3
+  warn_above: 0.15
+
+  asset_context:
+    criticality: 1.5
+    internet_facing: true
+    requires_auth: false
+    environment: "production"

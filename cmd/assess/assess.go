@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/analyzer"
-	"github.com/had-nu/wardex/pkg/catalog"
-	"github.com/had-nu/wardex/pkg/correlator"
-	"github.com/had-nu/wardex/pkg/ingestion"
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/report"
-	"github.com/had-nu/wardex/pkg/scorer"
-	"github.com/had-nu/wardex/pkg/snapshot"
+	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v2/pkg/analyzer"
+	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v2/pkg/correlator"
+	"github.com/had-nu/wardex/v2/pkg/ingestion"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/report"
+	"github.com/had-nu/wardex/v2/pkg/scorer"
+	"github.com/had-nu/wardex/v2/pkg/snapshot"
 	"github.com/spf13/cobra"
 )
 
@@ -66,7 +66,10 @@ func runAssess(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(os.Stderr, "[INFO] Loaded %d controls from input files.\n", len(extControls))
 
 	// 2. Load Framework Catalog
-	cat := catalog.Load(framework)
+	cat, err := catalog.Load(framework)
+	if err != nil {
+		return fmt.Errorf("assess: %w\n[HINT] Use --framework para especificar um framework válido: iso27001, soc2, nis2, dora", err)
+	}
 	fmt.Fprintf(os.Stderr, "[INFO] Using framework: %s (%d controls in catalog).\n", framework, len(cat))
 
 	// 3. Correlate mappings
