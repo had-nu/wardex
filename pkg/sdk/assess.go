@@ -58,7 +58,10 @@ func Analyze(controls []model.ExistingControl, framework string) (*AssessmentRes
 		return nil, fmt.Errorf("sdk: no controls provided")
 	}
 
-	cat := catalog.Load(framework)
+	cat, err := catalog.Load(framework)
+	if err != nil {
+		return nil, fmt.Errorf("sdk: %w", err)
+	}
 	corr := correlator.New(cat)
 	mappings, err := corr.Correlate(controls)
 	if err != nil {
@@ -103,10 +106,12 @@ func AnalyzeWithConfig(controls []model.ExistingControl, framework string, opts 
 	}
 	opts.setDefaults()
 
-	cat := catalog.Load(framework)
+	cat, err := catalog.Load(framework)
+	if err != nil {
+		return nil, fmt.Errorf("sdk: %w", err)
+	}
 	corr := correlator.New(cat)
 	var mappings []model.Mapping
-	var err error
 
 	if opts.MinConfidence == "high" {
 		mappings, err = corr.CorrelateWithConfidence(controls, "high")
@@ -174,7 +179,7 @@ func LoadControls(paths ...string) ([]model.ExistingControl, error) {
 }
 
 // LoadFramework returns the control catalog for a given framework.
-func LoadFramework(name string) []model.CatalogControl {
+func LoadFramework(name string) ([]model.CatalogControl, error) {
 	return catalog.Load(name)
 }
 

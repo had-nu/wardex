@@ -317,8 +317,190 @@ func TestAcceptHelp(t *testing.T) {
 	}
 }
 
+// ── Execution tests (mock exitFunc + stderr) ──────────────────────────────
+
+// exitPanic is a sentinel for recovering from exitFunc in tests.
+type exitPanic struct{ code int }
+
+func captureCommand(t *testing.T, args []string) (int, string) {
+	t.Helper()
+
+	oldExit := exitFunc
+	oldStderr := stderr
+	defer func() {
+		exitFunc = oldExit
+		stderr = oldStderr
+	}()
+
+	var exitCode int
+	exitFunc = func(code int) {
+		exitCode = code
+		panic(exitPanic{code})
+	}
+
+	var buf bytes.Buffer
+	stderr = &buf
+
+	root, _ := setupRootCmd()
+	root.SetArgs(args)
+
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				if _, ok := r.(exitPanic); !ok {
+					panic(r) // re-panic unexpected panics
+				}
+			}
+		}()
+		_ = root.Execute()
+	}()
+
+	return exitCode, buf.String()
+}
+
+func TestRun_Request_SecretMissing(t *testing.T) {
+	code, errOut := captureCommand(t, []string{"accept", "request", "--report", "/nope.json", "--accepted-by", "test@test.com"})
+	if code != 1 {
+		t.Errorf("expected exit code 1, got %d", code)
+	}
+	if !strings.Contains(errOut, "Secret error") {
+		t.Errorf("expected secret error, got: %s", errOut)
+	}
+}
+
+func TestRun_VerifyForwarding_NoAuditLog(t *testing.T) {
+	code, out := captureCommand(t, []string{"accept", "verify-forwarding"})
+	if code != 0 {
+		t.Errorf("expected exit code 0 (graceful no-op), got %d", code)
+	}
+	if !strings.Contains(out, "not found") {
+		t.Errorf("expected 'not found' message, got: %s", out)
+	}
+}
+
+func TestRun_ActiveExploit_ShortJustification(t *testing.T) {
+	code, errOut := captureCommand(t, []string{"accept", "active-exploit", "--cve", "CVE-2024-0001", "--justification", "too short"})
+	if code != 1 {
+		t.Errorf("expected exit code 1, got %d", code)
+	}
+	if !strings.Contains(errOut, "justification must be at least 80 characters") {
+		t.Errorf("expected justification length error, got: %s", errOut)
+	}
+}
+
+func TestRun_ActiveExploit_Success(t *testing.T) {
+	code, _ := captureCommand(t, []string{
+		"accept", "active-exploit",
+		"--cve", "CVE-2024-0001",
+		"--justification", strings.Repeat("x", 80),
+	})
+	if code != 0 {
+		t.Errorf("expected exit code 0 (success with default config), got %d", code)
+	}
+}
+
+func TestRun_List_SecretMissing(t *testing.T) {
+	code, errOut := captureCommand(t, []string{"accept", "list"})
+	if code != 1 {
+		t.Errorf("expected exit code 1, got %d", code)
+	}
+	if !strings.Contains(errOut, "Secret error") {
+		t.Errorf("expected secret error, got: %s", errOut)
+	}
+}
+
+func TestRun_Verify_SecretMissing(t *testing.T) {
+	code, errOut := captureCommand(t, []string{"accept", "verify"})
+	if code != 1 {
+		t.Errorf("expected exit code 1, got %d", code)
+	}
+	if !strings.Contains(errOut, "Secret error") {
+		t.Errorf("expected secret error, got: %s", errOut)
+	}
+}
+
+func TestRun_Revoke_SecretMissing(t *testing.T) {
+	code, errOut := captureCommand(t, []string{"accept", "revoke", "--id", "123", "--revoked-by", "admin@test.com", "--reason", "test"})
+	if code != 1 {
+		t.Errorf("expected exit code 1, got %d", code)
+	}
+	if !strings.Contains(errOut, "Secret error") {
+		t.Errorf("expected secret error, got: %s", errOut)
+	}
+}
+
+func TestRun_CheckExpiry_SecretMissing(t *testing.T) {
+	code, errOut := captureCommand(t, []string{"accept", "check-expiry"})
+	if code != 1 {
+		t.Errorf("expected exit code 1, got %d", code)
+	}
+	if !strings.Contains(errOut, "Secret error") {
+		t.Errorf("expected secret error, got: %s", errOut)
+	}
+}
+
+func TestRun_VerifyForwarding_WithBackendUnreachable(t *testing.T) {
+	// Create a dummy audit log in a temp dir, then chdir there
+	// so the verify-forwarding code finds the log and reaches the backend check
+	origWd, _ := os.Getwd()
+	tmpDir := t.TempDir()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	defer os.Chdir(origWd)
+	if err := os.WriteFile("wardex-accept-audit.log", []byte("dummy event\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	oldExit := exitFunc
+	oldStderr := stderr
+	defer func() {
+		exitFunc = oldExit
+		stderr = oldStderr
+	}()
+
+	var exitCode int
+	exitFunc = func(code int) {
+		exitCode = code
+		panic(exitPanic{code})
+	}
+
+	var buf bytes.Buffer
+	stderr = &buf
+
+	root, _ := setupRootCmd()
+	root.SetArgs([]string{"accept", "verify-forwarding", "--backend", "tcp://10.255.255.1:9"})
+
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				if _, ok := r.(exitPanic); !ok {
+					panic(r)
+				}
+			}
+		}()
+		_ = root.Execute()
+	}()
+
+	if exitCode != 1 {
+		t.Errorf("expected exit code 1 for unreachable backend, got %d", exitCode)
+	}
+	if !strings.Contains(buf.String(), "Failed to dial") {
+		t.Errorf("expected dial failure error, got: %s", buf.String())
+	}
+}
+
+func TestRun_RequestHelp(t *testing.T) {
+	code, errOut := captureCommand(t, []string{"accept", "request", "--help"})
+	if code != 0 {
+		t.Errorf("expected exit code 0 for --help, got %d", code)
+	}
+	if errOut != "" {
+		t.Errorf("expected no stderr for --help, got: %s", errOut)
+	}
+}
+
 func TestMain(m *testing.M) {
-	// Save original env and restore after tests
 	os.Clearenv()
 	code := m.Run()
 	os.Exit(code)

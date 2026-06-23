@@ -129,7 +129,10 @@ func TestAnalyzeWithConfig_FilterLowConfidence(t *testing.T) {
 }
 
 func TestLoadFramework_Iso27001(t *testing.T) {
-	controls := sdk.LoadFramework("iso27001")
+	controls, err := sdk.LoadFramework("iso27001")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if len(controls) == 0 {
 		t.Fatal("expected ISO27001 controls")
 	}
@@ -148,7 +151,10 @@ func TestLoadFramework_AllFrameworks(t *testing.T) {
 	frameworks := []string{"iso27001", "dora", "nis2", "soc2"}
 	for _, fw := range frameworks {
 		t.Run(fw, func(t *testing.T) {
-			controls := sdk.LoadFramework(fw)
+			controls, err := sdk.LoadFramework(fw)
+			if err != nil {
+				t.Errorf("unexpected error for framework %q: %v", fw, err)
+			}
 			if len(controls) == 0 {
 				t.Errorf("expected controls for framework %q", fw)
 			}

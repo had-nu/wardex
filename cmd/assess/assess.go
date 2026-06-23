@@ -66,7 +66,10 @@ func runAssess(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(os.Stderr, "[INFO] Loaded %d controls from input files.\n", len(extControls))
 
 	// 2. Load Framework Catalog
-	cat := catalog.Load(framework)
+	cat, err := catalog.Load(framework)
+	if err != nil {
+		return fmt.Errorf("assess: %w\n[HINT] Use --framework para especificar um framework válido: iso27001, soc2, nis2, dora", err)
+	}
 	fmt.Fprintf(os.Stderr, "[INFO] Using framework: %s (%d controls in catalog).\n", framework, len(cat))
 
 	// 3. Correlate mappings

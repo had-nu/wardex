@@ -74,5 +74,5 @@ func ResolveSecret(cfg config.Config) ([]byte, error) {
 		return []byte(strings.TrimSpace(secret)), nil
 	}
 
-	return nil, errors.New("missing WARDEX_ACCEPT_SECRET environment variable")
+	return nil, errors.New("missing WARDEX_ACCEPT_SECRET environment variable. [HINT] Gere uma chave com: openssl rand -base64 32. Depois exporte: export WARDEX_ACCEPT_SECRET=\"$(openssl rand -base64 32)\"")
 }
