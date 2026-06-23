@@ -34,6 +34,7 @@ var (
 	profileName    string
 	failAbove      float64
 	strict         bool
+	dryRun         bool
 	gateLogPath    string
 	art14OutputDir string // NEW in v2.0
 
@@ -82,6 +83,7 @@ func init() {
 	EvaluateCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 	EvaluateCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override profile")
 	EvaluateCmd.Flags().Float64Var(&failAbove, "fail-above", 0.0, "Exit 11 if any gap score exceeds this value")
+	EvaluateCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Validate inputs and show what would happen without writing any files or exiting with error codes")
 	EvaluateCmd.Flags().BoolVar(&strict, "strict", false, "Exit 3 if an unsealed config (.yaml) is used or if evidence is not canonical")
 	EvaluateCmd.Flags().StringVar(&gateLogPath, "gate-log", "", "Path to gate decision audit log (overrides config)")
 	EvaluateCmd.Flags().StringVar(&art14OutputDir, "art14-output-dir", "", "Directory where Article 14 notification artefacts are written (overrides config)")
@@ -284,6 +286,14 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		var cves []string
 		for _, v := range activelyExploited {
 			cves = append(cves, v.CVEID)
+		}
+
+		if dryRun {
+			fmt.Fprintf(stderr, "[DRY-RUN] Active exploitation detected for CVE(s): %s\n", strings.Join(cves, ", "))
+			fmt.Fprintf(stderr, "[DRY-RUN] Article 14 notification artefact would be written to: %s\n", outDir)
+			fmt.Fprintf(stderr, "[DRY-RUN] Gate would BLOCK with exit code %d (ActivelyExploited)\n", exitcodes.ActivelyExploited)
+			exitFunc(exitcodes.OK)
+			return nil
 		}
 
 		// Calculate awareness timestamp
@@ -493,6 +503,26 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	}
 	if gateLogPath != "" {
 		logPath = gateLogPath
+	}
+
+	if dryRun {
+		// Compute what exit code would be
+		exitReason := "Gate passed (ALLOW) — exit 0"
+		if gateReport.OverallDecision == "block" {
+			exitReason = fmt.Sprintf("Gate would BLOCK with exit code %d (GateBlocked)", exitcodes.GateBlocked)
+		} else if failAbove > 0 {
+			for _, d := range gateReport.Decisions {
+				if d.ReleaseRisk > failAbove {
+					exitReason = fmt.Sprintf("Compliance fail with exit code %d (ComplianceFail) — risk score %.1f exceeds --fail-above %.1f", exitcodes.ComplianceFail, d.ReleaseRisk, failAbove)
+					break
+				}
+			}
+		}
+		fmt.Fprintf(stderr, "[DRY-RUN] Gate decision: %s\n", gateReport.OverallDecision)
+		fmt.Fprintf(stderr, "[DRY-RUN] Result: %s\n", exitReason)
+		fmt.Fprintf(stderr, "[DRY-RUN] Audit log would be written to: %s\n", logPath)
+		exitFunc(exitcodes.OK)
+		return nil
 	}
 
 	if logPath != "/dev/null" {

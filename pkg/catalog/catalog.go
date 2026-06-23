@@ -6,7 +6,7 @@ package catalog
 import (
 	"bytes"
 	"embed"
-	"log"
+	"fmt"
 
 	"github.com/had-nu/wardex/pkg/model"
 	"gopkg.in/yaml.v3"
@@ -16,7 +16,7 @@ import (
 var catalogFS embed.FS
 
 // Load loads the requested framework controls from the embedded YAML files.
-func Load(framework string) []model.CatalogControl {
+func Load(framework string) ([]model.CatalogControl, error) {
 	var filename string
 	switch framework {
 	case "iso27001":
@@ -30,21 +30,21 @@ func Load(framework string) []model.CatalogControl {
 	case "nist_csf":
 		filename = "nist_csf.yaml"
 	default:
-		log.Fatalf("unsupported framework: %s", framework)
+		return nil, fmt.Errorf("framework não suportado: %s. Use: iso27001, soc2, nis2, dora", framework)
 	}
 
 	data, err := catalogFS.ReadFile(filename)
 	if err != nil {
-		log.Fatalf("failed to read embedded %s: %v", filename, err)
+		return nil, fmt.Errorf("falha ao ler %s incorporado: %w", filename, err)
 	}
 
 	var controls []model.CatalogControl
 	decoder := yaml.NewDecoder(bytes.NewReader(data))
-	decoder.KnownFields(true) // strict parsing
+	decoder.KnownFields(true)
 
 	if err := decoder.Decode(&controls); err != nil {
-		log.Fatalf("failed to parse %s: %v", filename, err)
+		return nil, fmt.Errorf("falha ao fazer parse de %s: %w", filename, err)
 	}
 
-	return controls
+	return controls, nil
 }

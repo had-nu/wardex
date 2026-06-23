@@ -4,26 +4,19 @@
 package cli
 
 import (
-	"bufio"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"net"
-	"net/http"
+	"io"
 	"os"
-	"strings"
-	"time"
 
-	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/accept"
-	"github.com/had-nu/wardex/pkg/art14"
-	"github.com/had-nu/wardex/pkg/duration"
-	"github.com/had-nu/wardex/pkg/exitcodes"
-	"github.com/had-nu/wardex/pkg/model"
 	"github.com/spf13/cobra"
 )
 
 var (
+	// Allow mocking in tests
+	exitFunc           = os.Exit
+	stderr   io.Writer = os.Stderr
+
+	acceptCfgPath *string
+
 	reqReport   string
 	reqCVEs     []string
 	reqAcceptBy string
@@ -40,6 +33,7 @@ var (
 
 	verifySince   string
 	verifyBackend string
+	verifyOutput  string
 
 	revokeID       string
 	revokeRevokeBy string
@@ -53,6 +47,7 @@ var (
 )
 
 func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
+	acceptCfgPath = configPathPtr
 	acceptCmd := &cobra.Command{
 		Use:   "accept",
 		Short: "Manage risk acceptances for vulnerabilities blocking the release gate",
@@ -61,97 +56,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	requestCmd := &cobra.Command{
 		Use:   "request",
 		Short: "Request a new risk acceptance",
-		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load(*configPathPtr)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
-				os.Exit(1)
-			}
-
-			key, err := accept.ResolveSecret(*cfg)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
-				os.Exit(1)
-			}
-
-			// Validate GateReport
-			blockedCVEs, reportHash, err := accept.ReadReport(reqReport, cfg.AcceptanceConfig.Limits.MaxReportAgeHours)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Report error: %v\n", err)
-				os.Exit(1)
-			}
-
-			// In a real flow, we check if the requested CVE is in blockedCVEs
-			validCVEs := make(map[string]bool)
-			for _, v := range blockedCVEs {
-				validCVEs[v.CVEID] = true
-			}
-
-			for _, reqCVE := range reqCVEs {
-				if !validCVEs[reqCVE] {
-					fmt.Fprintf(os.Stderr, "CVE %s not found in blocked report\n", reqCVE)
-					os.Exit(1)
-				}
-			}
-
-			// Calculate expirations
-			var expiresAt time.Time
-			if reqExpires != "" {
-				dur, err := duration.ParseExtended(reqExpires)
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Invalid expiration format %q: %v\n", reqExpires, err)
-					os.Exit(1)
-				}
-				expiresAt = time.Now().Add(dur)
-			}
-
-			currentConfigHash, _ := accept.ConfigHash(*configPathPtr)
-			baseID := fmt.Sprintf("acc-%s-%d", time.Now().Format("20060102"), time.Now().Unix())
-
-			var createdIDs []string
-			for i, cve := range reqCVEs {
-				id := baseID
-				if len(reqCVEs) > 1 {
-					id = fmt.Sprintf("%s-%d", baseID, i)
-				}
-
-				acceptance := model.Acceptance{
-					ID:            id,
-					CVE:           cve,
-					AcceptedBy:    reqAcceptBy,
-					Justification: reqJustif,
-					ExpiresAt:     expiresAt,
-					Ticket:        reqTicket,
-					ReportHash:    reportHash,
-				}
-
-				if err := accept.ValidateBusinessRules(acceptance, cfg.AcceptanceConfig); err != nil {
-					fmt.Fprintf(os.Stderr, "Validation error for %s: %v\n", cve, err)
-					os.Exit(1)
-				}
-
-				_ = accept.AuditLog("wardex-accept-audit.log", model.AuditEntry{
-					Event:       "acceptance.created",
-					ID:          id,
-					CVEID:       cve,
-					Actor:       reqAcceptBy,
-					Interactive: !reqYes,
-					ConfigHash:  currentConfigHash,
-				})
-
-				sig, _ := accept.Sign(acceptance, key)
-				acceptance.Signature = sig
-
-				if err := accept.Append("wardex-acceptances.yaml", acceptance); err != nil {
-					fmt.Fprintf(os.Stderr, "Storage error for %s: %v\n", cve, err)
-					os.Exit(1)
-				}
-
-				createdIDs = append(createdIDs, id)
-				fmt.Printf("Created acceptance %s for %s\n", id, cve)
-			}
-			fmt.Printf("\nTotal: %d acceptance(s) created.\n", len(createdIDs))
-		},
+		Run:   runRequest,
 	}
 	requestCmd.Flags().StringVar(&reqReport, "report", "", "GateReport JSON gerado pelo wardex (obrigatório)")
 	requestCmd.Flags().StringSliceVar(&reqCVEs, "cve", []string{}, "CVE ID; repetível para múltiplos CVEs")
@@ -170,69 +75,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	listCmd := &cobra.Command{
 		Use:   "list",
 		Short: "List risk acceptances",
-		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load(*configPathPtr)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
-				os.Exit(1)
-			}
-
-			key, err := accept.ResolveSecret(*cfg)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
-				os.Exit(1)
-			}
-
-			currentConfigHash, _ := accept.ConfigHash(*configPathPtr)
-
-			// Load checks validity under the hood
-			acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
-			if err != nil {
-				if errors.Is(err, accept.ErrTampered) {
-					fmt.Fprintf(os.Stderr, "Tampered acceptance detected: %v\n", err)
-					os.Exit(exitcodes.Tampered)
-				}
-				if errors.Is(err, accept.ErrStoreInconsistent) {
-					fmt.Fprintf(os.Stderr, "Store inconsistent: %v\n", err)
-					os.Exit(exitcodes.StoreInconsistent)
-				}
-				fmt.Fprintf(os.Stderr, "Failed to load acceptances: %v\n", err)
-				os.Exit(1)
-			}
-
-			var filtered []model.Acceptance
-			for _, a := range acceptances {
-				if listCVE != "" && a.CVE != listCVE {
-					continue
-				}
-				// Additional filtering by active/expired/stale would go here
-				filtered = append(filtered, a)
-			}
-
-			if listOutput == "json" {
-				enc := json.NewEncoder(os.Stdout)
-				enc.SetIndent("", "  ")
-				if err := enc.Encode(filtered); err != nil {
-					fmt.Fprintf(os.Stderr, "JSON encoding error: %v\n", err)
-				}
-				return
-			}
-
-			if listOutput == "csv" {
-				fmt.Println("ID,CVE,AcceptedBy,ExpiresAt,Status")
-				for _, a := range filtered {
-					fmt.Printf("%s,%s,%s,%s,VALID\n", a.ID, a.CVE, a.AcceptedBy, a.ExpiresAt.Format(time.RFC3339))
-				}
-				return
-			}
-
-			// Provide table output
-			// Minimal printing logic for now
-			fmt.Println("ID\tCVE\tAccepted By\tExpires At\tLogic Status")
-			for _, a := range filtered {
-				fmt.Printf("%s\t%s\t%s\t%s\t[VÁLIDA]\n", a.ID, a.CVE, a.AcceptedBy, a.ExpiresAt.Format("2006-01-02"))
-			}
-		},
+		Run:   runList,
 	}
 	listCmd.Flags().BoolVar(&listActive, "active", false, "Apenas aceitações activas")
 	listCmd.Flags().BoolVar(&listExpired, "expired", false, "Apenas aceitações expiradas")
@@ -243,140 +86,15 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	verifyCmd := &cobra.Command{
 		Use:   "verify",
 		Short: "Verify logic integrity of risk acceptances",
-		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load(*configPathPtr)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
-				os.Exit(1)
-			}
-
-			key, err := accept.ResolveSecret(*cfg)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
-				os.Exit(1)
-			}
-
-			currentConfigHash, _ := accept.ConfigHash(*configPathPtr)
-
-			_, err = accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
-			if err != nil {
-				if errors.Is(err, accept.ErrTampered) {
-					fmt.Fprintf(os.Stderr, "Tampered validation check failed: %v\n", err)
-					os.Exit(exitcodes.Tampered)
-				}
-				if errors.Is(err, accept.ErrStoreInconsistent) {
-					fmt.Fprintf(os.Stderr, "Store trace validation failed: %v\n", err)
-					os.Exit(exitcodes.StoreInconsistent)
-				}
-				fmt.Fprintf(os.Stderr, "Standard validation error: %v\n", err)
-				os.Exit(1)
-			}
-
-			fmt.Println("All acceptances passed integrity checks.")
-			os.Exit(exitcodes.OK)
-		},
+		Run:   runVerify,
 	}
+
+	verifyCmd.Flags().StringVar(&verifyOutput, "output", "", "Path to save verification report as JSON artefact")
 
 	verifyFwdCmd := &cobra.Command{
 		Use:   "verify-forwarding",
 		Short: "Verify log forwarding status",
-		Run: func(cmd *cobra.Command, args []string) {
-			// Parse the audit log as the first layer of readiness
-			logPath := "wardex-accept-audit.log"
-			info, err := os.Stat(logPath)
-			if os.IsNotExist(err) {
-				fmt.Fprintf(os.Stderr, "[WARN] Audit log '%s' not found. No events to forward.\n", logPath)
-				os.Exit(0)
-			}
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "[FAIL] Cannot access audit log: %v\n", err)
-				os.Exit(1)
-			}
-
-			// Real connection check to the configured SIEM backend
-			if verifyBackend != "" {
-				fmt.Printf("[INFO] Verifying reachability of SIEM backend: %s\n", verifyBackend)
-
-				timeout := 3 * time.Second
-
-				if strings.HasPrefix(verifyBackend, "http://") || strings.HasPrefix(verifyBackend, "https://") {
-					client := &http.Client{Timeout: timeout}
-					resp, err := client.Get(verifyBackend)
-					if err != nil {
-						fmt.Fprintf(os.Stderr, "[FAIL] Failed to connect to HTTP backend %s: %v\n", verifyBackend, err)
-						os.Exit(1)
-					}
-					defer func() { _ = resp.Body.Close() }()
-					if resp.StatusCode >= 500 {
-						fmt.Fprintf(os.Stderr, "[FAIL] HTTP backend returned server error %d\n", resp.StatusCode)
-						os.Exit(1)
-					}
-					fmt.Printf("[PASS] HTTP Backend '%s' is reachable (Status: %d).\n", verifyBackend, resp.StatusCode)
-				} else {
-					// Fallback to raw socket connection (TCP/UDP)
-					network := "tcp"
-					address := verifyBackend
-					if strings.Contains(verifyBackend, "://") {
-						parts := strings.SplitN(verifyBackend, "://", 2)
-						network = parts[0]
-						address = parts[1]
-					}
-
-					conn, err := net.DialTimeout(network, address, timeout)
-					if err != nil {
-						fmt.Fprintf(os.Stderr, "[FAIL] Failed to dial %s backend at %s: %v\n", strings.ToUpper(network), address, err)
-						os.Exit(1)
-					}
-					_ = conn.Close()
-					fmt.Printf("[PASS] %s Backend '%s' is reachable and accepting connections.\n", strings.ToUpper(network), address)
-				}
-			} else {
-				fmt.Printf("[INFO] No external backend specified. Verifying local log integrity for forwarding agent.\n")
-			}
-
-			fmt.Printf("[PASS] Found audit log: %s (%d bytes)\n", logPath, info.Size())
-
-			file, err := os.Open(logPath)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "[FAIL] Cannot open audit log for parsing: %v\n", err)
-				os.Exit(1)
-			}
-			defer func() { _ = file.Close() }()
-
-			var cutoff time.Time
-			if verifySince != "" {
-				dur, err := duration.ParseExtended(verifySince)
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "[FAIL] Invalid --since format: %v\n", err)
-					os.Exit(1)
-				}
-				cutoff = time.Now().Add(-dur)
-				fmt.Printf("[INFO] Filtering events since: %s\n", cutoff.Format(time.RFC3339))
-			}
-
-			validEvents := 0
-			scanner := bufio.NewScanner(file)
-			for scanner.Scan() {
-				line := scanner.Bytes()
-				if len(line) == 0 {
-					continue
-				}
-				var rec model.Acceptance
-				if err := json.Unmarshal(line, &rec); err == nil {
-					if verifySince == "" || rec.CreatedAt.After(cutoff) {
-						validEvents++
-					}
-				}
-			}
-
-			if err := scanner.Err(); err != nil {
-				fmt.Fprintf(os.Stderr, "[FAIL] Error reading audit log: %v\n", err)
-				os.Exit(1)
-			}
-
-			fmt.Printf("[PASS] SIEM Forwarding Verification Complete. %d events found ready for telemetry.\n", validEvents)
-			os.Exit(exitcodes.OK)
-		},
+		Run:   runVerifyForwarding,
 	}
 	verifyFwdCmd.Flags().StringVar(&verifySince, "since", "", "Período: ISO 8601 ou relativo (ex: 30d)")
 	verifyFwdCmd.Flags().StringVar(&verifyBackend, "backend", "", "Backend a verificar (default: todos)")
@@ -384,32 +102,7 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	revokeCmd := &cobra.Command{
 		Use:   "revoke",
 		Short: "Revoke an existing risk acceptance",
-		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load(*configPathPtr)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
-				os.Exit(1)
-			}
-
-			key, err := accept.ResolveSecret(*cfg)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
-				os.Exit(1)
-			}
-
-			revocation := &model.RevocationRecord{
-				RevokedBy: revokeRevokeBy,
-				RevokedAt: time.Now(),
-				Reason:    revokeReason,
-			}
-
-			if err := accept.UpdateStatus("wardex-acceptances.yaml", revokeID, "revoked", revocation, key); err != nil {
-				fmt.Fprintf(os.Stderr, "Failed to revoke: %v\n", err)
-				os.Exit(1)
-			}
-
-			fmt.Printf("Successfully revoked acceptance %s\n", revokeID)
-		},
+		Run:   runRevoke,
 	}
 	revokeCmd.Flags().StringVar(&revokeID, "id", "", "ID da aceitação (obrigatório)")
 	revokeCmd.Flags().StringVar(&revokeRevokeBy, "revoked-by", "", "Email do responsável (obrigatório)")
@@ -427,118 +120,14 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	checkExpiryCmd := &cobra.Command{
 		Use:   "check-expiry",
 		Short: "Check for pending expirations",
-		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load(*configPathPtr)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
-				os.Exit(1)
-			}
-
-			key, err := accept.ResolveSecret(*cfg)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Secret error: %v\n", err)
-				os.Exit(1)
-			}
-
-			currentConfigHash, _ := accept.ConfigHash(*configPathPtr)
-			acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Load error: %v\n", err)
-				os.Exit(1)
-			}
-
-			dur, err := duration.ParseExtended(expiryWarnBefore)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Invalid duration format %q: %v\n", expiryWarnBefore, err)
-				os.Exit(1)
-			}
-
-			warnTime := time.Now().Add(dur)
-			expiringCount := 0
-
-			for _, a := range acceptances {
-				if a.ExpiresAt.Before(warnTime) {
-					fmt.Printf("WARNING: Acceptance %s for CVE %s expires at %v\n", a.ID, a.CVE, a.ExpiresAt.Format(time.RFC3339))
-					expiringCount++
-				}
-			}
-
-			if expiringCount > 0 {
-				os.Exit(exitcodes.ExpiringSoon)
-			}
-
-			fmt.Println("No acceptances expiring soon.")
-			os.Exit(exitcodes.OK)
-		},
+		Run:   runCheckExpiry,
 	}
 	checkExpiryCmd.Flags().StringVar(&expiryWarnBefore, "warn-before", "72h", "Período de aviso: ex. 3d, 72h")
 
 	activeExploitCmd := &cobra.Command{
 		Use:   "active-exploit",
 		Short: "Acknowledge an active exploitation for compliance trail",
-		Run: func(cmd *cobra.Command, args []string) {
-			cfg, err := config.Load(*configPathPtr)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
-				os.Exit(1)
-			}
-
-			// Validate --cve (required)
-			if aeCVE == "" {
-				fmt.Fprintf(os.Stderr, "Error: --cve is required\n")
-				os.Exit(1)
-			}
-
-			// Validate --justification (required, min 80 chars)
-			if len(aeJustif) < 80 {
-				fmt.Fprintf(os.Stderr, "Error: justification must be at least 80 characters (got %d)\n", len(aeJustif))
-				os.Exit(1)
-			}
-
-			// If --art14-artefact is provided, check if it exists and validate its HMAC
-			if aeArtefactPath != "" {
-				key, err := accept.ResolveSecret(*cfg)
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Warning: WARDEX_ACCEPT_SECRET is not set, unable to verify HMAC: %v\n", err)
-				} else {
-					// Load and verify artefact
-					art, err := art14.ReadArtefact(aeArtefactPath)
-					if err != nil {
-						fmt.Fprintf(os.Stderr, "Error reading Article 14 notification artefact: %v\n", err)
-						os.Exit(1)
-					}
-					if err := art14.VerifyArtefact(art, key); err != nil {
-						fmt.Fprintf(os.Stderr, "Error: Article 14 notification artefact HMAC validation failed: %v\n", err)
-						os.Exit(1)
-					}
-				}
-			}
-
-			logPath := "wardex-gate-audit.log"
-			if cfg.Reporting.GateLog.Path != "" {
-				logPath = cfg.Reporting.GateLog.Path
-			}
-
-			configHash, _ := accept.ConfigHash(*configPathPtr)
-			entry := model.AuditEntry{
-				Timestamp:                     time.Now().UTC(),
-				Event:                         "active-exploit.acknowledged",
-				ConfigHash:                    configHash,
-				OverallDecision:               "block",
-				Status:                        "block",
-				Detail:                        fmt.Sprintf("Active exploitation acknowledged for CVE: %s. Justification: %s", aeCVE, aeJustif),
-				ActivelyExploited:             []string{aeCVE},
-				Art14NotificationArtefactPath: aeArtefactPath,
-			}
-
-			if err := accept.ChainedAuditLog(logPath, entry); err != nil {
-				fmt.Fprintf(os.Stderr, "Error writing audit log: %v\n", err)
-				os.Exit(1)
-			}
-
-			fmt.Printf("Acknowledged active exploitation for CVE %s in audit log (chained).\n", aeCVE)
-			os.Exit(exitcodes.OK)
-		},
+		Run:   runActiveExploit,
 	}
 
 	activeExploitCmd.Flags().StringVar(&aeCVE, "cve", "", "CVE ID (required)")
