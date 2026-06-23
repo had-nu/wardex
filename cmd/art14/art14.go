@@ -11,11 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/config"
-	"github.com/had-nu/wardex/pkg/accept"
-	"github.com/had-nu/wardex/pkg/art14"
-	"github.com/had-nu/wardex/pkg/exitcodes"
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v2/pkg/accept"
+	"github.com/had-nu/wardex/v2/pkg/art14"
+	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -101,6 +102,48 @@ func getOutputDir(cfg *config.Config) string {
 	return "."
 }
 
+func shortID(id string) string {
+	if len(id) > 7 {
+		return id[:7]
+	}
+	return id
+}
+
+func shortHMAC(h string) string {
+	if len(h) > 8 {
+		return h[len(h)-8:]
+	}
+	return h
+}
+
+func statusColor(status string) string {
+	switch {
+	case strings.HasPrefix(status, "dispatched"):
+		return ui.Green
+	case status == "draft":
+		return ui.Yellow
+	default:
+		return ui.Red
+	}
+}
+
+func fmtTime(t time.Time) string {
+	if t.IsZero() {
+		return "—"
+	}
+	return t.UTC().Format("2006-01-02 15:04 UTC")
+}
+
+func deadlineOverdue(deadline time.Time, status string) bool {
+	if deadline.IsZero() {
+		return false
+	}
+	if strings.HasPrefix(status, "dispatched") {
+		return false
+	}
+	return time.Now().UTC().After(deadline)
+}
+
 func runList(cmd *cobra.Command, args []string) error {
 	cfg, err := config.Load(configPath)
 	if err != nil {
@@ -118,15 +161,81 @@ func runList(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), "ID\t\t\t\t\tCVEs\t\tStatus\t\tGenerated At\n")
-	fmt.Fprintf(cmd.OutOrStdout(), "--\t\t\t\t\t----\t\t------\t\t------------\n")
-	for _, a := range artefacts {
-		cves := strings.Join(a.Notification.CVEIDs, ", ")
-		if len(cves) > 20 {
-			cves = cves[:17] + "..."
-		}
-		fmt.Fprintf(cmd.OutOrStdout(), "%s\t%s\t%s\t%s\n", a.ArtefactID, cves, a.Status, a.GeneratedAt.Local().Format("2006-01-02 15:04"))
+	w := cmd.OutOrStdout()
+
+	hdr := func(s string, w int) string {
+		return ui.PadANSI(ui.Colorize(s, ui.Cyan+ui.Bold), w)
 	}
+
+	const (
+		wID    = 10
+		wCVE   = 18
+		wDet   = 21
+		wEW    = 21
+		wNotif = 21
+		wStat  = 22
+		wHMAC  = 10
+	)
+
+	fill := func(r rune, n int) string {
+		return strings.Repeat(string(r), n)
+	}
+
+	fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
+		hdr("ID", wID), hdr("CVE", wCVE), hdr("Detected", wDet),
+		hdr("Early Warning", wEW), hdr("Notification", wNotif),
+		hdr("Status", wStat), hdr("HMAC", wHMAC))
+	fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
+		ui.Colorize(fill('─', wID), ui.Gray),
+		ui.Colorize(fill('─', wCVE), ui.Gray),
+		ui.Colorize(fill('─', wDet), ui.Gray),
+		ui.Colorize(fill('─', wEW), ui.Gray),
+		ui.Colorize(fill('─', wNotif), ui.Gray),
+		ui.Colorize(fill('─', wStat), ui.Gray),
+		ui.Colorize(fill('─', wHMAC), ui.Gray))
+
+	for _, a := range artefacts {
+		id := shortID(a.ArtefactID)
+		cves := strings.Join(a.Notification.CVEIDs, ", ")
+		if len(cves) > 16 {
+			cves = cves[:13] + "..."
+		}
+		detected := fmtTime(a.EarlyWarning.AwarenessTimestamp)
+		ewDeadline := fmtTime(a.EarlyWarning.Deadline)
+		notifDeadline := fmtTime(a.Notification.Deadline)
+
+		statusStr := a.Status
+		sc := statusColor(a.Status)
+		switch statusStr {
+		case "draft":
+			statusStr = "draft"
+		case "dispatched:early-warning":
+			statusStr = "EW"
+		case "dispatched:notification":
+			statusStr = "NT"
+		case "dispatched:final-report":
+			statusStr = "FR"
+		}
+
+		hmacShort := shortHMAC(a.HMAC)
+
+		if deadlineOverdue(a.EarlyWarning.Deadline, a.Status) {
+			ewDeadline = ui.Colorize(ewDeadline, ui.Red)
+		}
+		if deadlineOverdue(a.Notification.Deadline, a.Status) {
+			notifDeadline = ui.Colorize(notifDeadline, ui.Red)
+		}
+
+		fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
+			ui.PadANSI(id, wID),
+			ui.PadANSI(cves, wCVE),
+			ui.PadANSI(detected, wDet),
+			ui.PadANSI(ewDeadline, wEW),
+			ui.PadANSI(notifDeadline, wNotif),
+			ui.PadANSI(ui.Colorize(statusStr, sc), wStat),
+			ui.PadANSI(ui.Colorize(hmacShort, ui.Gray), wHMAC))
+	}
+
 	return nil
 }
 

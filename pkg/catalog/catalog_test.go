@@ -6,11 +6,14 @@ package catalog_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/pkg/catalog"
+	"github.com/had-nu/wardex/v2/pkg/catalog"
 )
 
 func TestCatalogLoad(t *testing.T) {
-	controls := catalog.Load("iso27001")
+	controls, err := catalog.Load("iso27001")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	if len(controls) != 93 {
 		t.Errorf("expected 93 controls, got %d", len(controls))

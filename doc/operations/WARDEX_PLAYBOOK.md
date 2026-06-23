@@ -1,8 +1,8 @@
-# Wardex Playbook v2.0
+# Wardex Playbook v2.1
 
 Guia operacional para release gates baseados em risco, análise de gaps de conformidade, e notificação CRA Article 14.
 
-**Versão:** v2.0.0 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
+**Versão:** v2.1.0 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
 
 ---
 
@@ -545,5 +545,5 @@ Os exit codes 10-12 devem ser tratados explicitamente na pipeline. O código 12 
 
 ---
 
-*Wardex v2.0.0 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
+*Wardex v2.1.0 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
 

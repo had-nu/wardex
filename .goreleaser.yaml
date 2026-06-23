@@ -2,6 +2,10 @@
 version: 2
 project_name: wardex
 
+before:
+  hooks:
+    - go mod tidy
+
 builds:
   - env:
       - CGO_ENABLED=0
@@ -12,7 +16,8 @@ builds:
     goarch:
       - amd64
       - arm64
-    main: ./cmd/wardex
+    ldflags:
+      - -s -w -X main.Version={{ .Version }}
 
 archives:
   - format: tar.gz
@@ -25,9 +30,23 @@ sboms:
     args: ["packages", "${artifact}", "-o", "cyclonedx-json", "--file", "${artifact}.sbom.json"]
 
 signs:
-  - artifacts: checksum
+  - id: cosign
+    artifacts: all
     cmd: cosign
     args:
       - "sign-blob"
       - "--yes"
+      - "--oidc-issuer=https://token.actions.githubusercontent.com"
+      - "--output-signature=${signature}"
+      - "--output-certificate=${certificate}"
+      - "${artifact}"
+
+docker_signs:
+  - id: cosign-keyless
+    artifacts: all
+    cmd: cosign
+    args:
+      - "sign"
+      - "--yes"
+      - "--oidc-issuer=https://token.actions.githubusercontent.com"
       - "${artifact}"

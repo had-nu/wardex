@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // SealConfig reads a draft wardex-config.yaml, verifies there are no

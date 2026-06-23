@@ -9,7 +9,7 @@
 //
 // # Usage
 //
-//	import "github.com/had-nu/wardex/pkg/sdk"
+//	import "github.com/had-nu/wardex/v2/pkg/sdk"
 //
 //	func main() {
 //	    // Load controls from files or other sources
@@ -32,13 +32,13 @@ package sdk
 import (
 	"fmt"
 
-	"github.com/had-nu/wardex/pkg/analyzer"
-	"github.com/had-nu/wardex/pkg/catalog"
-	"github.com/had-nu/wardex/pkg/correlator"
-	"github.com/had-nu/wardex/pkg/ingestion"
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/report"
-	"github.com/had-nu/wardex/pkg/snapshot"
+	"github.com/had-nu/wardex/v2/pkg/analyzer"
+	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v2/pkg/correlator"
+	"github.com/had-nu/wardex/v2/pkg/ingestion"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/report"
+	"github.com/had-nu/wardex/v2/pkg/snapshot"
 )
 
 // AssessmentResult contains the complete results of a compliance assessment.
@@ -58,7 +58,10 @@ func Analyze(controls []model.ExistingControl, framework string) (*AssessmentRes
 		return nil, fmt.Errorf("sdk: no controls provided")
 	}
 
-	cat := catalog.Load(framework)
+	cat, err := catalog.Load(framework)
+	if err != nil {
+		return nil, fmt.Errorf("sdk: %w", err)
+	}
 	corr := correlator.New(cat)
 	mappings, err := corr.Correlate(controls)
 	if err != nil {
@@ -103,10 +106,12 @@ func AnalyzeWithConfig(controls []model.ExistingControl, framework string, opts 
 	}
 	opts.setDefaults()
 
-	cat := catalog.Load(framework)
+	cat, err := catalog.Load(framework)
+	if err != nil {
+		return nil, fmt.Errorf("sdk: %w", err)
+	}
 	corr := correlator.New(cat)
 	var mappings []model.Mapping
-	var err error
 
 	if opts.MinConfidence == "high" {
 		mappings, err = corr.CorrelateWithConfidence(controls, "high")
@@ -174,7 +179,7 @@ func LoadControls(paths ...string) ([]model.ExistingControl, error) {
 }
 
 // LoadFramework returns the control catalog for a given framework.
-func LoadFramework(name string) []model.CatalogControl {
+func LoadFramework(name string) ([]model.CatalogControl, error) {
 	return catalog.Load(name)
 }
 

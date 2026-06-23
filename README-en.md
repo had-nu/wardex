@@ -6,7 +6,8 @@
 
 [![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
-[![CI](https://github.com/had-nu/wardex/actions/workflows/ci.yml/badge.svg)](https://github.com/had-nu/wardex/actions/workflows/ci.yml)
+[![Docker](https://img.shields.io/badge/Docker-ghcr.io/had--nu/wardex-2496ED?style=flat-square&logo=docker&logoColor=white)](https://github.com/had-nu/wardex/pkgs/container/wardex)
+[![GitHub Action](https://img.shields.io/badge/GitHub_Action-Wardex_Release_Gate-4A154B?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/wardex-release-gate)
 [![License: AGPL v3 / Commercial](https://img.shields.io/badge/License-AGPL_v3_%7C_Commercial-8A2BE2.svg?style=flat-square)](#licensing)
 
 <br>
@@ -30,7 +31,7 @@ The gap analysis crosses what the security function declared against what is ope
 
 ## Supported frameworks
 
-ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · CRA Article 14
+ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · CRA Article 14 · NIST CSF 2.0
 
 ```bash
 wardex assess controls.yaml --framework iso27001  # default
@@ -401,4 +402,4 @@ Dual-licensed:
 
 **AGPL-3.0 (free):** use in internal CI/CD pipelines or in open-source projects that make their source available.
 
-**Commercial licence (paid):** embedding in proprietary products, SaaS platforms, or distribution without opening source. See the [Commercial Terms](doc/COMMERCIAL_LICENSE.md) or contact **andre_ataide@proton.me**.
+**Commercial licence (paid):** embedding in proprietary products, SaaS platforms, or distribution without opening source. See the [Commercial Terms](doc/governance/COMMERCIAL_LICENSE.md) or contact **andre_ataide@proton.me**.

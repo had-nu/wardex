@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // Generate delegates reporting based on the requested format.
@@ -21,6 +21,8 @@ func Generate(report model.GapReport, format string, outFile string, limit int) 
 		return generateJSON(report, outFile)
 	case "csv":
 		return generateCSV(report, outFile)
+	case "html":
+		return generateHTML(report, outFile)
 	default:
 		return fmt.Errorf("unsupported format: %s", format)
 	}

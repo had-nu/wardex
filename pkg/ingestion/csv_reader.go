@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 func loadCSV(path string) ([]model.ExistingControl, error) {

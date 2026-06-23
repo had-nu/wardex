@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/had-nu/wardex/pkg/model"
-	"github.com/had-nu/wardex/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 func generateMarkdown(report model.GapReport, outFile string, limit int) error { // nolint:errcheck

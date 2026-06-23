@@ -6,7 +6,7 @@ package scorer
 import (
 	"time"
 
-	"github.com/had-nu/wardex/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // Summarize calculates global metrics from a list of findings.
