@@ -532,7 +532,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 				exitFunc(exitcodes.GenericError)
 				return nil
 			}
-			defer f.Close()
+			defer func() { _ = f.Close() }()
 			dest = f
 		}
 

@@ -34,9 +34,8 @@ func TestAnalyze_WithValidControls(t *testing.T) {
 	if len(result.Findings) == 0 {
 		t.Error("expected findings in result")
 	}
-	if result.Posture.GlobalIndex == 0 && len(result.Findings) > 0 {
-		// GlobalIndex can be 0 if no controls are covered; that's valid
-	}
+	// GlobalIndex can be 0 if no controls are covered; that's valid
+	_ = result.Posture.GlobalIndex == 0 && len(result.Findings) > 0
 }
 
 func TestAnalyze_WithEmptyControls(t *testing.T) {
