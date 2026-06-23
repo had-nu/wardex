@@ -63,7 +63,7 @@ func FetchScores(cves []string) (map[string]float64, map[string]string, error) {
 		}
 
 		// User-Agent is good practice for public APIs
-		req.Header.Set("User-Agent", "Wardex/1.7.0 (+https://github.com/had-nu/wardex)")
+		req.Header.Set("User-Agent", "Wardex/2.1.2 (+https://github.com/had-nu/wardex)")
 
 		resp, err := client.Do(req)
 		if err != nil {

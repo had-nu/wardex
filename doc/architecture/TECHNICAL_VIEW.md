@@ -48,7 +48,7 @@ A arquitetura do **Wardex** não estaria completa sem uma fundação de testes r
 Para suportar exceções justificadas ao *Release Gate*, o Wardex integra um sistema unificado em `pkg/accept` encarregue da *Aceitação Formal de Risco* com validação de adulteração state-of-the-art:
 
 * **Integridade Criptográfica**: Recusa o uso de segredos na base de código, exigindo variáveis de ambiente restritas (`WARDEX_ACCEPT_SECRET`) para assinar payloads HMAC-SHA256.
-* **Validação por Design**: Todas as exceções passam por rotinas de carga estritas. O sistema implementa o padrão "Fail-Closed" e aborta com Exit Codes rigorosos (`3` para adulterações/tampering ou configurações obsoletas pós-*drift*).
+* **Validação por Design**: Todas as exceções passam por rotinas de carga estritas. O sistema implementa o padrão "Fail-Closed" e aborta com Exit Codes rigorosos (`3` para adulterações/tampering, `4` para armazém inconsistente).
 * **Auditoria Imutável**: Regista todos os passos ("created", "revoked", "expired") em matrizes `JSONL` locais (`wardex-accept-audit.log`) para integração com SIEM.
 
 ### 7. Testando o Módulo de Aceitação Localmente
@@ -74,8 +74,8 @@ Para validar em profundidade o comportamento criptográfico da aceitação de ri
    ```
    *(Esta rotina cria o binário imutável em `wardex-acceptances.yaml` e adiciona as matrizes `JSONL` a `wardex-accept-audit.log`)*.
 
-4. **Operações de Teste do Trimming de Validação Secundária**: Corrompa intencionalmente o payload das aceitações editando um byte ou re-arranjando IDs no `wardex-acceptances.yaml`. Valide o acionamento fulminante das flags anti-tampering (Exit Code **3**) recorrendo a:
+4. **Operações de Teste do Trimming de Validação Secundária**: Corrompa intencionalmente o payload das aceitações editando um byte ou re-arranjando IDs no `wardex-acceptances.yaml`. Valide o acionamento fulminante das flags anti-tampering (Exit Code **3** para adulteração, **4** para armazém inconsistente) recorrendo a:
    ```bash
    wardex accept list --active
-   wardex accept verify
+   wardex accept verify --output verification-report.json
    ```

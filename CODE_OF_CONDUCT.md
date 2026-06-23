@@ -20,6 +20,6 @@ Examples of **unacceptable behaviour**:
 
 ## Enforcement
 
-Project maintainers are responsible for clarifying and enforcing these standards. Unacceptable behaviour may be reported to **Exemplo Empresa SA / had-nu**.
+Project maintainers are responsible for clarifying and enforcing these standards. Unacceptable behaviour may be reported to **André Ataíde (had-nu)** at **andre_ataide@proton.me**.
 
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1.

@@ -1,4 +1,4 @@
-# Wardex Configuration Example (v1.9.2)
+# Wardex Configuration Example (v2.1.2)
 # ------------------------------------
 
 # Release Gate Context
@@ -40,7 +40,7 @@ reporting:
     forward: ["syslog"]      # Optional destinations
     on_fail: "warn"          # "warn" | "block"
   enisa_queue:
-    path: "wardex-enisa-queue.jsonl" # Local queue for ENISABackend stub (v2.0)
+    path: "wardex-enisa-queue.jsonl" # Local queue for ENISABackend stub (v2.1)
 
 # Profiles (RBAC)
 # Overrides risk appetite for specific actors in trusted environments.
@@ -52,7 +52,7 @@ profiles:
       - "ciso@example.com"
       - "security-lead@example.com"
 
-# CRA Article 14 Configuration (v2.0)
+# CRA Article 14 Configuration (v2.1)
 # Controls CRA notification artefact generation.
 cra:
   art14:
@@ -61,3 +61,4 @@ cra:
     product_name: ""                   # pre-populated in artefact; operator fills
     product_version: ""                # same
     kev_path: ""                       # default KEV catalogue path for evaluate
+    kev_max_age_days: 7                # max age of KEV catalogue before re-download
