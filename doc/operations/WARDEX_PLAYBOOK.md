@@ -1,8 +1,8 @@
-# Wardex Playbook v2.1
+# Wardex Playbook v2.1.2
 
 Guia operacional para release gates baseados em risco, análise de gaps de conformidade, e notificação CRA Article 14.
 
-**Versão:** v2.1.0 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
+**Versão:** v2.1.2 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
 
 ---
 
@@ -26,7 +26,7 @@ Guia operacional para release gates baseados em risco, análise de gaps de confo
 
 ```bash
 # Instalar (SHA-pinned)
-go install github.com/had-nu/wardex@95eed886
+go install github.com/had-nu/wardex/v2@latest
 
 # Converter output do Grype
 wardex convert grype grype-results.json > vulns.yaml
@@ -485,7 +485,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex@95eed886
+        run: go install github.com/had-nu/wardex/v2@latest
 
       - name: Evaluate risk gate
         run: |
@@ -502,7 +502,7 @@ jobs:
 wardex-gate:
   image: golang:1.26
   script:
-    - go install github.com/had-nu/wardex@95eed886
+    - go install github.com/had-nu/wardex/v2@latest
     - wardex evaluate --config .wardex/config.yaml --evidence vulns.yaml controls.yaml
   only:
     - merge_requests
@@ -523,12 +523,13 @@ wardex policy validate wardex-config.yaml || exit 1
 | Code | Nome | Acção |
 |---|---|---|
 | 0 | ALLOW | Pipeline prossegue |
-| 3 | Integrity failure | Pipeline interrompe — configuração adulterada |
+| 3 | Integrity failure / Tampered | Pipeline interrompe — configuração ou aceitação adulterada |
+| 4 | Store inconsistent | Pipeline interrompe — armazém de aceitações inconsistente |
 | 10 | Gate blocked | Pipeline falha — risco excede apetite |
 | 11 | Compliance gap | Pipeline falha — cobertura de controlos insuficiente |
 | 12 | Active exploitation | Pipeline falha — notificação CRA Article 14 necessária |
 
-Os exit codes 10-12 devem ser tratados explicitamente na pipeline. O código 12 requer um path de notificação diferente de 10 — não podem ser tratados como o mesmo estado.
+Os exit codes 3-12 devem ser tratados explicitamente na pipeline. O código 12 requer um path de notificação diferente de 10 — não podem ser tratados como o mesmo estado.
 
 ---
 
@@ -545,5 +546,5 @@ Os exit codes 10-12 devem ser tratados explicitamente na pipeline. O código 12 
 
 ---
 
-*Wardex v2.1.0 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
+*Wardex v2.1.2 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
 

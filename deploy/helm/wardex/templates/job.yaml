@@ -1,0 +1,32 @@
+{{- if .Values.job.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # Append a short random suffix so each helm upgrade triggers a new Job.
+  # Without this, Kubernetes ignores a Job whose name already exists.
+  name: {{ include "wardex.fullname" . }}-evaluate-{{ randAlphaNum 6 | lower }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "wardex.labels" . | nindent 4 }}
+    app.kubernetes.io/component: evaluate
+  {{- with .Values.job.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  backoffLimit: {{ .Values.job.backoffLimit }}
+  {{- with .Values.job.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ . }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "wardex.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: evaluate
+      {{- with .Values.job.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "wardex.podSpec" . | nindent 6 }}
+{{- end }}

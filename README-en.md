@@ -6,7 +6,9 @@
 
 [![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
+[![Coverage](https://img.shields.io/badge/coverage-40%25-yellow?style=flat-square)](#)
 [![Docker](https://img.shields.io/badge/Docker-ghcr.io/had--nu/wardex-2496ED?style=flat-square&logo=docker&logoColor=white)](https://github.com/had-nu/wardex/pkgs/container/wardex)
+[![Helm](https://img.shields.io/badge/Helm-v0.1.0-0F1689?style=flat-square&logo=helm&logoColor=white)](deploy/helm/wardex/)
 [![GitHub Action](https://img.shields.io/badge/GitHub_Action-Wardex_Release_Gate-4A154B?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/wardex-release-gate)
 [![License: AGPL v3 / Commercial](https://img.shields.io/badge/License-AGPL_v3_%7C_Commercial-8A2BE2.svg?style=flat-square)](#licensing)
 
@@ -44,7 +46,7 @@ wardex assess controls.yaml --framework dora
 ## Installation
 
 ```bash
-go install github.com/had-nu/wardex@95eed886
+go install github.com/had-nu/wardex/v2@latest
 ```
 
 Requires Go ≥ 1.26. Ensure `$(go env GOPATH)/bin` is in your `$PATH`.
@@ -55,6 +57,21 @@ To build from source:
 git clone https://github.com/had-nu/wardex.git
 cd wardex && make build
 ```
+
+### Docker
+
+```bash
+docker pull ghcr.io/had-nu/wardex:2.1.2
+```
+
+### Helm (Kubernetes)
+
+```bash
+helm upgrade --install wardex deploy/helm/wardex/ \
+  --set acceptSecret.value=$(openssl rand -hex 32)
+```
+
+See [deploy/helm/wardex/](deploy/helm/wardex/) for the full chart reference.
 
 ---
 
@@ -71,7 +88,10 @@ wardex evaluate \
   --evidence vulns.yaml \
   --config doc/examples/wardex-config.yaml
 
-# Exit codes: 0 (ALLOW) · 10 (BLOCK) · 11 (Gap) · 12 (Active exploitation)
+# Dry-run — preview without writing artefacts
+wardex evaluate --evidence vulns.yaml --config doc/examples/wardex-config.yaml --dry-run
+
+# Exit codes: 0 (ALLOW) · 3 (Tampered) · 4 (Store inconsistent) · 10 (BLOCK) · 11 (Gap) · 12 (Exploited)
 ```
 
 ---
@@ -118,7 +138,7 @@ wardex art14 finalize <artefact-id> --patch-date 2026-06-09T12:00:00Z
 wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
 ```
 
-**Exit codes (v2.0):** `0` OK · `3` Integrity failure · `10` Gate blocked · `11` Compliance fail · **`12` Actively exploited**
+**Exit codes (v2.1):** `0` OK · `3` Integrity failure / Tampered · `4` Store inconsistent · `10` Gate blocked · `11` Compliance fail · **`12` Actively exploited**
 
 ---
 ## Compliance gap analysis
@@ -287,7 +307,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex@95eed886
+        run: go install github.com/had-nu/wardex/v2@latest
 
       - name: Evaluate risk gate
         run: |
@@ -297,6 +317,49 @@ jobs:
             controls.yaml
         # Exit 0 = ALLOW, Exit 10 = BLOCK, Exit 11 = compliance gap
 ```
+
+---
+
+## Dev environment
+
+```bash
+docker compose up -d         # start PostgreSQL, MinIO, and Wardex API stub
+docker compose down          # stop everything
+```
+
+Wardex ships a [docker-compose.yml](docker-compose.yml) with PostgreSQL (audit store), MinIO (artefact bucket), and a Wardex API stub for local integration testing. See the compose file for service ports and configuration.
+
+---
+
+## Environment & syslog forwarding
+
+Wardex reads these environment variables at startup:
+
+| Variable | Default | Description |
+|---|---|---|
+| `WARDEX_ACCEPT_SECRET` | — | HMAC-SHA256 key for signing acceptances and Art14 artefacts (min 32 chars) |
+| `WARDEX_ACTOR` | `cli` | Identity string recorded in audit entries |
+| `WARDEX_SYSLOG_ENDPOINT` | — | `tcp://syslog.example.com:514` — forward audit events to central syslog |
+| `WARDEX_SYSLOG_PROTO` | `tcp` | Syslog transport: `tcp`, `udp`, or `tls` |
+| `WARDEX_SYSLOG_CERT` | — | TLS client cert path for `tls` proto |
+| `WARDEX_SYSLOG_KEY` | — | TLS client key path for `tls` proto |
+| `WARDEX_SYSLOG_CA` | — | Custom CA cert path for `tls` proto |
+
+Syslog forwarding is **opt-in**. When `WARDEX_SYSLOG_ENDPOINT` is set, every gate decision, acceptance, and Art14 lifecycle event is also dispatched as a structured RFC 5424 message to the configured endpoint. The connection is established at startup and reconnected on failure with exponential backoff.
+
+---
+
+## PKI mode
+
+For environments that require certificate-based identity rather than shared secrets:
+
+```bash
+wardex pki init --org "Your Corp" --validity 3650d
+wardex pki issue --name ci-agent --out ci-agent.wex
+wardex config seal --keyring ci-agent.wex --input config.yaml --out config.wexstate
+```
+
+PKI mode creates an Ed25519 CA and issues short-lived operator certificates. Sealed configs signed with PKI certificates carry the full X.509 chain, enabling automated expiry verification without an external trust store.
 
 ---
 
@@ -315,6 +378,9 @@ wardex accept request \
 
 # Verify integrity of all active acceptances
 wardex accept verify
+
+# Export verification report as JSON artefact
+wardex accept verify --output verification-report.json
 
 # List acceptances and status
 wardex accept list --active
@@ -347,7 +413,7 @@ See the [Governance Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md) for the f
 ## SDK
 
 ```go
-import "github.com/had-nu/wardex/pkg/sdk"
+import "github.com/had-nu/wardex/v2/pkg/sdk"
 
 controls, _ := sdk.LoadControls("./controls.yaml")
 result, _   := sdk.Analyze(controls, "iso27001")
@@ -359,8 +425,8 @@ For the release gate:
 
 ```go
 import (
-    "github.com/had-nu/wardex/pkg/model"
-    "github.com/had-nu/wardex/pkg/releasegate"
+    "github.com/had-nu/wardex/v2/pkg/model"
+    "github.com/had-nu/wardex/v2/pkg/releasegate"
 )
 
 gate := releasegate.Gate{
@@ -391,8 +457,11 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 - [Playbook — use cases with full commands](doc/operations/WARDEX_PLAYBOOK.md)
 - [Governance — Trust Store & Sealed Config Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md)
 - [GitHub Actions integration](doc/operations/github-actions-integration.md)
+- [Helm chart reference](deploy/helm/wardex/)
 - [Exit codes](doc/operations/EXIT_CODES.md)
+- [Dev environment (docker-compose)](docker-compose.yml)
 - [CHANGELOG](CHANGELOG.md)
+- [Contributing](CONTRIBUTING.md)
 
 ---
 
