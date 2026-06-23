@@ -9,7 +9,7 @@ Este guia descreve o fluxo completo de instalação e governação do sistema de
 ### Opção A: Instalação via Go Install (Recomendado)
 Para instalar a versão estável mais recente directamente do repositório:
 ```bash
-go install github.com/had-nu/wardex@95eed886
+go install github.com/had-nu/wardex/v2@latest
 ```
 *Nota: Certifica-te que `$(go env GOPATH)/bin` está no teu `$PATH`.*
 

@@ -222,7 +222,7 @@
 <h2 id="quickstart">Quickstart</h2>
 
 <pre># Install
-go install github.com/had-nu/wardex@95eed886
+go install github.com/had-nu/wardex/v2@latest
 
 # Convert scanner output to Wardex format
 wardex convert grype test/usability/grype-results.json > vulns.yaml
@@ -232,13 +232,13 @@ wardex evaluate \
   --evidence vulns.yaml \
   --config doc/examples/wardex-config.yaml</pre>
 
-<p>Exit codes: <code>0</code> ALLOW · <code>10</code> BLOCK · <code>11</code> Compliance Gap · <code>12</code> Active Exploitation</p>
+<p>Exit codes: <code>0</code> ALLOW · <code>3</code> Tampered · <code>4</code> Store inconsistent · <code>10</code> BLOCK · <code>11</code> Compliance Gap · <code>12</code> Active Exploitation</p>
 
 <h2 id="install">Install</h2>
 
 <p>Requires Go ≥ 1.26.</p>
 
-<pre>go install github.com/had-nu/wardex@95eed886</pre>
+<pre>go install github.com/had-nu/wardex/v2@latest</pre>
 
 <p>Or build from source:</p>
 

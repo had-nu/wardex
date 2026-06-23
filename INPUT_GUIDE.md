@@ -273,7 +273,6 @@ The point of the linter is not to convince an auditor that you are honest. The p
 ## 8. Reference
 
 - Rule catalogue: `pkg/lint/rules.go`
-- Rule catalogue: `pkg/lint/rules.go`
 - Inspect a specific rule: `wardex lint --explain LINT-XXX`
 - Command reference: `wardex assess --help`
 
@@ -302,7 +301,7 @@ vulnerabilities:
 
 `actively_exploited_since` records when exploitation was first confirmed (distinct from when Wardex detected it). When set via KEV, this is populated from the KEV `dateAdded` field.
 
-*This document is part of the Wardex v2.0 release.*
+*This document is part of the Wardex v2.1.2 release.*
 
 ---
 

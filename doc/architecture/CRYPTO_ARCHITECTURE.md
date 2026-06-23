@@ -18,7 +18,7 @@ All Risk Acceptances are cryptographically bound using Hash-based Message Authen
 The secret key must be exactly 32 bytes (256 bits) of high-entropy data. 
 It is injected into the CI/CD environment runtime exclusively as an environment variable and is **never** written to disk during gate evaluation.
 *   **Derivation**: N/A (Symmetric Key)
-*   **Rotation**: Supported manually holding older keys in an array (pending automated JWK rotation in v2.0).
+*   **Rotation**: Supported manually holding older keys in an array (pending automated JWK rotation).
 
 ### 2.2 The Canonical Payload
 To prevent tampering, the payload hashed by the HMAC must represent the exact semantic state of the acceptance. Wardex extracts the following fields, in strict order, formatted precisely as a delimiter-separated string:
