@@ -1,0 +1,25 @@
+apiVersion: v2
+name: wardex
+description: >
+  Risk-based release gate for CRA Article 14, NIS2, DORA, and ISO 27001.
+  Evaluates vulnerability evidence against risk appetite and blocks deployments.
+  Produces signed, auditable decision artefacts. Enable, never execute.
+type: application
+version: 0.1.0
+appVersion: "2.1.2"
+keywords:
+  - security
+  - vulnerability
+  - release-gate
+  - cra
+  - compliance
+  - devsecops
+home: https://had-nu.github.io/wardex/
+sources:
+  - https://github.com/had-nu/wardex
+maintainers:
+  - name: André Ataíde
+    email: andre.ataide@proton.me
+    url: https://github.com/had-nu
+annotations:
+  category: Security

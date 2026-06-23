@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "wardex.configMapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "wardex.labels" . | nindent 4 }}
+data:
+  wardex-config.yaml: |
+    {{- toYaml .Values.config | nindent 4 }}
