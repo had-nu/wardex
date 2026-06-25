@@ -1,8 +1,8 @@
-# Wardex Playbook v2.1.2
+# Wardex Playbook v2.2.0
 
 Guia operacional para release gates baseados em risco, análise de gaps de conformidade, e notificação CRA Article 14.
 
-**Versão:** v2.1.2 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
+**Versão:** v2.2.0 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
 
 ---
 
@@ -14,6 +14,7 @@ Guia operacional para release gates baseados em risco, análise de gaps de confo
 4. [Risk-Based Release Gate](#4-risk-based-release-gate)
 5. [CRA Article 14 — Active Exploitation](#5-cra-article-14--active-exploitation)
 6. [EPSS Enrichment](#6-epss-enrichment)
+6.5. [Configuration Provenance Link (CPL)](#65-configuration-provenance-link-cpl)
 7. [Risk Acceptance & Audit Chain](#7-risk-acceptance--audit-chain)
 8. [Governance: Trust Store & Sealed Config](#8-governance-trust-store--sealed-config)
 9. [CI/CD Integration](#9-cicd-integration)
@@ -396,6 +397,91 @@ O enriquecimento consulta `api.first.org` e assina cada resultado via HMAC-SHA25
 
 ---
 
+## 6.5. Configuration Provenance Link (CPL)
+
+O CPL estabelece uma ligação criptográfica entre cada decisão do release gate
+e a configuração (`wardex-config.yaml` ou `config.wexstate`) em vigor no momento
+da avaliação.
+
+### 6.5.1. Calcular o hash da configuração
+
+```bash
+wardex config hash --config wardex-config.yaml
+# sha256:1840e526e5bda5a8a79aeede4e48d46288b1236e90b89caee99680436972fdae
+
+wardex config hash --config wardex-config.yaml --algorithm blake3
+# blake3:fe7c61a3e9f4b188d1b58d4e0c0d98b53f3decd04deff13dc517028ddcf34b02
+```
+
+O hash é calculado sobre o conteúdo YAML canónico (chaves ordenadas, comentários removidos,
+whitespace normalizado). Isto garante que configurações semanticamente idênticas produzem
+o mesmo hash independentemente de formatação.
+
+### 6.5.2. Verificar a hash chain do audit log
+
+Cada entrada do audit log (`wardex-gate-audit.log`) inclui o hash SHA-256 da entrada anterior.
+A primeira entrada usa `"genesis"` como referência. Qualquer adulteração invalida todas as
+entradas subsequentes:
+
+```bash
+wardex audit verify-chain --audit-log wardex-gate-audit.log
+# Audit log hash chain: INTACT
+```
+
+### 6.5.3. Verificar o link entre audit log e configurações arquivadas
+
+```bash
+# Contra um arquivo de configurações
+wardex audit verify-link \
+  --audit-log wardex-gate-audit.log \
+  --config-archive ./config-versions/
+
+# Contra uma única configuração
+wardex audit verify-link \
+  --audit-log wardex-gate-audit.log \
+  --config wardex-config.yaml
+```
+
+O relatório produz três estados:
+
+| Estado | Significado |
+|--------|-------------|
+| `OK` | Hash coincide com a configuração arquivada |
+| `MISMATCH` | Hash diferente — configuração alterada entre decisão e arquivo |
+| `MISSING` | Nenhuma configuração encontrada para o timestamp |
+
+### 6.5.4. Notificação de divergência (webhook)
+
+Quando `verify-link` detecta MISMATCH ou MISSING, pode notificar um endpoint externo
+(SIEM, alerting platform). A notificação é fire-and-forget e não afecta exit codes:
+
+```bash
+wardex audit verify-link \
+  --audit-log wardex-gate-audit.log \
+  --config-archive ./configs/ \
+  --webhook-url "${SIEM_WEBHOOK_URL}"
+```
+
+Configuração persistente em `wardex-config.yaml`:
+
+```yaml
+notifications:
+  divergence_webhook:
+    url: "${WARDEX_SIEM_WEBHOOK_URL}"
+    auth_env: "WARDEX_SIEM_TOKEN"
+    timeout_seconds: 5
+```
+
+### 6.5.5. Exit codes do CPL
+
+| Código | Condição |
+|--------|----------|
+| 0 | Todas as entradas com estado `OK` |
+| 1 | Uma ou mais entradas com `MISMATCH` ou `MISSING` |
+| 2 | Erro operacional (ficheiro inacessível, parse error) |
+
+---
+
 ## 7. Risk Acceptance & Audit Chain
 
 Quando o gate bloqueia e existe caso de negócio para prosseguir:
@@ -546,5 +632,5 @@ Os exit codes 3-12 devem ser tratados explicitamente na pipeline. O código 12 r
 
 ---
 
-*Wardex v2.1.2 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
+*Wardex v2.2.0 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
 

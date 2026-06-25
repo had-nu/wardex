@@ -42,3 +42,16 @@ case $EXIT_CODE in
     exit 1 ;;
 esac
 ```
+
+---
+
+## CPL — Configuration Provenance Link (v2.2+)
+
+Os comandos `wardex audit verify-link` e `wardex audit verify-chain` produzem exit codes
+específicos para integração em pipelines e notificações:
+
+| Código | Condição |
+|--------|----------|
+| 0 | Todas as entradas com estado `OK` |
+| 1 | Uma ou mais entradas com `MISMATCH` ou `MISSING` |
+| 2 | Erro operacional (ficheiro inacessível, parse error) |

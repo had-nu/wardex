@@ -1,0 +1,2 @@
+{"ts":"2026-06-20T10:00:00Z","event":"gate.evaluated","config_hash":"sha256:abc123def456","prev_hash":"genesis"}
+{"ts":"2026-06-21T10:00:00Z","event":"gate.evaluated","config_hash":"sha256:no-such-config","prev_hash":"sha256-hash-of-line1"}

@@ -1,0 +1,15 @@
+# Wardex configuration file
+release_gate:
+  enabled: true    # enable the release gate
+  mode: any
+  risk_appetite: 0.5
+  warn_above: 0.3
+reporting:
+  format: markdown   # output format
+  gate_log:
+    path: wardex-gate-audit.log
+cra:
+  art14:
+    enabled: true
+    product_name: nexumflow-api
+    product_version: 1.5.0

@@ -106,6 +106,14 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(stderr, "Warning: release_gate.enabled is false in config — gate will always ALLOW.\n")
 	}
 
+	if strict {
+		if _, err := accept.ConfigHash(configPath); err != nil {
+			fmt.Fprintf(stderr, "[STRICT ENFORCEMENT] config hash computation failed: %v\n", err)
+			exitFunc(exitcodes.IntegrityFailure)
+			return nil
+		}
+	}
+
 	// Load controls for context (needed for ingestion but gate is the primary output)
 	_, err = ingestion.LoadMany(args)
 	if err != nil {
@@ -238,6 +246,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 			Timestamp:                     time.Now().UTC(),
 			Event:                         "active-exploit.detected",
 			ConfigHash:                    configHash,
+			CliOverrides:                  collectCLIOverrides(),
 			EvidenceHash:                  evidenceHash,
 			OverallDecision:               "block",
 			Status:                        "block",
@@ -449,6 +458,8 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		logPath = gateLogPath
 	}
 
+	cliOverrides := collectCLIOverrides()
+
 	if dryRun {
 		// Compute what exit code would be
 		exitReason := "Gate passed (ALLOW) — exit 0"
@@ -475,6 +486,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 			Timestamp:       time.Now().UTC(),
 			Event:           "gate.evaluated",
 			ConfigHash:      configHash,
+			CliOverrides:    cliOverrides,
 			EvidenceHash:    evidenceHash,
 			OverallDecision: gateReport.OverallDecision,
 			Risk:            gateReport.HighestRisk,
@@ -482,10 +494,10 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 			Detail:          fmt.Sprintf("%d vulnerabilities evaluated; %d blocked, %d warned", len(vulns), gateReport.BlockedCount, gateReport.WarnCount),
 		}
 
-		if err := accept.AuditLog(logPath, entry); err != nil {
+		if err := accept.ChainedAuditLog(logPath, entry); err != nil {
 			fmt.Fprintf(stderr, "Warning: failed to write gate audit log: %v\n", err)
 		} else {
-			fmt.Fprintf(stderr, "[INFO] Gate decision logged → %s\n", logPath)
+			fmt.Fprintf(stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
 		}
 
 		// Forwarding (G3)
