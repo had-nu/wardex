@@ -90,12 +90,26 @@ type CRAConfig struct {
 	Art14 Art14Config `yaml:"art14"`
 }
 
+// NotificationConfig configures external notifications for CPL divergence events.
+type NotificationConfig struct {
+	DivergenceWebhook DivergenceWebhookConfig `yaml:"divergence_webhook"`
+}
+
+// DivergenceWebhookConfig configures the fire-and-forget webhook for CPL divergence alerts.
+type DivergenceWebhookConfig struct {
+	URL            string            `yaml:"url"`             // env-var resolved at runtime
+	AuthEnv        string            `yaml:"auth_env"`        // env var name for Bearer token
+	TimeoutSeconds int               `yaml:"timeout_seconds"` // default 5, max 30
+	Headers        map[string]string `yaml:"headers,omitempty"`
+}
+
 type Config struct {
 	ReleaseGate      ReleaseGate        `yaml:"release_gate"`
 	AcceptanceConfig AcceptanceConfig   `yaml:"acceptance"`
 	Reporting        ReportingConfig    `yaml:"reporting"`
 	Profiles         map[string]Profile `yaml:"profiles"`
-	CRA              CRAConfig          `yaml:"cra"` // NEW in v2.0
+	CRA              CRAConfig          `yaml:"cra"`              // NEW in v2.0
+	Notifications    NotificationConfig `yaml:"notifications"`    // NEW in v2.2 — CPL
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.

@@ -10,6 +10,7 @@ import (
 
 	"github.com/had-nu/wardex/v2/cmd/aggregate"
 	"github.com/had-nu/wardex/v2/cmd/assess"
+	"github.com/had-nu/wardex/v2/cmd/audit"
 	"github.com/had-nu/wardex/v2/cmd/configseal"
 	"github.com/had-nu/wardex/v2/cmd/convert"
 	"github.com/had-nu/wardex/v2/cmd/evaluate"
@@ -40,7 +41,7 @@ import (
 )
 
 var (
-	Version       = "2.1.2"
+	Version       = "2.2.0"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -171,6 +172,7 @@ func init() {
 	cli.AddCommands(rootCmd, &configPath)
 	enrichCli.AddCommands(rootCmd, &configPath)
 	rootCmd.AddCommand(art14cmd.Art14Cmd)
+	rootCmd.AddCommand(audit.AuditCmd)
 }
 
 func main() {

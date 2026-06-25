@@ -153,3 +153,28 @@ func formatDuration(d time.Duration) string {
 	}
 	return fmt.Sprintf("%dh %dm", h, m)
 }
+
+// collectCLIOverrides collects CLI flags that override config values.
+// These are recorded in the audit log as cli_overrides for CPL provenance.
+func collectCLIOverrides() map[string]string {
+	overrides := make(map[string]string)
+	if gateMode != "any" {
+		overrides["gate-mode"] = gateMode
+	}
+	if failAbove > 0 {
+		overrides["fail-above"] = fmt.Sprintf("%.1f", failAbove)
+	}
+	if epssEnrich != "" {
+		overrides["epss-enrichment"] = epssEnrich
+	}
+	if profileName != "" {
+		overrides["profile"] = profileName
+	}
+	if strict {
+		overrides["strict"] = "true"
+	}
+	if dryRun {
+		overrides["dry-run"] = "true"
+	}
+	return overrides
+}

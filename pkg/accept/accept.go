@@ -5,7 +5,6 @@ package accept
 
 import (
 	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +15,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v2/internal/cpl"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/utils"
 	"gopkg.in/yaml.v3"
@@ -310,7 +310,8 @@ func VerifyAll(acceptances []model.Acceptance, key []byte, currentReportHash str
 	return results, allValid
 }
 
-// ConfigHash calculates the SHA256 of the configuration file.
+// ConfigHash calculates the canonical SHA-256 hash of the configuration file.
+// Uses the CPL canonicalisation (sorted keys, no comments, normalised whitespace).
 func ConfigHash(configPath string) (string, error) {
 	cwd, _ := os.Getwd()
 	safePathStr, err := utils.SafePath(cwd, configPath)
@@ -325,8 +326,7 @@ func ConfigHash(configPath string) (string, error) {
 		return "", fmt.Errorf("reading config file for audit: %w", err)
 	}
 
-	hash := sha256.Sum256(data)
-	return fmt.Sprintf("sha256:%s", hex.EncodeToString(hash[:])), nil
+	return cpl.ComputeConfigHash(data, cpl.AlgoSHA256)
 }
 
 // ConfigCheck compares the current config hash with the last recorded one in the audit log.

@@ -301,7 +301,7 @@ vulnerabilities:
 
 `actively_exploited_since` records when exploitation was first confirmed (distinct from when Wardex detected it). When set via KEV, this is populated from the KEV `dateAdded` field.
 
-*This document is part of the Wardex v2.1.2 release.*
+*This document is part of the Wardex v2.2.0 release.*
 
 ---
 
