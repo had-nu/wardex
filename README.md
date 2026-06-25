@@ -61,7 +61,7 @@ cd wardex && make build
 ### Docker
 
 ```bash
-docker pull ghcr.io/had-nu/wardex:2.1.2
+docker pull ghcr.io/had-nu/wardex:2.2.0
 ```
 
 ### Helm (Kubernetes)
@@ -138,7 +138,25 @@ wardex art14 finalize <artefact-id> --patch-date 2026-06-09T12:00:00Z
 wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
 ```
 
-**Exit codes (v2.1):** `0` OK · `3` Falha de integridade / Adulterado · `4` Armazém inconsistente · `10` Gate bloqueado · `11` Falha de conformidade · **`12` Activamente explorado**
+**Exit codes (v2.2):** `0` Entrada CPL verificada · `1` CPL MISMATCH/MISSING · `2` CPL Erro operacional · `3` Falha de integridade / Adulterado · `4` Armazém inconsistente · `10` Gate bloqueado · `11` Falha de conformidade · **`12` Activamente explorado**
+
+### Configuration Provenance Link (CPL) — v2.2
+
+```bash
+# Calcular hash canónico da configuração (SHA-256 ou BLAKE3)
+wardex config hash --config wardex-config.yaml
+wardex config hash --config wardex-config.yaml --algorithm blake3
+
+# Verificar integridade do audit log
+wardex audit verify-chain --audit-log wardex-gate-audit.log
+
+# Verificar que hashes no audit log correspondem a configurações arquivadas
+wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./configs/
+```
+
+O CPL estabelece uma ligação criptográfica entre cada decisão do release gate e a configuração em vigor. O hash é calculado sobre o conteúdo YAML canónico (chaves ordenadas, comentários removidos, whitespace normalizado) — garantindo reprodutibilidade entre ambientes. Suporta SHA-256 e **BLAKE3** (algoritmo moderno com performance superior). Hashes com algoritmos diferentes são distinguidos pelo prefixo (`sha256:`, `blake3:`) e nunca comparados silenciosamente. Divergências entre o audit log e configurações arquivadas podem ser notificadas via webhook para SIEM.
+
+**Exit codes do CPL:** `0` Todas as entradas OK · `1` MISMATCH/MISSING detectado · `2` Erro operacional
 
 ---
 ## Análise de gaps de conformidade

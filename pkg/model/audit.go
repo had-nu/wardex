@@ -26,6 +26,9 @@ type AuditEntry struct {
 	EvidenceHash    string `json:"evidence_hash,omitempty"`
 	OverallDecision string `json:"overall_decision,omitempty"`
 
+	// NEW in v2.2 — CPL: CLI override flags that affected the evaluation
+	CliOverrides map[string]string `json:"cli_overrides,omitempty"`
+
 	// NEW in v2.0 — CRA Article 14 audit chain and deadline tracking
 	PreviousEntryHash         string    `json:"previous_entry_hash,omitempty"`
 	ActivelyExploited         []string  `json:"actively_exploited_cves,omitempty"`

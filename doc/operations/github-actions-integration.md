@@ -4,12 +4,12 @@ Wardex é um **release gate**, não um scanner. Não encontra vulnerabilidades �
 
 Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo GitHub Actions.
 
-> **Versão de referência:** v2.1.2  
+> **Versão de referência:** v2.2.0  
 > **Instalação:** `go install github.com/had-nu/wardex/v2@latest`
 
 ---
 
-## Mapa de Comandos (v2.1.2)
+## Mapa de Comandos (v2.2.0)
 
 | Comando | Propósito |
 |---------|-----------|
@@ -314,7 +314,7 @@ A estrutura de directórios espelha a hierarquia de secções do framework. Quan
 
 ---
 
-## Exit Codes (v2.1.2)
+## Exit Codes (v2.2.0)
 
 | Código | Constante | Quando ocorre |
 |--------|-----------|---------------|
@@ -338,4 +338,36 @@ case $exit_code in
   12) echo "ACTIVE EXPLOITATION — CRA Article 14 notification required" ;;
   *) echo "Unexpected error (exit $exit_code) — check stderr" ;;
 esac
+```
+
+---
+
+### CPL — Config Provenance Link (v2.2+)
+
+```yaml
+# .github/workflows/cpl-audit.yml
+name: CPL Audit
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # every Monday 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  verify-link:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # fetch all history for config archives
+      - run: wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./config-versions/
+      - run: wardex audit verify-chain --audit-log wardex-gate-audit.log
+```
+
+### Hash da configuração
+
+```yaml
+# Usar em steps que precisam de proveniência
+- name: Record config hash
+  run: |
+    echo "CONFIG_HASH=$(wardex config hash --config wardex-config.yaml)" >> $GITHUB_ENV
 ```

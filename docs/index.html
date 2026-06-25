@@ -196,6 +196,7 @@
     <li>Evaluates release risk per asset context — the same CVE can ALLOW, WARN, or BLOCK depending on criticality, exposure, and compensating controls</li>
     <li>Cross-references documented vs implemented controls against ISO 27001, NIS2, DORA, and CRA Article 14 catalogues</li>
     <li>Returns distinct exit codes for each outcome: gate block (10), compliance gap (11), active exploitation (12)</li>
+    <li>Configuration Provenance Link (CPL) — cryptographically binds gate decisions to the exact config in force, with hash-chain audit verification</li>
 </ul>
 
 <h2>Supported frameworks</h2>
@@ -232,7 +233,7 @@ wardex evaluate \
   --evidence vulns.yaml \
   --config doc/examples/wardex-config.yaml</pre>
 
-<p>Exit codes: <code>0</code> ALLOW · <code>3</code> Tampered · <code>4</code> Store inconsistent · <code>10</code> BLOCK · <code>11</code> Compliance Gap · <code>12</code> Active Exploitation</p>
+<p>Exit codes: <code>0</code> ALLOW · <code>3</code> Tampered · <code>4</code> Store inconsistent · <code>10</code> BLOCK · <code>11</code> Compliance Gap · <code>12</code> Active Exploitation · CPL: <code>0</code> OK · <code>1</code> MISMATCH/MISSING · <code>2</code> Error</p>
 
 <h2 id="install">Install</h2>
 

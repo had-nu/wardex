@@ -61,7 +61,7 @@ cd wardex && make build
 ### Docker
 
 ```bash
-docker pull ghcr.io/had-nu/wardex:2.1.2
+docker pull ghcr.io/had-nu/wardex:2.2.0
 ```
 
 ### Helm (Kubernetes)
@@ -138,7 +138,25 @@ wardex art14 finalize <artefact-id> --patch-date 2026-06-09T12:00:00Z
 wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
 ```
 
-**Exit codes (v2.1):** `0` OK · `3` Integrity failure / Tampered · `4` Store inconsistent · `10` Gate blocked · `11` Compliance fail · **`12` Actively exploited**
+**Exit codes (v2.2):** `0` CPL entry verified · `1` CPL MISMATCH/MISSING · `2` CPL Operational error · `3` Integrity failure / Tampered · `4` Store inconsistent · `10` Gate blocked · `11` Compliance fail · **`12` Actively exploited**
+
+### Configuration Provenance Link (CPL) — v2.2
+
+```bash
+# Compute canonical configuration hash (SHA-256 or BLAKE3)
+wardex config hash --config wardex-config.yaml
+wardex config hash --config wardex-config.yaml --algorithm blake3
+
+# Verify audit log chain integrity
+wardex audit verify-chain --audit-log wardex-gate-audit.log
+
+# Verify hashes in the audit log match archived configurations
+wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./configs/
+```
+
+CPL establishes a cryptographic link between each release gate decision and the configuration in effect at the time. The hash is computed over canonical YAML content (sorted keys, stripped comments, normalized whitespace) — guaranteeing reproducibility across environments. Supports SHA-256 and **BLAKE3** (modern algorithm with superior performance). Hashes with different algorithms are distinguished by prefix (`sha256:`, `blake3:`) and never silently compared. Divergences between the audit log and archived configurations can be notified via webhook to SIEM.
+
+**CPL exit codes:** `0` All entries OK · `1` MISMATCH/MISSING detected · `2` Operational error
 
 ---
 ## Compliance gap analysis

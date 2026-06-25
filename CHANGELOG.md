@@ -4,6 +4,96 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] — 2026-06-25
+
+### Added
+
+- **Configuration Provenance Link (CPL)**: Cryptographic integrity for release gate
+  decisions, connecting each evaluation to the configuration in effect at decision time.
+
+- **`wardex config hash`**: Compute SHA-256 or BLAKE3 hash of `wardex-config.yaml` over
+  canonicalised content (sorted keys, no comments, normalised whitespace). Deterministic
+  across environments — semantically identical configs produce the same hash.
+  (`cmd/configseal/hash.go`)
+
+- **`wardex audit verify-link`**: Verify that `config_hash` entries in a wardex audit
+  log match the corresponding archived configuration files. Reports `OK`, `MISMATCH`,
+  or `MISSING` per entry. Exit code 0 all-OK, 1 on divergence, 2 on error.
+  (`cmd/audit/verify_link.go`)
+
+- **`wardex audit verify-chain`**: Validate the integrity of the audit log hash chain.
+  Each entry must reference the SHA-256 of the preceding line; first entry must have
+  `prev_hash = "genesis"`. Exit code 0 intact, 1 tampered, 2 on error.
+  (`cmd/audit/verify_chain.go`)
+
+- **`internal/cpl/` package**: Core CPL library — `ComputeConfigHash` with YAML
+  canonicalisation, `VerifyChain` for hash chain integrity, `VerifyLink` for
+  config-archive matching. Supports SHA-256 and BLAKE3 with algorithm prefix
+  (`sha256:`, `blake3:`). (`internal/cpl/hash.go`, `chain.go`, `verifylink.go`)
+
+- **CPL test suite**: 12 cryptographic integrity tests covering canonicalisation
+  determinism, env-var isolation, known vectors, invalid YAML, algorithm prefix
+  parsing, mixed-algorithm logs, chain verification (valid, tampered, genesis,
+  large corpus), and verify-link (OK, mismatch, missing). (`internal/cpl/*_test.go`)
+
+- **`internal/notification/` package**: Fire-and-forget divergence webhook for CPL.
+  Sends HTTP POST with `DivergencePayload` JSON to configurable endpoint. Bearer
+  auth via env var, configurable timeout (default 5s, max 30s), non-blocking.
+  (`internal/notification/webhook.go`)
+
+- **CPL divergence webhook**: When `wardex audit verify-link` detects MISMATCH or
+  MISSING, optionally notifies an external endpoint (SIEM, alerting) without
+  affecting exit codes. Configured in `wardex.yaml` under `notifications.divergence_webhook`.
+
+- **`cli_overrides` in audit log**: CLI flags that override config values (e.g.,
+  `--gate-mode`, `--fail-above`, `--profile`) are recorded as `cli_overrides` in
+  gate audit log entries for full provenance. (`cmd/evaluate/evaluate.go`,
+  `pkg/model/audit.go`)
+
+- **Canonicalised ConfigHash**: `accept.ConfigHash()` now uses CPL canonicalisation
+  (YAML→JSON→SHA-256) instead of raw byte hashing, ensuring reproducibility across
+  formatting differences. (`pkg/accept/accept.go`)
+
+- **Chained audit logging**: All gate evaluation log entries now use
+  `ChainedAuditLog` (hash-chain linked) instead of plain `AuditLog`.
+  (`cmd/evaluate/evaluate.go`)
+
+- **`--strict` config hash check**: When `wardex evaluate --strict` is active, exit
+  code 3 (`IntegrityFailure`) if the config hash cannot be computed.
+  (`cmd/evaluate/evaluate.go`)
+
+- **`notifications` config section**: New `wardex.yaml` section for CPL webhook
+  configuration (`url`, `auth_env`, `timeout_seconds`, `headers`).
+  (`config/config.go`)
+
+- **BLAKE3 support**: Hash algorithm BLAKE3 available via `--algorithm blake3` flag
+  on `wardex config hash`. (`internal/cpl/blake3.go`, `go.mod`)
+
+- **CI mirror gate**: CPL integrity check commands documented in the spec for CI
+  pipeline integration.
+
+### Changed
+
+- **`pkg/accept.ConfigHash`**: Refactored to delegate to `internal/cpl.ComputeConfigHash`
+  with SHA-256 canonicalisation. All callers (evaluate, accept) automatically benefit
+  from deterministic hashing.
+
+- **`pkg/model.AuditEntry`**: Added `CliOverrides map[string]string` field for CLI
+  provenance tracking.
+
+- **Audit log format**: Gate evaluation entries now use chained logging
+  (`ChainedAuditLog`) — each entry carries `previous_entry_hash` for tamper
+  detection.
+
+### Security
+
+- **CPL cryptographic integrity**: 12-test suite verifies canonicalisation
+  determinism, hash chain integrity, algorithm prefix isolation, and divergence
+  detection. Canonicalisation uses `encoding/json` for deterministic key ordering
+  (guaranteed since Go 1.12).
+
+---
+
 ## [2.1.2] — 2026-06-22
 
 ### Added
