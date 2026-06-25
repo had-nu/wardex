@@ -45,3 +45,22 @@ Risk Acceptances are stored in plaintext YAML (`wardex-acceptances.yaml`) to ens
 
 ### Write-Once / Append-Only 
 The application logically prevents the internal modification of an acceptance once signed. If an acceptance must be invalidated before its expiration date, it must be explicitly **Revoked**, which issues a new cryptographically verifiable revocation entry in the `wardex-accept-audit.log`.
+
+---
+
+## 4. BLAKE3 Support (v2.2.0 — CPL)
+
+A partir da v2.2.0, o Wardex suporta BLAKE3 como alternativa ao SHA-256 para hashing
+de configurações (Configuration Provenance Link). BLAKE3 oferece:
+
+- **Performance superior**: 10-15× mais rápido que SHA-256 em software
+- **Segurança equivalente**: 256 bits de segurança, mesma margem que SHA-256
+- **Determinismo**: Output consistente entre plataformas
+
+O algoritmo é seleccionado pela flag `--algorithm sha256|blake3` no comando
+`wardex config hash`. Hashes produzem sempre um prefixo identificador (`sha256:` ou
+`blake3:`) que impede comparação silenciosa entre algoritmos diferentes.
+
+A canonicalização YAML (chaves ordenadas, comentários removidos, whitespace normalizado)
+é aplicada antes do hash independentemente do algoritmo escolhido, garantindo
+reprodutibilidade entre ambientes.
