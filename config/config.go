@@ -103,6 +103,14 @@ type DivergenceWebhookConfig struct {
 	Headers        map[string]string `yaml:"headers,omitempty"`
 }
 
+// StateStoreConfig configures the persistent state store.
+type StateStoreConfig struct {
+	Enabled         bool   `yaml:"enabled"`
+	Dir             string `yaml:"dir"`              // default: ".wardex"
+	RetentionDays   int    `yaml:"retention_days"`   // default: 90
+	WORM            bool   `yaml:"worm"`              // enable WORM protection
+}
+
 type Config struct {
 	ReleaseGate      ReleaseGate        `yaml:"release_gate"`
 	AcceptanceConfig AcceptanceConfig   `yaml:"acceptance"`
@@ -110,6 +118,7 @@ type Config struct {
 	Profiles         map[string]Profile `yaml:"profiles"`
 	CRA              CRAConfig          `yaml:"cra"`              // NEW in v2.0
 	Notifications    NotificationConfig `yaml:"notifications"`    // NEW in v2.2 — CPL
+	StateStore       StateStoreConfig   `yaml:"state_store"`      // NEW in v2.3 — persistent state
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.

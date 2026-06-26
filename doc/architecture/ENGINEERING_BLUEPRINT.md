@@ -527,71 +527,36 @@ Templates:
 
 ---
 
-## 12. Lacunas Identificadas — State Store
+## 12. State Store — Implementação (v2.2.1)
 
-### O Problema
-
-O Wardex é *stateless* por design. Cada execução é independente. No entanto, existem dados que **precisam** de persistir entre execuções para funcionamento correcto:
-
-| Dado | Actual | Impacto da Ausência |
-|---|---|---|
-| **Snapshot delta** | `.wardex_snapshot.json` (ficheiro avulso) | Sem gerenciamento de lifecycle, sem versionamento, sem partilha |
-| **Audit log** | `wardex-gate-audit.log` (JSONL append-only) | Sem query, sem aggregate, sem alertas |
-| **Acceptances** | `wardex-acceptances.yaml` + audit log | Dois ficheiros separados, sem transacção atómica |
-| **Trust store** | `wardex-trust.yaml` | Append-only mas sem rollback, sem backup automático |
-| **Config sealed** | `wardex.wexstate` | Bind estático, sem rotação automática |
-| **Gate decisions** | Log apenas | Sem histórico consultável, sem trend analysis |
-| **CPL hashes** | Audit log chain | Sem indexação, sem busca por data/config |
-
-### Consequências
-
-1. **Sem continuidade de sessão**: Cada `wardex evaluate` começa do zero — não sabe o que decidiu na execução anterior
-2. **Sem trend analysis**: Impossível saber se a postura de segurança está a melhorar ou piorar ao longo do tempo
-3. **Sem alertas proactivos**: O sistema não pode notificar quando uma acceptance está para expirar
-4. **Sem rollback**: Se uma config selada for comprometida, não há como reverter para um estado anterior
-5. **Sem aggregação multi-execução**: Cada execução é um ilha — impossível construir dashboards ou relatórios históricos
-
----
-
-## 13. Proposta de Solução — Persistent State Store
-
-### 13.1 Princípios de Design
-
-1. **Opt-in**: State store é opcional — sem ele, o Wardex funciona exactamente como hoje
-2. **File-based**: Sem base de dados externa — tudo em ficheiros no sistema de ficheiros local
-3. **Atomic writes**: Cada operação de escrita é atómica (write-to-temp + rename)
-4. **Append-only where possible**: Logs e auditoria mantêm append-only
-5. **Portable**: Ficheiros podem ser versionados com git ou partilhados via NFS
-6. **Zero dependencies**: Usa apenas stdlib Go (os, filepath, encoding/json, sync)
-
-### 13.2 Estrutura Proposta
+### 12.1 Estrutura Implementada
 
 ```
 .wardex/
 ├── state.json                  # Estado consolidado (singleton)
+├── chain.json                  # Cadeia BLAKE3 (audit trail)
 ├── history/
 │   ├── 2026-06-26T10:00:00Z.json   # Snapshot de cada execução
-│   ├── 2026-06-26T14:30:00Z.json
 │   └── ...
-├── decisions/
-│   ├── 2026-06.json             # Decisões de gate por mês
-│   └── ...
-├── acceptances/
-│   ├── active.yaml              # Acceptances activas
-│   ├── audit.jsonl              # Audit log (append-only)
-│   └── archive/                 # Acceptances expiradas/revogadas
-├── trust/
-│   ├── wardex-trust.yaml        # Trust store
-│   └── keys/                    # Keypairs (Ed25519)
-├── config/
-│   ├── wardex.wexstate          # Config selada
-│   └── provenance/
-│       ├── 2026-06-26.json      # CPL hashes
-│       └── ...
 └── index.md                     # Auto-generated index (human-readable)
 ```
 
-### 13.3 Componente `pkg/statestore/`
+### 12.2 Componentes Implementados
+
+| Componente | Ficheiro | Propósito |
+|---|---|---|
+| `State` | `pkg/statestore/state.go` | Tipos (State, TrendPoint, TrendAnalysis, TrendDirection) |
+| `Store` | `pkg/statestore/store.go` | API principal (New, LoadState, SaveState, RecordDecision, History, TrendAnalysis, Cleanup, VerifyChain) |
+| `Chain` | `pkg/statestore/chain.go` | Cadeia BLAKE3 (ChainEntry, ComputeChainHash, HashBytes, LoadChain, SaveChain, VerifyChain, AppendEntry) |
+| `WORM` | `pkg/statestore/worm.go` | Protecção imutável (LockFile, IsLocked, UnlockFile, LockDir, UnlockDir) |
+| `WORM Linux` | `pkg/statestore/worm_linux.go` | FS_IMMUTABLE_FL via ioctl |
+| `WORM Darwin` | `pkg/statestore/worm_darwin.go` | UF_IMMUTABLE via ioctl |
+| `WORM Windows` | `pkg/statestore/worm_windows.go` | FILE_ATTRIBUTE_READONLY |
+| `History` | `pkg/statestore/history.go` | ListHistory, HistoryBetween, HistoryCount |
+| `Trend` | `pkg/statestore/trend.go` | FormatTrend, FormatHistory, FormatDashboard |
+| `CLI` | `cmd/state/state.go` | 6 subcomandos (status, history, trend, dashboard, verify, cleanup) |
+
+### 12.3 API Principal
 
 ```go
 // pkg/statestore/store.go
@@ -599,27 +564,8 @@ O Wardex é *stateless* por design. Cada execução é independente. No entanto,
 package statestore
 
 type Store struct {
-    root string // .wardex/ directory
-}
-
-type State struct {
-    Version       string          `json:"version"`
-    LastRun       time.Time       `json:"last_run"`
-    LastDecision  string          `json:"last_decision"` // "allow"|"warn"|"block"
-    LastRisk      float64         `json:"last_risk"`
-    RunCount      int             `json:"run_count"`
-    Trend         []TrendPoint    `json:"trend"`         // últimos 30 dias
-    ActiveAccepts int             `json:"active_accepts"`
-    ExpiringSoon  []string        `json:"expiring_soon"` // CVEs a expirar em 7d
-    ConfigHash    string          `json:"config_hash"`
-    TrustRootSig  string          `json:"trust_root_sig"`
-}
-
-type TrendPoint struct {
-    Date      time.Time `json:"date"`
-    Risk      float64   `json:"risk"`
-    Decision  string    `json:"decision"`
-    VulnCount int       `json:"vuln_count"`
+    root  string      // .wardex/ directory
+    chain *ChainFile  // BLAKE3 hash chain
 }
 
 // New cria ou abre um state store existente
@@ -628,11 +574,11 @@ func New(root string) (*Store, error)
 // LoadState retorna o estado consolidado actual
 func (s *Store) LoadState() (*State, error)
 
-// SaveState grava o estado de forma atómica
+// SaveState grava o estado de forma atómica e append à cadeia
 func (s *Store) SaveState(state *State) error
 
 // RecordDecision Regista uma decisão de gate no histórico
-func (s *Store) RecordDecision(report model.GateReport) error
+func (s *Store) RecordDecision(decision string, risk float64, vulnCount int, activeAccepts int, expiringSoon []string) error
 
 // History Retorna o histórico de decisões (últimos N dias)
 func (s *Store) History(days int) ([]TrendPoint, error)
@@ -642,9 +588,33 @@ func (s *Store) TrendAnalysis() (*TrendAnalysis, error)
 
 // Cleanup Remove snapshots antigos (retention policy)
 func (s *Store) Cleanup(retentionDays int) error
+
+// VerifyChain Verifica a integridade da cadeia BLAKE3
+func (s *Store) VerifyChain() error
 ```
 
-### 13.4 Integração com o Pipeline Existente
+### 12.4 Cadeia BLAKE3
+
+```go
+// pkg/statestore/chain.go
+
+type ChainEntry struct {
+    Index     int       `json:"index"`
+    Timestamp time.Time `json:"timestamp"`
+    DataHash  string    `json:"data_hash"`  // BLAKE3 hash of the state data
+    PrevHash  string    `json:"prev_hash"`  // BLAKE3 hash of the previous entry
+    ChainHash string    `json:"chain_hash"` // BLAKE3(DataHash || PrevHash)
+}
+
+func ComputeChainHash(dataHash, prevHash string) string
+func HashBytes(data []byte) string
+func LoadChain(path string) (*ChainFile, error)
+func SaveChain(path string, chain *ChainFile) error
+func VerifyChain(chain *ChainFile) error
+func AppendEntry(chain *ChainFile, dataHash string) ChainEntry
+```
+
+### 12.5 Integração com o Pipeline
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
@@ -658,40 +628,44 @@ func (s *Store) Cleanup(retentionDays int) error
                                           └───────┬───────┘
                                                   │
                                           ┌───────▼───────┐
-                                          │ trend/        │
-                                          │ analysis      │
+                                          │ chain.json    │
+                                          │ (BLAKE3)      │
                                           └───────────────┘
 ```
 
 **Fluxo integrado**:
 
 1. `wardex evaluate` executa como hoje
-2. **NOVO**: Após `gate.Evaluate()`, chama `store.RecordDecision(report)`
-3. **NOVO**: `state.json` é actualizado atomicamente com último run, tendência, acceptances activas
-4. **NOVO**: `--trend` flag mostra tendência últimos 30 dias
-5. **NOVO**: `--alert-expiring` flag notifica acceptances a expirar em 7 dias
+2. Após `gate.Evaluate()`, chama `store.RecordDecision()`
+3. `state.json` é actualizado atomicamente com último run, tendência, acceptances activas
+4. Entrada é adicionada à cadeia BLAKE3 para audit trail
+5. `--trend` flag mostra tendência últimos 30 dias
 
-### 13.5 Compatibilidade
+### 12.6 Configuração
 
-- **Sem state store**: `wardex evaluate` funciona exactamente como hoje (default)
-- **Com state store**: `wardex evaluate --state-dir .wardex/` activa persistência
-- **Migração**: `wardex state import` importa dados de snapshots/logs existentes
-- **Export**: `wardex state export --format json` exporta estado consolidado
+```yaml
+# wardex-config.yaml
+state_store:
+  enabled: true
+  dir: .wardex
+  retention_days: 90
+  worm: true
+```
 
-### 13.6 Ganhos
+### 12.7 Comandos CLI
 
-| Capabilidade | Antes (stateless) | Depois (com state store) |
-|---|---|---|
-| Histórico de decisões | Log JSONL sem query | Query por data, CVE, decisão |
-| Trend analysis | Impossível | Gráfico de tendência 30/60/90 dias |
-| Alertas proactivos | Nenhum | Acceptances a expirar, risco crescente |
-| Rollback de config | Impossível | Versões anteriores preservadas |
-| Dashboard | Não suportado | `wardex state dashboard` → HTML |
-| Multi-execução aggregation | Não | `wardex state aggregate` → relatório |
+| Comando | Propósito |
+|---|---|
+| `wardex state status` | Estado actual e integridade da cadeia |
+| `wardex state history` | Histórico de decisões |
+| `wardex state trend` | Análise de tendência de risco |
+| `wardex state dashboard` | Dashboard abrangente |
+| `wardex state verify` | Verificar integridade BLAKE3 |
+| `wardex state cleanup` | Remover snapshots antigos |
 
 ---
 
-## 14. Referências do Codebase
+## 13. Referências do Codebase
 
 | Ficheiro | Caminho |
 |---|---|
@@ -710,6 +684,12 @@ func (s *Store) Cleanup(retentionDays int) error
 | Art14 model | `pkg/model/art14.go` |
 | SDK | `pkg/sdk/assess.go` |
 | Snapshot | `pkg/snapshot/snapshot.go` |
+| State Store | `pkg/statestore/store.go` |
+| State Types | `pkg/statestore/state.go` |
+| BLAKE3 Chain | `pkg/statestore/chain.go` |
+| WORM Protection | `pkg/statestore/worm.go` |
+| State CLI | `cmd/state/state.go` |
+| UI Logging | `pkg/ui/logging.go` |
 | Technical View | `doc/architecture/TECHNICAL_VIEW.md` |
 | Business View | `doc/architecture/BUSINESS_VIEW.md` |
 | Crypto Arch | `doc/architecture/CRYPTO_ARCHITECTURE.md` |
@@ -721,4 +701,4 @@ func (s *Store) Cleanup(retentionDays int) error
 
 ---
 
-*Blueprint gerado automaticamente a partir da análise do codebase Wardex v2.2.0.*
+*Blueprint gerado automaticamente a partir da análise do codebase Wardex v2.2.1.*
