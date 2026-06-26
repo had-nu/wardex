@@ -130,3 +130,80 @@ Exemplo de saída:
 [INFO] Filtered 3 low-confidence mappings (--min-confidence high)
 [WARN] EPSS score 1.5 for CVE-2024-1234 out of range [0,1] — clamped to 1.0
 ```
+
+### 9. State Store Persistente (`pkg/statestore/`)
+
+O Wardex v2.2.1 introduz memória persistente entre execuções, permitindo trend analysis, alertas proactivos e auditoria histórica de decisões do gate.
+
+#### 9.1 Estrutura de Directorias
+
+```
+.wardex/
+├── state.json                  # Estado consolidado (singleton)
+├── chain.json                  # Cadeia BLAKE3 (audit trail)
+├── history/
+│   ├── 2026-06-26T10:00:00Z.json   # Snapshot de cada execução
+│   └── ...
+└── index.md                     # Auto-generated index (human-readable)
+```
+
+#### 9.2 Componentes
+
+| Componente | Localização | Propósito |
+|---|---|---|
+| `State` | `pkg/statestore/state.go` | Tipos de dados (State, TrendPoint, TrendAnalysis) |
+| `Store` | `pkg/statestore/store.go` | API principal (New, LoadState, SaveState, RecordDecision) |
+| `Chain` | `pkg/statestore/chain.go` | Cadeia BLAKE3 para integridade auditável |
+| `WORM` | `pkg/statestore/worm.go` | Protecção imutável (Linux: FS_IMMUTABLE_FL, Windows: READONLY) |
+| `History` | `pkg/statestore/history.go` | Consultas históricas com filtros temporais |
+| `Trend` | `pkg/statestore/trend.go` | Análise de tendência com visualização sparkline |
+
+#### 9.3 Cadeia BLAKE3
+
+Cada decisão de gate é registada na cadeia com:
+- **DataHash**: BLAKE3 do estado serializado
+- **PrevHash**: Hash da entrada anterior (formando cadeia)
+- **ChainHash**: BLAKE3(DataHash || PrevHash)
+
+A verificação de integridade (`wardex state verify`) valida toda a cadeia desde o genesis.
+
+#### 9.4 Integração com o Pipeline
+
+```
+wardex evaluate → gate.Evaluate() → store.RecordDecision()
+                                        ↓
+                                   state.json (atômico)
+                                        ↓
+                                   history/YYYY-MM-DD.json
+```
+
+**Flags CLI:**
+- `--trend`: Mostra análise de tendência dos últimos 30 dias
+- `--state-dir .wardex/`: Directório do state store (default: `.wardex/`)
+
+**Configuração (`wardex-config.yaml`):**
+```yaml
+state_store:
+  enabled: true
+  dir: .wardex
+  retention_days: 90
+  worm: true
+```
+
+#### 9.5 Comandos CLI
+
+| Comando | Propósito |
+|---|---|
+| `wardex state status` | Estado actual e integridade da cadeia |
+| `wardex state history` | Histórico de decisões |
+| `wardex state trend` | Análise de tendência de risco |
+| `wardex state dashboard` | Dashboard abrangente |
+| `wardex state verify` | Verificar integridade BLAKE3 |
+| `wardex state cleanup` | Remover snapshots antigos |
+
+#### 9.6 Compatibilidade
+
+- **Sem state store**: `wardex evaluate` funciona exactamente como hoje (default)
+- **Com state store**: `wardex evaluate --state-dir .wardex/` activa persistência
+- **Migração**: `wardex state import` importa dados de snapshots/logs existentes
+- **Export**: `wardex state export --format json` exporta estado consolidado
