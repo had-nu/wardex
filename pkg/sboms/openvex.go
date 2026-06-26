@@ -48,6 +48,7 @@ func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
 	}
 
 	var vulns []model.Vulnerability
+	var skippedStates int
 
 	for _, stmt := range vex.Statements {
 		var reachable bool
@@ -57,7 +58,8 @@ func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
 		case "under_investigation", "affected":
 			reachable = true
 		default:
-			continue // Unrecognized state
+			skippedStates++
+			continue
 		}
 
 		compStr := "unknown-product"
@@ -72,6 +74,10 @@ func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
 			Component: compStr,
 			Reachable: reachable,
 		})
+	}
+
+	if skippedStates > 0 {
+		fmt.Fprintf(os.Stderr, "[WARN] %d OpenVEX statement(s) skipped — unrecognized state\n", skippedStates)
 	}
 
 	return vulns, nil

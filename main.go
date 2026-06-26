@@ -245,11 +245,16 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 	// Filter confidence if necessary (not fully required by spec, but added for robust coverage)
 	var filtered []model.Mapping
+	droppedLowConf := 0
 	for _, m := range mappings {
 		if minConfidence == "high" && m.Confidence == "low" {
+			droppedLowConf++
 			continue
 		}
 		filtered = append(filtered, m)
+	}
+	if droppedLowConf > 0 {
+		fmt.Fprintf(os.Stderr, "[INFO] Filtered %d low-confidence mappings (--min-confidence high)\n", droppedLowConf)
 	}
 
 	an := analyzer.New(cat, filtered, extControls)
@@ -365,7 +370,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 		if key, err := accept.ResolveSecret(*cfg); err == nil {
 			configHash, _ := accept.ConfigHash(configPath)
-			if accs, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
+			if accs, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash, os.Stderr); err == nil {
 				acceptedMap := make(map[string]bool)
 				for _, a := range accs {
 					if !a.Revoked {
@@ -382,6 +387,8 @@ func runWardex(cmd *cobra.Command, args []string) {
 				}
 				vulnsFormat.Vulnerabilities = filtered
 			}
+		} else {
+			fmt.Fprintf(os.Stderr, "[WARN] Cannot load acceptances — WARDEX_ACCEPT_SECRET not set. All CVEs will be evaluated without acceptance filtering.\n")
 		}
 
 		if epssEnrich != "" {

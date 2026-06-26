@@ -79,3 +79,54 @@ Para validar em profundidade o comportamento criptográfico da aceitação de ri
    wardex accept list --active
    wardex accept verify --output verification-report.json
    ```
+
+### 8. Sistema de Rejeição Explícita (`pkg/ui/logging.go`)
+
+O Wardex v2.2.1 introduz logging explícito para todos os comportamentos de rejeição que anteriormente ocorriam silenciosamente. Este sistema garante que nenhuma decisão de filtragem ou rejeição passa despercebida durante operações CI/CD.
+
+#### 8.1 Componentes
+
+| Componente | Localização | Propósito |
+|---|---|---|
+| `LogReject()` | `pkg/ui/logging.go` | Rejeições de validação (formatação ANSI condicional) |
+| `LogWarn()` | `pkg/ui/logging.go` | Alertas operacionais (ex: secret não configurado) |
+| `LogInfo()` | `pkg/ui/logging.go` | Informação de contexto (ex: mappings filtrados) |
+| `LogHint()` | `pkg/ui/logging.go` | Sugestões de resolução (ex: enriquecer EPSS) |
+
+#### 8.2 Locais com Logging Explícito
+
+**CRITICAL (3 locais)** — Rejeições que afectam directamente a decisão do gate:
+- `accept.Load()`: Aceitações expiradas, adulteradas ou com HMAC inválido
+- `cmd/evaluate/evaluate.go`: Falha ao resolver secret de assinatura
+- `main.go`: Falha ao carregar aceitações (secret não configurado)
+
+**HIGH (10 locais)** — Rejeições que reduzem dados disponíveis:
+- EPSS `FetchScores()`: Scores malformados ou fora de domínio [0,1]
+- CycloneDX: SBOMs com IDs vazios ou sem pontuação CVE
+- Grype converter: CVEs vazios ou duplicados
+- Art14 artefactos: Ficheiros malformados
+- OpenVEX: Estados não reconhecidos
+- Policy loader: Criação automática de novos ficheiros
+
+**MEDIUM (11 locais)** — Rejeições de consistência:
+- Trust store: Chaves admin com decodificação falhada
+- Snapshot delta: Controlos ausentes no snapshot anterior
+- Maturity scorer: Domínios não encontrados nos resumos
+- Analyzer gap: Controlos inexistentes em mappings
+- KEV converter: CVEs não encontrados no catálogo
+- CPL verifylink: Entradas com hash de configuração vazio
+
+#### 8.3 Formato de Saída
+
+Todas as mensagens são escritas para `stderr` com prefixos padronizados:
+- `[FAIL]` — Erro fatal que impede continuação
+- `[WARN]` — Alerta operacional que não bloqueia execução
+- `[INFO]` — Informação de contexto para debugging
+- `[HINT]` — Sugestão de acção corretiva
+
+Exemplo de saída:
+```
+[WARN] Cannot load acceptances — WARDEX_ACCEPT_SECRET not set. All CVEs will be evaluated without acceptance filtering.
+[INFO] Filtered 3 low-confidence mappings (--min-confidence high)
+[WARN] EPSS score 1.5 for CVE-2024-1234 out of range [0,1] — clamped to 1.0
+```

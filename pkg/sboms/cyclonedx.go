@@ -60,9 +60,11 @@ func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
 
 	var vulns []model.Vulnerability
 	seen := make(map[string]bool)
+	var skippedEmptyID, skippedNoScore int
 
 	for _, v := range report.Vulnerabilities {
 		if v.ID == "" {
+			skippedEmptyID++
 			continue
 		}
 
@@ -127,7 +129,16 @@ func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
 				Component: comp,
 				Reachable: true, // Conservative default
 			})
+		} else {
+			skippedNoScore++
 		}
+	}
+
+	if skippedEmptyID > 0 {
+		fmt.Fprintf(os.Stderr, "[WARN] %d CycloneDX CVEs skipped — empty ID\n", skippedEmptyID)
+	}
+	if skippedNoScore > 0 {
+		fmt.Fprintf(os.Stderr, "[WARN] %d CycloneDX CVEs skipped — no CVSS score available\n", skippedNoScore)
 	}
 
 	return vulns, nil

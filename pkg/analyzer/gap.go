@@ -5,6 +5,7 @@ package analyzer
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
@@ -30,6 +31,7 @@ func EvaluateCoverage(maps []model.Mapping, controls []model.ExistingControl) (m
 		}
 
 		if ec == nil {
+			fmt.Fprintf(os.Stderr, "[WARN] Mapping references nonexistent control %s — skipped\n", m.ExistingControlID)
 			continue
 		}
 

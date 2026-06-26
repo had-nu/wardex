@@ -223,6 +223,7 @@ func VerifyRootSig(store *TrustStore) error {
 		}
 		pub, err := DecodePublicKey(k.PubKey)
 		if err != nil {
+			fmt.Fprintf(os.Stderr, "[WARN] Admin key %s failed to decode — skipped in root verification\n", k.ID)
 			continue
 		}
 		if err := Verify(pub, rootMsg, store.RootSig); err == nil {

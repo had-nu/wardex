@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/mail"
 	"os"
 	"path/filepath"
@@ -97,7 +98,8 @@ type Result struct {
 var ErrStoreInconsistent = errors.New("store inconsistency: yaml entries < audit log events")
 
 // Load reads wardex-acceptances.yaml and sequentially executes verify logic.
-func Load(path string, key []byte, auditPath string, currentReportHash string, currentConfigHash string) ([]model.Acceptance, error) {
+// Rejected acceptances (expired, tampered, revoked) are logged to logw when non-nil.
+func Load(path string, key []byte, auditPath string, currentReportHash string, currentConfigHash string, logw io.Writer) ([]model.Acceptance, error) {
 	cwd, _ := os.Getwd()
 	safePathStr, err := utils.SafePath(cwd, path)
 	if err != nil {
@@ -134,11 +136,24 @@ func Load(path string, key []byte, auditPath string, currentReportHash string, c
 		}
 	}
 
-	// Return only non-expired and valid
+	// Return only non-expired and valid, logging rejections
 	var validAcceptances []model.Acceptance
 	for _, res := range results {
 		if res.Valid {
 			validAcceptances = append(validAcceptances, res.Acceptance)
+		} else if logw != nil {
+			reason := "unknown"
+			switch {
+			case res.Expired:
+				reason = "expired"
+			case res.Tampered:
+				reason = "tampered"
+			case res.Stale:
+				reason = "config changed since acceptance"
+			case res.ReportMismatch:
+				reason = "report hash mismatch"
+			}
+			fmt.Fprintf(logw, "[REJECT] Acceptance %s for %s — %s\n", res.Acceptance.ID, res.Acceptance.CVE, reason)
 		}
 	}
 

@@ -97,6 +97,7 @@ func CorrelateKEV(vulns []model.Vulnerability, catalogue *KEVCatalogue) []model.
 	for i, v := range vulns {
 		entry, found := kevMap[v.CVEID]
 		if !found {
+			fmt.Fprintf(os.Stderr, "[INFO] CVE %s not found in KEV catalogue — no enrichment applied\n", v.CVEID)
 			continue
 		}
 

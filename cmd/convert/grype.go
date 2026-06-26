@@ -89,13 +89,19 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 	}
 
 	seen := make(map[string]bool)
+	var skippedEmpty, skippedDuplicate int
 
 	for _, match := range report.Matches {
 		vulnID := match.Vulnerability.ID
 		comp := match.Artifact.Name
 		key := vulnID + "|" + comp
 
-		if seen[key] || vulnID == "" {
+		if vulnID == "" {
+			skippedEmpty++
+			continue
+		}
+		if seen[key] {
+			skippedDuplicate++
 			continue
 		}
 		seen[key] = true
@@ -158,6 +164,10 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 			"[INFO] No KEV catalogue provided. To correlate against CISA Known Exploited Vulnerabilities, download it with:\n"+
 				"       curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json\n"+
 				"       Then re-run with: wardex convert grype %s --kev kev-catalogue.json\n", inFile)
+	}
+
+	if skippedEmpty > 0 || skippedDuplicate > 0 {
+		fmt.Fprintf(os.Stderr, "[INFO] Skipped %d CVEs (empty ID: %d, duplicate: %d)\n", skippedEmpty+skippedDuplicate, skippedEmpty, skippedDuplicate)
 	}
 
 	yamlData, err := yaml.Marshal(&out)
