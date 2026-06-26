@@ -39,7 +39,7 @@ func runVerify(cmd *cobra.Command, args []string) {
 
 	currentConfigHash, _ := accept.ConfigHash(*acceptCfgPath)
 
-	acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
+	acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash, stderr)
 	if err != nil {
 		if errors.Is(err, accept.ErrTampered) {
 			fmt.Fprintf(stderr, "Tampered validation check failed: %v\n", err)
@@ -220,7 +220,7 @@ func runCheckExpiry(cmd *cobra.Command, args []string) {
 	}
 
 	currentConfigHash, _ := accept.ConfigHash(*acceptCfgPath)
-	acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
+	acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash, stderr)
 	if err != nil {
 		fmt.Fprintf(stderr, "Load error: %v\n", err)
 		exitFunc(1)
@@ -414,7 +414,7 @@ func runList(cmd *cobra.Command, args []string) {
 
 	currentConfigHash, _ := accept.ConfigHash(*acceptCfgPath)
 
-	acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash)
+	acceptances, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", currentConfigHash, stderr)
 	if err != nil {
 		if errors.Is(err, accept.ErrTampered) {
 			fmt.Fprintf(stderr, "Tampered acceptance detected: %v\n", err)

@@ -311,7 +311,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	// Filter accepted CVEs
 	if key, err := accept.ResolveSecret(*cfg); err == nil {
 		configHash, _ := accept.ConfigHash(configPath)
-		if accs, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash); err == nil {
+		if accs, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash, stderr); err == nil {
 			acceptedMap := make(map[string]bool)
 			for _, a := range accs {
 				if !a.Revoked {
@@ -328,6 +328,8 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 			}
 			vulns = filtered
 		}
+	} else {
+		fmt.Fprintf(stderr, "[WARN] Cannot load acceptances — WARDEX_ACCEPT_SECRET not set. All CVEs will be evaluated without acceptance filtering.\n")
 	}
 
 	// Apply EPSS enrichment

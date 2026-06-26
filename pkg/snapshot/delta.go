@@ -4,6 +4,9 @@
 package snapshot
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
@@ -22,7 +25,8 @@ func Diff(current, previous model.GapReport) model.Delta {
 	for _, curr := range current.Findings {
 		ps, exists := prevStatus[curr.Control.ID]
 		if !exists {
-			continue // Should not happen with static catalog
+			fmt.Fprintf(os.Stderr, "[WARN] Control %s not in previous snapshot — skipped in delta\n", curr.Control.ID)
+			continue
 		}
 
 		if curr.Status == model.StatusCovered && ps != model.StatusCovered {

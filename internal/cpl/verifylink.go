@@ -38,7 +38,7 @@ func VerifyLink(log []byte, configDir string) ([]LinkResult, error) {
 	}
 
 	var results []LinkResult
-	for _, line := range lines {
+	for lineNum, line := range lines {
 		line = bytes.TrimSpace(line)
 		if len(line) == 0 {
 			continue
@@ -50,6 +50,7 @@ func VerifyLink(log []byte, configDir string) ([]LinkResult, error) {
 		}
 
 		if entry.ConfigHash == "" {
+			fmt.Fprintf(os.Stderr, "[WARN] CPL entry at line %d has empty config hash — skipped\n", lineNum+1)
 			continue
 		}
 
@@ -116,7 +117,7 @@ func VerifyLinkWithConfig(log []byte, configRaw []byte) ([]LinkResult, error) {
 	}
 
 	var results []LinkResult
-	for _, line := range lines {
+	for lineNum, line := range lines {
 		line = bytes.TrimSpace(line)
 		if len(line) == 0 {
 			continue
@@ -128,6 +129,7 @@ func VerifyLinkWithConfig(log []byte, configRaw []byte) ([]LinkResult, error) {
 		}
 
 		if entry.ConfigHash == "" {
+			fmt.Fprintf(os.Stderr, "[WARN] CPL entry at line %d has empty config hash — skipped\n", lineNum+1)
 			continue
 		}
 

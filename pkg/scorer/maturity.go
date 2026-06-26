@@ -4,6 +4,9 @@
 package scorer
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
@@ -29,7 +32,8 @@ func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 		d := f.Control.Domain
 		s, ok := summaries[d]
 		if !ok {
-			continue // Should not happen if catalog is well-formed
+			fmt.Fprintf(os.Stderr, "[WARN] Domain %s not found in summaries — excluded from maturity\n", d)
+			continue
 		}
 
 		s.TotalControls++

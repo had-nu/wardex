@@ -190,15 +190,20 @@ func ListArtefacts(dir string) ([]*model.Art14NotificationArtefact, error) {
 	}
 
 	var artefacts []*model.Art14NotificationArtefact
+	var skipped int
 	for _, e := range entries {
 		if e.IsDir() || !strings.HasPrefix(e.Name(), "wardex-art14-") || !strings.HasSuffix(e.Name(), ".json") {
 			continue
 		}
 		a, err := ReadArtefact(filepath.Join(dir, e.Name()))
 		if err != nil {
-			continue // skip malformed files
+			skipped++
+			continue
 		}
 		artefacts = append(artefacts, a)
+	}
+	if skipped > 0 {
+		fmt.Fprintf(os.Stderr, "[WARN] %d malformed Art14 artefact(s) skipped\n", skipped)
 	}
 
 	return artefacts, nil

@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -35,8 +36,8 @@ type Data struct {
 
 // FetchScores queries the FIRST.org API for a list of CVE IDs and parses
 // the returned EPSS probabilities. It batches requests natively (the API allows
-// comma-separated CVEs).
-func FetchScores(cves []string) (map[string]float64, map[string]string, error) {
+// comma-separated CVEs). Malformed/out-of-range scores are logged to logw when non-nil.
+func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]string, error) {
 	if len(cves) == 0 {
 		return nil, nil, nil // Nothing to fetch
 	}
@@ -44,6 +45,7 @@ func FetchScores(cves []string) (map[string]float64, map[string]string, error) {
 	scores := make(map[string]float64)
 	provenance := make(map[string]string)
 	chunkSize := 50 // FIRST API accepts multiple CVEs, let's chunk to avoid URI limits
+	var skippedMalformed, skippedOutOfRange int
 
 	client := &http.Client{Timeout: 10 * time.Second}
 
@@ -90,11 +92,13 @@ func FetchScores(cves []string) (map[string]float64, map[string]string, error) {
 		for _, item := range apiResp.Data {
 			val, err := strconv.ParseFloat(item.EPSS, 64)
 			if err != nil {
-				continue // Skip malformed floats instead of dying
+				skippedMalformed++
+				continue
 			}
 
 			// Range validation
 			if val < 0.0 || val > 1.0 {
+				skippedOutOfRange++
 				continue
 			}
 
@@ -104,6 +108,15 @@ func FetchScores(cves []string) (map[string]float64, map[string]string, error) {
 		// Polite delay between chunks if multiple
 		if end < len(cves) {
 			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	if logw != nil {
+		if skippedMalformed > 0 {
+			fmt.Fprintf(logw, "[WARN] %d EPSS scores skipped — malformed float values (will default to worst-case 1.0)\n", skippedMalformed)
+		}
+		if skippedOutOfRange > 0 {
+			fmt.Fprintf(logw, "[WARN] %d EPSS scores skipped — out of range [0.0, 1.0] (will default to worst-case 1.0)\n", skippedOutOfRange)
 		}
 	}
 

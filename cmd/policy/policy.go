@@ -148,10 +148,12 @@ func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
 		for _, c := range d.Controls {
 			for _, e := range c.Exceptions {
 				if e.Expiry == "" {
+					fmt.Fprintf(os.Stderr, "[WARN] Exception for %s has no expiry date — not checked\n", c.ID)
 					continue
 				}
 				expiry, err := time.Parse("2006-01-02", e.Expiry)
 				if err != nil {
+					fmt.Fprintf(os.Stderr, "[WARN] Exception for %s has unparseable expiry %q — not checked\n", c.ID, e.Expiry)
 					continue
 				}
 				if expiry.Before(now) {
@@ -234,9 +236,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("policy add: parse existing file: %w", err)
 		}
 	case os.IsNotExist(err):
-		// New file: the caller is responsible for setting framework/domain
-		// metadata separately (or we could add --framework / --domain flags
-		// to this command in a future iteration).
+		fmt.Fprintf(os.Stderr, "[WARN] Policy file %s not found — creating new\n", abs)
 	default:
 		return fmt.Errorf("policy add: read: %w", err)
 	}
