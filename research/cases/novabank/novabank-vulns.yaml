@@ -1,0 +1,51 @@
+vulnerabilities:
+  - cve_id: CVE-2024-21762
+    cvss_base: 9.8
+    epss_score: 0.97239
+    component: libssl-dev
+    reachable: true
+  - cve_id: CVE-2024-3092
+    cvss_base: 10.0
+    epss_score: 0.99810
+    component: liblzma
+    reachable: true
+  - cve_id: CVE-2024-10826
+    cvss_base: 7.5
+    epss_score: 0.00061
+    component: kernel
+    reachable: true
+  - cve_id: CVE-2023-44487
+    cvss_base: 7.5
+    epss_score: 0.04520
+    component: http2
+    reachable: true
+  - cve_id: CVE-2023-29400
+    cvss_base: 5.3
+    epss_score: 0.00089
+    component: python3
+    reachable: true
+  - cve_id: CVE-2024-24786
+    cvss_base: 8.1
+    epss_score: 0.00345
+    component: grpc
+    reachable: true
+  - cve_id: CVE-2024-21413
+    cvss_base: 6.5
+    epss_score: 0.00120
+    component: openssh
+    reachable: true
+  - cve_id: CVE-2023-4863
+    cvss_base: 8.8
+    epss_score: 0.01450
+    component: libwebp
+    reachable: true
+  - cve_id: CVE-2024-0567
+    cvss_base: 5.9
+    epss_score: 0.00042
+    component: gnutls
+    reachable: true
+  - cve_id: CVE-2024-0535
+    cvss_base: 3.7
+    epss_score: 0.00018
+    component: curl
+    reachable: true

@@ -1,0 +1,42 @@
+# scenario-03-compensating-controls.yaml
+# Expected decision: ALLOW  (would be BLOCK without compensating controls)
+#
+# The raw vulnerability would exceed the risk appetite (CVSS 8.1, EPSS 0.45).
+# However, active compensating controls lower the composite score below 6.0:
+#
+#   WAF (effectiveness 0.40) — filters exploitation attempts at the edge
+#   auth  (effectiveness 0.30) — requires valid session; reduces attack surface
+#
+# This scenario validates that wardex correctly applies control effectiveness
+# as a multiplicative dampener on the composite risk score.
+
+asset:
+  criticality: 0.75
+  internet_facing: true
+  requires_auth: true
+
+compensating_controls:
+  - type: waf
+    effectiveness: 0.40   # WAF blocks ~40% of exploit attempts for this vuln class
+    description: "Cloudflare WAF — rule set updated 2025-02-10"
+
+  - type: auth
+    effectiveness: 0.30
+    description: "mTLS + short-lived JWT; attacker needs valid credentials"
+
+  - type: network_segmentation
+    effectiveness: 0.15
+    description: "Lateral movement blocked — service in isolated VPC subnet"
+
+vulnerabilities:
+  - cve_id: "CVE-2024-3388"
+    cvss_base: 8.1
+    epss_score: 0.45
+    reachable: true
+    description: "SSRF in HTTP client library used by the API gateway"
+
+  - cve_id: "CVE-2024-6610"
+    cvss_base: 7.4
+    epss_score: 0.31
+    reachable: true
+    description: "Path traversal in file-upload handler (requires auth)"

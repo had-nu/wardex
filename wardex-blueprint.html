@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wardex v2.1 — Architecture Blueprint</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b0f1a; --surface: #111827; --card: #1a1f2e;
+    --border: #2a3040; --text: #e2e8f0; --muted: #8892a4;
+    --accent: #7c5cfc; --accent2: #5b8def; --accent3: #00c9a7;
+    --red: #ef4444; --amber: #f59e0b; --green: #00c9a7;
+    --grad: linear-gradient(135deg, #7c5cfc, #5b8def);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── Header ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(11,15,26,.85); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: .75rem 2rem; display: flex; align-items: center; gap: 1rem;
+  }
+  header h1 { font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; }
+  header h1 span { color: var(--accent); }
+  header .tag { margin-left: auto; font-size: .75rem; color: var(--muted); }
+  nav { display: flex; gap: .25rem; }
+  nav a {
+    color: var(--muted); text-decoration: none; font-size: .8rem;
+    padding: .35rem .75rem; border-radius: 6px; transition: all .2s;
+  }
+  nav a:hover { color: var(--text); background: var(--card); }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center; padding: 4rem 2rem 3rem;
+    background: radial-gradient(ellipse at 50% 0%, rgba(124,92,252,.12) 0%, transparent 60%);
+  }
+  .hero h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -.03em; }
+  .hero h2 span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { color: var(--muted); max-width: 600px; margin: 1rem auto 0; font-size: 1.05rem; }
+
+  /* ── Container ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; }
+  section { margin-top: 4rem; }
+  .section-title {
+    font-size: 1.35rem; font-weight: 600; margin-bottom: .5rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .section-title .badge {
+    font-size: .7rem; font-weight: 500; padding: .15rem .6rem;
+    border-radius: 99px; background: rgba(124,92,252,.15); color: var(--accent);
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .section-sub { color: var(--muted); font-size: .9rem; margin-bottom: 1.5rem; }
+
+  /* ── Architecture Diagram ── */
+  .arch-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  }
+  @media (max-width:900px) { .arch-grid { grid-template-columns: 1fr; } }
+  .arch-layer {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .arch-layer h3 {
+    font-size: .75rem; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .arch-layer p { font-size: .8rem; color: var(--muted); margin-bottom: .75rem; }
+  .arch-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: .6rem .8rem; margin-bottom: .5rem;
+    font-size: .82rem; cursor: default; transition: all .2s;
+  }
+  .arch-box:hover { border-color: var(--accent); transform: translateX(3px); }
+  .arch-box .sub { font-size: .7rem; color: var(--muted); margin-top: .2rem; }
+  .arch-arrow {
+    text-align: center; color: var(--muted); font-size: .7rem;
+    padding: .3rem 0; letter-spacing: .1em;
+  }
+  .arch-flow {
+    display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+    margin: .5rem 0;
+  }
+  .arch-flow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent2); opacity: .5;
+  }
+  .arch-flow .dot.green { background: var(--green); }
+  .arch-flow .dot.amber { background: var(--amber); }
+  .arch-flow .dot.red { background: var(--red); }
+  .arch-flow .label { font-size: .7rem; color: var(--muted); }
+
+  /* ── Stat Cards ── */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.25rem; text-align: center;
+  }
+  .stat .num { font-size: 2rem; font-weight: 700; }
+  .stat .num.accent { color: var(--accent); }
+  .stat .num.green { color: var(--green); }
+  .stat .num.amber { color: var(--amber); }
+  .stat .num.red { color: var(--red); }
+  .stat .lbl { font-size: .75rem; color: var(--muted); margin-top: .25rem; }
+
+  /* ── Cards Grid ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1rem; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.5rem; transition: all .3s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,92,252,.08); }
+  .card h3 { font-size: .95rem; font-weight: 600; margin-bottom: .5rem; display: flex; align-items: center; gap: .5rem; }
+  .card p { font-size: .82rem; color: var(--muted); line-height: 1.7; }
+  .card .tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .75rem; }
+  .card .tags span {
+    font-size: .7rem; padding: .15rem .5rem; border-radius: 4px;
+    background: rgba(124,92,252,.1); color: var(--accent2);
+  }
+  .card .tags span.green { background: rgba(0,201,167,.1); color: var(--green); }
+  .card .tags span.amber { background: rgba(245,158,11,.1); color: var(--amber); }
+
+  /* ── SVG Flow Diagram ── */
+  .flow-diagram {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 2rem; overflow-x: auto;
+  }
+  .flow-diagram svg { width: 100%; height: auto; }
+  .flow-diagram svg text { font-family: 'Inter', sans-serif; }
+
+  /* ── Animation ── */
+  @keyframes pulse-dot {
+    0%, 100% { opacity: .3; }
+    50% { opacity: 1; }
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card, .arch-layer, .stat, .flow-diagram { animation: slideIn .5s ease-out both; }
+  .card:nth-child(2) { animation-delay: .1s; }
+  .card:nth-child(3) { animation-delay: .2s; }
+  .card:nth-child(4) { animation-delay: .3s; }
+  .card:nth-child(5) { animation-delay: .4s; }
+  .card:nth-child(6) { animation-delay: .5s; }
+
+  /* ── Frameworks ── */
+  .fw-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: .75rem; }
+  .fw-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; text-align: center; transition: all .2s;
+  }
+  .fw-item:hover { border-color: var(--accent); }
+  .fw-item .fw-name { font-size: .85rem; font-weight: 600; }
+  .fw-item .fw-ct { font-size: .7rem; color: var(--muted); margin-top: .25rem; }
+  .fw-item .fw-bar {
+    height: 3px; border-radius: 2px; margin-top: .5rem;
+    background: var(--border); overflow: hidden;
+  }
+  .fw-item .fw-bar .fill { height: 100%; border-radius: 2px; background: var(--grad); }
+
+  /* ── Risk Formula ── */
+  .formula-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.5rem; margin: 1rem 0;
+  }
+  .formula-box code {
+    display: block; font-size: .9rem; color: var(--accent3); 
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .formula-box .vars { margin-top: 1rem; font-size: .8rem; color: var(--muted); }
+  .formula-box .vars span { display: inline-block; margin-right: 1.5rem; }
+  .formula-box .vars b { color: var(--text); }
+
+  /* ── Timeline ── */
+  .timeline { position: relative; padding-left: 2rem; margin: 1.5rem 0; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+  .tl-item { position: relative; margin-bottom: 1.25rem; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -1.65rem; top: .35rem;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--bg);
+  }
+  .tl-item.red::before { background: var(--red); }
+  .tl-item.green::before { background: var(--green); }
+  .tl-item.amber::before { background: var(--amber); }
+  .tl-item h4 { font-size: .85rem; font-weight: 600; }
+  .tl-item p { font-size: .78rem; color: var(--muted); }
+  .tl-item .deadline { font-size: .72rem; color: var(--accent3); font-weight: 500; }
+
+  /* ── Gate Maturity ── */
+  .maturity-steps { display: flex; gap: .5rem; margin: 1rem 0; }
+  .m-step {
+    flex: 1; text-align: center; padding: .75rem .5rem;
+    border-radius: 8px; border: 1px solid var(--border); font-size: .75rem;
+    background: var(--surface); transition: all .3s;
+  }
+  .m-step.active { border-color: var(--accent); background: rgba(124,92,252,.1); }
+  .m-step .num { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+  .m-step.active .num { color: var(--accent3); }
+
+  /* ── Footer ── */
+  footer { text-align: center; padding: 3rem 2rem; color: var(--muted); font-size: .8rem; border-top: 1px solid var(--border); }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* ── Exit Codes Table ── */
+  .ec-table { width: 100%; border-collapse: collapse; font-size: .82rem; margin: 1rem 0; }
+  .ec-table th { text-align: left; padding: .6rem; border-bottom: 2px solid var(--border); color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; }
+  .ec-table td { padding: .6rem; border-bottom: 1px solid var(--border); }
+  .ec-table tr:hover td { background: rgba(124,92,252,.04); }
+  .ec-table .code { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .ec-table .code.green { color: var(--green); }
+  .ec-table .code.amber { color: var(--amber); }
+  .ec-table .code.red { color: var(--red); }
+  .ec-table .code.accent { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⬡ <span>WARDEX</span></h1>
+  <nav>
+    <a href="#arch">Architecture</a>
+    <a href="#data">Data Model</a>
+    <a href="#gate">Release Gate</a>
+    <a href="#cra">CRA Art.14</a>
+    <a href="#frameworks">Frameworks</a>
+    <a href="#trust">Trust</a>
+    <a href="#pipeline">Pipeline</a>
+  </nav>
+  <span class="tag">v2.1.1</span>
+</header>
+
+<div class="hero">
+  <h2><span>Risk-Based Release Gate</span><br>Compliance Infrastructure</h2>
+  <p>Wardex evaluates vulnerability evidence against policy controls, generates CRA Article 14 notifications, and produces compliance gap reports across ISO 27001, NIS2, DORA, NIST CSF 2.0, and SOC 2.</p>
+</div>
+
+<div class="container">
+
+<!-- ═══ Stats ═══ -->
+<div class="stats">
+  <div class="stat"><div class="num accent">11</div><div class="lbl">CLI Commands</div></div>
+  <div class="stat"><div class="num green">5</div><div class="lbl">Framework Catalogs</div></div>
+  <div class="stat"><div class="num amber">182</div><div class="lbl">Total Controls</div></div>
+  <div class="stat"><div class="num accent">20</div><div class="lbl">Go Packages</div></div>
+  <div class="stat"><div class="num green">4</div><div class="lbl">Report Formats</div></div>
+  <div class="stat"><div class="num red">12</div><div class="lbl">Exit Codes</div></div>
+</div>
+
+<!-- ═══ Architecture ═══ -->
+<section id="arch">
+  <div class="section-title">Architecture <span class="badge">Layered</span></div>
+  <p class="section-sub">Three-layer design: CLI dispatch → analysis engine → persistence & reporting.</p>
+  <div class="arch-grid">
+    <div class="arch-layer">
+      <h3>CLI / Interface Layer</h3>
+      <p>Entry points for CI/CD, CLI usage, and third-party integrations.</p>
+      <div class="arch-box"><strong>evaluate</strong> <span class="sub">Release gate decision from evidence</span></div>
+      <div class="arch-box"><strong>assess</strong> <span class="sub">Full compliance gap analysis</span></div>
+      <div class="arch-box"><strong>art14</strong> <span class="sub">CRA Article 14 lifecycle (list/show/mark/finalize/verify)</span></div>
+      <div class="arch-box"><strong>accept</strong> <span class="sub">Risk acceptances with HMAC signing</span></div>
+      <div class="arch-box"><strong>convert</strong> <span class="sub">Canonicalise third-party scanner output</span></div>
+      <div class="arch-box"><strong>aggregate</strong> <span class="sub">Multi-framework gate aggregation</span></div>
+      <div class="arch-box"><strong>enrich</strong> <span class="sub">EPSS score enrichment with signature verification</span></div>
+      <div class="arch-box"><strong>trust</strong> <span class="sub">Keypair management, trust store, revocations</span></div>
+      <div class="arch-box"><strong>policy</strong> <span class="sub">Validate and manage policy YAML files</span></div>
+      <div class="arch-box"><strong>config seal</strong> <span class="sub">Seal config with Ed25519 signature</span></div>
+      <div class="arch-box"><strong>simulate</strong> <span class="sub">Monte Carlo risk simulation</span></div>
+    </div>
+
+    <div class="arch-layer">
+      <h3>Analysis Engine</h3>
+      <p>Core domain logic — correlation, scoring, risk calculation.</p>
+      <div class="arch-box">
+        <strong>ingestion</strong> <span class="sub">LoadMany() · LoadAssets() · LoadControls()</span>
+        <div class="arch-flow"><span class="dot"></span><span class="label">YAML controls</span><span class="dot"></span><span class="label">Evidence files</span><span class="dot"></span><span class="label">Asset definitions</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>catalog</strong> <span class="sub">Load(framework) → []CatalogControl</span>
+        <div class="arch-flow"><span class="dot green"></span><span class="label">Embedded YAML catalogs</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>correlator</strong> <span class="sub">Correlate() → []Mapping</span>
+        <div class="arch-flow"><span class="dot"></span><span class="label">Keyword+domain matching</span><span class="dot"></span><span class="label">Confidence scoring</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>analyzer</strong> <span class="sub">Analyze() → []Finding · ComputeLayerDelta()</span>
+        <div class="arch-flow"><span class="dot green"></span><span class="label">Gap detection</span><span class="dot amber"></span><span class="label">Layer delta (Paper vs Code)</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>scorer</strong> <span class="sub">Summarize() · MaturityByDomain() · Roadmap()</span>
+      </div>
+      <div class="arch-box">
+        <strong>releasegate</strong> <span class="sub">Gate.Evaluate() · CalculateRisk() · InferMaturity()</span>
+        <div class="arch-flow"><span class="dot red"></span><span class="label">CVSS × EPSS × Exposure risk model</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>epss</strong> <span class="sub">FetchScores() · Verify()</span>
+        <div class="arch-flow"><span class="dot"></span><span class="label">TLS-cert pinned · HMAC signed</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>art14</strong> <span class="sub">GenerateArtefact() · SignArtefact() · ListArtefacts()</span>
+      </div>
+    </div>
+
+    <div class="arch-layer">
+      <h3>Persistence & Reporting</h3>
+      <p>Output formats, audit trails, forwarding, sealed state.</p>
+      <div class="arch-box">
+        <strong>report</strong> <span class="sub">Generate(GapReport, format, outFile)</span>
+        <div class="arch-flow"><span class="dot green"></span><span class="label">Markdown</span><span class="dot green"></span><span class="label">JSON</span><span class="dot green"></span><span class="label">CSV</span><span class="dot green"></span><span class="label">HTML</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>snapshot</strong> <span class="sub">Load() · Save() · Diff()</span>
+        <div class="arch-flow"><span class="dot"></span><span class="label">Delta tracking between runs</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>accept</strong> <span class="sub">Forwarder · AuditLog · ChainedAuditLog · SyslogBackend · ENISABackend · MockBackend</span>
+        <div class="arch-flow"><span class="dot"></span><span class="label">HMAC signing</span><span class="dot red"></span><span class="label">Chained audit log</span><span class="dot"></span><span class="label">Syslog/UDP · ENISA stub</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>trust</strong> <span class="sub">LoadWexState() · VerifySeal() · FetchTrustStore()</span>
+        <div class="arch-flow"><span class="dot"></span><span class="label">Ed25519 · KERI-compatible refs</span></div>
+      </div>
+      <div class="arch-box">
+        <strong>utils</strong> <span class="sub">SafePath() · HashFile()</span>
+      </div>
+      <div class="arch-box">
+        <strong>config</strong> <span class="sub">Load() · Config struct</span>
+        <div class="arch-flow"><span class="dot"></span><span class="label">YAML · .wexstate sealed</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arch-arrow">⬇  DATA FLOW  ⬇</div>
+  <div class="flow-diagram">
+    <svg viewBox="0 0 1100 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c5cfc"/><stop offset="100%" stop-color="#5b8def"/></linearGradient>
+        <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00c9a7"/><stop offset="100%" stop-color="#00e5bf"/></linearGradient>
+        <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#f87171"/></linearGradient>
+        <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10" fill="var(--muted, #8892a4)"/></marker>
+      </defs>
+
+      <!-- Background -->
+      <rect x="0" y="0" width="1100" height="320" fill="none"/>
+
+      <!-- Top row: inputs -->
+      <rect x="60" y="20" width="160" height="40" rx="8" fill="rgba(124,92,252,.12)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="140" y="45" text-anchor="middle" fill="var(--accent)" font-size="13" font-weight="600">Controls YAML</text>
+
+      <rect x="260" y="20" width="160" height="40" rx="8" fill="rgba(124,92,252,.12)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="340" y="45" text-anchor="middle" fill="var(--accent)" font-size="13" font-weight="600">Evidence/Envelope</text>
+
+      <rect x="460" y="20" width="160" height="40" rx="8" fill="rgba(124,92,252,.12)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="540" y="45" text-anchor="middle" fill="var(--accent)" font-size="13" font-weight="600">Config/Assets</text>
+
+      <!-- Arrows down -->
+      <line x1="140" y1="60" x2="140" y2="105" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow)" opacity=".5"/>
+      <line x1="340" y1="60" x2="340" y2="105" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow)" opacity=".5"/>
+      <line x1="540" y1="60" x2="540" y2="105" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow)" opacity=".5"/>
+
+      <!-- Middle: engine -->
+      <rect x="40" y="105" width="620" height="90" rx="10" fill="var(--card)" stroke="var(--border)" stroke-width="1" filter="url(#glow)"/>
+      <text x="350" y="128" text-anchor="middle" fill="var(--accent)" font-size="12" font-weight="600" letter-spacing=".05em">ANALYSIS ENGINE</text>
+
+      <text x="90" y="152" fill="var(--muted)" font-size="11">ingestion.LoadMany()</text>
+      <text x="90" y="170" fill="var(--muted)" font-size="11">catalog.Load(framework)</text>
+      <text x="270" y="152" fill="var(--muted)" font-size="11">correlator.Correlate()</text>
+      <text x="270" y="170" fill="var(--muted)" font-size="11">analyzer.Analyze()</text>
+      <text x="460" y="152" fill="var(--muted)" font-size="11">scorer.Summarize()</text>
+      <text x="460" y="170" fill="var(--muted)" font-size="11">gate.Evaluate()</text>
+
+      <!-- Engine output arrow -->
+      <line x1="350" y1="195" x2="350" y2="235" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow)" opacity=".5"/>
+
+      <!-- Bottom: GapReport -->
+      <rect x="100" y="240" width="520" height="44" rx="8" fill="rgba(0,201,167,.08)" stroke="var(--green)" stroke-width="1.5"/>
+      <text x="360" y="266" text-anchor="middle" fill="var(--green)" font-size="13" font-weight="600">GapReport</text>
+
+      <!-- Branch lines from GapReport -->
+      <line x1="360" y1="284" x2="360" y2="300" stroke="var(--muted)" stroke-width="1" opacity=".4"/>
+      <line x1="130" y1="300" x2="590" y2="300" stroke="var(--muted)" stroke-width="1" opacity=".4"/>
+
+      <!-- Output formats -->
+      <rect x="40" y="280" width="130" height="36" rx="6" fill="rgba(0,201,167,.06)" stroke="var(--green)" stroke-width="1"/>
+      <text x="105" y="302" text-anchor="middle" fill="var(--green)" font-size="11">Markdown / HTML</text>
+
+      <rect x="200" y="280" width="100" height="36" rx="6" fill="rgba(0,201,167,.06)" stroke="var(--green)" stroke-width="1"/>
+      <text x="250" y="302" text-anchor="middle" fill="var(--green)" font-size="11">JSON / CSV</text>
+
+      <rect x="340" y="280" width="110" height="36" rx="6" fill="rgba(245,158,11,.06)" stroke="var(--amber)" stroke-width="1"/>
+      <text x="395" y="302" text-anchor="middle" fill="var(--amber)" font-size="11">Audit Log</text>
+
+      <rect x="480" y="280" width="140" height="36" rx="6" fill="rgba(239,68,68,.06)" stroke="var(--red)" stroke-width="1"/>
+      <text x="550" y="302" text-anchor="middle" fill="var(--red)" font-size="11">Art14 Notification</text>
+
+      <!-- Right column: external -->
+      <rect x="760" y="60" width="200" height="44" rx="8" fill="rgba(0,201,167,.06)" stroke="var(--green)" stroke-width="1"/>
+      <text x="860" y="87" text-anchor="middle" fill="var(--green)" font-size="12">EPSS FIRST.org API</text>
+
+      <rect x="760" y="125" width="200" height="44" rx="8" fill="rgba(0,201,167,.06)" stroke="var(--green)" stroke-width="1"/>
+      <text x="860" y="152" text-anchor="middle" fill="var(--green)" font-size="12">Trust Store (KERI)</text>
+
+      <rect x="760" y="190" width="200" height="44" rx="8" fill="rgba(0,201,167,.06)" stroke="var(--green)" stroke-width="1"/>
+      <text x="860" y="217" text-anchor="middle" fill="var(--green)" font-size="12">Syslog / ENISA</text>
+
+      <line x1="660" y1="82" x2="760" y2="82" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4" opacity=".4"/>
+      <line x1="660" y1="147" x2="760" y2="147" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4" opacity=".4"/>
+      <line x1="480" y1="316" x2="480" y2="212" stroke="var(--muted)" stroke-width="1" marker-end="url(#arrow)" stroke-dasharray="4" opacity=".3"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══ Data Model ═══ -->
+<section id="data">
+  <div class="section-title">Data Model <span class="badge">Core Types</span></div>
+  <p class="section-sub">Central data structures flowing through the pipeline.</p>
+  <div class="card-grid">
+    <div class="card">
+      <h3>📦 GapReport</h3>
+      <p>Top-level assessment output. Contains the executive summary, all findings, roadmap, gate decision, layer delta, asset compliance, and optional delta.</p>
+      <div class="tags">
+        <span>Summary</span><span>Findings</span><span>Roadmap</span><span>Gate</span>
+        <span>LayerDelta</span><span>AssetCompliance</span><span>Delta</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📊 ExecutiveSummary</h3>
+      <p>Management-grade overview: global coverage %, per-domain summaries, top critical gaps, and gate summary. Designed for stakeholder review.</p>
+      <div class="tags">
+        <span>GlobalCoverage</span><span>DomainSummaries</span><span>TopCriticalGaps</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔍 Finding & Mapping</h3>
+      <p>Individual control assessment with status (covered/partial/gap), final score, maturity, gap reasons, and recommendation. Linked via Mapping to framework controls.</p>
+      <div class="tags">
+        <span>CoverageStatus</span><span>FinalScore</span><span>GapReasons</span>
+        <span>Confidence</span><span>MatchedDomains</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🛡️ VulnerabilityEnvelope</h3>
+      <p>Canonicalised scanner output wrapper. Includes CVE ID, CVSS base, EPSS score, reachability flag, CRA Article 14 active exploitation metadata, and provenance.</p>
+      <div class="tags">
+        <span>CVE</span><span>CVSS</span><span>EPSS</span><span>ActivelyExploited</span>
+        <span>Provenance</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🧩 Asset & AssetCompliance</h3>
+      <p>Full asset model with criticality, exposure context, compensating controls, threats, and scope. Compliance score per asset against framework controls.</p>
+      <div class="tags">
+        <span>Criticality</span><span>Exposure</span><span>CompControls</span>
+        <span>Threats</span><span>ComplianceScore</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📋 LayerDelta</h3>
+      <p>Quantifies the gap between documented policies and operational implementation. Three categories: Active Coverage, Paper Security, Shadow Security.</p>
+      <div class="tags">
+        <span>DocumentedCount</span><span>ImplementedCount</span>
+        <span>PolicyGap</span><span>ImplementedOnly</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Release Gate ═══ -->
+<section id="gate">
+  <div class="section-title">Release Gate <span class="badge">Risk Model</span></div>
+  <p class="section-sub">Compound risk calculation that determines BLOCK / WARN / ALLOW per vulnerability.</p>
+
+  <div class="formula-box">
+    <code>R(α) = (CVSS/10 × EPSS) × (1 − Σ(Φ)) × C(α) × E(α)</code>
+    <div class="vars">
+      <span><b>CVSS/10</b> Normalised base score [0,1]</span>
+      <span><b>EPSS</b> Exploit probability [0,1] (defaults to 1.0 if missing)</span>
+      <span><b>Σ(Φ)</b> Compensating control effectiveness [0,0.8]</span>
+      <span><b>C(α)</b> Asset criticality [0,1]</span>
+      <span><b>E(α)</b> Exposure = internetWeight × (1 − authRed) × (1 − reachableRed)</span>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0">
+    <div class="card">
+      <h3>⚙️ Gate Configuration</h3>
+      <div style="font-size:.82rem;color:var(--muted)">
+        <div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border)">
+          <span>Mode</span><span style="color:var(--text);font-weight:500">any | aggregate</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border)">
+          <span>Risk Appetite</span><span style="color:var(--text);font-weight:500">0.0 – 1.5</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border)">
+          <span>Warn Above</span><span style="color:var(--text);font-weight:500">0.0 – 1.5</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem 0;">
+          <span>Aggregate Limit</span><span style="color:var(--text);font-weight:500">total risk threshold</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🧠 Gate Maturity Level</h3>
+      <p>Auto-inferred from AssetContext fields provided. Higher maturity = more informed risk decisions.</p>
+      <div class="maturity-steps">
+        <div class="m-step"><div class="num">1</div>default</div>
+        <div class="m-step"><div class="num">2</div>+criticality</div>
+        <div class="m-step"><div class="num">3</div>+internet_facing</div>
+        <div class="m-step"><div class="num">4</div>+auth</div>
+        <div class="m-step"><div class="num">5</div>+environment</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🚦 Exit Codes</h3>
+    <table class="ec-table">
+      <thead><tr><th>Code</th><th>Name</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td class="code green">0</td><td>OK</td><td>Gate passed — release allowed</td></tr>
+        <tr><td class="code accent">3</td><td>IntegrityFailure</td><td>HMAC tampered, trust store drift, or --strict with unsealed config</td></tr>
+        <tr><td class="code accent">4</td><td>StoreInconsistent</td><td>Mismatch between store file and audit log</td></tr>
+        <tr><td class="code amber">5</td><td>ExpiringSoon</td><td>Acceptances approaching expiration</td></tr>
+        <tr><td class="code red">10</td><td>GateBlocked</td><td>Release gate evaluated to BLOCK</td></tr>
+        <tr><td class="code amber">11</td><td>ComplianceFail</td><td>Gap score exceeded --fail-above threshold</td></tr>
+        <tr><td class="code red">12</td><td>ActivelyExploited</td><td>CISA KEV / actively exploited — hard stop, CRA Art.14 triggered</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ CRA Article 14 ═══ -->
+<section id="cra">
+  <div class="section-title">CRA Article 14 <span class="badge">Notification Pipeline</span></div>
+  <p class="section-sub">EU Cyber Resilience Act: active exploitation detection with HMAC-signed artefacts and regulatory deadlines.</p>
+
+  <div class="timeline">
+    <div class="tl-item red">
+      <h4>Active Exploitation Detected</h4>
+      <p>CISA KEV matching or manual classification. Wardex generates a signed notification artefact.</p>
+      <div class="deadline">Exit code 12 — hard stop</div>
+    </div>
+    <div class="tl-item red">
+      <h4>Early Warning (+24h)</h4>
+      <p>Submit early warning notification to competent authority (CSIRT/ENISA).</p>
+      <div class="deadline">Deadline: awareness timestamp + 24 hours</div>
+    </div>
+    <div class="tl-item red">
+      <h4>Notification (+72h)</h4>
+      <p>Formal vulnerability notification with product details, impact assessment, and mitigation timeline.</p>
+      <div class="deadline">Deadline: awareness timestamp + 72 hours</div>
+    </div>
+    <div class="tl-item amber">
+      <h4>Mark Dispatched</h4>
+      <p><code>wardex art14 mark-dispatched &lt;id&gt;</code> — acknowledges notification sent to authority.</p>
+    </div>
+    <div class="tl-item green">
+      <h4>Finalize (+14d after patch)</h4>
+      <p><code>wardex art14 finalize &lt;id&gt; --patch-date ...</code> — close-out report with vulnerability description, severity, impact, threat actor details, and corrective measures.</p>
+      <div class="deadline">Deadline: 14 days after corrective measures available</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔐 Artefact Signing & Verification</h3>
+    <p>Every notification artefact is HMAC-SHA256 signed using <code>WARDEX_ACCEPT_SECRET</code>. The artefact contains CVE IDs, awareness timestamp, deadlines, and a chained audit trail. Verification:</p>
+    <div style="margin-top:.75rem;font-size:.82rem;color:var(--muted)">
+      <code style="display:block;padding:.5rem;background:var(--surface);border-radius:6px;margin-bottom:.5rem">wardex art14 verify &lt;artefact-id&gt;</code>
+      <code style="display:block;padding:.5rem;background:var(--surface);border-radius:6px">wardex art14 list → artefact metadata & HMAC status</code>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Framework Catalogs ═══ -->
+<section id="frameworks">
+  <div class="section-title">Framework Catalogs <span class="badge">Embedded</span></div>
+  <p class="section-sub">Five compliance catalogs embedded via <code>//go:embed *.yaml</code>. Strict YAML parsing with <code>KnownFields(true)</code>.</p>
+
+  <div class="fw-grid">
+    <div class="fw-item">
+      <div class="fw-name">ISO 27001</div>
+      <div class="fw-ct">93 controls · 4 domains</div>
+      <div class="fw-bar"><div class="fill" style="width:100%"></div></div>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">SOC 2</div>
+      <div class="fw-ct">7 controls · 5 TSCs</div>
+      <div class="fw-bar"><div class="fill" style="width:30%"></div></div>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">NIS2</div>
+      <div class="fw-ct">25 controls</div>
+      <div class="fw-bar"><div class="fill" style="width:60%"></div></div>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">DORA</div>
+      <div class="fw-ct">26 controls</div>
+      <div class="fw-bar"><div class="fill" style="width:65%"></div></div>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">NIST CSF 2.0</div>
+      <div class="fw-ct">31 controls · 6 functions</div>
+      <div class="fw-bar"><div class="fill" style="width:75%"></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <h3>🧩 Correlation Engine</h3>
+    <p>Existing controls are matched to catalog controls via keyword overlap and domain intersection. Each match gets a confidence label (<code>high</code> or <code>low</code>). The scoring model uses <code>min-confidence</code> flag (default: <code>low</code>) to filter matches before gap analysis.</p>
+    <div class="tags">
+      <span>Keyword matching</span><span>Domain intersection</span>
+      <span>Confidence filtering</span><span>Practice-level gate relevance</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Trust System ═══ -->
+<section id="trust">
+  <div class="section-title">Trust System <span class="badge">Sealed Configs</span></div>
+  <p class="section-sub">Ed25519 keypairs, revocable trust store, and signed configuration states for non-repudiation in CI/CD pipelines.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div class="card">
+      <h3>🔑 Key Generation</h3>
+      <p><code>wardex keygen</code> generates Ed25519 keypairs with human-readable role labels. Keys are stored in <code>~/.wardex/keys/</code> with restricted permissions (0600).</p>
+      <div class="tags"><span>Ed25519</span><span>Role labels</span><span>0600 permissions</span></div>
+    </div>
+    <div class="card">
+      <h3>📜 Trust Store</h3>
+      <p>Signed registry of trusted public keys with roles, issuance dates, and optional KERI-compatible references. Supports key rotation and targeted revocation.</p>
+      <div class="tags"><span>KERI refs</span><span>Key rotation</span><span>Revocation</span></div>
+    </div>
+    <div class="card">
+      <h3>🔒 Config Seal</h3>
+      <p><code>wardex config seal</code> signs the active YAML config with a trusted key. The sealed payload (<code>.wexstate</code>) includes the original config, signer identity, key ID, and timestamp. <code>wardex evaluate</code> verifies the seal before loading.</p>
+      <div class="tags"><span>.wexstate</span><span>IntegrityFailure on broken seal</span><span>CI enforcement</span></div>
+    </div>
+    <div class="card">
+      <h3>🛡️ Non-Repudiation in CI</h3>
+      <p>When <code>--strict</code> is used, unsealed YAML configs are rejected with exit code 3. All gate decisions are logged to a chained audit log with evidence hash, config hash, and decision details.</p>
+      <div class="tags"><span>Evidence hash (SHA256)</span><span>Chained audit log</span><span>Exit code 3</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Pipeline Integration ═══ -->
+<section id="pipeline">
+  <div class="section-title">CI/CD Pipeline <span class="badge">Integration</span></div>
+  <p class="section-sub">Docker images on GHCR, GitHub Action, exit-code-based gate decisions, and supply-chain signing.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>🐳 Docker</h3>
+      <p>Official images on <code>ghcr.io/had-nu/wardex</code> with tags <code>:2.1.1</code>, <code>:2.1</code>, <code>:latest</code>. Distroless static base, non-root user (65532).</p>
+      <div style="margin-top:.5rem;font-size:.8rem">
+        <code style="display:block;padding:.4rem;background:var(--surface);border-radius:4px">docker pull ghcr.io/had-nu/wardex:2.1.1</code>
+      </div>
+      <div class="tags"><span>golang:1.26-alpine</span><span>distroless/static</span><span>cosign-signed</span></div>
+    </div>
+    <div class="card">
+      <h3>⚡ GitHub Action</h3>
+      <p>Reusable action at <code>had-nu/wardex@v2.1</code>. Accepts config, evidence, controls inputs. Exit codes route to distinct pipeline handlers.</p>
+      <div class="tags"><span>action.yml</span><span>Exit code routing</span><span>CI-native</span></div>
+    </div>
+    <div class="card">
+      <h3>📦 Release Pipeline</h3>
+      <p>GoReleaser builds 6 targets (linux/darwin/windows × amd64/arm64). CycloneDX SBOM via syft. Cosign keyless signing. GitHub Container Registry push.</p>
+      <div class="tags"><span>GoReleaser v2</span><span>Cosign v3.8</span><span>CycloneDX</span><span>GHCR</span></div>
+    </div>
+    <div class="card">
+      <h3>🔐 Supply Chain</h3>
+      <p>Cosign signatures (<code>.sig</code>) + CycloneDX SBOMs (<code>.sbom.json</code>) attached to every release artifact. SLSA provenance deferred — signatures provide cryptographic proof of origin.</p>
+      <div class="tags"><span>Cosign keyless</span><span>OIDC issuer</span><span>GitHub OIDC</span></div>
+    </div>
+    <div class="card">
+      <h3>📋 CI Quality Gates</h3>
+      <p>golangci-lint v2.11, govulncheck, gosec, 69% coverage threshold. All on Node 24 runners with pinned action SHAs.</p>
+      <div class="tags"><span>golangci-lint</span><span>govulncheck</span><span>gosec</span><span>69% threshold</span></div>
+    </div>
+    <div class="card">
+      <h3>📤 Forwarding</h3>
+      <p>Gate audit log supports forwarding via syslog (UDP) and ENISA stub (JSONL queue awaiting API publication). On-fail policy: warn or block.</p>
+      <div class="tags"><span>SyslogBackend</span><span>ENISABackend</span><span>ForwardMultiplexer</span></div>
+    </div>
+  </div>
+
+  <div class="flow-diagram" style="margin-top:1.5rem">
+    <svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10" fill="var(--muted)"/></marker>
+      </defs>
+      <rect x="20" y="20" width="140" height="48" rx="8" fill="rgba(124,92,252,.12)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="90" y="48" text-anchor="middle" fill="var(--accent)" font-size="13" font-weight="600">CI Trigger</text>
+      <line x1="160" y1="44" x2="200" y2="44" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow2)" opacity=".5"/>
+
+      <rect x="200" y="20" width="140" height="48" rx="8" fill="rgba(0,201,167,.08)" stroke="var(--green)" stroke-width="1.5"/>
+      <text x="270" y="48" text-anchor="middle" fill="var(--green)" font-size="13" font-weight="600">wardex convert</text>
+      <line x1="340" y1="44" x2="380" y2="44" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow2)" opacity=".5"/>
+
+      <rect x="380" y="20" width="160" height="48" rx="8" fill="rgba(0,201,167,.08)" stroke="var(--green)" stroke-width="1.5"/>
+      <text x="460" y="48" text-anchor="middle" fill="var(--green)" font-size="13" font-weight="600">wardex evaluate</text>
+      <line x1="540" y1="44" x2="580" y2="44" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrow2)" opacity=".5"/>
+
+      <!-- Decision diamond -->
+      <polygon points="640,20 700,44 640,68 580,44" fill="rgba(245,158,11,.08)" stroke="var(--amber)" stroke-width="1.5"/>
+      <text x="640" y="48" text-anchor="middle" fill="var(--amber)" font-size="11" font-weight="600">Gate?</text>
+
+      <!-- ALLOW branch -->
+      <line x1="640" y1="20" x2="640" y2="0" stroke="var(--green)" stroke-width="1.5"/>
+      <line x1="640" y1="0" x2="800" y2="0" stroke="var(--green)" stroke-width="1.5"/>
+      <line x1="800" y1="0" x2="800" y2="20" stroke="var(--green)" stroke-width="1.5" marker-end="url(#arrow2)"/>
+      <rect x="800" y="20" width="120" height="40" rx="6" fill="rgba(0,201,167,.08)" stroke="var(--green)" stroke-width="1"/>
+      <text x="860" y="45" text-anchor="middle" fill="var(--green)" font-size="12">ALLOW → Deploy</text>
+
+      <!-- BLOCK branch -->
+      <line x1="640" y1="68" x2="640" y2="90" stroke="var(--red)" stroke-width="1.5"/>
+      <line x1="640" y1="90" x2="780" y2="90" stroke="var(--red)" stroke-width="1.5"/>
+      <rect x="780" y="70" width="200" height="40" rx="6" fill="rgba(239,68,68,.08)" stroke="var(--red)" stroke-width="1"/>
+      <text x="880" y="95" text-anchor="middle" fill="var(--red)" font-size="12">BLOCK → Exit code 10/12</text>
+
+      <!-- Active exploitation sub-branch -->
+      <line x1="700" y1="44" x2="750" y2="44" stroke="var(--red)" stroke-width="1" stroke-dasharray="4" opacity=".5"/>
+      <rect x="750" y="120" width="200" height="36" rx="6" fill="rgba(239,68,68,.06)" stroke="var(--red)" stroke-width="1"/>
+      <text x="850" y="143" text-anchor="middle" fill="var(--red)" font-size="11">Art14 artefact generated</text>
+      <line x1="850" y1="120" x2="850" y2="80" stroke="var(--red)" stroke-width="1" stroke-dasharray="4" opacity=".3"/>
+    </svg>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  Wardex v2.1.1 · Built with Go · André Ataíde &nbsp;·&nbsp;
+  <a href="https://github.com/had-nu/wardex">github.com/had-nu/wardex</a>
+</footer>
+
+</body>
+</html>

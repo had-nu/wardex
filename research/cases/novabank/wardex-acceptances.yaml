@@ -1,0 +1,16 @@
+acceptances:
+  - cve: CVE-2024-3092
+    justification: "Critical vulnerability in xz/liblzma. Vendor patch scheduled for v5.4.1 release on 2025-05-15. Interim compensating controls: disable xz compression in all services, container images rebuilt without liblzma dependency."
+    accepted_at: "2024-12-20"
+    expires: "2025-06-01"
+    severity: critical
+    risk_owner: "Platform Engineering"
+    approver: "CISO"
+
+  - cve: CVE-2024-21762
+    justification: "OpenSSL vulnerability in libssl-dev. All production services updated to OpenSSL 3.2.1 as of 2024-12-18. Remaining non-production instances will be patched by 2025-01-15."
+    accepted_at: "2024-12-19"
+    expires: "2025-02-01"
+    severity: critical
+    risk_owner: "IT Ops"
+    approver: "CISO"

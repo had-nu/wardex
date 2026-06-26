@@ -1,0 +1,96 @@
+mappings:
+  - existing_control_id: "CTRL-001"
+    catalog_control_id: "NIS2.21.2.a"
+    confidence: high
+
+  - existing_control_id: "CTRL-001"
+    catalog_control_id: "DORA.Art9"
+    confidence: high
+
+  - existing_control_id: "CTRL-002"
+    catalog_control_id: "NIS2.21.2.b"
+    confidence: high
+
+  - existing_control_id: "CTRL-002"
+    catalog_control_id: "DORA.Art10"
+    confidence: high
+
+  - existing_control_id: "CTRL-003"
+    catalog_control_id: "NIS2.21.2.a"
+    confidence: high
+
+  - existing_control_id: "CTRL-004"
+    catalog_control_id: "NIS2.21.2.e"
+    confidence: low
+
+  - existing_control_id: "CTRL-005"
+    catalog_control_id: "NIS2.21.2.c"
+    confidence: high
+
+  - existing_control_id: "CTRL-005"
+    catalog_control_id: "DORA.Art11"
+    confidence: high
+
+  - existing_control_id: "CTRL-006"
+    catalog_control_id: "NIS2.21.2.e"
+    confidence: high
+
+  - existing_control_id: "CTRL-007"
+    catalog_control_id: "NIS2.21.2.d"
+    confidence: high
+
+  - existing_control_id: "CTRL-008"
+    catalog_control_id: "NIS2.21.2.e"
+    confidence: low
+
+  - existing_control_id: "CTRL-009"
+    catalog_control_id: "NIS2.21.2.e"
+    confidence: low
+
+  - existing_control_id: "CTRL-010"
+    catalog_control_id: "DORA.Art9"
+    confidence: high
+
+  - existing_control_id: "CTRL-011"
+    catalog_control_id: "DORA.Art9"
+    confidence: high
+
+  - existing_control_id: "CTRL-012"
+    catalog_control_id: "NIS2.21.2.b"
+    confidence: low
+
+  - existing_control_id: "CTRL-013"
+    catalog_control_id: "NIS2.21.2.d"
+    confidence: low
+
+  - existing_control_id: "CTRL-014"
+    catalog_control_id: "NIS2.21.2.i"
+    confidence: high
+
+  - existing_control_id: "CTRL-015"
+    catalog_control_id: "NIS2.21.2.e"
+    confidence: high
+
+  - existing_control_id: "CTRL-015"
+    catalog_control_id: "DORA.Art24"
+    confidence: high
+
+  - existing_control_id: "CTRL-016"
+    catalog_control_id: "DORA.Art9"
+    confidence: high
+
+  - existing_control_id: "CTRL-017"
+    catalog_control_id: "DORA.Art9"
+    confidence: low
+
+  - existing_control_id: "CTRL-018"
+    catalog_control_id: "NIS2.21.2.b"
+    confidence: high
+
+  - existing_control_id: "CTRL-019"
+    catalog_control_id: "DORA.Art24"
+    confidence: low
+
+  - existing_control_id: "CTRL-020"
+    catalog_control_id: "NIS2.21.2.a"
+    confidence: low
