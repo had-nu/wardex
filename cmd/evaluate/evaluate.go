@@ -19,6 +19,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/ingestion"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/releasegate"
+	"github.com/had-nu/wardex/v2/pkg/statestore"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
@@ -38,6 +39,7 @@ var (
 	dryRun         bool
 	gateLogPath    string
 	art14OutputDir string // NEW in v2.0
+	showTrend      bool   // NEW in v2.3 — show trend analysis
 
 	// For testing
 	exitFunc = os.Exit
@@ -88,6 +90,7 @@ func init() {
 	EvaluateCmd.Flags().BoolVar(&strict, "strict", false, "Exit 3 if an unsealed config (.yaml) is used or if evidence is not canonical")
 	EvaluateCmd.Flags().StringVar(&gateLogPath, "gate-log", "", "Path to gate decision audit log (overrides config)")
 	EvaluateCmd.Flags().StringVar(&art14OutputDir, "art14-output-dir", "", "Directory where Article 14 notification artefacts are written (overrides config)")
+	EvaluateCmd.Flags().BoolVar(&showTrend, "trend", false, "Show risk trend analysis from state store (requires state_store.enabled)")
 	_ = EvaluateCmd.MarkFlagRequired("evidence")
 
 	// Allow the parent to inject the shared --config persistent flag.
@@ -531,6 +534,47 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 						exitFunc(exitcodes.IntegrityFailure)
 						return nil
 					}
+				}
+			}
+		}
+	}
+
+	// Record decision to persistent state store (if enabled)
+	if cfg.StateStore.Enabled {
+		stateDir := cfg.StateStore.Dir
+		if stateDir == "" {
+			stateDir = ".wardex"
+		}
+		store, err := statestore.New(stateDir)
+		if err != nil {
+			fmt.Fprintf(stderr, "[WARN] State store init failed: %v\n", err)
+		} else {
+			// Count blocked and warned decisions
+			activeAccepts := 0
+			for _, d := range gateReport.Decisions {
+				if d.Decision == "block" || d.Decision == "warn" {
+					activeAccepts++
+				}
+			}
+
+			if err := store.RecordDecision(
+				gateReport.OverallDecision,
+				gateReport.HighestRisk,
+				len(vulns),
+				activeAccepts,
+				nil,
+			); err != nil {
+				fmt.Fprintf(stderr, "[WARN] Failed to record decision to state store: %v\n", err)
+			} else {
+				fmt.Fprintf(stderr, "[INFO] Decision recorded to state store → %s\n", stateDir)
+			}
+
+			// Show trend if requested
+			if showTrend {
+				analysis, err := store.TrendAnalysis()
+				if err == nil {
+					history, _ := store.History(90)
+					fmt.Fprintln(w, statestore.FormatTrend(analysis, history))
 				}
 			}
 		}
