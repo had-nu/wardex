@@ -12,6 +12,7 @@ wardex
 *.out
 *.html
 !docs/**/*.html
+!doc/architecture/**/*.html
 coverage.out
 coverage.html
 .wardex_snapshot.json
@@ -32,6 +33,39 @@ lazygo.yml.bak
 # OS
 .DS_Store
 Thumbs.db
+
+# ============================================================
+# SECURITY — Cryptographic Material & Secrets
+# ============================================================
+
+# Private keys (Ed25519, RSA, etc.)
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+
+# Wardex state store (proposed persistent state)
+.wardex/
+
+# Wardex sealed config and keyring outputs
+*.wexstate
+*.wex
+
+# Environment files (may contain WARDEX_ACCEPT_SECRET, etc.)
+.env
+.env.*
+!.env.example
+
+# Trust store directory (per-organisation, must be regenerated)
+your-org/
+
+# Seal / keyring outputs
+wardex-trust.yaml
+wardex-trust.yaml.bak
+wardex.wexstate
+wardex.keyring
 
 # Wardex Portal POC (Not in official architecture)
 portal-workspaces/

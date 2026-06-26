@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wardex — Diagramas Arquitectonais</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --green: #3fb950;
+    --sidebar-w: 280px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  nav { position: fixed; top:0; left:0; width: var(--sidebar-w); height: 100vh; background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; padding: 20px 0; z-index: 100; }
+  nav .logo { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  nav .logo h1 { font-size: 18px; color: var(--accent); letter-spacing: 1px; }
+  nav .logo span { font-size: 11px; color: var(--text-muted); }
+  nav ul { list-style: none; }
+  nav ul li a { display: block; padding: 8px 20px; color: var(--text-muted); text-decoration: none; font-size: 13px; border-left: 3px solid transparent; transition: all 0.15s; }
+  nav ul li a:hover, nav ul li a.active { color: var(--accent); background: rgba(88,166,255,0.06); border-left-color: var(--accent); }
+  nav ul li a .num { color: var(--accent2); font-weight: 600; margin-right: 6px; }
+  nav .section-label { padding: 12px 20px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 600; }
+
+  /* Main content */
+  main { margin-left: var(--sidebar-w); flex:1; padding: 40px 60px 80px; max-width: 1100px; }
+  h2 { font-size: 22px; color: var(--accent); margin: 48px 0 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h2:first-of-type { margin-top: 0; }
+  h3 { font-size: 16px; color: var(--text); margin: 24px 0 8px; }
+  p { color: var(--text-muted); line-height: 1.7; margin: 8px 0 16px; font-size: 14px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+  .badge-gap { background: rgba(248,81,73,0.15); color: var(--red); }
+  .badge-ok { background: rgba(63,185,80,0.15); color: var(--green); }
+
+  /* Diagram container */
+  .diagram-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin: 16px 0 32px; overflow-x: auto; }
+  .diagram-card .mermaid { display: flex; justify-content: center; }
+  .diagram-card .legend { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+  .diagram-card .legend strong { color: var(--text); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 13px; }
+  th { background: var(--surface); text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); color: var(--accent); font-weight: 600; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  tr:hover td { background: rgba(88,166,255,0.04); }
+
+  /* Code */
+  code { background: rgba(88,166,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--accent); font-family: 'SFMono-Regular', Consolas, monospace; }
+
+  /* Analysis box */
+  .analysis { background: linear-gradient(135deg, rgba(248,81,73,0.08), rgba(210,153,34,0.08)); border: 1px solid rgba(248,81,73,0.3); border-radius: 8px; padding: 24px; margin: 32px 0; }
+  .analysis h3 { color: var(--yellow); margin-top: 0; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { width: 100%; height: auto; position: relative; }
+    main { margin-left: 0; padding: 20px; }
+  }
+
+  /* Mermaid overrides */
+  .mermaid svg { max-width: 100%; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <h1>WARDEX</h1>
+    <span>Diagramas Arquitectonais v2.2.0</span>
+  </div>
+  <div class="section-label">Diagramas</div>
+  <ul>
+    <li><a href="#d1"><span class="num">D1</span>Arquitectura de Componentes</a></li>
+    <li><a href="#d2"><span class="num">D2</span>Fluxo Compliance Gap</a></li>
+    <li><a href="#d3"><span class="num">D3</span>Fluxo Release Gate</a></li>
+    <li><a href="#d4"><span class="num">D4</span>Modelo de Dados Core</a></li>
+    <li><a href="#d5"><span class="num">D5</span>Estados do Gate</a></li>
+    <li><a href="#d6"><span class="num">D6</span>Arquitectura de Confiança</a></li>
+    <li><a href="#d7"><span class="num">D7</span>Arquitectura de Deployment</a></li>
+    <li><a href="#d8"><span class="num">D8</span>Lacuna: State Store</a></li>
+  </ul>
+  <div class="section-label">Análise</div>
+  <ul>
+    <li><a href="#analysis">Lacuna de Estado <span class="badge badge-gap">GAP</span></a></li>
+    <li><a href="#proposal">Proposta de Solução</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ============================================================ -->
+<!-- D1: COMPONENT ARCHITECTURE -->
+<!-- ============================================================ -->
+<h2 id="d1">D1 — Arquitectura de Componentes <span class="badge badge-ok">Vista Panorâmica</span></h2>
+<p>Diagrama de dependências entre todos os packages do Wardex. Mostra a camada CLI, o engine core, e a infraestrutura partilhada.</p>
+
+<div class="diagram-card">
+<div class="mermaid">
+graph TB
+    subgraph CLI["CLI Layer — cmd/"]
+        direction LR
+        ROOT["wardex<br/>(raiz)"]
+        EVAL["evaluate"]
+        ASSESS["assess"]
+        CONVERT["convert"]
+        AGG["aggregate"]
+        ART14CLI["art14"]
+        AUDIT["audit"]
+        SEAL["configseal"]
+        TRUSTCLI["trust"]
+        POLICY["policy"]
+        SIM["simulate"]
+        KEYGEN["keygen"]
+        ACCEPTCLI["accept"]
+        ENRICHCLI["enrich"]
+    end
+
+    subgraph CORE["Core Engine — pkg/"]
+        direction TB
+        INGEST["ingestion<br/><small>Load YAML/JSON/CSV</small>"]
+        CATALOG["catalog<br/><small>Embedded frameworks</small>"]
+        CORR["correlator<br/><small>Control ↔ Framework</small>"]
+        ANAL["analyzer<br/><small>Gaps, LayerDelta, Assets</small>"]
+        SCORER["scorer<br/><small>Score, Summary, Roadmap</small>"]
+        GATE["releasegate<br/><small>CalculateRisk, Evaluate</small>"]
+        ACCEPT["accept<br/><small>HMAC, Audit, Verify</small>"]
+        REPORT["report<br/><small>MD/JSON/CSV/HTML</small>"]
+        SNAPSHOT["snapshot<br/><small>Delta tracking</small>"]
+    end
+
+    subgraph INFRA["Infrastructure — pkg/"]
+        direction LR
+        MODEL["model<br/><small>8 type files</small>"]
+        TRUST["trust<br/><small>Ed25519, seal</small>"]
+        ART14["art14<br/><small>CRA notifications</small>"]
+        EPSS["epss<br/><small>EPSS enrichment</small>"]
+        UI["ui<br/><small>Banner, tables, color</small>"]
+        SDK["sdk<br/><small>Programmatic API</small>"]
+        UTILS["utils<br/><small>Path utilities</small>"]
+        EXIT["exitcodes<br/><small>0-12 codes</small>"]
+    end
+
+    subgraph INTERNAL["Internal — internal/"]
+        direction LR
+        CPL["cpl<br/><small>Config provenance</small>"]
+        NOTIFY["notification<br/><small>Webhooks</small>"]
+        INT_POLICY["policy<br/><small>Policy management</small>"]
+    end
+
+    ROOT --> INGEST
+    EVAL --> GATE
+    EVAL --> ACCEPT
+    EVAL --> ART14
+    EVAL --> EPSS
+    ASSESS --> ANAL
+    ASSESS --> SNAPSHOT
+    CONVERT --> INGEST
+    AGG --> REPORT
+
+    INGEST --> MODEL
+    CATALOG --> MODEL
+    CORR --> MODEL
+    ANAL --> MODEL
+    SCORER --> MODEL
+    GATE --> MODEL
+    ACCEPT --> MODEL
+    ACCEPT --> TRUST
+    REPORT --> MODEL
+    SNAPSHOT --> MODEL
+    ART14 --> MODEL
+    EPSS --> MODEL
+    TRUST --> MODEL
+    CPL --> MODEL
+
+    GATE --> SCORER
+    ANAL --> SCORER
+    CORR --> ANAL
+    INGEST --> CORR
+    CATALOG --> CORR
+
+    ACCEPTCLI --> ACCEPT
+    SEAL --> CPL
+    SEAL --> TRUST
+    TRUSTCLI --> TRUST
+    ART14CLI --> ART14
+    AUDIT --> CPL
+    ENRICHCLI --> EPSS
+
+    style CLI fill:#1a2332,stroke:#58a6ff,color:#c9d1d9
+    style CORE fill:#1a2332,stroke:#3fb950,color:#c9d1d9
+    style INFRA fill:#1a2332,stroke:#d29922,color:#c9d1d9
+    style INTERNAL fill:#1a2332,stroke:#f85149,color:#c9d1d9
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Azul = CLI (12 subcomandos) | Verde = Core Engine (9 packages de processamento) | Amarelo = Infraestrutura partilhada (8 packages) | Vermelho = Packages internos (3 packages).<br/>
+  <strong>Fluxo principal:</strong> CLI → Ingestion → Correlator → Analyzer → Scorer → Report. O Release Gate ramifica-se para Accept, Art14 e EPSS.<br/>
+  <strong>Nota:</strong> Todos os packages dependem de <code>model</code> (tipos de dados centrais). O <code>sdk</code> encapsula o pipeline completo para uso programático.
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- D2: COMPLIANCE GAP FLOW -->
+<!-- ============================================================ -->
+<h2 id="d2">D2 — Fluxo de Compliance Gap Analysis</h2>
+<p>Sequence diagram do pipeline principal: desde a ingestão de controlos até à geração do relatório.</p>
+
+<div class="diagram-card">
+<div class="mermaid">
+sequenceDiagram
+    actor User as Utilizador
+    participant CLI as wardex (raiz)
+    participant ING as ingestion
+    participant CAT as catalog
+    participant CORR as correlator
+    participant ANL as analyzer
+    participant SCR as scorer
+    participant SNF as snapshot
+    participant RPT as report
+
+    User->>CLI: wardex *.yaml --config wardex-config.yaml
+    CLI->>CLI: loadConfig(wardex-config.yaml)
+    CLI->>CLI: RBAC check (WARDEX_ACTOR)
+
+    CLI->>ING: LoadMany(args)
+    ING->>ING: Detect format (YAML/JSON/CSV)
+    ING->>ING: Validate mandatory fields (ID, Maturity)
+    ING-->>CLI: []ExistingControl
+
+    CLI->>CAT: Load(framework)
+    CAT->>CAT: Parse embedded YAML
+    CAT-->>CLI: []CatalogControl
+
+    CLI->>CORR: Correlate(controls, catalog)
+    CORR->>CORR: Domain intersection (HIGH confidence)
+    CORR->>CORR: strings.Contains (LOW confidence)
+    CORR-->>CLI: []Mapping
+
+    CLI->>ANL: Analyze(mappings)
+    ANL->>ANL: For each control: covered/partial/gap
+    ANL-->>CLI: []Finding
+
+    ANL->>ANL: ComputeLayerDelta()
+    Note right of ANL: Paper Security vs<br/>Shadow Security
+
+    ANL->>ANL: AssessAssets()
+    Note right of ANL: Per-asset compliance<br/>mapping
+
+    CLI->>SCR: Summarize(findings)
+    SCR->>SCR: Coverage percentages
+    SCR->>SCR: Domain maturity scores
+    SCR->>SCR: Roadmap (prioritized gaps)
+    SCR-->>CLI: ExecutiveSummary
+
+    CLI->>SNF: Diff(current, previous)
+    SNF->>SNF: Load .wardex_snapshot.json
+    SNF->>SNF: Compute delta
+    SNF-->>CLI: Delta
+
+    CLI->>SNF: Save(current)
+    SNF->>SNF: Write .wardex_snapshot.json
+
+    CLI->>RPT: Generate(summary, format)
+    RPT-->>User: Markdown / JSON / CSV / HTML
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Setas sólidas = chamadas síncronas | Setas tracejadas = returns | Notas = explicações contextuais.<br/>
+  <strong>Critérios de decisão:</strong> Cada controlo é classificado como <code>covered</code> (maturidade ≥ framework), <code>partial</code> (parcial), ou <code>gap</code> (ausente).<br/>
+  <strong>Layer Delta:</strong> Paper Security (documentado mas não implementado) vs Shadow Security (implementado mas não documentado).
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- D3: RELEASE GATE FLOW -->
+<!-- ============================================================ -->
+<h2 id="d3">D3 — Fluxo de Release Gate Evaluation</h2>
+<p>Sequence diagram do <code>wardex evaluate</code>: desde a evidência de vulnerabilidades até à decisão de gate.</p>
+
+<div class="diagram-card">
+<div class="mermaid">
+sequenceDiagram
+    actor CI as CI/CD Pipeline
+    participant CLI as wardex evaluate
+    participant ING as ingestion
+    participant ACC as accept
+    participant EPSS as epss
+    participant GATE as releasegate
+    participant ART as art14
+    participant AUD as audit log
+    participant FWD as forward (syslog/ENISA)
+
+    CI->>CLI: wardex evaluate --evidence vulns.yaml --config config.yaml
+    CLI->>CLI: loadConfig() + RBAC check
+
+    CLI->>ING: LoadMany(args)
+    ING-->>CLI: []ExistingControl
+
+    CLI->>CLI: loadEvidence(vulns.yaml)
+    CLI-->>CLI: []Vulnerability
+
+    Note over CLI: CRA Article 14 Hard Stop
+    CLI->>CLI: Check actively_exploited flags
+    alt Actively Exploited Detected
+        CLI->>ART: GenerateArtefact(cves, awarenessAt)
+        ART-->>CLI: Art14NotificationArtefact
+        CLI->>ART: SignArtefact(artefact, key)
+        CLI->>AUD: ChainedAuditLog(event: "active-exploit.detected")
+        CLI->>FWD: Dispatch(syslog, ENISA)
+        CI-->>CLI: Exit 12 (ActivelyExploited)
+    end
+
+    Note over CLI: Risk Acceptance Filter
+    CLI->>ACC: Load(wardex-acceptances.yaml, key)
+    ACC->>ACC: Verify HMAC-SHA256 signatures
+    ACC->>ACC: Filter expired/revoked
+    ACC-->>CLI: Filtered []Vulnerability
+
+    Note over CLI: EPSS Enrichment
+    opt --epss-enrichment provided
+        CLI->>EPSS: Verify(enrichment file, key)
+        EPSS->>EPSS: Validate HMAC signature
+        EPSS-->>CLI: Enriched scores
+    end
+
+    Note over CLI: Missing EPSS Check
+    loop For each vuln without EPSS
+        CLI->>CLI: Default EPSS = 1.0 (worst-case)
+    end
+    alt Missing EPSS detected
+        CI-->>CLI: Exit 11 (ComplianceFail)
+    end
+
+    Note over CLI: Gate Evaluation
+    CLI->>GATE: Evaluate(vulns)
+    loop For each vulnerability
+        GATE->>GATE: CalculateRisk(vuln, assetCtx, comps)
+        Note right of GATE: R = (CVSS/10) × EPSS × C × E × (1-Φ)
+        GATE->>GATE: Compare vs risk_appetite
+        GATE->>GATE: Decision: allow | warn | block
+    end
+    GATE->>GATE: InferMaturityLevel()
+    GATE-->>CLI: GateReport
+
+    Note over CLI: Audit & Forwarding
+    CLI->>AUD: ChainedAuditLog(event: "gate.evaluated")
+    CLI->>FWD: Dispatch(auditEntry)
+
+    alt OverallDecision = block
+        CI-->>CLI: Exit 10 (GateBlocked)
+    else OverallDecision = warn
+        CI-->>CLI: Exit 0 + WARNING
+    else OverallDecision = allow
+        CI-->>CLI: Exit 0 (OK)
+    end
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Blocos <code>alt</code> = caminhos condicionais | <code>opt</code> = passo opcional | <code>loop</code> = iteração.<br/>
+  <strong>Fluxo prioritário:</strong> (1) Art14 hard stop é verificado PRIMEIRO — não pode ser ultrapassado. (2) Acceptances filtram CVEs aceites. (3) EPSS enrichment enriquece scores. (4) Gate evaluate produz decisão final.<br/>
+  <strong>Exit codes:</strong> 0=ALLOW, 10=BLOCK, 11=ComplianceFail, 12=ActivelyExploited.
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- D4: DATA MODEL -->
+<!-- ============================================================ -->
+<h2 id="d4">D4 — Modelo de Dados Core</h2>
+<p>Diagrama ER (Entity-Relationship) dos 8 tipos de dados principais em <code>pkg/model/</code>.</p>
+
+<div class="diagram-card">
+<div class="mermaid">
+erDiagram
+    ExistingControl {
+        string ID
+        string Name
+        int Maturity
+        string Layer
+        string Domain
+        string Description
+    }
+
+    CatalogControl {
+        string ID
+        string Name
+        string Framework
+        int RequiredMaturity
+        string Domain
+        string Category
+    }
+
+    Mapping {
+        string ControlID
+        string CatalogID
+        string Confidence
+        float Score
+    }
+
+    Finding {
+        string ControlID
+        string CatalogID
+        string Status
+        float CoverageScore
+        string GapDescription
+    }
+
+    Vulnerability {
+        string CVEID
+        float CVSSBase
+        float EPSSScore
+        string Component
+        bool Reachable
+        bool ActivelyExploited
+    }
+
+    AssetContext {
+        float Criticality
+        bool InternetFacing
+        bool RequiresAuth
+        string Environment
+    }
+
+    RiskBreakdown {
+        float CVSSBase
+        float EPSSFactor
+        float AdjustedScore
+        float AssetCriticality
+        float ExposureFactor
+        float CompensatingEffect
+        float FinalReleaseRisk
+    }
+
+    GateReport {
+        string OverallDecision
+        int GateMaturityLevel
+        int BlockedCount
+        int AllowedCount
+        int WarnCount
+        float HighestRisk
+    }
+
+    ReleaseDecision {
+        string Decision
+        float ReleaseRisk
+        float RiskAppetite
+        string AuditTrail
+    }
+
+    Acceptance {
+        string ID
+        string CVE
+        string AcceptedBy
+        string Justification
+        time ExpiresAt
+        string Signature
+        bool Revoked
+    }
+
+    AuditEntry {
+        time Timestamp
+        string Event
+        string ConfigHash
+        string OverallDecision
+        float Risk
+        string Status
+    }
+
+    GapReport {
+        string Framework
+        float CoveragePercent
+        int TotalControls
+        int CoveredControls
+        int GapControls
+    }
+
+    ExecutiveSummary {
+        float OverallCoverage
+        int TotalFindings
+        int Gaps
+        int Partials
+    }
+
+    ExistingControl ||--o{ Mapping : "produces"
+    CatalogControl ||--o{ Mapping : "receives"
+    Mapping ||--o{ Finding : "generates"
+    Finding ||--o{ GapReport : "aggregates"
+    Finding ||--o{ ExecutiveSummary : "summarizes"
+
+    Vulnerability ||--|| RiskBreakdown : "calculates"
+    AssetContext ||--|| RiskBreakdown : "contextualizes"
+    RiskBreakdown ||--o{ ReleaseDecision : "decides"
+    ReleaseDecision ||--o{ GateReport : "aggregates"
+
+    GateReport ||--|| AuditEntry : "logs"
+    Acceptance ||--o{ AuditEntry : "trails"
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Caixas = entidades (tipos Go) | <code>||--o{</code> = one-to-many | <code>||--||</code> = one-to-one | <code>||--o{</code> = optional one-to-many.<br/>
+  <strong>Fluxo de dados:</strong> ExistingControl + CatalogControl → Mapping → Finding → GapReport/ExecutiveSummary. Vulnerability + AssetContext → RiskBreakdown → ReleaseDecision → GateReport → AuditEntry.<br/>
+  <strong>Tipos-chave:</strong> <code>Vulnerability</code> e <code>AssetContext</code> são inputs; <code>GateReport</code> e <code>AuditEntry</code> são outputs; <code>RiskBreakdown</code> é o intermediário calculado.
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- D5: STATE TRANSITIONS -->
+<!-- ============================================================ -->
+<h2 id="d5">D5 — Diagrama de Estados do Gate</h2>
+<p>Lifecycle de uma decisão de release gate: como uma vulnerabilidade transita entre estados.</p>
+
+<div class="diagram-card">
+<div class="mermaid">
+stateDiagram-v2
+    [*] --> Pending: Vulnerabilidade detectada
+
+    Pending --> Calculating: gate.Evaluate()
+    Calculating --> Analyzed: CalculateRisk() completo
+
+    state Analyzed {
+        [*] --> RiskComputed
+        RiskComputed --> ThresholdCheck
+        ThresholdCheck --> Result
+    }
+
+    Result --> Allow: risk < warn_above
+    Result --> Warn: warn_above ≤ risk < risk_appetite
+    Result --> Block: risk ≥ risk_appetite
+
+    state Allow {
+        [*] --> Allowed
+        Allowed --> Logged: audit log
+    }
+
+    state Warn {
+        [*] --> Warning
+        Warning --> Logged_W: audit log + WARNING
+        Warning --> Block: risk reavaliado ≥ threshold
+    }
+
+    state Block {
+        [*] --> Blocked
+        Blocked --> AcceptanceCheck: Verificar acceptance
+        AcceptanceCheck --> Accepted: acceptance válida + HMAC ok
+        AcceptanceCheck --> HardBlock: acceptance inválida/expirada
+
+        Accepted --> Skipped: CVE filtrado
+        HardBlock --> Exit10: Exit code 10
+    }
+
+    state CRA_HardStop {
+        [*] --> ActivelyExploited
+        ActivelyExploited --> ArtefactGenerated: Art14 artefact
+        ArtefactGenerated --> Exit12: Exit code 12 (não ultrapassável)
+    }
+
+    Pending --> CRA_HardStop: actively_exploited = true
+
+    Logged --> [*]
+    Logged_W --> [*]
+    Skipped --> [*]
+    Exit10 --> [*]
+    Exit12 --> [*]
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Estados arredondados = ALLOW (verde) | WARN (amarelo) | BLOCK (vermelho).<br/>
+  <strong>Transições-chave:</strong> (1) <code>actively_exploited=true</code> bypassa TODO o pipeline → hard stop imediato. (2) Acceptances válidas removem CVEs antes do evaluate. (3) O estado WARN pode degradar para BLOCK se risk reavaliado.<br/>
+  <strong>Exit codes:</strong> ALLOW → 0 | WARN → 0 + warning | BLOCK → 10 | CRA → 12.
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- D6: TRUST ARCHITECTURE -->
+<!-- ============================================================ -->
+<h2 id="d6">D6 — Arquitectura de Confiança e Signing</h2>
+<p>Fluxo de assinatura criptográfica: trust store, config sealing, acceptance HMAC e Art14.</p>
+
+<div class="diagram-card">
+<div class="mermaid">
+graph LR
+    subgraph KEYGEN["Geração de Chaves"]
+        KG[wardex keygen]
+        KP[Ed25519 Keypairs]
+        KG --> KP
+    end
+
+    subgraph TRUSTSTORE["Trust Store"]
+        TS[wardex-trust.yaml<br/>append-only]
+        KS[keys/<br/>Admin, CISO, Analyst]
+        TS --> KS
+    end
+
+    subgraph SEAL["Config Sealing"]
+        CFG[wardex-config.yaml]
+        CPL[Config Provenance Link<br/>SHA-256 / BLAKE3]
+        WXS[wardex.wexstate<br/>Ed25519 signed]
+        CFG --> CPL --> WXS
+    end
+
+    subgraph ACCEPT_FLOW["Risk Acceptance"]
+        REQ[accept request]
+        YAML[wardex-acceptances.yaml<br/>HMAC-SHA256]
+        AUD[wardex-accept-audit.log<br/>JSONL chained]
+        REQ --> YAML --> AUD
+    end
+
+    subgraph ART14_FLOW["CRA Article 14"]
+        DET[detection<br/>actively_exploited]
+        ART[Art14 Artefact<br/>HMAC-SHA256]
+        LIFECYCLE[Dispatched:<br/>early-warning → notification → final]
+        DET --> ART --> LIFECYCLE
+    end
+
+    subgraph EPSS_FLOW["EPSS Enrichment"]
+        FETCH[FIRST.org API]
+        SIGN[Sign EPSS data<br/>HMAC-SHA256]
+        VERIFY[Verify before apply]
+        FETCH --> SIGN --> VERIFY
+    end
+
+    KP --> TS
+    TS --> SEAL
+    TS --> ACCEPT_FLOW
+    TS --> ART14_FLOW
+    TS --> EPSS_FLOW
+
+    style KEYGEN fill:#1a2332,stroke:#3fb950,color:#c9d1d9
+    style TRUSTSTORE fill:#1a2332,stroke:#58a6ff,color:#c9d1d9
+    style SEAL fill:#1a2332,stroke:#d29922,color:#c9d1d9
+    style ACCEPT_FLOW fill:#1a2332,stroke:#f85149,color:#c9d1d9
+    style ART14_FLOW fill:#1a2332,stroke:#bc8cff,color:#c9d1d9
+    style EPSS_FLOW fill:#1a2332,stroke:#3fb950,color:#c9d1d9
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Verde = geração | Azul = armazenamento | Amarelo = sealing | Vermelho = acceptances | Roxo = CRA | Verde claro = EPSS.<br/>
+  <strong>Cadeia de confiança:</strong> Ed25519 (asimétrico) protege trust store e config sealing. HMAC-SHA256 (simétrico) protege acceptances, Art14 e EPSS.<br/>
+  <strong>Princípio:</strong> Segredos NUNCA em disco — injectados via environment variables. Constant-time comparison impede timing attacks.
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- D7: DEPLOYMENT ARCHITECTURE -->
+<!-- ============================================================ -->
+<h2 id="d7">D7 — Arquitectura de Deployment</h2>
+<p>Targets multi-plataforma, pipeline CI/CD e orquestração Kubernetes.</p>
+
+<div class="diagram-card">
+<div class="mermaid">
+graph TB
+    subgraph CI["GitHub Actions CI"]
+        direction LR
+        CI_TEST["ci.yml<br/>test + lint + security"]
+        CI_DOCKER["docker.yml<br/>build + push"]
+        CI_RELEASE["release.yml<br/>GoReleaser + Cosign"]
+        CI_ACTION["action.yml<br/>composite action"]
+        CI_TEST --> CI_DOCKER --> CI_RELEASE
+    end
+
+    subgraph REGISTRY["Container Registry"]
+        GHCR["ghcr.io/had-nu/wardex"]
+    end
+
+    subgraph TARGETS["Targets Multi-plataforma"]
+        direction LR
+        subgraph LINUX["Linux"]
+            L_AMD64["amd64"]
+            L_ARM64["arm64"]
+        end
+        subgraph DARWIN["macOS"]
+            D_AMD64["amd64"]
+            D_ARM64["arm64"]
+        end
+        subgraph WINDOWS["Windows"]
+            W_AMD64["amd64"]
+            W_ARM64["arm64"]
+        end
+    end
+
+    subgraph K8S["Kubernetes (Helm v0.1.0)"]
+        direction TB
+        JOB["Job<br/>one-shot evaluation"]
+        CRON["CronJob<br/>scheduled assessments"]
+        PVC["PVC<br/>state store persistence"]
+        CM["ConfigMap<br/>wardex-config.yaml"]
+        SECRET["Secret<br/>WARDEX_ACCEPT_SECRET"]
+    end
+
+    subgraph DOCKER_RUNTIME["Docker Runtime"]
+        BUILDER["golang:1.26-alpine<br/>(builder)"]
+        RUNTIME["distroless/static:nonroot<br/>(runtime)"]
+        BUILDER --> RUNTIME
+    end
+
+    CI_DOCKER --> GHCR
+    CI_RELEASE --> TARGETS
+    GHCR --> K8S
+    K8S --> PVC
+
+    style CI fill:#1a2332,stroke:#58a6ff,color:#c9d1d9
+    style REGISTRY fill:#1a2332,stroke:#3fb950,color:#c9d1d9
+    style TARGETS fill:#1a2332,stroke:#d29922,color:#c9d1d9
+    style K8S fill:#1a2332,stroke:#bc8cff,color:#c9d1d9
+    style DOCKER_RUNTIME fill:#1a2332,stroke:#f85149,color:#c9d1d9
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Azul = CI/CD | Verde = Registry | Amarelo = Targets | Roxo = Kubernetes | Vermelho = Docker build stages.<br/>
+  <strong>Fluxo:</strong> Push → ci.yml (test+lint+security) → docker.yml (build+push ghcr.io) → release.yml (GoReleaser cross-platform + Cosign signing + CycloneDX SBOM).<br/>
+  <strong>K8s:</strong> Helm chart com Job (one-shot), CronJob (agendado), PVC (para state store proposto), ConfigMap, Secret.
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- D8: STATE STORE GAP -->
+<!-- ============================================================ -->
+<h2 id="d8">D8 — Lacuna: Ausência de State Store <span class="badge badge-gap">CRÍTICO</span></h2>
+<p>Diagrama comparativo: estado actual (stateless) vs estado proposto (com persistent state store).</p>
+
+<div class="diagram-card">
+<div class="mermaid">
+graph LR
+    subgraph ACTUAL["Estado Actual — Stateless"]
+        direction TB
+        E1["wardex evaluate #1"]
+        E2["wardex evaluate #2"]
+        E3["wardex evaluate #3"]
+
+        E1 -->|"gera log"| L1["audit.log"]
+        E2 -->|"gera log"| L2["audit.log"]
+        E3 -->|"gera log"| L3["audit.log"]
+
+        E1 -->|"gera snapshot"| S1[".wardex_snapshot.json"]
+        E2 -->|"gera snapshot"| S2[".wardex_snapshot.json"]
+        E3 -->|"gera snapshot"| S3[".wardex_snapshot.json"]
+
+        L1 -.->|"sem query"| X1["❌ Sem histórico"]
+        L2 -.->|"sem aggregate"| X2["❌ Sem trend"]
+        S1 -.->|"sem versionamento"| X3["❌ Sem rollback"]
+    end
+
+    subgraph PROPOSED["Estado Proposto — Com State Store"]
+        direction TB
+        P1["wardex evaluate #1"]
+        P2["wardex evaluate #2"]
+        P3["wardex evaluate #3"]
+
+        P1 -->|"RecordDecision()"| STORE[".wardex/state.json<br/>(atômico)"]
+        P2 -->|"RecordDecision()"| STORE
+        P3 -->|"RecordDecision()"| STORE
+
+        STORE -->|"History()"| HIST["history/<br/>2026-06-26T10:00:00Z.json<br/>2026-06-26T14:30:00Z.json"]
+        STORE -->|"TrendAnalysis()"| TREND["Trend: 30 dias<br/>Risco ↓ 0.23 → 0.18"]
+        STORE -->|"Cleanup()"| CLEAN["Retention policy<br/>90 dias"]
+
+        P1 -->|"SaveState()"| STATE["state.json<br/>last_run, run_count,<br/>trend, active_accepts"]
+        P2 -->|"SaveState()"| STATE
+        P3 -->|"SaveState()"| STATE
+
+        STATE -->|"--trend"| DASH["wardex state dashboard<br/>→ HTML charts"]
+        STATE -->|"--alert-expiring"| ALERT["Acceptances a expirar<br/>em 7 dias"]
+    end
+
+    style ACTUAL fill:#1a2332,stroke:#f85149,color:#c9d1d9
+    style PROPOSED fill:#1a2332,stroke:#3fb950,color:#c9d1d9
+    style X1 fill:#3d1114,stroke:#f85149,color:#f85149
+    style X2 fill:#3d1114,stroke:#f85149,color:#f85149
+    style X3 fill:#3d1114,stroke:#f85149,color:#f85149
+    style STORE fill:#0d2818,stroke:#3fb950,color:#3fb950
+    style STATE fill:#0d2818,stroke:#3fb950,color:#3fb950
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Vermelho = estado actual (lacunas) | Verde = estado proposto (solução).<br/>
+  <strong>Lacunas identificadas:</strong> (1) Sem histórico consultável — logs JSONL não têm indexação. (2) Sem trend analysis — impossível saber se a postura está a melhorar. (3) Sem rollback — snapshots são sobrescritos sem versionamento. (4) Sem alertas proactivos — acceptances expiram sem aviso.<br/>
+  <strong>Componente proposta:</strong> <code>pkg/statestore/</code> com escrita atómica, histórico versionado, trend analysis, e cleanup automático.
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ANALYSIS -->
+<!-- ============================================================ -->
+<h2 id="analysis">Análise Sumária — A Lacuna de Estado</h2>
+
+<div class="analysis">
+<h3>O Que Falta</h3>
+<p>O Wardex foi concebido como um sistema <em>stateless</em> — cada execução é uma ilha. Esta arquitectura foi uma escolha deliberada para maximizar a portabilidade e minimizar dependências operacionais. No entanto, esta simplicidade cria uma lacuna significativa quando o sistema é integrado em pipelines de conformidade contínua:</p>
+
+<table>
+<tr><th>Capacidade</th><th>Actual (Stateless)</th><th>Proposto (Com State Store)</th></tr>
+<tr><td>Histórico de decisões</td><td>JSONL sem query — busca manual</td><td>Índice por data, CVE, decisão — query instantânea</td></tr>
+<tr><td>Trend analysis</td><td>Impossível</td><td>Gráfico 30/60/90 dias — tendência de risco</td></tr>
+<tr><td>Alertas proactivos</td><td>Nenhum</td><td>Acceptances a expirar, risco crescente, gaps novos</td></tr>
+<tr><td>Rollback de config</td><td>Impossível — snapshots sobrescritos</td><td>Versões anteriores preservadas, diff entre versões</td></tr>
+<tr><td>Dashboard</td><td>Não suportado</td><td><code>wardex state dashboard</code> → HTML interactivo</td></tr>
+<tr><td>Multi-execução aggregation</td><td>Cada execução é independente</td><td><code>wardex state aggregate</code> → relatório consolidado</td></tr>
+</table>
+
+<h3>Porque É Importante</h3>
+<p>Num contexto regulatório (NIS2, DORA, CRA), a capacidade de demonstrar <em>melhoria contínua</em> da postura de segurança é tão importante quanto a postura actual. Sem um state store, o Wardex pode dizer "esta é a sua conformidade hoje" mas não pode dizer "a sua conformidade melhorou 15% nos últimos 90 dias" — exactamente o tipo de evidência que os auditores e reguladores procuram.</p>
+
+<h3>Proposta</h3>
+<p>O componente <code>pkg/statestore/</code> proposto é <strong>opt-in</strong> (sem breaking changes), <strong>file-based</strong> (sem base de dados externa), e usa apenas <strong>stdlib Go</strong> (zero novas dependências). A integração é mínima: uma chamada a <code>RecordDecision()</code> após cada <code>gate.Evaluate()</code>, e uma chamada a <code>SaveState()</code> no final de cada execução. O ganho é transformar o Wardex de uma ferramenta pontual num sistema de conformidade contínua com memória.</p>
+</div>
+
+<h2 id="proposal">Proposta de Solução — Arquitectura Concreta</h2>
+
+<div class="diagram-card">
+<div class="mermaid">
+graph TB
+    subgraph PROPOSAL["pkg/statestore/ — Arquitectura Proposta"]
+        direction TB
+        STORE["Store struct<br/>root: .wardex/"]
+        STATE["State struct<br/>version, last_run, trend, run_count"]
+        HISTORY["History()<br/>últimos N dias"]
+        TREND["TrendAnalysis()<br/>tendência 30/60/90 dias"]
+        RECORD["RecordDecision()<br/>após cada gate.Evaluate()"]
+        SAVE["SaveState()<br/>escrita atómica (write+rename)"]
+        CLEANUP["Cleanup()<br/>retention policy"]
+        IMPORT["Import()<br/>migrar snapshots/logs existentes"]
+    end
+
+    subgraph INTEGRATION["Integração com Pipeline"]
+        EVAL["wardex evaluate"]
+        GATE["gate.Evaluate()"]
+        AUDIT["audit log (actual)"]
+        SS["statestore.RecordDecision()"]
+        STATEJSON[".wardex/state.json"]
+        HISTORYDIR[".wardex/history/"]
+    end
+
+    EVAL --> GATE
+    GATE --> AUDIT
+    GATE --> SS
+    SS --> STATEJSON
+    SS --> HISTORYDIR
+    STATEJSON --> STATE
+    HISTORYDIR --> HISTORY
+    HISTORY --> TREND
+
+    subgraph COMMANDS["Novos Subcomandos"]
+        CMD1["wardex state status<br/>→ último run + trend"]
+        CMD2["wardex state history<br/>→ histórico N dias"]
+        CMD3["wardex state dashboard<br/>→ HTML interactivo"]
+        CMD4["wardex state import<br/>→ migrar dados existentes"]
+    end
+
+    STATE --> CMD1
+    HISTORY --> CMD2
+    TREND --> CMD3
+    IMPORT --> CMD4
+
+    style PROPOSAL fill:#1a2332,stroke:#3fb950,color:#c9d1d9
+    style INTEGRATION fill:#1a2332,stroke:#58a6ff,color:#c9d1d9
+    style COMMANDS fill:#1a2332,stroke:#d29922,color:#c9d1d9
+</div>
+<div class="legend">
+  <strong>Legenda:</strong> Verde = componente statestore | Azul = integração com pipeline actual | Amarelo = novos subcomandos CLI.<br/>
+  <strong>Compatibilidade:</strong> Sem <code>--state-dir</code>, o sistema funciona exactamente como hoje. Com <code>--state-dir .wardex/</code>, activa persistência.<br/>
+  <strong>Zero breaking changes:</strong> Nenhuma API existente é alterada. O state store é uma camada aditiva opcional.
+</div>
+</div>
+
+</main>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#1a2332',
+      primaryTextColor: '#c9d1d9',
+      primaryBorderColor: '#58a6ff',
+      lineColor: '#58a6ff',
+      secondaryColor: '#161b22',
+      tertiaryColor: '#0d1117',
+      fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif',
+      fontSize: '13px'
+    },
+    flowchart: { curve: 'basis', htmlLabels: true },
+    sequence: { mirrorActors: false, messageAlign: 'center' },
+    er: { useMaxWidth: true }
+  });
+
+  // Active sidebar link
+  const sections = document.querySelectorAll('h2[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(section => observer.observe(section));
+</script>
+
+</body>
+</html>
