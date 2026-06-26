@@ -11,6 +11,28 @@ import (
 	"unsafe"
 )
 
+var (
+	modkernel32                   = syscall.NewLazyDLL("kernel32.dll")
+	procSetFileInformationByHandle = modkernel32.NewProc("SetFileInformationByHandle")
+)
+
+const (
+	fileReadAttributes           = 0x0080
+	fileWriteAttributes          = 0x0100
+	fileAttributeReadonly uint32 = 0x00000001
+	fileInfoClassBasic           = 1
+)
+
+// fileBasicInfo mirrors the Windows FILE_BASIC_INFO structure.
+type fileBasicInfo struct {
+	CreationTime   syscall.Filetime
+	LastAccessTime syscall.Filetime
+	LastWriteTime  syscall.Filetime
+	ChangeTime     syscall.Filetime
+	FileAttributes uint32
+	_              [4]byte
+}
+
 func lockFile(path string) error {
 	name, err := syscall.UTF16PtrFromString(path)
 	if err != nil {
@@ -19,7 +41,7 @@ func lockFile(path string) error {
 
 	handle, err := syscall.CreateFile(
 		name,
-		syscall.FILE_WRITE_ATTRIBUTES|syscall.FILE_READ_ATTRIBUTES,
+		fileWriteAttributes|fileReadAttributes,
 		0, nil,
 		syscall.OPEN_EXISTING,
 		syscall.FILE_ATTRIBUTE_NORMAL,
@@ -30,16 +52,24 @@ func lockFile(path string) error {
 	}
 	defer syscall.CloseHandle(handle)
 
-	var attrs syscall.FileBasicInfo
-	_, err = syscall.GetFileInformationByHandle(handle, (*syscall.ByHandleFileInformation)(unsafe.Pointer(&attrs)))
+	var info fileBasicInfo
+	err = syscall.GetFileInformationByHandle(handle, (*syscall.ByHandleFileInformation)(unsafe.Pointer(&info)))
 	if err != nil {
 		return fmt.Errorf("statestore: get info: %w", err)
 	}
 
-	attrs.FileAttributes |= syscall.FILE_ATTRIBUTE_READONLY
-	_, err = syscall.SetFileInformationByHandle(handle, syscall.FileBasicInfoClass, (*byte)(unsafe.Pointer(&attrs)), uint32(unsafe.Sizeof(attrs)))
-	if err != nil {
-		return fmt.Errorf("statestore: set readonly: %w", err)
+	info.FileAttributes |= fileAttributeReadonly
+	r, _, callErr := procSetFileInformationByHandle.Call(
+		uintptr(handle),
+		fileInfoClassBasic,
+		uintptr(unsafe.Pointer(&info)),
+		uintptr(unsafe.Sizeof(info)),
+	)
+	if r == 0 {
+		if callErr != nil {
+			return fmt.Errorf("statestore: set readonly: %w", callErr)
+		}
+		return fmt.Errorf("statestore: set readonly: unknown error")
 	}
 	return nil
 }
@@ -52,7 +82,7 @@ func isLocked(path string) (bool, error) {
 
 	handle, err := syscall.CreateFile(
 		name,
-		syscall.FILE_READ_ATTRIBUTES,
+		fileReadAttributes,
 		0, nil,
 		syscall.OPEN_EXISTING,
 		syscall.FILE_ATTRIBUTE_NORMAL,
@@ -63,13 +93,13 @@ func isLocked(path string) (bool, error) {
 	}
 	defer syscall.CloseHandle(handle)
 
-	var attrs syscall.FileBasicInfo
-	_, err = syscall.GetFileInformationByHandle(handle, (*syscall.ByHandleFileInformation)(unsafe.Pointer(&attrs)))
+	var info fileBasicInfo
+	err = syscall.GetFileInformationByHandle(handle, (*syscall.ByHandleFileInformation)(unsafe.Pointer(&info)))
 	if err != nil {
 		return false, fmt.Errorf("statestore: get info: %w", err)
 	}
 
-	return attrs.FileAttributes&syscall.FILE_ATTRIBUTE_READONLY != 0, nil
+	return info.FileAttributes&fileAttributeReadonly != 0, nil
 }
 
 func unlockFile(path string) error {
@@ -80,7 +110,7 @@ func unlockFile(path string) error {
 
 	handle, err := syscall.CreateFile(
 		name,
-		syscall.FILE_WRITE_ATTRIBUTES|syscall.FILE_READ_ATTRIBUTES,
+		fileWriteAttributes|fileReadAttributes,
 		0, nil,
 		syscall.OPEN_EXISTING,
 		syscall.FILE_ATTRIBUTE_NORMAL,
@@ -91,16 +121,24 @@ func unlockFile(path string) error {
 	}
 	defer syscall.CloseHandle(handle)
 
-	var attrs syscall.FileBasicInfo
-	_, err = syscall.GetFileInformationByHandle(handle, (*syscall.ByHandleFileInformation)(unsafe.Pointer(&attrs)))
+	var info fileBasicInfo
+	err = syscall.GetFileInformationByHandle(handle, (*syscall.ByHandleFileInformation)(unsafe.Pointer(&info)))
 	if err != nil {
 		return fmt.Errorf("statestore: get info: %w", err)
 	}
 
-	attrs.FileAttributes &^= syscall.FILE_ATTRIBUTE_READONLY
-	_, err = syscall.SetFileInformationByHandle(handle, syscall.FileBasicInfoClass, (*byte)(unsafe.Pointer(&attrs)), uint32(unsafe.Sizeof(attrs)))
-	if err != nil {
-		return fmt.Errorf("statestore: clear readonly: %w", err)
+	info.FileAttributes &^= fileAttributeReadonly
+	r, _, callErr := procSetFileInformationByHandle.Call(
+		uintptr(handle),
+		fileInfoClassBasic,
+		uintptr(unsafe.Pointer(&info)),
+		uintptr(unsafe.Sizeof(info)),
+	)
+	if r == 0 {
+		if callErr != nil {
+			return fmt.Errorf("statestore: clear readonly: %w", callErr)
+		}
+		return fmt.Errorf("statestore: clear readonly: unknown error")
 	}
 	return nil
 }
