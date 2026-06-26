@@ -24,15 +24,15 @@ type ChainEntry struct {
 // ComputeChainHash computes the BLAKE3 hash for a chain entry.
 func ComputeChainHash(dataHash, prevHash string) string {
 	h := blake3.New(32, nil)
-	h.Write([]byte(dataHash))
-	h.Write([]byte(prevHash))
+	_, _ = h.Write([]byte(dataHash))
+	_, _ = h.Write([]byte(prevHash))
 	return hex.EncodeToString(h.Sum(nil))
 }
 
 // HashBytes computes BLAKE3 hash of raw bytes.
 func HashBytes(data []byte) string {
 	h := blake3.New(32, nil)
-	h.Write(data)
+	_, _ = h.Write(data)
 	return hex.EncodeToString(h.Sum(nil))
 }
 

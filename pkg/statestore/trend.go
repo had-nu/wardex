@@ -17,25 +17,25 @@ func FormatTrend(analysis *TrendAnalysis, history []TrendPoint) string {
 	sb.WriteString(strings.Repeat("=", 40) + "\n\n")
 
 	// Direction
-	sb.WriteString(fmt.Sprintf("Direction:      %s\n", strings.ToUpper(string(analysis.Direction))))
+	fmt.Fprintf(&sb, "Direction:      %s\n", strings.ToUpper(string(analysis.Direction)))
 
 	// Risk summary
-	sb.WriteString(fmt.Sprintf("Average Risk:   %.1f%%\n", analysis.AverageRisk*100))
-	sb.WriteString(fmt.Sprintf("Min Risk:       %.1f%%\n", analysis.MinRisk*100))
-	sb.WriteString(fmt.Sprintf("Max Risk:       %.1f%%\n", analysis.MaxRisk*100))
-	sb.WriteString(fmt.Sprintf("Risk Delta:     %+.1f%%\n", analysis.RiskDelta*100))
+	fmt.Fprintf(&sb, "Average Risk:   %.1f%%\n", analysis.AverageRisk*100)
+	fmt.Fprintf(&sb, "Min Risk:       %.1f%%\n", analysis.MinRisk*100)
+	fmt.Fprintf(&sb, "Max Risk:       %.1f%%\n", analysis.MaxRisk*100)
+	fmt.Fprintf(&sb, "Risk Delta:     %+.1f%%\n", analysis.RiskDelta*100)
 
 	// Run counts
-	sb.WriteString(fmt.Sprintf("\nTotal Runs:     %d\n", analysis.TotalRuns))
-	sb.WriteString(fmt.Sprintf("  Allow:        %d\n", analysis.AllowCount))
-	sb.WriteString(fmt.Sprintf("  Warn:         %d\n", analysis.WarnCount))
-	sb.WriteString(fmt.Sprintf("  Block:        %d\n", analysis.BlockCount))
+	fmt.Fprintf(&sb, "\nTotal Runs:     %d\n", analysis.TotalRuns)
+	fmt.Fprintf(&sb, "  Allow:        %d\n", analysis.AllowCount)
+	fmt.Fprintf(&sb, "  Warn:         %d\n", analysis.WarnCount)
+	fmt.Fprintf(&sb, "  Block:        %d\n", analysis.BlockCount)
 
 	// Time range
-	sb.WriteString(fmt.Sprintf("\nPeriod:         %s → %s\n",
+	fmt.Fprintf(&sb, "\nPeriod:         %s → %s\n",
 		analysis.OldestRun.Format("2006-01-02"),
 		analysis.NewestRun.Format("2006-01-02"),
-	))
+	)
 
 	// Mini sparkline chart
 	if len(history) > 1 {
@@ -63,12 +63,12 @@ func FormatTrend(analysis *TrendAnalysis, history []TrendPoint) string {
 				indicator = "~"
 			}
 
-			sb.WriteString(fmt.Sprintf("%s %s %5.1f%% %s\n",
+			fmt.Fprintf(&sb, "%s %s %5.1f%% %s\n",
 				p.Date.Format("01-02"),
 				indicator,
 				p.Risk*100,
 				strings.Repeat("#", barLen),
-			))
+			)
 		}
 	}
 
@@ -100,20 +100,20 @@ func FormatHistory(records []HistoryRecord) string {
 	}
 
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("HISTORY (%d records)\n", len(records)))
+	fmt.Fprintf(&sb, "HISTORY (%d records)\n", len(records))
 	sb.WriteString(strings.Repeat("=", 60) + "\n")
-	sb.WriteString(fmt.Sprintf("%-20s %-8s %-8s %-10s %-8s\n",
-		"DATE", "RISK", "DECISION", "VULNS", "ACCEPTS"))
+	fmt.Fprintf(&sb, "%-20s %-8s %-8s %-10s %-8s\n",
+		"DATE", "RISK", "DECISION", "VULNS", "ACCEPTS")
 	sb.WriteString(strings.Repeat("-", 60) + "\n")
 
 	for _, r := range records {
-		sb.WriteString(fmt.Sprintf("%-20s %-8s %-8s %-10d %-8d\n",
+		fmt.Fprintf(&sb, "%-20s %-8s %-8s %-10d %-8d\n",
 			r.Timestamp.Format("2006-01-02 15:04:05"),
 			fmt.Sprintf("%.1f%%", r.State.LastRisk*100),
 			strings.ToUpper(r.State.LastDecision),
 			countTrendVulns(r.State.Trend),
 			r.State.ActiveAccepts,
-		))
+		)
 	}
 
 	return sb.String()
@@ -138,26 +138,26 @@ func FormatDashboard(state *State, analysis *TrendAnalysis) string {
 	// Current state
 	sb.WriteString("CURRENT STATE\n")
 	sb.WriteString(strings.Repeat("-", 50) + "\n")
-	sb.WriteString(fmt.Sprintf("Version:        %s\n", state.Version))
-	sb.WriteString(fmt.Sprintf("Last Run:       %s\n", state.LastRun.Format("2006-01-02 15:04:05 UTC")))
-	sb.WriteString(fmt.Sprintf("Last Decision:  %s\n", strings.ToUpper(state.LastDecision)))
-	sb.WriteString(fmt.Sprintf("Risk Score:     %.1f%%\n", state.LastRisk*100))
-	sb.WriteString(fmt.Sprintf("Total Runs:     %d\n", state.RunCount))
-	sb.WriteString(fmt.Sprintf("Active Accepts: %d\n", state.ActiveAccepts))
+	fmt.Fprintf(&sb, "Version:        %s\n", state.Version)
+	fmt.Fprintf(&sb, "Last Run:       %s\n", state.LastRun.Format("2006-01-02 15:04:05 UTC"))
+	fmt.Fprintf(&sb, "Last Decision:  %s\n", strings.ToUpper(state.LastDecision))
+	fmt.Fprintf(&sb, "Risk Score:     %.1f%%\n", state.LastRisk*100)
+	fmt.Fprintf(&sb, "Total Runs:     %d\n", state.RunCount)
+	fmt.Fprintf(&sb, "Active Accepts: %d\n", state.ActiveAccepts)
 
 	if len(state.ExpiringSoon) > 0 {
-		sb.WriteString(fmt.Sprintf("Expiring Soon:  %s\n", strings.Join(state.ExpiringSoon, ", ")))
+		fmt.Fprintf(&sb, "Expiring Soon:  %s\n", strings.Join(state.ExpiringSoon, ", "))
 	}
 
 	// Trend
 	if analysis != nil {
 		sb.WriteString("\nTREND SUMMARY\n")
 		sb.WriteString(strings.Repeat("-", 50) + "\n")
-		sb.WriteString(fmt.Sprintf("Direction:      %s\n", strings.ToUpper(string(analysis.Direction))))
-		sb.WriteString(fmt.Sprintf("Avg Risk:       %.1f%%\n", analysis.AverageRisk*100))
-		sb.WriteString(fmt.Sprintf("Risk Delta:     %+.1f%%\n", analysis.RiskDelta*100))
-		sb.WriteString(fmt.Sprintf("Runs (allow/warn/block): %d/%d/%d\n",
-			analysis.AllowCount, analysis.WarnCount, analysis.BlockCount))
+		fmt.Fprintf(&sb, "Direction:      %s\n", strings.ToUpper(string(analysis.Direction)))
+		fmt.Fprintf(&sb, "Avg Risk:       %.1f%%\n", analysis.AverageRisk*100)
+		fmt.Fprintf(&sb, "Risk Delta:     %+.1f%%\n", analysis.RiskDelta*100)
+		fmt.Fprintf(&sb, "Runs (allow/warn/block): %d/%d/%d\n",
+			analysis.AllowCount, analysis.WarnCount, analysis.BlockCount)
 	}
 
 	// Recent trend
@@ -176,17 +176,17 @@ func FormatDashboard(state *State, analysis *TrendAnalysis) string {
 			if barLen == 0 && p.Risk > 0 {
 				barLen = 1
 			}
-			sb.WriteString(fmt.Sprintf("  %s  %5.1f%%  %-5s  %s\n",
+			fmt.Fprintf(&sb, "  %s  %5.1f%%  %-5s  %s\n",
 				p.Date.Format("01-02"),
 				p.Risk*100,
 				strings.ToUpper(p.Decision),
 				strings.Repeat("█", barLen),
-			))
+			)
 		}
 	}
 
 	// Footer
-	sb.WriteString(fmt.Sprintf("\nGenerated: %s\n", time.Now().UTC().Format("2006-01-02 15:04:05 UTC")))
+	fmt.Fprintf(&sb, "\nGenerated: %s\n", time.Now().UTC().Format("2006-01-02 15:04:05 UTC"))
 
 	return sb.String()
 }

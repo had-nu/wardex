@@ -13,17 +13,18 @@ import (
 )
 
 func lockFile(path string) error {
-	f, err := os.Open(path)
+	f, err := os.Open(path) // #nosec G304
 	if err != nil {
 		return fmt.Errorf("statestore: open for lock: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	// FS_IMMUTABLE_FL = 0x00000010 (from linux/fs.h)
 	_, _, errno := syscall.Syscall6(
 		syscall.SYS_IOCTL,
 		f.Fd(),
 		0x8008660C, // FS_IOC_SETFLAGS
+		// #nosec G103 — ioctl requires unsafe.Pointer for kernel flag struct
 		uintptr(unsafe.Pointer(&struct{ flags uint32 }{0x00000010})),
 		0, 0, 0,
 	)
@@ -34,17 +35,18 @@ func lockFile(path string) error {
 }
 
 func isLocked(path string) (bool, error) {
-	f, err := os.Open(path)
+	f, err := os.Open(path) // #nosec G304
 	if err != nil {
 		return false, fmt.Errorf("statestore: open for check: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	var flags struct{ flags uint32 }
 	_, _, errno := syscall.Syscall6(
 		syscall.SYS_IOCTL,
 		f.Fd(),
 		0x80046601, // FS_IOC_GETFLAGS
+		// #nosec G103 — ioctl requires unsafe.Pointer for kernel flag struct
 		uintptr(unsafe.Pointer(&flags)),
 		0, 0, 0,
 	)
@@ -55,16 +57,17 @@ func isLocked(path string) (bool, error) {
 }
 
 func unlockFile(path string) error {
-	f, err := os.Open(path)
+	f, err := os.Open(path) // #nosec G304
 	if err != nil {
 		return fmt.Errorf("statestore: open for unlock: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	_, _, errno := syscall.Syscall6(
 		syscall.SYS_IOCTL,
 		f.Fd(),
 		0x8008660C, // FS_IOC_SETFLAGS
+		// #nosec G103 — ioctl requires unsafe.Pointer for kernel flag struct
 		uintptr(unsafe.Pointer(&struct{ flags uint32 }{0})),
 		0, 0, 0,
 	)

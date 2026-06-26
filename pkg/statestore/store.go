@@ -19,7 +19,7 @@ type Store struct {
 
 // New creates or opens a state store at the given root directory.
 func New(root string) (*Store, error) {
-	if err := os.MkdirAll(root, 0o755); err != nil {
+	if err := os.MkdirAll(root, 0o750); err != nil {
 		return nil, fmt.Errorf("statestore: mkdir: %w", err)
 	}
 
@@ -118,7 +118,7 @@ func (s *Store) RecordDecision(decision string, risk float64, vulnCount int, act
 // saveHistorySnapshot saves a timestamped snapshot.
 func (s *Store) saveHistorySnapshot(state *State) error {
 	historyDir := filepath.Join(s.root, "history")
-	if err := os.MkdirAll(historyDir, 0o755); err != nil {
+	if err := os.MkdirAll(historyDir, 0o750); err != nil {
 		return err
 	}
 
@@ -258,10 +258,11 @@ func (s *Store) ChainPath() string {
 // atomicWrite writes data to a temp file then renames.
 func atomicWrite(path string, data []byte) error {
 	tmp := path + ".tmp"
-	if err := os.WriteFile(tmp, data, 0o644); err != nil {
+	if err := os.WriteFile(tmp, data, 0o600); err != nil {
 		return fmt.Errorf("statestore: write tmp: %w", err)
 	}
 	if err := os.Rename(tmp, path); err != nil {
+		// #nosec G104 — best-effort cleanup of temp file
 		os.Remove(tmp) //nolint:errcheck
 		return fmt.Errorf("statestore: rename: %w", err)
 	}
