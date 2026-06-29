@@ -19,6 +19,7 @@ import (
 
 func TestArt14CLI(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	t.Setenv("WARDEX_ACCEPT_SECRET", "test-secret-key-123456789012345678901234")
 
 	// Pre-create a draft artefact

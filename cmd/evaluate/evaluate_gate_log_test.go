@@ -13,6 +13,7 @@ import (
 
 func TestEvaluateWritesGateAuditLog(t *testing.T) {
 	tmpDir := t.TempDir()
+	t.Chdir(tmpDir)
 	logPath := filepath.Join(tmpDir, "gate.log")
 	evidenceFile := filepath.Join(tmpDir, "evidence.yaml")
 

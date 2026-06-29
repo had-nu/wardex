@@ -8,8 +8,8 @@ import (
 	"io/fs"
 	"os"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // SPDXDocument represents the minimal structure of an SPDX 2.3 JSON SBOM.
@@ -36,7 +36,7 @@ type SPDXDocument struct {
 // and throw a strategic NotImplementedError until VEX ingestion (G-17) is built.
 func ParseSPDX(filepath string) ([]model.Vulnerability, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, filepath)
+	safePathStr, err := cli.ValidateInputPath(cwd, filepath)
 	if err != nil {
 		return nil, err
 	}

@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // ChainGap represents a verification failure in the audit log chain.
@@ -36,7 +36,7 @@ func LastEntryHash(logPath string) (string, error) {
 // lastEntryHashLocked is the lock-free helper for LastEntryHash.
 func lastEntryHashLocked(logPath string) (string, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, logPath)
+	safePathStr, err := cli.ValidateInputPath(cwd, logPath)
 	if err != nil {
 		return "", err
 	}
@@ -89,7 +89,7 @@ func ChainedAuditLog(logPath string, entry model.AuditEntry) error {
 	}
 
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, logPath)
+	safePathStr, err := cli.ValidateInputPath(cwd, logPath)
 	if err != nil {
 		return err
 	}
@@ -122,7 +122,7 @@ func VerifyChain(logPath string) ([]ChainGap, error) {
 	defer auditMu.Unlock()
 
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, logPath)
+	safePathStr, err := cli.ValidateInputPath(cwd, logPath)
 	if err != nil {
 		return nil, err
 	}

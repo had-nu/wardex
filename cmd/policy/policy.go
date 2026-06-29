@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/v2/internal/policy"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/ui"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -221,7 +221,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	note, _ := cmd.Flags().GetString("note")
 
 	// Resolve and clean the path before any I/O.
-	abs, err := utils.SafePath(".", filepath.Clean(file))
+	abs, err := cli.ValidateInputPath(".", filepath.Clean(file))
 	if err != nil {
 		return fmt.Errorf("policy add: resolve path: %w", err)
 	}

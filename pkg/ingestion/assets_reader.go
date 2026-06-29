@@ -11,15 +11,15 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
 // LoadAssets loads asset definitions from a YAML or JSON file.
 func LoadAssets(path string) ([]model.Asset, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return nil, err
 	}

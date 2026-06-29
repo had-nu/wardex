@@ -21,6 +21,7 @@ import (
 	trustcmd "github.com/had-nu/wardex/v2/cmd/trust"
 	art14cmd "github.com/had-nu/wardex/v2/cmd/art14"
 	"github.com/had-nu/wardex/v2/config"
+	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
 	"github.com/had-nu/wardex/v2/pkg/accept"
 	"github.com/had-nu/wardex/v2/pkg/analyzer"
@@ -35,7 +36,6 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/report"
 	"github.com/had-nu/wardex/v2/pkg/snapshot"
 	"github.com/had-nu/wardex/v2/pkg/ui"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"gopkg.in/yaml.v3"
@@ -352,7 +352,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 		}
 
 		cwd, _ := os.Getwd()
-		safePathStr, err := utils.SafePath(cwd, gateFile)
+		safePathStr, err := pathguard.ValidateInputPath(cwd, gateFile)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
@@ -396,7 +396,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 		if epssEnrich != "" {
 			if key, err := accept.ResolveSecret(*cfg); err == nil {
 				cwd, _ := os.Getwd()
-				safePathStr, err := utils.SafePath(cwd, epssEnrich)
+				safePathStr, err := pathguard.ValidateInputPath(cwd, epssEnrich)
 				if err != nil {
 					fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 					os.Exit(1)

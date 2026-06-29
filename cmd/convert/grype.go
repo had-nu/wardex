@@ -9,8 +9,8 @@ import (
 	"io"
 	"os"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -58,7 +58,7 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	safePathStr, err := utils.SafePath(cwd, inFile)
+	safePathStr, err := cli.ValidateInputPath(cwd, inFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error resolving safe path for input file: %v\n", err)
 		os.Exit(1)

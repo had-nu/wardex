@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 var auditMu sync.Mutex
@@ -35,7 +35,7 @@ func AuditLog(path string, entry model.AuditEntry) error {
 	}
 
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func AuditLog(path string, entry model.AuditEntry) error {
 // AuditCountCreated returns the number of "acceptance.created" events in the audit log.
 func AuditCountCreated(path string) (int, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return 0, err
 	}

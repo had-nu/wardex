@@ -10,9 +10,9 @@ import (
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/accept"
+	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -51,7 +51,7 @@ var epssCmd = &cobra.Command{
 			fmt.Fprintf(os.Stderr, "Failed to get current working directory: %v\n", err)
 			os.Exit(1)
 		}
-		safePathStr, err := utils.SafePath(cwd, inFile)
+		safePathStr, err := pathguard.ValidateInputPath(cwd, inFile)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Invalid input file path: %v\n", err)
 			os.Exit(1)

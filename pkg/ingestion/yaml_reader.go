@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -35,7 +35,7 @@ type yamlFormat struct {
 
 func loadYAML(path string) ([]model.ExistingControl, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return nil, err
 	}

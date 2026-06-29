@@ -163,6 +163,7 @@ func TestLoadFramework_AllFrameworks(t *testing.T) {
 
 func TestLoadControls_ValidFile(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	yamlContent := `
 controls:
   - id: C1
@@ -204,6 +205,7 @@ func TestLoadControls_EmptyPaths(t *testing.T) {
 
 func TestLoadControls_MultipleFiles(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 
 	f1 := filepath.Join(dir, "c1.yaml")
 	os.WriteFile(f1, []byte("controls:\n  - id: C1\n    name: Ctrl1\n    maturity: 3\n    domains: [\"a\"]\n"), 0644)
@@ -222,6 +224,7 @@ func TestLoadControls_MultipleFiles(t *testing.T) {
 
 func TestLoadControls_JSONFormat(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	jsonContent := `{"controls": [{"id": "C1", "name": "JSON Control", "maturity": 3, "domains": ["test"]}]}`
 	jsonFile := filepath.Join(dir, "controls.json")
 	if err := os.WriteFile(jsonFile, []byte(jsonContent), 0644); err != nil {
@@ -265,6 +268,7 @@ func TestSnapshotDiff_WithResults(t *testing.T) {
 
 func TestSnapshotSaveAndLoad(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	snapshotFile := filepath.Join(dir, "snapshot.json")
 
 	result := &sdk.AssessmentResult{
@@ -302,6 +306,7 @@ func TestSnapshotSaveAndLoad(t *testing.T) {
 
 func TestSnapshotLoad_NonExistentFile(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	missingPath := filepath.Join(dir, "nonexistent.json")
 	result, err := sdk.SnapshotLoad(missingPath)
 	if err != nil {
@@ -314,6 +319,7 @@ func TestSnapshotLoad_NonExistentFile(t *testing.T) {
 
 func TestReport_WithValidResult(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	outputFile := filepath.Join(dir, "report.md")
 
 	result := &sdk.AssessmentResult{
@@ -360,6 +366,7 @@ func TestReport_JSONFormat(t *testing.T) {
 
 func TestReport_CSVFormat(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	outputFile := filepath.Join(dir, "report.csv")
 
 	result := &sdk.AssessmentResult{

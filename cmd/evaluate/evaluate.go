@@ -14,6 +14,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/accept"
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
 	"github.com/had-nu/wardex/v2/pkg/art14"
+	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/ingestion"
@@ -21,7 +22,6 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/releasegate"
 	"github.com/had-nu/wardex/v2/pkg/statestore"
 	"github.com/had-nu/wardex/v2/pkg/ui"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -338,7 +338,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	// Apply EPSS enrichment
 	if epssEnrich != "" {
 		if key, err := accept.ResolveSecret(*cfg); err == nil {
-			safeEnrichPath, err := utils.SafePath(cwd, epssEnrich)
+			safeEnrichPath, err := pathguard.ValidateInputPath(cwd, epssEnrich)
 			if err == nil {
 				if edata, err := os.ReadFile(safeEnrichPath); err == nil { // #nosec G304
 					var enrichFormat model.EPSSEnrichmentFile
@@ -584,7 +584,14 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	if outputFormat != "" && outputFormat != "markdown" {
 		dest := os.Stdout
 		if outFile != "stdout" {
-			f, err := os.Create(outFile) // #nosec G304 — user-chosen output path via --out-file flag
+			cwd, _ := os.Getwd()
+			safeOutPath, err := pathguard.ValidateOutputPath(cwd, outFile)
+			if err != nil {
+				fmt.Fprintf(stderr, "Error: --out-file: %v\n", err)
+				exitFunc(exitcodes.GenericError)
+				return nil
+			}
+			f, err := os.Create(safeOutPath) // #nosec G304
 			if err != nil {
 				fmt.Fprintf(stderr, "Error: cannot create output file %s: %v\n", outFile, err)
 				exitFunc(exitcodes.GenericError)

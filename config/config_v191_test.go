@@ -43,6 +43,7 @@ reporting:
   verbose: true
 `
 	dir := t.TempDir()
+	t.Chdir(dir)
 	path := filepath.Join(dir, "legacy-config.yaml")
 	if err := os.WriteFile(path, []byte(legacyYAML), 0o600); err != nil {
 		t.Fatalf("write legacy fixture: %v", err)

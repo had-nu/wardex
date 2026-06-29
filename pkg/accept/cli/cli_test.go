@@ -6,21 +6,23 @@ package cli
 import (
 	"bytes"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/spf13/cobra"
 )
 
-func setupRootCmd() (*cobra.Command, *string) {
-	configPath := "/tmp/wardex-test-config.yaml"
+func setupRootCmd(t *testing.T) (*cobra.Command, *string) {
+	t.Helper()
+	configPath := filepath.Join(t.TempDir(), "wardex-test-config.yaml")
 	root := &cobra.Command{Use: "wardex"}
 	AddCommands(root, &configPath)
 	return root, &configPath
 }
 
 func TestAddCommands_AllSubcommandsRegistered(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 
 	acceptCmd, _, err := root.Find([]string{"accept"})
 	if err != nil {
@@ -58,7 +60,7 @@ func TestAddCommands_AllSubcommandsRegistered(t *testing.T) {
 }
 
 func TestAddCommands_RequestFlags(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 	reqCmd, _, _ := root.Find([]string{"accept", "request"})
 
 	tests := []struct {
@@ -92,7 +94,7 @@ func TestAddCommands_RequestFlags(t *testing.T) {
 }
 
 func TestAddCommands_ListFlags(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 	listCmd, _, _ := root.Find([]string{"accept", "list"})
 
 	tests := []string{"active", "expired", "stale", "cve", "output"}
@@ -115,7 +117,7 @@ func TestAddCommands_ListFlags(t *testing.T) {
 }
 
 func TestAddCommands_RevokeFlags(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 	revokeCmd, _, _ := root.Find([]string{"accept", "revoke"})
 
 	tests := []struct {
@@ -144,7 +146,7 @@ func TestAddCommands_RevokeFlags(t *testing.T) {
 }
 
 func TestAddCommands_CheckExpiryFlags(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 	cmd, _, _ := root.Find([]string{"accept", "check-expiry"})
 
 	f := cmd.Flags().Lookup("warn-before")
@@ -157,7 +159,7 @@ func TestAddCommands_CheckExpiryFlags(t *testing.T) {
 }
 
 func TestAddCommands_ActiveExploitFlags(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 	cmd, _, _ := root.Find([]string{"accept", "active-exploit"})
 
 	tests := []struct {
@@ -186,7 +188,7 @@ func TestAddCommands_ActiveExploitFlags(t *testing.T) {
 }
 
 func TestAddCommands_VerifyForwardingFlags(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 	cmd, _, _ := root.Find([]string{"accept", "verify-forwarding"})
 
 	tests := []string{"since", "backend"}
@@ -201,7 +203,7 @@ func TestAddCommands_VerifyForwardingFlags(t *testing.T) {
 }
 
 func TestAddCommands_AcceptHelpOutput(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 
 	var buf bytes.Buffer
 	root.SetOut(&buf)
@@ -241,7 +243,7 @@ func TestAddCommands_RootDoesNotPanic(t *testing.T) {
 }
 
 func TestAddCommands_RequestCommandExists(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 
 	// Test that the full chain accept->request works
 	var buf bytes.Buffer
@@ -263,7 +265,7 @@ func TestAddCommands_RequestCommandExists(t *testing.T) {
 }
 
 func TestAddCommands_VerifyCommandExists(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 
 	var buf bytes.Buffer
 	root.SetOut(&buf)
@@ -297,7 +299,7 @@ func TestAddCommands_ConfigPathPropagation(t *testing.T) {
 }
 
 func TestAcceptHelp(t *testing.T) {
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 
 	var buf bytes.Buffer
 	root.SetOut(&buf)
@@ -325,6 +327,9 @@ type exitPanic struct{ code int }
 func captureCommand(t *testing.T, args []string) (int, string) {
 	t.Helper()
 
+	tmpDir := t.TempDir()
+	t.Chdir(tmpDir)
+
 	oldExit := exitFunc
 	oldStderr := stderr
 	defer func() {
@@ -341,7 +346,9 @@ func captureCommand(t *testing.T, args []string) (int, string) {
 	var buf bytes.Buffer
 	stderr = &buf
 
-	root, _ := setupRootCmd()
+	configPath := filepath.Join(tmpDir, "config.yaml")
+	root := &cobra.Command{Use: "wardex"}
+	AddCommands(root, &configPath)
 	root.SetArgs(args)
 
 	func() {
@@ -442,12 +449,8 @@ func TestRun_CheckExpiry_SecretMissing(t *testing.T) {
 func TestRun_VerifyForwarding_WithBackendUnreachable(t *testing.T) {
 	// Create a dummy audit log in a temp dir, then chdir there
 	// so the verify-forwarding code finds the log and reaches the backend check
-	origWd, _ := os.Getwd()
 	tmpDir := t.TempDir()
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatal(err)
-	}
-	defer os.Chdir(origWd)
+	t.Chdir(tmpDir)
 	if err := os.WriteFile("wardex-accept-audit.log", []byte("dummy event\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
@@ -468,7 +471,7 @@ func TestRun_VerifyForwarding_WithBackendUnreachable(t *testing.T) {
 	var buf bytes.Buffer
 	stderr = &buf
 
-	root, _ := setupRootCmd()
+	root, _ := setupRootCmd(t)
 	root.SetArgs([]string{"accept", "verify-forwarding", "--backend", "tcp://10.255.255.1:9"})
 
 	func() {

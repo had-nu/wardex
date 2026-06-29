@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // OpenVEXDocument partial schema based on https://openvex.dev
@@ -29,7 +29,7 @@ type OpenVEXStatement struct {
 // or false_positive, it marks Reachable=false so the Release Gate suppresses them.
 func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, filePath)
+	safePathStr, err := cli.ValidateInputPath(cwd, filePath)
 	if err != nil {
 		return nil, err
 	}

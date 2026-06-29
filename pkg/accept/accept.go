@@ -17,8 +17,8 @@ import (
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/internal/cpl"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -43,7 +43,7 @@ var (
 // It returns the list of blocked vulnerabilities, the ReportHash, and any errors.
 func ReadReport(path string, maxAgeHours int) ([]model.Vulnerability, string, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return nil, "", err
 	}
@@ -101,7 +101,7 @@ var ErrStoreInconsistent = errors.New("store inconsistency: yaml entries < audit
 // Rejected acceptances (expired, tampered, revoked) are logged to logw when non-nil.
 func Load(path string, key []byte, auditPath string, currentReportHash string, currentConfigHash string, logw io.Writer) ([]model.Acceptance, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return nil, err
 	}
@@ -160,10 +160,10 @@ func Load(path string, key []byte, auditPath string, currentReportHash string, c
 	return validAcceptances, nil
 }
 
-// Append atomagically writes a new Acceptance to the store
+// Append atomically writes a new Acceptance to the store
 func Append(path string, a model.Acceptance) error {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return err
 	}
@@ -187,18 +187,18 @@ func Append(path string, a model.Acceptance) error {
 		return err
 	}
 
-	tempFile := path + ".tmp"
+	tempFile := safePathStr + ".tmp"
 	if err := os.WriteFile(tempFile, out, 0600); err != nil {
 		return err
 	}
 
-	return os.Rename(tempFile, path)
+	return os.Rename(tempFile, safePathStr)
 }
 
 // UpdateStatus actualiza status e RevocationRecord. Regenera assinatura.
 func UpdateStatus(path string, id string, status string, revocation *model.RevocationRecord, key []byte) error {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return err
 	}
@@ -246,12 +246,12 @@ func UpdateStatus(path string, id string, status string, revocation *model.Revoc
 		return err
 	}
 
-	tempFile := path + ".tmp"
+	tempFile := safePathStr + ".tmp"
 	if err := os.WriteFile(tempFile, out, 0600); err != nil {
 		return err
 	}
 
-	return os.Rename(tempFile, path)
+	return os.Rename(tempFile, safePathStr)
 }
 
 // ValidateBusinessRules enforces acceptance constraints against the config limits.
@@ -329,7 +329,7 @@ func VerifyAll(acceptances []model.Acceptance, key []byte, currentReportHash str
 // Uses the CPL canonicalisation (sorted keys, no comments, normalised whitespace).
 func ConfigHash(configPath string) (string, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, configPath)
+	safePathStr, err := cli.ValidateInputPath(cwd, configPath)
 	if err != nil {
 		return "", err
 	}

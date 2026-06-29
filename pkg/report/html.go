@@ -10,8 +10,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 //go:embed templates/report.html
@@ -289,7 +289,7 @@ func generateHTML(report model.GapReport, outFile string) error {
 	if err != nil {
 		return err
 	}
-	safePath, err := utils.SafePath(cwd, outFile)
+	safePath, err := cli.ValidateOutputPath(cwd, outFile)
 	if err != nil {
 		return err
 	}
