@@ -292,3 +292,18 @@ Não há testes unitários novos — este patch altera configuração e document
 Nenhuma alteração de interface, protocolo ou formato de dados. Pipelines existentes que usem o Wardex não requerem qualquer ajuste. O único impacto visível para utilizadores externos é o `SECURITY.md` actualizado com contacto e scope correctos.
 
 Para maintainers: após merge, confirmar que a CI passa em verde em todos os três jobs (`test`, `lint`, `security`) antes de publicar a release tag.
+
+---
+
+## 6. Hardening subsequente
+
+O v2.2.2 expandiu o âmbito do hardening SDLC com três findings adicionais
+derivados de uma revisão pós-Cordyceps:
+
+- **CI-1** — Supply chain: Syft `curl | bash` substituído por SHA-256 checksum
+- **CI-2** — Unsigned dev images: namespace `dev-` + cosign universal
+- **CI-3** — Path traversal via symlink: `utils.SafePath` substituído por
+  `cli.ValidateInputPath` com `filepath.EvalSymlinks`
+
+Ver [SPEC-WARDEX-HARDEN-CORDYCPS-BASED-001.md](../../SPEC-WARDEX-HARDEN-CORDYCPS-BASED-001.md)
+e [issue #94](https://github.com/had-nu/wardex/issues/94) para detalhes.

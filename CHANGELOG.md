@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] — 2026-06-29
+
+### Security
+
+- **CI-1 — Supply chain fix (release.yml)**: Syft installation replaced `curl | bash` with pinned binary download + SHA-256 checksum verification. Hash displayed in CI logs for PR diff visibility. ([PR #96](https://github.com/had-nu/wardex/pull/96))
+- **CI-2 — Unsigned dev images (docker.yml)**: Branch-triggered Docker images now use `dev-` namespace prefix and are signed immediately with cosign (removed tag-only gate). ([PR #97](https://github.com/had-nu/wardex/pull/97))
+- **CI-3 — Path traversal via symlink bypass**: Replaced `utils.SafePath` with `cli.ValidateInputPath`/`cli.ValidateOutputPath` using `filepath.EvalSymlinks` before containment check. Migrated 33 call sites across 19+ files. Fixed TOCTOU in `pkg/accept/accept.go` (validated path used for writes). Fixed gap in `cmd/evaluate/evaluate.go` (`--out-file` now validates before `os.Create`). 33 tests including symlink escape, null bytes, shell injection, pseudo-filesystems. ([PR #98](https://github.com/had-nu/wardex/pull/98))
+- **New `pkg/cli/pathguard.go`**: Central path validation package with `ValidateInputPath` (file reads) and `ValidateOutputPath` (file writes). Resolves symlinks via `filepath.EvalSymlinks` before containment check. Accepts `fs.ErrNotExist` for output paths (file not yet created). Checks pseudo-filesystems (`/proc/`, `/sys/`, `/dev/`) in output paths.
+
 ## [2.2.0] — 2026-06-25
 
 ### Added

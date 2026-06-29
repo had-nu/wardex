@@ -498,12 +498,18 @@ Templates:
 ### 10.3 CI/CD Pipeline
 
 ```
-┌──────────┐     ┌──────────┐     ┌───────────┐     ┌──────────┐
-│  ci.yml  │────▶│ docker.yml│────▶│release.yml│────▶│ action.yml│
-│test/lint │     │build/push│     │GoReleaser │     │ composite │
-│security  │     │ghcr.io   │     │Cosign+SBOM│     │  action   │
-└──────────┘     └──────────┘     └───────────┘     └──────────┘
+┌──────────┐     ┌──────────┐     ┌───────────────┐     ┌──────────┐
+│  ci.yml  │────▶│docker.yml│────▶│ release.yml   │────▶│action.yml│
+│test/lint │     │build/push│     │GoReleaser     │     │ composite│
+│security  │     │ghcr.io   │     │Cosign+SBOM    │     │  action  │
+│          │     │dev-* ns  │     │Syft SHA-pinned│     │pathguard │
+└──────────┘     └──────────┘     └───────────────┘     └──────────┘
 ```
+
+**Hardening (v2.2.2):**
+- Syft installed via SHA-256 checksum verification (not `curl | bash`)
+- Dev branch images namespaced (`dev-`) and signed immediately with cosign
+- Path validation via `pkg/cli/pathguard.go` — `ValidateInputPath`/`ValidateOutputPath` with symlink resolution
 
 ### 10.4 GoReleaser Targets
 

@@ -4,8 +4,14 @@ Wardex é um **release gate**, não um scanner. Não encontra vulnerabilidades �
 
 Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo GitHub Actions.
 
-> **Versão de referência:** v2.2.0  
+> **Versão de referência:** v2.2.2  
 > **Instalação:** `go install github.com/had-nu/wardex/v2@latest`
+
+> **Hardening (v2.2.2):** O Wardex implementa validação de paths via
+> `pkg/cli/pathguard.go`. Se usas a Marketplace Action, os inputs `--evidence`,
+> `--config`, `--out-file` são validados contra path traversal com resolução de
+> symlinks. Para workflows manuais, garante que os paths são relativos ao
+> workspace ou absolutos dentro dele.
 
 ---
 

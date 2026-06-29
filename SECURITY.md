@@ -56,5 +56,8 @@ The `WARDEX_ACCEPT_SECRET` environment variable generates HMAC-SHA256 signatures
 - Static analysis: `staticcheck`, `gosec`, `govulncheck` on every PR
 - Race condition detection: `go test -race` on every PR
 - GitHub Actions pinned to SHA256 commits, not tags
+- Syft installation uses SHA-256 checksum verification (not `curl | bash`)
 - Release binaries signed with `cosign`; SBOM generated in CycloneDX format via goreleaser
+- Dev branch Docker images namespaced (`dev-`) and signed immediately with cosign
+- Path validation via `pkg/cli/pathguard.go` — `ValidateInputPath`/`ValidateOutputPath` resolve symlinks before containment check, preventing path traversal attacks
 - Trust store and sealed config use Ed25519 keys; audit logs are HMAC-SHA256 signed and append-only
