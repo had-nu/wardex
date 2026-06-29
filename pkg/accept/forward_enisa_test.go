@@ -15,6 +15,7 @@ import (
 
 func TestENISABackend(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	queuePath := filepath.Join(dir, "enisa-queue.jsonl")
 
 	backend := NewENISABackend(queuePath)

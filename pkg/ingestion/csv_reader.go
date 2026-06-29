@@ -10,13 +10,13 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 func loadCSV(path string) ([]model.ExistingControl, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return nil, fmt.Errorf("safe path validation failed: %w", err)
 	}

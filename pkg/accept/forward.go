@@ -14,8 +14,8 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 var (
@@ -218,7 +218,7 @@ func (e *ENISABackend) Name() string {
 // Send appends the entry to the local queue file.
 func (e *ENISABackend) Send(entry model.AuditEntry) error {
 	cwd, _ := os.Getwd()
-	safePath, err := utils.SafePath(cwd, e.QueuePath)
+	safePath, err := cli.ValidateInputPath(cwd, e.QueuePath)
 	if err != nil {
 		return err
 	}

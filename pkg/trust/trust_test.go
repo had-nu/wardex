@@ -153,6 +153,7 @@ func TestStoreLifecycle(t *testing.T) {
 
 func TestConfigSeal(t *testing.T) {
 	tmp := t.TempDir()
+	t.Chdir(tmp)
 	adminKeyPath := filepath.Join(tmp, "admin.wex")
 	storePath := filepath.Join(tmp, "wardex-trust.yaml")
 	draftPath := filepath.Join(tmp, "draft.yaml")

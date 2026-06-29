@@ -36,6 +36,7 @@ func TestReportGeneration(t *testing.T) {
 	}
 
 	dir := t.TempDir()
+	t.Chdir(dir)
 
 	// Test JSON
 	jsonFile := filepath.Join(dir, "report.json")
@@ -118,6 +119,7 @@ func TestHTMLReportEdgeCases(t *testing.T) {
 				},
 			}
 			dir := t.TempDir()
+			t.Chdir(dir)
 			htmlFile := filepath.Join(dir, "report.html")
 			if err := report.Generate(rep, "html", htmlFile, 10); err != nil {
 				t.Fatalf("HTML generation failed: %v", err)

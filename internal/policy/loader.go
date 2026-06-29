@@ -7,14 +7,14 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/had-nu/wardex/v2/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 // LoadDomain reads and validates a single domain YAML file.
 // Returns a validated *DomainFile or a descriptive error — never both.
 func LoadDomain(path string) (*DomainFile, error) {
 	// Security: prevent path traversal (gosec G304)
-	safe, err := utils.SafePath(".", path)
+	safe, err := cli.ValidateInputPath(".", path)
 	if err != nil {
 		return nil, err
 	}

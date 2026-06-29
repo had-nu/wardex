@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 // Save writes the current GapReport to the snapshot file.
@@ -27,7 +27,7 @@ func Save(filename string, report *model.GapReport) error {
 // Load reads the snapshot file if it exists. Returns nil, nil if missing.
 func Load(filename string) (*model.GapReport, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, filename)
+	safePathStr, err := cli.ValidateInputPath(cwd, filename)
 	if err != nil {
 		return nil, err
 	}

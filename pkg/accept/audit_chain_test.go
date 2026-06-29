@@ -15,6 +15,7 @@ import (
 
 func TestAuditChain(t *testing.T) {
 	dir := t.TempDir()
+	t.Chdir(dir)
 	logPath := filepath.Join(dir, "audit-chain.log")
 
 	// 1. Write first entry -> previous_entry_hash should be empty

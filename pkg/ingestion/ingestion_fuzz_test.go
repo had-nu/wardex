@@ -5,7 +5,6 @@ package ingestion
 
 import (
 	"os"
-	"path/filepath"
 	"testing"
 )
 
@@ -23,9 +22,10 @@ func FuzzParseYAML(f *testing.F) {
 	f.Add([]byte(`invalid yaml`))
 
 	f.Fuzz(func(t *testing.T, data []byte) {
-		path := filepath.Join(t.TempDir(), "fuzz.yaml")
-		_ = os.WriteFile(path, data, 0600)
-		_, _ = loadYAML(path)
+		dir := t.TempDir()
+		t.Chdir(dir)
+		_ = os.WriteFile("fuzz.yaml", data, 0600)
+		_, _ = loadYAML("fuzz.yaml")
 	})
 }
 
@@ -34,9 +34,10 @@ func FuzzParseJSON(f *testing.F) {
 	f.Add([]byte(`{invalid json`))
 
 	f.Fuzz(func(t *testing.T, data []byte) {
-		path := filepath.Join(t.TempDir(), "fuzz.json")
-		_ = os.WriteFile(path, data, 0600)
-		_, _ = loadJSON(path)
+		dir := t.TempDir()
+		t.Chdir(dir)
+		_ = os.WriteFile("fuzz.json", data, 0600)
+		_, _ = loadJSON("fuzz.json")
 	})
 }
 
@@ -45,8 +46,9 @@ func FuzzParseCSV(f *testing.F) {
 	f.Add([]byte("id,name\n1"))
 
 	f.Fuzz(func(t *testing.T, data []byte) {
-		path := filepath.Join(t.TempDir(), "fuzz.csv")
-		_ = os.WriteFile(path, data, 0600)
-		_, _ = loadCSV(path)
+		dir := t.TempDir()
+		t.Chdir(dir)
+		_ = os.WriteFile("fuzz.csv", data, 0600)
+		_, _ = loadCSV("fuzz.csv")
 	})
 }

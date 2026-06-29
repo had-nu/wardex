@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -124,7 +124,7 @@ type Config struct {
 // Load reads and parses the configuration file. Returns an empty default if not found.
 func Load(path string) (*Config, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, path)
+	safePathStr, err := cli.ValidateInputPath(cwd, path)
 	if err != nil {
 		return nil, err
 	}

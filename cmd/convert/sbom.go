@@ -9,9 +9,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/sboms"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -33,7 +33,7 @@ func init() {
 // if it's CycloneDX or SPDX before invoking the dedicated parsers.
 func peekSbomFormat(filepath string) (string, error) {
 	cwd, _ := os.Getwd()
-	safePathStr, err := utils.SafePath(cwd, filepath)
+	safePathStr, err := cli.ValidateInputPath(cwd, filepath)
 	if err != nil {
 		return "", err
 	}

@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 )
 
 func generateMarkdown(report model.GapReport, outFile string, limit int) error { // nolint:errcheck
@@ -21,7 +21,7 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 		if err != nil {
 			return err
 		}
-		safePathStr, err := utils.SafePath(cwd, outFile)
+		safePathStr, err := cli.ValidateOutputPath(cwd, outFile)
 		if err != nil {
 			return err
 		}

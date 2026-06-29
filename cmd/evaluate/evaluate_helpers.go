@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/v2/config"
+	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/trust"
 	"github.com/had-nu/wardex/v2/pkg/utils"
@@ -101,7 +102,7 @@ func loadEvalConfig(configPath string, strict bool, profileName string) (*config
 // loadEvidence reads and parses a vulnerability evidence file, returning the vulnerabilities list
 // and the SHA-256 hash of the file content. It validates optional provenance metadata.
 func loadEvidence(gateFile, cwd string, strict bool) ([]model.Vulnerability, string, error) {
-	safeGatePath, err := utils.SafePath(cwd, gateFile)
+	safeGatePath, err := pathguard.ValidateInputPath(cwd, gateFile)
 	if err != nil {
 		return nil, "", fmt.Errorf("evidence path: %w", err)
 	}

@@ -34,6 +34,7 @@ func TestConvertGrype(t *testing.T) {
 }`
 
 	dir := t.TempDir()
+	t.Chdir(dir)
 	inFile := filepath.Join(dir, "grype.json")
 	outFile := filepath.Join(dir, "out.yaml")
 

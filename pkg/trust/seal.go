@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 // SealConfig reads a draft wardex-config.yaml, verifies there are no
@@ -52,7 +52,7 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 	if err != nil {
 		return fmt.Errorf("config seal: get working directory: %w", err)
 	}
-	safePath, err := utils.SafePath(cwd, inputPath)
+	safePath, err := cli.ValidateInputPath(cwd, inputPath)
 	if err != nil {
 		return fmt.Errorf("config seal: unsafe path %q: %w", inputPath, err)
 	}
