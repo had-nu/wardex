@@ -18,6 +18,11 @@ FROM gcr.io/distroless/static:nonroot
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /wardex /wardex
 
+# GitHub Actions mounts the workspace at /github/workspace.
+# Setting WORKDIR ensures os.Getwd() returns the workspace root,
+# so pathguard validation uses the correct base path.
+WORKDIR /github/workspace
+
 USER 65532:65532
 
 ENTRYPOINT ["/wardex"]

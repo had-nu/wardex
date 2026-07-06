@@ -5,14 +5,21 @@ description: >
 branding:
   icon: 'shield'
   color: 'purple'
+
+# Workspace Confinement Contract (WRDX-HARDEN-002):
+# Paths are resolved relative to GITHUB_WORKSPACE (/github/workspace).
+# The container's WORKDIR is set to /github/workspace, so os.Getwd()
+# returns the workspace root. Pathguard validation ensures all inputs
+# and outputs stay within this directory.
 inputs:
   evidence:
     description: >
       Vulnerability evidence file (YAML/JSON).
+      Path is relative to GITHUB_WORKSPACE.
       Generate with: `wardex convert grype <file>` or `wardex convert sbom <file>`.
     required: true
   config:
-    description: 'Path to wardex-config.yaml.'
+    description: 'Path to wardex-config.yaml (relative to GITHUB_WORKSPACE).'
     default: 'wardex-config.yaml'
     required: false
   framework:
@@ -24,7 +31,7 @@ inputs:
     default: 'markdown'
     required: false
   output-file:
-    description: 'Path for the generated report.'
+    description: 'Path for the generated report (relative to GITHUB_WORKSPACE).'
     default: 'wardex-report.md'
     required: false
 runs:
