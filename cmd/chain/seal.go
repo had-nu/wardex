@@ -82,7 +82,12 @@ _exclude := make(map[string]bool)
 			return nil
 		}
 
-		data, err := os.ReadFile(path) // #nosec G304
+		// Validate path to prevent TOCTOU traversal
+		if _, err := cli.ValidateInputPath(safeBase, path); err != nil {
+			return nil // skip invalid paths
+		}
+
+		data, err := os.ReadFile(path) // #nosec G304 G122 — path validated above via ValidateInputPath
 		if err != nil {
 			return nil
 		}

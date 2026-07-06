@@ -69,8 +69,6 @@ func TestEvaluateWritesGateAuditLog(t *testing.T) {
 	}
 }
 
-type discardWriter struct{}
-func (d discardWriter) Write(p []byte) (n int, err error) { return len(p), nil }
 func ioDiscard() *os.File {
 	return os.NewFile(0, os.DevNull)
 }
