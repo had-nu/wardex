@@ -73,12 +73,17 @@ func runHMACSign(cmd *cobra.Command, args []string) error {
 		outPath = hmacFile + ".hmac"
 	}
 
+	safeOutPath, err := cli.ValidateOutputPath(cwd, outPath)
+	if err != nil {
+		return fmt.Errorf("validating output path: %w", err)
+	}
+
 	sigData := []byte(fmt.Sprintf("HMAC-SHA256: %s\n", sig))
-	if err := os.WriteFile(outPath, sigData, 0600); err != nil {
+	if err := os.WriteFile(safeOutPath, sigData, 0600); err != nil { // #nosec G703 — safeOutPath validated by ValidateOutputPath
 		return fmt.Errorf("writing signature: %w", err)
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), "HMAC-SHA256 signature written to: %s\n", outPath)
+	fmt.Fprintf(cmd.OutOrStdout(), "HMAC-SHA256 signature written to: %s\n", safeOutPath)
 	fmt.Fprintf(cmd.OutOrStdout(), "  Algorithm:  HMAC-SHA256\n")
 	fmt.Fprintf(cmd.OutOrStdout(), "  Payload:    %s (%d bytes)\n", hmacFile, len(data))
 	fmt.Fprintf(cmd.OutOrStdout(), "  Signature:  %s\n", sig[:16]+"...")
