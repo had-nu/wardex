@@ -37,15 +37,19 @@ func LoadDomain(path string) (*DomainFile, error) {
 }
 
 // LoadFramework loads and validates all domain YAML files found under dir.
-// Files are matched by the *.yml glob; non-YAML files are silently ignored.
+// Files are matched by both *.yml and *.yaml globs; non-YAML files are silently ignored.
 func LoadFramework(dir string) ([]*DomainFile, error) {
-	pattern := filepath.Join(dir, "*.yml")
-	paths, err := filepath.Glob(pattern)
-	if err != nil {
-		return nil, fmt.Errorf("policy: glob %q: %w", dir, err)
+	var paths []string
+	for _, ext := range []string{"*.yml", "*.yaml"} {
+		pattern := filepath.Join(dir, ext)
+		matched, err := filepath.Glob(pattern)
+		if err != nil {
+			return nil, fmt.Errorf("policy: glob %q: %w", dir, err)
+		}
+		paths = append(paths, matched...)
 	}
 	if len(paths) == 0 {
-		return nil, fmt.Errorf("policy: no .yml files found in %q", dir)
+		return nil, fmt.Errorf("policy: no .yml or .yaml files found in %q", dir)
 	}
 
 	domains := make([]*DomainFile, 0, len(paths))

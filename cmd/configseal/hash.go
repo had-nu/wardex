@@ -34,8 +34,6 @@ func init() {
 	HashCmd.Flags().StringVar(&hashConfigPath, "config", "", "Path to wardex-config.yaml (required)")
 	HashCmd.Flags().StringVar(&hashAlgorithm, "algorithm", "sha256", "Hash algorithm: sha256|blake3")
 	_ = HashCmd.MarkFlagRequired("config")
-
-	ConfigCmd.AddCommand(HashCmd)
 }
 
 func runConfigHash(cmd *cobra.Command, args []string) error {

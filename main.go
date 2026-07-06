@@ -10,10 +10,15 @@ import (
 
 	"github.com/had-nu/wardex/v2/cmd/aggregate"
 	"github.com/had-nu/wardex/v2/cmd/assess"
+	"github.com/had-nu/wardex/v2/cmd/assets"
 	"github.com/had-nu/wardex/v2/cmd/audit"
+	authcmd "github.com/had-nu/wardex/v2/cmd/auth"
+	"github.com/had-nu/wardex/v2/cmd/chain"
 	"github.com/had-nu/wardex/v2/cmd/configseal"
+	"github.com/had-nu/wardex/v2/cmd/contract"
 	"github.com/had-nu/wardex/v2/cmd/convert"
 	"github.com/had-nu/wardex/v2/cmd/evaluate"
+	hmaccmd "github.com/had-nu/wardex/v2/cmd/hmac"
 	"github.com/had-nu/wardex/v2/cmd/keygen"
 	"github.com/had-nu/wardex/v2/cmd/policy"
 	"github.com/had-nu/wardex/v2/cmd/simulate"
@@ -160,7 +165,7 @@ func init() {
 	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora")
 	rootCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a cryptographically signed EPSS enrichment file")
 
-	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd)
+	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd, convert.KevCmd)
 	rootCmd.AddCommand(convertCmd)
 	rootCmd.AddCommand(simulate.SimulateCmd)
 	rootCmd.AddCommand(policy.PolicyCmd)
@@ -175,6 +180,11 @@ func init() {
 	rootCmd.AddCommand(art14cmd.Art14Cmd)
 	rootCmd.AddCommand(audit.AuditCmd)
 	rootCmd.AddCommand(state.StateCmd)
+	rootCmd.AddCommand(authcmd.AuthCmd)
+	rootCmd.AddCommand(contract.ContractCmd)
+	rootCmd.AddCommand(chain.ChainCmd)
+	rootCmd.AddCommand(hmaccmd.HMACCmd)
+	rootCmd.AddCommand(assets.AssetsCmd)
 }
 
 func main() {

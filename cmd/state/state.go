@@ -5,7 +5,6 @@ package state
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/statestore"
 	"github.com/spf13/cobra"
@@ -47,7 +46,14 @@ var StatusCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		store, err := getStore()
 		if err != nil {
-			return fmt.Errorf("failed to open state store: %w", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "No state store found at %s/\n\n", stateDir)
+			fmt.Fprintf(cmd.ErrOrStderr(), "To enable persistent state tracking:\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "  1. Add to wardex-config.yaml:\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "     state_store:\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "       enabled: true\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "       dir: %s\n", stateDir)
+			fmt.Fprintf(cmd.ErrOrStderr(), "  2. Run: wardex evaluate --config wardex-config.yaml ...\n")
+			return nil
 		}
 
 		state, err := store.LoadState()
@@ -56,7 +62,7 @@ var StatusCmd = &cobra.Command{
 		}
 
 		if state.LastRun.IsZero() {
-			fmt.Println("No state recorded yet. Run 'wardex evaluate' with state_store.enabled=true to start tracking.")
+			fmt.Fprintln(cmd.OutOrStdout(), "No state recorded yet. Run 'wardex evaluate' with state_store.enabled=true to start tracking.")
 			return nil
 		}
 
@@ -163,24 +169,31 @@ var VerifyCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		store, err := getStore()
 		if err != nil {
-			return fmt.Errorf("failed to open state store: %w", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "No state store found at %s/\n\n", stateDir)
+			fmt.Fprintf(cmd.ErrOrStderr(), "To enable persistent state tracking:\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "  1. Add to wardex-config.yaml:\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "     state_store:\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "       enabled: true\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "       dir: %s\n", stateDir)
+			fmt.Fprintf(cmd.ErrOrStderr(), "  2. Run: wardex evaluate --config wardex-config.yaml ...\n")
+			return nil
 		}
 
 		if err := store.VerifyChain(); err != nil {
-			fmt.Fprintf(os.Stderr, "Chain integrity: BROKEN\n")
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Chain integrity: BROKEN\n")
+			fmt.Fprintf(cmd.ErrOrStderr(), "Error: %v\n", err)
 			return err
 		}
 
-		fmt.Printf("Chain integrity: OK\n")
+		fmt.Fprintln(cmd.OutOrStdout(), "Chain integrity: OK")
 
 		// Show chain stats
 		chain, err := statestore.LoadChain(store.ChainPath())
 		if err == nil {
-			fmt.Printf("Chain entries:   %d\n", len(chain.Entries))
+			fmt.Fprintf(cmd.OutOrStdout(), "Chain entries:   %d\n", len(chain.Entries))
 			if len(chain.Entries) > 0 {
-				fmt.Printf("First entry:     %s\n", chain.Entries[0].Timestamp.Format("2006-01-02 15:04:05 UTC"))
-				fmt.Printf("Last entry:      %s\n", chain.Entries[len(chain.Entries)-1].Timestamp.Format("2006-01-02 15:04:05 UTC"))
+				fmt.Fprintf(cmd.OutOrStdout(), "First entry:     %s\n", chain.Entries[0].Timestamp.Format("2006-01-02 15:04:05 UTC"))
+				fmt.Fprintf(cmd.OutOrStdout(), "Last entry:      %s\n", chain.Entries[len(chain.Entries)-1].Timestamp.Format("2006-01-02 15:04:05 UTC"))
 			}
 		}
 

@@ -4,14 +4,35 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.2.2] — 2026-06-29
+## [2.2.2] — 2026-07-06
 
-### Security
+### Security (Cordyceps Hardening — 2026-06-29)
 
 - **CI-1 — Supply chain fix (release.yml)**: Syft installation replaced `curl | bash` with pinned binary download + SHA-256 checksum verification. Hash displayed in CI logs for PR diff visibility. ([PR #96](https://github.com/had-nu/wardex/pull/96))
 - **CI-2 — Unsigned dev images (docker.yml)**: Branch-triggered Docker images now use `dev-` namespace prefix and are signed immediately with cosign (removed tag-only gate). ([PR #97](https://github.com/had-nu/wardex/pull/97))
 - **CI-3 — Path traversal via symlink bypass**: Replaced `utils.SafePath` with `cli.ValidateInputPath`/`cli.ValidateOutputPath` using `filepath.EvalSymlinks` before containment check. Migrated 33 call sites across 19+ files. Fixed TOCTOU in `pkg/accept/accept.go` (validated path used for writes). Fixed gap in `cmd/evaluate/evaluate.go` (`--out-file` now validates before `os.Create`). 33 tests including symlink escape, null bytes, shell injection, pseudo-filesystems. ([PR #98](https://github.com/had-nu/wardex/pull/98))
 - **New `pkg/cli/pathguard.go`**: Central path validation package with `ValidateInputPath` (file reads) and `ValidateOutputPath` (file writes). Resolves symlinks via `filepath.EvalSymlinks` before containment check. Accepts `fs.ErrNotExist` for output paths (file not yet created). Checks pseudo-filesystems (`/proc/`, `/sys/`, `/dev/`) in output paths.
+
+### Added (Usability Improvements)
+
+- **`wardex trust list`**: List all keys in the trust store with status, role, and metadata. Table and JSON output formats. (`cmd/trust/trust_extended.go`)
+- **`wardex trust show <id>`**: Display detailed information for a specific trust key including revocation status and signatures. (`cmd/trust/trust_extended.go`)
+- **`wardex trust verify`**: Verify root signature validity and key status across the entire trust store. (`cmd/trust/trust_extended.go`)
+- **`wardex config show`**: Display configuration metadata including risk appetite, gate mode, CRA Art.14 status, state store status, and SHA-256 hash. (`cmd/configseal/show.go`)
+- **`wardex auth status`**: Show trust store integrity status with admin key and active/revoked key counts. (`cmd/auth/auth.go`)
+- **`wardex auth verify --actor`**: Verify actor permissions against the trust store, listing all permitted operations. (`cmd/auth/auth.go`)
+- **`wardex contract verify`**: Compute SHA-256 hash of contract file and optionally verify against expected hash. Shows file size and modification time. (`cmd/contract/verify.go`)
+- **`wardex assets inventory`**: Display ICT asset inventory with criticality, internet exposure, network zone, and owner. Table, JSON, and CSV output formats. (`cmd/assets/inventory.go`)
+- **`wardex hmac sign`**: Compute HMAC-SHA256 signature for file integrity verification using secret from environment variable. (`cmd/hmac/sign.go`)
+- **`wardex convert kev`**: Convert CISA KEV catalogue format to Wardex YAML format for use with evaluate command. (`cmd/convert/kev_cmd.go`)
+- **`wardex chain seal`**: Create SHA-256 chain seal of all artifacts in a directory, generating chain-seal.json manifest with file hashes and collection hash. (`cmd/chain/seal.go`)
+
+### Fixed
+
+- **`policy validate/list` — accept `.yaml`**: Now accepts both `*.yml` and `*.yaml` policy files. Previously only matched `*.yml`, causing confusion for users with `.yaml` files. (`internal/policy/loader.go`)
+- **`art14 verify` — clear error message**: When `WARDEX_ACCEPT_SECRET` is not set, now shows actionable instructions including how to generate a key with `openssl rand -base64 32`. (`cmd/art14/art14.go`)
+- **`audit verify-chain` — multi-segment support**: Added `--session-id` flag to filter entries by session ID. Audit logs with multiple segments (each starting with genesis) are now verified as independent chains. (`cmd/audit/verify_chain.go`)
+- **`state status/verify` — actionable instructions**: When state store is not initialized, now shows clear instructions to enable `state_store.enabled=true` in config. (`cmd/state/state.go`)
 
 ## [2.2.0] — 2026-06-25
 

@@ -53,7 +53,7 @@ func init() {
 	SealCmd.Flags().StringVar(&trustRef, "trust", "", "Path or URL to wardex-trust.yaml\nOverrides WARDEX_TRUST_STORE if set (default: ./wardex-trust.yaml)")
 	_ = SealCmd.MarkFlagRequired("input")
 
-	ConfigCmd.AddCommand(SealCmd)
+	ConfigCmd.AddCommand(SealCmd, HashCmd, ShowCmd)
 }
 
 func runConfigSeal(cmd *cobra.Command, args []string) error {

@@ -441,7 +441,7 @@ func runVerify(cmd *cobra.Command, args []string) error {
 
 	key, err := accept.ResolveSecret(*cfg)
 	if err != nil {
-		return fmt.Errorf("verify: WARDEX_ACCEPT_SECRET is required: %w", err)
+		return fmt.Errorf("verify: WARDEX_ACCEPT_SECRET is required for Art. 14 HMAC verification.\n\nHINT: Generate a key with:\n  openssl rand -base64 32\n\nThen export:\n  export WARDEX_ACCEPT_SECRET=\"$(openssl rand -base64 32)\"\n\nOriginal error: %w", err)
 	}
 
 	err = art14.VerifyArtefact(art, key)
