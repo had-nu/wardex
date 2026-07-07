@@ -18,7 +18,7 @@ func Write(path string, data []byte) error {
 		return fmt.Errorf("atomic write tmp: %w", err)
 	}
 	if err := os.Rename(tmp, path); err != nil {
-		os.Remove(tmp) //nolint:errcheck
+		_ = os.Remove(tmp) // #nosec G104 -- best-effort cleanup, rename already failed
 		return fmt.Errorf("atomic rename: %w", err)
 	}
 	return nil
