@@ -25,9 +25,57 @@
 
 Wardex is a CLI and Go library that turns security and compliance decisions into auditable evidence. Two independent modes — neither requires the other.
 
-The release gate evaluates each vulnerability in the context of the asset that contains it: system criticality, effective exposure, compensating controls already active. Rather than a static CVSS threshold that blocks everything or nothing, the output is a decision with a timestamped, signed record that survives an audit.
+**European positioning:** Wardex is built from the ground up for European regulations — NIS2, DORA, CRA — and for the compliance standard emerging across the EU. Every release gate decision, every risk acceptance, every Art14 artefact is cryptographically sealed and recorded in a chained audit log that survives external audits.
 
-The gap analysis crosses what the security function declared against what is operationally confirmed, mapped against the chosen framework catalogue. The result is not a control list — it is the separation between genuine coverage, what exists only in policy, and what operates outside of governance.
+---
+
+## Chained Audit Log — Core Feature
+
+The chained audit log is the heart of Wardex. Each entry is cryptographically linked to the previous one, forming an unbreakable chain of evidence.
+
+```
+┌─────────────┐    SHA-256    ┌─────────────┐    SHA-256    ┌─────────────┐
+│  Entry 1    │──────────────▶│  Entry 2    │──────────────▶│  Entry 3    │
+│  (genesis)  │               │  (decision) │               │  (acceptance)│
+└─────────────┘               └─────────────┘               └─────────────┘
+       │                             │                             │
+       ▼                             ▼                             ▼
+  Config hash                 Config hash                   Config hash
+  (CPL v2.2)                  (CPL v2.2)                   (CPL v2.2)
+```
+
+**What makes it tamper-proof:**
+- Each entry includes the hash of the previous entry (chained hashing)
+- The config hash (CPL) links every decision to the policy in effect
+- Any modification to the audit log or config is immediately detectable
+- Exportable as JSONL for SIEM, Datadog, or external audit
+
+```bash
+# Verify chain integrity
+wardex audit verify-chain --audit-log wardex-gate-audit.log
+
+# Verify linkage with archived configurations
+wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./configs/
+```
+
+---
+
+## What's New — v2.2.2
+
+**Security Hardening:**
+- Workspace confinement: `evaluate` restricts file access to the project root
+- Pathguard: replaces ad-hoc SafePath with validated path checking
+- SBOM generation with pinned syft and SHA-256 verification
+
+**Code Quality (PR #102):**
+- Consolidated atomic writes (`pkg/atomicwrite`) — fixed temp-file leak
+- Shared gate pipeline (`pkg/gate`) — DRY between evaluate and wardex commands
+- `runEvaluate()` decomposed from CC=123 into 11 focused helpers
+
+**Immutable Provenance (v2.3.0 branch):**
+- Cryptographic provenance manifest with BLAKE3 + Ed25519
+- Bitcoin anchoring via OpenTimestamps
+- Ethereum/Polygon anchoring via `ProvenanceAnchor` smart contract
 
 ---
 
@@ -61,7 +109,7 @@ cd wardex && make build
 ### Docker
 
 ```bash
-docker pull ghcr.io/had-nu/wardex:2.2.0
+docker pull ghcr.io/had-nu/wardex:2.2.2
 ```
 
 ### Helm (Kubernetes)
@@ -77,7 +125,7 @@ See [deploy/helm/wardex/](deploy/helm/wardex/) for the full chart reference.
 
 ## Quickstart
 
-Test Wardex with the example files included in the repository:
+### 1. Evaluate vulnerability risk
 
 ```bash
 # Convert Grype output to Wardex format
@@ -90,171 +138,63 @@ wardex evaluate \
 
 # Dry-run — preview without writing artefacts
 wardex evaluate --evidence vulns.yaml --config doc/examples/wardex-config.yaml --dry-run
-
-# Exit codes: 0 (ALLOW) · 3 (Tampered) · 4 (Store inconsistent) · 10 (BLOCK) · 11 (Gap) · 12 (Exploited)
 ```
+
+### 2. Generate and manage keys
+
+```bash
+# Generate Ed25519 keypair for the trust system
+wardex keygen
+
+# Key is created at ~/.crypto/trust/root.key
+# Public key is ~/.crypto/trust/root.key.pub (send to admin)
+```
+
+### 3. Seal and verify provenance
+
+```bash
+# Seal source tree (from v2.3.0 branch)
+immutable-provenance seal \
+  --dir . \
+  --output provenance.yaml \
+  --version v2.2.2 \
+  --keyring ~/.crypto/provenance/signing.key
+
+# Verify integrity
+immutable-provenance verify --manifest provenance.yaml --dir .
+```
+
+**Exit codes:** `0` ALLOW · `3` Tampered · `4` Store inconsistent · `10` BLOCK · `11` Gap · `12` Actively exploited
 
 ---
 
-## CRA Article 14 (v2.0)
+## Command Reference
 
-The EU Cyber Resilience Act's active exploitation notification obligations enter into force in September 2026. Wardex v2.0 implements the Article 14 reporting path.
-
-### KEV Correlation
-
-```bash
-# Download the CISA KEV catalogue
-curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json
-
-# Convert Grype output with KEV correlation
-wardex convert grype grype-output.json --kev kev-catalogue.json
-```
-
-### Active Exploitation Hard Stop
-
-When a vulnerability is classified as actively exploited (`actively_exploited: true`), `wardex evaluate`:
-- Exits with code **12** (`ActivelyExploited`) — distinct from the normal gate block (10)
-- Generates an Article 14 notification artefact signed with HMAC-SHA256
-- Records a chained audit entry with three CRA deadlines
-- **Cannot** be overridden by risk acceptances
-
-```bash
-wardex evaluate --evidence vulns.yaml --config wardex-config.yaml frameworks/iso27001/*.yml
-```
-
-### Artefact Lifecycle (`wardex art14`)
-
-```bash
-wardex art14 list
-wardex art14 show <artefact-id>
-wardex art14 verify <artefact-id>
-wardex art14 mark-dispatched <artefact-id> --phase early-warning
-wardex art14 finalize <artefact-id> --patch-date 2026-06-09T12:00:00Z
-```
-
-### Active Exploit Acknowledgement
-
-```bash
-wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
-```
-
-**Exit codes (v2.2):** `0` CPL entry verified · `1` CPL MISMATCH/MISSING · `2` CPL Operational error · `3` Integrity failure / Tampered · `4` Store inconsistent · `10` Gate blocked · `11` Compliance fail · **`12` Actively exploited**
-
-### Configuration Provenance Link (CPL) — v2.2
-
-```bash
-# Compute canonical configuration hash (SHA-256 or BLAKE3)
-wardex config hash --config wardex-config.yaml
-wardex config hash --config wardex-config.yaml --algorithm blake3
-
-# Verify audit log chain integrity
-wardex audit verify-chain --audit-log wardex-gate-audit.log
-
-# Verify hashes in the audit log match archived configurations
-wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./configs/
-```
-
-CPL establishes a cryptographic link between each release gate decision and the configuration in effect at the time. The hash is computed over canonical YAML content (sorted keys, stripped comments, normalized whitespace) — guaranteeing reproducibility across environments. Supports SHA-256 and **BLAKE3** (modern algorithm with superior performance). Hashes with different algorithms are distinguished by prefix (`sha256:`, `blake3:`) and never silently compared. Divergences between the audit log and archived configurations can be notified via webhook to SIEM.
-
-**CPL exit codes:** `0` All entries OK · `1` MISMATCH/MISSING detected · `2` Operational error
-
----
-## Compliance gap analysis
-
-Wardex compares what infosec has declared against what is operationally active, and identifies the delta against the framework.
-
-### Input
-
-Two YAML files with a `layer` field identifying the origin:
-
-```yaml
-# documented-controls.yaml — policies declared by infosec
-- id: CTRL-IAM-001
-  name: Multi-Factor Authentication
-  layer: documented
-  domains: [access_control]
-  maturity: 4
-  evidences:
-    - type: policy
-      ref: https://wiki.internal/sec/mfa-policy
-
-# implemented-controls.yaml — operationally confirmed controls
-# (produced by Bridgr or maintained manually)
-- id: CTRL-IAM-001
-  name: Multi-Factor Authentication
-  layer: implemented
-  domains: [access_control]
-  maturity: 4
-  effectiveness: 0.90
-  evidences:
-    - type: tool
-      ref: okta-mfa-config-2026
-```
-
-The same ID appearing in both files is the expected case: a control that is both declared and confirmed operational. IDs present in only one file are the signal of interest.
-
-### Running
-
-```bash
-wardex assess documented-controls.yaml implemented-controls.yaml \
-  --framework iso27001 \
-  -o markdown
-```
-
-### What the report produces
-
-The report separates results into four compliance states:
-
-| Category | Meaning |
-|---|---|
-| **Covered** | Present in `implemented` layer, maturity >= 3, with operational evidence. |
-| **Policy without practice** | Documented only. No corresponding implemented control. |
-| **Practice without governance** | Implemented but without a documented policy. |
-| **Gap** | Absent from both layers for a catalogue control. |
-
-The `LayerDelta` section identifies the real drift between intent (policy) and execution (code), exposing compliance illusions.
-
-### With assets
-
-If your asset inventory is declared, the report produces a per-asset compliance table:
-
-```bash
-wardex assess documented-controls.yaml implemented-controls.yaml \
-  --assets assets.yaml \
-  --framework iso27001 \
-  -o json --out-file posture.json
-```
-
-```yaml
-# assets.yaml — v2.0.0 Schema
-- id: ASSET-PAY-001
-  name: Payment API
-  type: application
-  criticality: 0.9
-  scope: [iso27001]
-  controls: [CTRL-IAM-001, CTRL-CRYPTO-002]
-  exposure:
-    internet_facing: true
-    network_zone: dmz
-    data_classification: restricted
-  threats:
-    - id: T-01
-      scenario: "API abuse"
-      likelihood: high
-  owner: platform-team
-```
+| Command | Description |
+|---------|-------------|
+| `wardex evaluate` | Evaluate vulnerabilities against the release gate |
+| `wardex assess` | Compliance gap analysis |
+| `wardex convert grype/sbom` | Convert scanner output to Wardex format |
+| `wardex enrich epss` | Enrich vulnerabilities with EPSS data |
+| `wardex accept request/verify/list` | Risk acceptance management |
+| `wardex art14 list/show/verify` | CRA Article 14 artefact lifecycle |
+| `wardex config hash/seal` | CPL and sealed config |
+| `wardex audit verify-chain/verify-link` | Chained audit log verification |
+| `wardex trust init/add` | Trust store management |
+| `wardex keygen` | Ed25519 keypair generation |
+| `wardex pki init/issue` | PKI mode with Ed25519 CA |
+| `wardex policy show` | Show configured risk policy |
+| `wardex simulate` | Simulate gate decisions with historical data |
 
 ---
 
-## Risk-based release gate
+## Risk-Based Release Gate
 
-The gate evaluates vulnerabilities using the model:
+The gate evaluates each vulnerability with the model:
 
 ```
 R(v, α) = (CVSS(v)/10) × EPSS(v) × C(α) × E(α) × (1 − Φ(α))
 ```
-
-`CVSS/10` normalises the base score to [0, 1]; combined with `EPSS`, the product represents severity weighted by exploitation probability. `C` is asset criticality, `E` is effective exposure, and `Φ` is compensating control effectiveness (clamped at 0.80 — a compensating control reduces risk at most 80%). The final `R` lies in [0, 1.5]. Thresholds in `wardex-config.yaml` use the same scale.
 
 The result is compared against the `risk_appetite` defined in `wardex-config.yaml`. Three possible outcomes: `ALLOW`, `WARN`, `BLOCK`.
 
@@ -278,8 +218,6 @@ release_gate:
 
 ### The same CVE, four contexts
 
-The difference between ALLOW and BLOCK is not the CVE — it is the asset context. `R` lies in [0, 1.5]; each profile carries a distinct `risk_appetite` threshold (see `data/calibration.json`).
-
 | CVE | CVSS | EPSS | [BANK] | [SAAS] | [INFRA] | [HOSP] |
 |---|---|---|---|---|---|---|
 | Log4Shell | 10.0 | 0.94 | **1.41** `BLOCK` | **0.75** `BLOCK` | **1.41** `BLOCK` | **1.13** `BLOCK` |
@@ -287,31 +225,11 @@ The difference between ALLOW and BLOCK is not the CVE — it is the asset contex
 | curl SOCKS5 | 9.8 | 0.26 | **0.38** `BLOCK` | **0.20** `WARN` | **0.38** `BLOCK` | **0.31** `BLOCK` |
 | minimist | 9.8 | 0.01 | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` |
 
-Calibrated against 237 real CVEs with live EPSS from FIRST.org (`data/dataset_2025-03-01.json`):
-
-| Profile | Appetite | BLOCK | ALLOW | % Block |
-|---|---|---|---|---|
-| Tier-1 Bank (DORA) | 0.5 | 176 | 57 | 74% |
-| Hospital (HIPAA) | 0.8 | 168 | 63 | 71% |
-| SaaS Start-up | 2.0 | 111 | 86 | 47% |
-| Energy/Utilities (NIS2) | 0.3 | 180 | 53 | 76% |
-
 ### EPSS enrichment
-
-When your scanner does not include EPSS, Wardex assumes EPSS 1.0 (worst case) and blocks until explicit validation:
 
 ```bash
 wardex enrich epss wardex-vulns.yaml --output epss-enrich.yaml
 wardex evaluate --epss-enrichment epss-enrich.yaml --evidence vulns.yaml controls.yaml
-```
-
-Enrichment queries `api.first.org` and signs the result via HMAC-SHA256.
-
-### Format conversion
-
-```bash
-wardex convert grype results.json > vulns.yaml
-wardex convert sbom sbom.xml > vulns.yaml
 ```
 
 ### CI/CD integration
@@ -323,35 +241,110 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install Wardex
         run: go install github.com/had-nu/wardex/v2@latest
-
       - name: Evaluate risk gate
         run: |
           wardex evaluate \
             --config .wardex/config.yaml \
             --evidence vulns.yaml \
             controls.yaml
-        # Exit 0 = ALLOW, Exit 10 = BLOCK, Exit 11 = compliance gap
 ```
 
 ---
 
-## Dev environment
+## Compliance Gap Analysis
+
+Wardex compares what infosec has declared against what is operationally active, and identifies the delta against the framework.
+
+| Category | Meaning |
+|---|---|
+| **Covered** | Present in `implemented` layer, maturity >= 3, with operational evidence. |
+| **Policy without practice** | Documented only. No corresponding implemented control. |
+| **Practice without governance** | Implemented but without a documented policy. |
+| **Gap** | Absent from both layers for a catalogue control. |
 
 ```bash
-docker compose up -d         # start PostgreSQL, MinIO, and Wardex API stub
-docker compose down          # stop everything
-```
+wardex assess documented-controls.yaml implemented-controls.yaml \
+  --framework iso27001 \
+  -o markdown
 
-Wardex ships a [docker-compose.yml](docker-compose.yml) with PostgreSQL (audit store), MinIO (artefact bucket), and a Wardex API stub for local integration testing. See the compose file for service ports and configuration.
+# With asset inventory
+wardex assess documented-controls.yaml implemented-controls.yaml \
+  --assets assets.yaml \
+  --framework iso27001 \
+  -o json --out-file posture.json
+```
 
 ---
 
-## Environment & syslog forwarding
+## CRA Article 14
 
-Wardex reads these environment variables at startup:
+The EU Cyber Resilience Act's active exploitation notification obligations enter into force in September 2026.
+
+**Active Exploitation Hard Stop:** When a vulnerability is classified as actively exploited (`actively_exploited: true`), `wardex evaluate` exits with code **12** — distinct from the normal gate block (10). It cannot be overridden by risk acceptances.
+
+```bash
+# Art14 artefact
+wardex art14 list
+wardex art14 show <artefact-id>
+wardex art14 verify <artefact-id>
+wardex art14 mark-dispatched <artefact-id> --phase early-warning
+
+# Active exploit acceptance
+wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
+```
+
+See the [Governance Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md) for the full workflow.
+
+---
+
+## Key Management & Governance
+
+### Cryptographic Keys
+
+All Ed25519 keys are stored in `~/.crypto/` with subdirectories by purpose:
+
+```
+~/.crypto/
+├── provenance/          # Provenance manifest signing
+│   ├── signing.key      # Ed25519 private (mode 0400)
+│   └── signing.key.pub  # Ed25519 public
+└── trust/               # Wardex trust system
+    └── root.key         # Root key (generated by wardex keygen)
+```
+
+**Permissions**: Directories `700`, private keys `0400`, public keys `0644`.
+
+### Trust Store & Sealed Config (WexState)
+
+For **DORA** compliance and non-repudiable chains of custody:
+
+- **Strong identity**: Ed25519 keys for Admins, CISOs, and Analysts.
+- **Sealed config**: Risk policies cannot be altered without executive approval.
+- **Append-only trust store**: Central record of authorised keys and revocations.
+
+```bash
+# Seal the policy (CISO action)
+wardex config seal --keyring ~/.crypto/trust/root.key --input config.yaml --out config.wexstate
+
+# Evaluate with mandatory seal verification
+wardex evaluate --config config.wexstate --evidence vulns.yaml --strict
+```
+
+### PKI Mode
+
+For environments that require certificate-based identity:
+
+```bash
+wardex pki init --org "Your Corp" --validity 3650d
+wardex pki issue --name ci-agent --out ci-agent.wex
+wardex config seal --keyring ci-agent.wex --input config.yaml --out config.wexstate
+```
+
+---
+
+## Environment & Syslog
 
 | Variable | Default | Description |
 |---|---|---|
@@ -362,69 +355,6 @@ Wardex reads these environment variables at startup:
 | `WARDEX_SYSLOG_CERT` | — | TLS client cert path for `tls` proto |
 | `WARDEX_SYSLOG_KEY` | — | TLS client key path for `tls` proto |
 | `WARDEX_SYSLOG_CA` | — | Custom CA cert path for `tls` proto |
-
-Syslog forwarding is **opt-in**. When `WARDEX_SYSLOG_ENDPOINT` is set, every gate decision, acceptance, and Art14 lifecycle event is also dispatched as a structured RFC 5424 message to the configured endpoint. The connection is established at startup and reconnected on failure with exponential backoff.
-
----
-
-## PKI mode
-
-For environments that require certificate-based identity rather than shared secrets:
-
-```bash
-wardex pki init --org "Your Corp" --validity 3650d
-wardex pki issue --name ci-agent --out ci-agent.wex
-wardex config seal --keyring ci-agent.wex --input config.yaml --out config.wexstate
-```
-
-PKI mode creates an Ed25519 CA and issues short-lived operator certificates. Sealed configs signed with PKI certificates carry the full X.509 chain, enabling automated expiry verification without an external trust store.
-
----
-
-## Risk acceptance
-
-When the gate blocks and there is a business case for proceeding, Wardex formalises the exception with a named owner, justification, and TTL. Silent expirations and configuration drift are detected automatically.
-
-```bash
-# Request acceptance
-wardex accept request \
-  --report report.json \
-  --cve CVE-2024-1234 \
-  --accepted-by sec-lead@company.com \
-  --justification "WAF mitigates the attack vector; patch scheduled for Q3" \
-  --expiry 90d
-
-# Verify integrity of all active acceptances
-wardex accept verify
-
-# Export verification report as JSON artefact
-wardex accept verify --output verification-report.json
-
-# List acceptances and status
-wardex accept list --active
-```
-
-Acceptances are signed with HMAC-SHA256 and recorded in an append-only log (JSONL). Wardex rejects acceptances that have expired, been tampered with, or whose `wardex-config.yaml` has drifted since signing.
-
----
-
-## Governance: Trust Store & Sealed Config (WexState)
-
-For **DORA** compliance and non-repudiable chains of custody, Wardex allows sealing risk policies (`wardex-config.yaml`) into a signed cryptographic envelope (`.wexstate`).
-
-- **Strong identity**: Ed25519 keys for Admins, CISOs, and Analysts.
-- **Sealed config**: Risk policies cannot be altered in CI/CD without executive approval.
-- **Append-only trust store**: Central record of authorised keys and revocations.
-
-```bash
-# Seal the policy (CISO action)
-wardex config seal --keyring ciso.wex --input config.yaml --out config.wexstate
-
-# Evaluate with mandatory seal verification
-wardex evaluate --config config.wexstate --evidence vulns.yaml --strict
-```
-
-See the [Governance Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md) for the full workflow.
 
 ---
 
