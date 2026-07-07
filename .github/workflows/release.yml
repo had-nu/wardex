@@ -31,7 +31,7 @@ jobs:
       - name: Install syft
         env:
           SYFT_VERSION: "1.19.0"
-          SYFT_SHA256: "b3f5f849d77c2c2d4bc42e9c96a7e0a99fee3f9e06ebd0b4e39c66d4e7a2d5a1"
+          SYFT_SHA256: "1dec148ea36aef68a866e35528974b5dbc106ba0b545f1a262ad977d48294637"
         run: |
           curl -sSfL \
             "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/syft_${SYFT_VERSION}_linux_amd64.tar.gz" \
