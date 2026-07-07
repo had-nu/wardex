@@ -282,7 +282,6 @@ func runMarkDispatched(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// Append dispatch entry to gate audit log
 	logPath := "wardex-gate-audit.log"
 	if cfg.Reporting.GateLog.Path != "" {
 		logPath = cfg.Reporting.GateLog.Path

@@ -61,11 +61,7 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("trust list: %w", err)
 	}
 
-	// Build revoked set
-	revoked := make(map[string]bool)
-	for _, r := range store.Revocations {
-		revoked[r.KeyID] = true
-	}
+	revoked := trust.RevokedKeySet(store)
 
 	switch listOutput {
 	case "json":
@@ -226,23 +222,7 @@ func runTrustVerify(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("trust verify: %w", err)
 	}
 
-	// Count active/revoked
-	revoked := make(map[string]bool)
-	for _, r := range store.Revocations {
-		revoked[r.KeyID] = true
-	}
-	var activeCount, revokedCount int
-	var adminID string
-	for _, k := range store.Keys {
-		if revoked[k.ID] {
-			revokedCount++
-		} else {
-			activeCount++
-		}
-		if k.Role == trust.RoleAdmin && adminID == "" {
-			adminID = k.ID
-		}
-	}
+	activeCount, revokedCount, adminID := trust.KeyStats(store)
 
 	// Verify root signature
 	err = trust.VerifyRootSig(store)

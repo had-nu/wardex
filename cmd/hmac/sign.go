@@ -40,12 +40,7 @@ func init() {
 }
 
 func runHMACSign(cmd *cobra.Command, args []string) error {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("getting working directory: %w", err)
-	}
-
-	safePath, err := cli.ValidateInputPath(cwd, hmacFile)
+	safePath, err := cli.SafePath(hmacFile)
 	if err != nil {
 		return fmt.Errorf("validating file path: %w", err)
 	}
@@ -73,7 +68,7 @@ func runHMACSign(cmd *cobra.Command, args []string) error {
 		outPath = hmacFile + ".hmac"
 	}
 
-	safeOutPath, err := cli.ValidateOutputPath(cwd, outPath)
+	safeOutPath, err := cli.SafeOutputPath(outPath)
 	if err != nil {
 		return fmt.Errorf("validating output path: %w", err)
 	}

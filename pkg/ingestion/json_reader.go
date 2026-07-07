@@ -32,8 +32,7 @@ type jsonFormat struct {
 }
 
 func loadJSON(path string) ([]model.ExistingControl, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, path)
+	safePathStr, err := cli.SafePath(path)
 	if err != nil {
 		return nil, fmt.Errorf("safe path validation failed: %w", err)
 	}

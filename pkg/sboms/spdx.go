@@ -35,8 +35,7 @@ type SPDXDocument struct {
 // For the scope of Wardex ingestion today, we extract the structural shell
 // and throw a strategic NotImplementedError until VEX ingestion (G-17) is built.
 func ParseSPDX(filepath string) ([]model.Vulnerability, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, filepath)
+	safePathStr, err := cli.SafePath(filepath)
 	if err != nil {
 		return nil, err
 	}

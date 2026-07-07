@@ -18,11 +18,7 @@ func generateCSV(report model.GapReport, outFile string) error {
 	if outFile == "stdout" || outFile == "" {
 		f = os.Stdout
 	} else {
-		cwd, err := os.Getwd()
-		if err != nil {
-			return err
-		}
-		safePathStr, err := cli.ValidateOutputPath(cwd, outFile)
+		safePathStr, err := cli.SafeOutputPath(outFile)
 		if err != nil {
 			return err
 		}

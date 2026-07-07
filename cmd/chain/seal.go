@@ -48,12 +48,7 @@ type chainSeal struct {
 }
 
 func runChainSeal(cmd *cobra.Command, args []string) error {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("getting working directory: %w", err)
-	}
-
-	safeBase, err := cli.ValidateInputPath(cwd, chainBaseDir)
+	safeBase, err := cli.SafePath(chainBaseDir)
 	if err != nil {
 		return fmt.Errorf("validating base directory: %w", err)
 	}
@@ -102,12 +97,10 @@ _exclude := make(map[string]bool)
 		return fmt.Errorf("walking directory: %w", err)
 	}
 
-	// Compute chain hash over all artifact hashes (sorted for determinism)
 	var keys []string
 	for k := range artifacts {
 		keys = append(keys, k)
 	}
-	// Simple sort
 	for i := 0; i < len(keys); i++ {
 		for j := i + 1; j < len(keys); j++ {
 			if keys[i] > keys[j] {
@@ -130,12 +123,10 @@ _exclude := make(map[string]bool)
 		Artifacts: artifacts,
 	}
 
-	// Use actual timestamp
 	seal.Timestamp = ""
 	data, _ := json.MarshalIndent(seal, "", "  ")
 	_ = data
 
-	// Write output
 	outData, _ := json.MarshalIndent(seal, "", "  ")
 	if err := os.WriteFile(chainOutput, outData, 0600); err != nil {
 		return fmt.Errorf("writing chain seal: %w", err)

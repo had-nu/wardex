@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/had-nu/wardex/v2/pkg/atomicwrite"
 )
 
 // Store manages the persistent state directory.
@@ -62,12 +64,10 @@ func (s *Store) SaveState(state *State) error {
 		return fmt.Errorf("statestore: marshal state: %w", err)
 	}
 
-	// Write atomically
 	if err := atomicWrite(filepath.Join(s.root, "state.json"), data); err != nil {
 		return err
 	}
 
-	// Append to chain
 	dataHash := HashBytes(data)
 	AppendEntry(s.chain, dataHash)
 
@@ -81,14 +81,12 @@ func (s *Store) RecordDecision(decision string, risk float64, vulnCount int, act
 		return err
 	}
 
-	// Update state
 	state.LastDecision = decision
 	state.LastRisk = risk
 	state.RunCount++
 	state.ActiveAccepts = activeAccepts
 	state.ExpiringSoon = expiringSoon
 
-	// Append trend point
 	point := TrendPoint{
 		Date:      time.Now().UTC(),
 		Risk:      risk,
@@ -97,17 +95,14 @@ func (s *Store) RecordDecision(decision string, risk float64, vulnCount int, act
 	}
 	state.Trend = append(state.Trend, point)
 
-	// Keep only last 90 days of trend data
 	if len(state.Trend) > 90 {
 		state.Trend = state.Trend[len(state.Trend)-90:]
 	}
 
-	// Save state
 	if err := s.SaveState(state); err != nil {
 		return err
 	}
 
-	// Save history snapshot
 	if err := s.saveHistorySnapshot(state); err != nil {
 		return fmt.Errorf("statestore: save history: %w", err)
 	}
@@ -257,16 +252,7 @@ func (s *Store) ChainPath() string {
 
 // atomicWrite writes data to a temp file then renames.
 func atomicWrite(path string, data []byte) error {
-	tmp := path + ".tmp"
-	if err := os.WriteFile(tmp, data, 0o600); err != nil {
-		return fmt.Errorf("statestore: write tmp: %w", err)
-	}
-	if err := os.Rename(tmp, path); err != nil {
-		// #nosec G104 — best-effort cleanup of temp file
-		os.Remove(tmp) //nolint:errcheck
-		return fmt.Errorf("statestore: rename: %w", err)
-	}
-	return nil
+	return atomicwrite.Write(path, data)
 }
 
 // marshalJSON marshals to indented JSON.

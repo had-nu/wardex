@@ -26,8 +26,7 @@ func Save(filename string, report *model.GapReport) error {
 
 // Load reads the snapshot file if it exists. Returns nil, nil if missing.
 func Load(filename string) (*model.GapReport, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, filename)
+	safePathStr, err := cli.SafePath(filename)
 	if err != nil {
 		return nil, err
 	}

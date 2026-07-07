@@ -37,12 +37,7 @@ func init() {
 }
 
 func runContractVerify(cmd *cobra.Command, args []string) error {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("getting working directory: %w", err)
-	}
-
-	safePath, err := cli.ValidateInputPath(cwd, contractFile)
+	safePath, err := cli.SafePath(contractFile)
 	if err != nil {
 		return fmt.Errorf("validating contract path: %w", err)
 	}

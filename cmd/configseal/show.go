@@ -34,7 +34,6 @@ func runConfigShow(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("loading config: %w", err)
 	}
 
-	// Compute hash using canonical YAML
 	data, err := os.ReadFile(showConfigPath) // #nosec G304
 	if err != nil {
 		return fmt.Errorf("reading config: %w", err)

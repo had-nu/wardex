@@ -52,12 +52,7 @@ type assetEntry struct {
 }
 
 func runAssetsInventory(cmd *cobra.Command, args []string) error {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("getting working directory: %w", err)
-	}
-
-	safePath, err := cli.ValidateInputPath(cwd, assetsFile)
+	safePath, err := cli.SafePath(assetsFile)
 	if err != nil {
 		return fmt.Errorf("validating assets path: %w", err)
 	}

@@ -123,8 +123,7 @@ type Config struct {
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
 func Load(path string) (*Config, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, path)
+	safePathStr, err := cli.SafePath(path)
 	if err != nil {
 		return nil, err
 	}

@@ -7,10 +7,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/v2/config"
-	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/trust"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -97,38 +94,6 @@ func loadEvalConfig(configPath string, strict bool, profileName string) (*config
 	}
 
 	return cfg, nil
-}
-
-// loadEvidence reads and parses a vulnerability evidence file, returning the vulnerabilities list
-// and the SHA-256 hash of the file content. It validates optional provenance metadata.
-func loadEvidence(gateFile, cwd string, strict bool) ([]model.Vulnerability, string, error) {
-	safeGatePath, err := pathguard.ValidateInputPath(cwd, gateFile)
-	if err != nil {
-		return nil, "", fmt.Errorf("evidence path: %w", err)
-	}
-	vdata, err := os.ReadFile(safeGatePath) // #nosec G304
-	if err != nil {
-		return nil, "", fmt.Errorf("read evidence file: %w", err)
-	}
-
-	evidenceHash := ""
-	if h, err := utils.HashFile(safeGatePath); err == nil {
-		evidenceHash = "sha256:" + h
-	}
-
-	var vulnsEnvelope model.VulnerabilityEnvelope
-	if err := yaml.Unmarshal(vdata, &vulnsEnvelope); err != nil {
-		return nil, "", fmt.Errorf("parse evidence file: %w", err)
-	}
-
-	if vulnsEnvelope.ConvertedBy == "" {
-		if strict {
-			return nil, "", fmt.Errorf("--strict requires canonicalised evidence. Run 'wardex convert' before evaluate")
-		}
-		fmt.Fprintf(stderr, "[WARN] Evidence file has no 'converted_by' field. Run 'wardex convert' to canonicalise scanner output. Proceeding with defaults (reachable=true, epss=1.0).\n")
-	}
-
-	return vulnsEnvelope.Vulnerabilities, evidenceHash, nil
 }
 
 // isCI detects common CI environment variables.

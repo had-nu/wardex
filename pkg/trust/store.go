@@ -43,7 +43,6 @@ func InitStore(keyPath, actor, name, outPath string) error {
 		AddedBy: "bootstrap",
 	}
 
-	// Sign the entry
 	entryMsg := canonicalKeyEntryMessage(&entry)
 	entry.AddedSig = Sign(priv, entryMsg)
 
@@ -54,7 +53,6 @@ func InitStore(keyPath, actor, name, outPath string) error {
 		Keys:      []KeyEntry{entry},
 	}
 
-	// Compute root signature
 	store.RootSig = computeRootSig(store, priv)
 
 	return saveStore(outPath, store)
@@ -77,7 +75,6 @@ func AddKey(storePath, keyPath, pubkeyPath string, role Role, actor, name string
 		return fmt.Errorf("trust add: %w", err)
 	}
 
-	// Verify signer is an active admin
 	signerEntry, err := findKeyByPublicKey(store, priv.Public().(ed25519.PublicKey))
 	if err != nil {
 		return fmt.Errorf("trust add: signer key not found in trust store: %w", err)
@@ -87,7 +84,6 @@ func AddKey(storePath, keyPath, pubkeyPath string, role Role, actor, name string
 			signerEntry.ID, signerEntry.Actor, signerEntry.Role, RoleAdmin)
 	}
 
-	// Check duplicate actor
 	for _, k := range store.Keys {
 		if k.Actor == actor && !isRevoked(store, k.ID) {
 			return fmt.Errorf("trust add: %s already has an active entry (%s).\n"+
@@ -95,7 +91,6 @@ func AddKey(storePath, keyPath, pubkeyPath string, role Role, actor, name string
 		}
 	}
 
-	// Load new public key
 	newPub, err := LoadPublicKeyFile(pubkeyPath)
 	if err != nil {
 		return fmt.Errorf("trust add: %w", err)
@@ -139,7 +134,6 @@ func RevokeKey(storePath, keyPath, keyID, reason string) error {
 		return fmt.Errorf("trust revoke: %w", err)
 	}
 
-	// Verify signer is an active admin
 	signerEntry, err := findKeyByPublicKey(store, priv.Public().(ed25519.PublicKey))
 	if err != nil {
 		return fmt.Errorf("trust revoke: signer key not found in trust store: %w", err)
@@ -149,7 +143,6 @@ func RevokeKey(storePath, keyPath, keyID, reason string) error {
 			signerEntry.ID, signerEntry.Actor, signerEntry.Role, RoleAdmin)
 	}
 
-	// Verify the target key exists
 	found := false
 	for _, k := range store.Keys {
 		if k.ID == keyID {
@@ -161,7 +154,6 @@ func RevokeKey(storePath, keyPath, keyID, reason string) error {
 		return fmt.Errorf("trust revoke: key %q not found in trust store", keyID)
 	}
 
-	// Check if already revoked
 	if isRevoked(store, keyID) {
 		return fmt.Errorf("trust revoke: key %q is already revoked", keyID)
 	}
@@ -255,6 +247,7 @@ func SHA256Sum(data []byte) string {
 
 // --- Internal helpers ---
 
+// isRevoked checks if a specific key is revoked.
 func isRevoked(store *TrustStore, keyID string) bool {
 	for _, r := range store.Revocations {
 		if r.KeyID == keyID {
@@ -262,6 +255,31 @@ func isRevoked(store *TrustStore, keyID string) bool {
 		}
 	}
 	return false
+}
+
+// RevokedKeySet returns a map of revoked key IDs for O(1) lookup.
+func RevokedKeySet(store *TrustStore) map[string]bool {
+	revoked := make(map[string]bool, len(store.Revocations))
+	for _, r := range store.Revocations {
+		revoked[r.KeyID] = true
+	}
+	return revoked
+}
+
+// KeyStats returns the count of active keys, revoked keys, and the admin key ID.
+func KeyStats(store *TrustStore) (active, revoked int, adminID string) {
+	revokedSet := RevokedKeySet(store)
+	for _, k := range store.Keys {
+		if revokedSet[k.ID] {
+			revoked++
+		} else {
+			active++
+			if k.Role == RoleAdmin && adminID == "" {
+				adminID = k.ID
+			}
+		}
+	}
+	return active, revoked, adminID
 }
 
 func findKeyByPublicKey(store *TrustStore, pub ed25519.PublicKey) (*KeyEntry, error) {
@@ -338,7 +356,6 @@ func generateKeyID(fullName string, role string, existing []KeyEntry) string {
 	maxSeq := 0
 	for _, k := range existing {
 		if strings.HasPrefix(k.ID, prefix) {
-			// Parse the sequence number
 			suffix := strings.TrimPrefix(k.ID, prefix)
 			var seq int
 			if _, err := fmt.Sscanf(suffix, "%d", &seq); err == nil {

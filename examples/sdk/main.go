@@ -17,7 +17,6 @@ func main() {
 	fmt.Println("=== Wardex SDK Example ===")
 	fmt.Println()
 
-	// Load controls from file or create programmatically
 	controls, err := sdk.LoadControls("./examples/sdk/controls.yaml")
 	if err != nil {
 		log.Fatalf("Failed to load controls: %v", err)
@@ -43,13 +42,11 @@ func main() {
 	}
 	controls = append(controls, programmaticControls...)
 
-	// Run ISO 27001 assessment
 	result, err := sdk.Analyze(controls, "iso27001")
 	if err != nil {
 		log.Fatalf("Analysis failed: %v", err)
 	}
 
-	// Print results
 	fmt.Printf("\n## Assessment Results: ISO 27001\n")
 	fmt.Printf("Coverage: %.1f%%\n", result.Summary.GlobalCoverage)
 	fmt.Printf("Controls: %d covered / %d partial / %d gaps\n",
@@ -66,7 +63,6 @@ func main() {
 		}
 	}
 
-	// Generate reports in different formats
 	fmt.Println("\n## Generating reports...")
 
 	if err := sdk.Report(result, "markdown", "report.md", 10); err != nil {

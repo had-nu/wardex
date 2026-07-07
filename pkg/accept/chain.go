@@ -35,8 +35,7 @@ func LastEntryHash(logPath string) (string, error) {
 
 // lastEntryHashLocked is the lock-free helper for LastEntryHash.
 func lastEntryHashLocked(logPath string) (string, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, logPath)
+	safePathStr, err := cli.SafePath(logPath)
 	if err != nil {
 		return "", err
 	}
@@ -88,8 +87,7 @@ func ChainedAuditLog(logPath string, entry model.AuditEntry) error {
 		entry.Timestamp = entry.Timestamp.UTC()
 	}
 
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, logPath)
+	safePathStr, err := cli.SafePath(logPath)
 	if err != nil {
 		return err
 	}
@@ -121,8 +119,7 @@ func VerifyChain(logPath string) ([]ChainGap, error) {
 	auditMu.Lock()
 	defer auditMu.Unlock()
 
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, logPath)
+	safePathStr, err := cli.SafePath(logPath)
 	if err != nil {
 		return nil, err
 	}

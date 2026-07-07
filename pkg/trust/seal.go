@@ -48,11 +48,7 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 	}
 
 	// 3. Read and validate the draft config
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("config seal: get working directory: %w", err)
-	}
-	safePath, err := cli.ValidateInputPath(cwd, inputPath)
+	safePath, err := cli.SafePath(inputPath)
 	if err != nil {
 		return fmt.Errorf("config seal: unsafe path %q: %w", inputPath, err)
 	}
