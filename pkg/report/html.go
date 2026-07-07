@@ -285,11 +285,7 @@ func generateHTML(report model.GapReport, outFile string) error {
 		return err
 	}
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	safePath, err := cli.ValidateOutputPath(cwd, outFile)
+	safePath, err := cli.SafeOutputPath(outFile)
 	if err != nil {
 		return err
 	}

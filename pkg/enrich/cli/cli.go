@@ -46,12 +46,7 @@ var epssCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		cwd, err := os.Getwd()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to get current working directory: %v\n", err)
-			os.Exit(1)
-		}
-		safePathStr, err := pathguard.ValidateInputPath(cwd, inFile)
+		safePathStr, err := pathguard.SafePath(inFile)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Invalid input file path: %v\n", err)
 			os.Exit(1)

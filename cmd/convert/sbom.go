@@ -32,8 +32,7 @@ func init() {
 // peekSbomFormat attempts a naive peek into the JSON structure to determine
 // if it's CycloneDX or SPDX before invoking the dedicated parsers.
 func peekSbomFormat(filepath string) (string, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, filepath)
+	safePathStr, err := cli.SafePath(filepath)
 	if err != nil {
 		return "", err
 	}

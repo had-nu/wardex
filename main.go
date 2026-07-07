@@ -25,16 +25,16 @@ import (
 	"github.com/had-nu/wardex/v2/cmd/state"
 	trustcmd "github.com/had-nu/wardex/v2/cmd/trust"
 	art14cmd "github.com/had-nu/wardex/v2/cmd/art14"
+	provenancecmd "github.com/had-nu/wardex/v2/cmd/provenance"
 	"github.com/had-nu/wardex/v2/config"
 	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
-	"github.com/had-nu/wardex/v2/pkg/accept"
 	"github.com/had-nu/wardex/v2/pkg/analyzer"
 	"github.com/had-nu/wardex/v2/pkg/catalog"
 	"github.com/had-nu/wardex/v2/pkg/correlator"
 	enrichCli "github.com/had-nu/wardex/v2/pkg/enrich/cli"
-	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v2/pkg/gate"
 	"github.com/had-nu/wardex/v2/pkg/ingestion"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/releasegate"
@@ -175,6 +175,7 @@ func init() {
 	rootCmd.AddCommand(keygen.KeygenCmd)
 	rootCmd.AddCommand(trustcmd.TrustCmd)
 	rootCmd.AddCommand(configseal.ConfigCmd)
+	rootCmd.AddCommand(provenancecmd.ProvenanceCmd)
 	cli.AddCommands(rootCmd, &configPath)
 	enrichCli.AddCommands(rootCmd, &configPath)
 	rootCmd.AddCommand(art14cmd.Art14Cmd)
@@ -255,7 +256,6 @@ func runWardex(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	// Filter confidence if necessary (not fully required by spec, but added for robust coverage)
 	var filtered []model.Mapping
 	droppedLowConf := 0
 	for _, m := range mappings {
@@ -282,7 +282,6 @@ func runWardex(cmd *cobra.Command, args []string) {
 			sortedRoadmap = append(sortedRoadmap, f)
 		}
 	}
-	// Sort highest risk first (simple bubble for ease since size is < 93)
 	for i := 0; i < len(sortedRoadmap); i++ {
 		for j := i + 1; j < len(sortedRoadmap); j++ {
 			if sortedRoadmap[i].FinalScore < sortedRoadmap[j].FinalScore {
@@ -344,15 +343,9 @@ func runWardex(cmd *cobra.Command, args []string) {
 
 	gateFailed := false
 	if cfg.ReleaseGate.Enabled && gateFile != "" {
-		gateModeVal := "any"
-		if cfg.ReleaseGate.Mode != "" {
-			gateModeVal = cfg.ReleaseGate.Mode
-		}
-		if gateMode != "any" {
-			gateModeVal = gateMode
-		}
+		gateModeVal := gate.ResolveGateMode(cfg, gateMode)
 
-		gate := releasegate.Gate{
+		rg := releasegate.Gate{
 			AssetContext:         cfg.ReleaseGate.AssetContext,
 			CompensatingControls: cfg.ReleaseGate.CompensatingControls,
 			RiskAppetite:         cfg.ReleaseGate.RiskAppetite,
@@ -361,8 +354,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 			Mode:                 gateModeVal,
 		}
 
-		cwd, _ := os.Getwd()
-		safePathStr, err := pathguard.ValidateInputPath(cwd, gateFile)
+		safePathStr, err := pathguard.SafePath(gateFile)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
@@ -380,63 +372,10 @@ func runWardex(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 
-		if key, err := accept.ResolveSecret(*cfg); err == nil {
-			configHash, _ := accept.ConfigHash(configPath)
-			if accs, err := accept.Load("wardex-acceptances.yaml", key, "wardex-accept-audit.log", "", configHash, os.Stderr); err == nil {
-				acceptedMap := make(map[string]bool)
-				for _, a := range accs {
-					if !a.Revoked {
-						acceptedMap[a.CVE] = true
-					}
-				}
-				var filtered []model.Vulnerability
-				for _, v := range vulnsFormat.Vulnerabilities {
-					if !acceptedMap[v.CVEID] {
-						filtered = append(filtered, v)
-					} else {
-						fmt.Fprintf(os.Stderr, "[INFO] CVE %s is covered by an active risk acceptance and will be ignored.\n", v.CVEID)
-					}
-				}
-				vulnsFormat.Vulnerabilities = filtered
-			}
-		} else {
-			fmt.Fprintf(os.Stderr, "[WARN] Cannot load acceptances — WARDEX_ACCEPT_SECRET not set. All CVEs will be evaluated without acceptance filtering.\n")
-		}
+		vulnsFormat.Vulnerabilities = gate.FilterAccepted(vulnsFormat.Vulnerabilities, cfg, configPath, os.Stderr)
+		vulnsFormat.Vulnerabilities = gate.ApplyEPSSEnrichment(vulnsFormat.Vulnerabilities, cfg, epssEnrich, os.Stderr)
 
-		if epssEnrich != "" {
-			if key, err := accept.ResolveSecret(*cfg); err == nil {
-				cwd, _ := os.Getwd()
-				safePathStr, err := pathguard.ValidateInputPath(cwd, epssEnrich)
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-					os.Exit(1)
-				}
-				edata, err := os.ReadFile(safePathStr) // #nosec G304
-				if err == nil {
-					var enrichFormat model.EPSSEnrichmentFile
-					if err := yaml.Unmarshal(edata, &enrichFormat); err == nil {
-						if err := epss.Verify(enrichFormat, key); err == nil {
-							scoreMap := make(map[string]float64)
-							for _, e := range enrichFormat.Enrichments {
-								scoreMap[e.CVE] = e.Score
-							}
-							for i, v := range vulnsFormat.Vulnerabilities {
-								if s, ok := scoreMap[v.CVEID]; ok {
-									vulnsFormat.Vulnerabilities[i].EPSSScore = s
-									fmt.Fprintf(os.Stderr, "[INFO] Applied signed EPSS Enrichment for %s: %.6f\n", v.CVEID, s)
-								}
-							}
-						} else {
-							fmt.Fprintf(os.Stderr, "WARNING: EPSS Enrichment signature invalid: %v\n", err)
-						}
-					}
-				}
-			} else {
-				fmt.Fprintf(os.Stderr, "WARNING: Cannot verify EPSS Enrichment without WARDEX_ACCEPT_SECRET configured.\n")
-			}
-		}
-
-		gateReport := gate.Evaluate(vulnsFormat.Vulnerabilities)
+		gateReport := rg.Evaluate(vulnsFormat.Vulnerabilities)
 		rep.Gate = &gateReport
 		switch gateReport.OverallDecision {
 		case "block":

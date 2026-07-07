@@ -37,12 +37,7 @@ func init() {
 func runConvertKEV(cmd *cobra.Command, args []string) error {
 	inFile := args[0]
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("getting working directory: %w", err)
-	}
-
-	safePath, err := cli.ValidateInputPath(cwd, inFile)
+	safePath, err := cli.SafePath(inFile)
 	if err != nil {
 		return fmt.Errorf("validating input path: %w", err)
 	}

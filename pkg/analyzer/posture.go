@@ -54,7 +54,6 @@ func (a *Analyzer) AssessPosture(findings []model.Finding) PostureReport {
 		report.GlobalIndex = (achievedScore / totalPossibleScore) * 100.0
 	}
 
-	// Sort critical gaps by BaseScore descending
 	sort.Slice(report.CriticalGaps, func(i, j int) bool {
 		return report.CriticalGaps[i].Control.BaseScore > report.CriticalGaps[j].Control.BaseScore
 	})

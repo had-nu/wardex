@@ -18,8 +18,7 @@ import (
 
 // LoadAssets loads asset definitions from a YAML or JSON file.
 func LoadAssets(path string) ([]model.Asset, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, path)
+	safePathStr, err := cli.SafePath(path)
 	if err != nil {
 		return nil, err
 	}

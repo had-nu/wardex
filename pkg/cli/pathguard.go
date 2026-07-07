@@ -69,6 +69,25 @@ func ValidateOutputPath(base, path string) (string, error) {
 	return resolved, nil
 }
 
+// SafePath combines os.Getwd() + ValidateInputPath into a single call.
+// This eliminates the repeated 2-line boilerplate found across the codebase.
+func SafePath(relativePath string) (string, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return "", fmt.Errorf("getting working directory: %w", err)
+	}
+	return ValidateInputPath(cwd, relativePath)
+}
+
+// SafeOutputPath combines os.Getwd() + ValidateOutputPath into a single call.
+func SafeOutputPath(relativePath string) (string, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return "", fmt.Errorf("getting working directory: %w", err)
+	}
+	return ValidateOutputPath(cwd, relativePath)
+}
+
 func validatePath(base, path string, isOutput bool) (string, error) {
 	if path == "" {
 		return "", fmt.Errorf("%w: path must not be empty", ErrInvalidPath)

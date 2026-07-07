@@ -40,8 +40,7 @@ type CycloneDXVulnerability struct {
 // ParseCycloneDX reads a CycloneDX 1.5 JSON formatted SBOM and extracts
 // the embedded vulnerabilities into the Wardex model.
 func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, filepath)
+	safePathStr, err := cli.SafePath(filepath)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +76,6 @@ func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
 			}
 		}
 
-		// Find the best CVSS score
 		var bestScore float64
 		for _, rating := range v.Ratings {
 			if rating.Score > bestScore && (rating.Method == "CVSSv3" || rating.Method == "CVSSv31" || rating.Method == "CVSSv4" || rating.Method == "CVSSv2") {
@@ -99,12 +97,11 @@ func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
 					bestScore = 2.0
 				}
 				if bestScore > 0 {
-					break // Break on first found severity
+					break
 				}
 			}
 		}
 
-		// Grab the component ref if available
 		comp := "unknown-component"
 		if len(v.Affects) > 0 {
 			// e.g. pkg:npm/lodash@4.17.21
@@ -114,7 +111,6 @@ func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
 			}
 		}
 
-		// Deduplicate based on CVE+Component
 		key := v.ID + ":" + comp
 		if seen[key] {
 			continue

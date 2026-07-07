@@ -18,7 +18,6 @@ func Roadmap(findings []model.Finding) []model.Finding {
 		}
 	}
 
-	// Sort highest score (most critical) first
 	sort.Slice(roadmap, func(i, j int) bool {
 		return roadmap[i].FinalScore > roadmap[j].FinalScore
 	})

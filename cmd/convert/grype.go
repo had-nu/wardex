@@ -52,13 +52,7 @@ func init() {
 func runConvertGrype(cmd *cobra.Command, args []string) {
 	inFile := args[0]
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error getting current working directory: %v\n", err)
-		os.Exit(1)
-	}
-
-	safePathStr, err := cli.ValidateInputPath(cwd, inFile)
+	safePathStr, err := cli.SafePath(inFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error resolving safe path for input file: %v\n", err)
 		os.Exit(1)

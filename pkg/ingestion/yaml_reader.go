@@ -34,8 +34,7 @@ type yamlFormat struct {
 }
 
 func loadYAML(path string) ([]model.ExistingControl, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, path)
+	safePathStr, err := cli.SafePath(path)
 	if err != nil {
 		return nil, err
 	}

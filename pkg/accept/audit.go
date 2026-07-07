@@ -34,8 +34,7 @@ func AuditLog(path string, entry model.AuditEntry) error {
 		return err
 	}
 
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, path)
+	safePathStr, err := cli.SafePath(path)
 	if err != nil {
 		return err
 	}
@@ -57,8 +56,7 @@ func AuditLog(path string, entry model.AuditEntry) error {
 
 // AuditCountCreated returns the number of "acceptance.created" events in the audit log.
 func AuditCountCreated(path string) (int, error) {
-	cwd, _ := os.Getwd()
-	safePathStr, err := cli.ValidateInputPath(cwd, path)
+	safePathStr, err := cli.SafePath(path)
 	if err != nil {
 		return 0, err
 	}

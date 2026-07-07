@@ -50,25 +50,8 @@ func runAuthStatus(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("auth status: %w", err)
 	}
 
-	// Count keys
-	revoked := make(map[string]bool)
-	for _, r := range store.Revocations {
-		revoked[r.KeyID] = true
-	}
-	var activeCount, revokedCount int
-	var adminID string
-	for _, k := range store.Keys {
-		if revoked[k.ID] {
-			revokedCount++
-		} else {
-			activeCount++
-		}
-		if k.Role == trust.RoleAdmin && adminID == "" && !revoked[k.ID] {
-			adminID = k.ID
-		}
-	}
+	activeCount, revokedCount, adminID := trust.KeyStats(store)
 
-	// Verify root signature
 	err = trust.VerifyRootSig(store)
 
 	w := cmd.OutOrStdout()
@@ -94,7 +77,6 @@ func runAuthVerify(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("auth verify: %w", err)
 	}
 
-	// Find the actor
 	var found *trust.KeyEntry
 	for i, k := range store.Keys {
 		if k.Actor == authActor {
@@ -107,14 +89,8 @@ func runAuthVerify(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("auth verify: actor %q not found in trust store", authActor)
 	}
 
-	// Check if revoked
-	revoked := false
-	for _, r := range store.Revocations {
-		if r.KeyID == found.ID {
-			revoked = true
-			break
-		}
-	}
+	revokedSet := trust.RevokedKeySet(store)
+	revoked := revokedSet[found.ID]
 
 	w := cmd.OutOrStdout()
 	fmt.Fprintf(w, "Actor:   %s\n", found.Actor)
@@ -128,7 +104,6 @@ func runAuthVerify(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(w, "Status:  %s\n", ui.Colorize("ACTIVE", ui.Green))
 	}
 
-	// Show permissions
 	perms := trust.RolePermissions[found.Role]
 	if len(perms) > 0 {
 		fmt.Fprintf(w, "Can perform:\n")

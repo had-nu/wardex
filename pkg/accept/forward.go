@@ -217,8 +217,7 @@ func (e *ENISABackend) Name() string {
 
 // Send appends the entry to the local queue file.
 func (e *ENISABackend) Send(entry model.AuditEntry) error {
-	cwd, _ := os.Getwd()
-	safePath, err := cli.ValidateInputPath(cwd, e.QueuePath)
+	safePath, err := cli.SafePath(e.QueuePath)
 	if err != nil {
 		return err
 	}

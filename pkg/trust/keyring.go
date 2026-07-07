@@ -24,13 +24,11 @@ const (
 // The private key is written with mode 0400; the public key with mode 0644.
 // Returns the public key bytes for convenience.
 func GenerateKeypair(outPath string, force bool) (ed25519.PublicKey, error) {
-	// Ensure parent directory exists
 	dir := filepath.Dir(outPath)
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return nil, fmt.Errorf("keygen: create directory %q: %w", dir, err)
 	}
 
-	// Check if file already exists
 	if _, err := os.Stat(outPath); err == nil && !force {
 		return nil, fmt.Errorf("keygen: %q already exists — use --force to overwrite", outPath)
 	}
@@ -40,13 +38,11 @@ func GenerateKeypair(outPath string, force bool) (ed25519.PublicKey, error) {
 		return nil, fmt.Errorf("keygen: generate key: %w", err)
 	}
 
-	// Write private key (mode 0400 — read-only for owner)
 	privEncoded := base64.StdEncoding.EncodeToString(priv)
 	if err := os.WriteFile(outPath, []byte(privEncoded), 0400); err != nil {
 		return nil, fmt.Errorf("keygen: write private key: %w", err)
 	}
 
-	// Write public key
 	pubPath := outPath + ".pub"
 	pubEncoded := PubKeyPrefix + base64.StdEncoding.EncodeToString(pub)
 	if err := os.WriteFile(pubPath, []byte(pubEncoded), 0644); err != nil { // #nosec G306 -- public key, world-readable by design
