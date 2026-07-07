@@ -25,7 +25,6 @@ import (
 	"github.com/had-nu/wardex/v2/cmd/state"
 	trustcmd "github.com/had-nu/wardex/v2/cmd/trust"
 	art14cmd "github.com/had-nu/wardex/v2/cmd/art14"
-	provenancecmd "github.com/had-nu/wardex/v2/cmd/provenance"
 	"github.com/had-nu/wardex/v2/config"
 	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
@@ -175,7 +174,6 @@ func init() {
 	rootCmd.AddCommand(keygen.KeygenCmd)
 	rootCmd.AddCommand(trustcmd.TrustCmd)
 	rootCmd.AddCommand(configseal.ConfigCmd)
-	rootCmd.AddCommand(provenancecmd.ProvenanceCmd)
 	cli.AddCommands(rootCmd, &configPath)
 	enrichCli.AddCommands(rootCmd, &configPath)
 	rootCmd.AddCommand(art14cmd.Art14Cmd)
