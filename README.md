@@ -316,6 +316,30 @@ Todas as chaves Ed25519 são armazenadas em `~/.crypto/` com subdiretórios por 
 
 **Permissões**: Directórios `700`, chaves privadas `0400`, chaves públicas `0644`.
 
+### Verificação de Provenance — v2.2.2
+
+Para verificar a integridade do source tree v2.2.2, use a chave pública abaixo e o root hash do manifesto:
+
+> **Chave pública de assinatura (v2.2.2):**
+> ```
+> ed25519:HsD9e6BB2LlaeKODGqgWUZoflDgdUH1HWTdyWA7dGqE=
+> ```
+
+> **Root hash (BLAKE3, 113 ficheiros):**
+> ```
+> sha256:6f972edf99f5457f8fb13668c529f4343dab7a76d20b67ea746ebdf54d910fee
+> ```
+
+```bash
+# Descarregar o manifesto assinado do release
+gh release download v2.2.2 --pattern "provenance-manifest*"
+
+# Verificar (requer o binário immutable-provenance da branch v2.3.0)
+immutable-provenance verify \
+  --manifest provenance-manifest-v2.2.2-signed.yaml \
+  --dir /caminho/para/wardex-v2.2.2
+```
+
 ### Trust Store & Sealed Config (WexState)
 
 Para conformidade **DORA** e cadeias de custódia não-repudiáveis:

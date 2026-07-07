@@ -316,6 +316,30 @@ All Ed25519 keys are stored in `~/.crypto/` with subdirectories by purpose:
 
 **Permissions**: Directories `700`, private keys `0400`, public keys `0644`.
 
+### Provenance Verification — v2.2.2
+
+To verify the integrity of the v2.2.2 source tree, use the public key below and the manifest root hash:
+
+> **Signing public key (v2.2.2):**
+> ```
+> ed25519:HsD9e6BB2LlaeKODGqgWUZoflDgdUH1HWTdyWA7dGqE=
+> ```
+
+> **Root hash (BLAKE3, 113 files):**
+> ```
+> sha256:6f972edf99f5457f8fb13668c529f4343dab7a76d20b67ea746ebdf54d910fee
+> ```
+
+```bash
+# Download the signed manifest from the release
+gh release download v2.2.2 --pattern "provenance-manifest*"
+
+# Verify (requires immutable-provenance binary from v2.3.0 branch)
+immutable-provenance verify \
+  --manifest provenance-manifest-v2.2.2-signed.yaml \
+  --dir /path/to/wardex-v2.2.2
+```
+
 ### Trust Store & Sealed Config (WexState)
 
 For **DORA** compliance and non-repudiable chains of custody:
