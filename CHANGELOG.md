@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] — 2026-07-07
+
+### Added (Immutable Provenance)
+
+- **`wardex provenance seal`**: Generate cryptographic source-code provenance manifest with Ed25519 signing. Computes Merkle-like root hash over all included files. (`cmd/provenance/provenance.go`, `immutable-provenance/manifest/`)
+- **`wardex provenance verify`**: Verify manifest signature and file integrity against source tree. Detects missing, modified, and tampered files. (`cmd/provenance/provenance.go`, `immutable-provenance/manifest/`)
+- **`wardex provenance ots stamp`**: Anchor manifest to Bitcoin via OpenTimestamps calendars. Generates .ots receipt file. (`immutable-provenance/ots/`)
+- **`wardex provenance ots verify`**: Verify OpenTimestamps receipt against manifest. Queries calendar servers for stamp status. (`immutable-provenance/ots/`)
+- **`wardex provenance eth anchor`**: Anchor manifest root hash to Ethereum/Polygon smart contract (ProvenanceAnchor). (`immutable-provenance/ethanchor/`)
+- **`wardex provenance eth verify`**: Verify manifest root hash is anchored on-chain. Returns anchor timestamp. (`immutable-provenance/ethanchor/`)
+
+### Changed (Code Quality — PR #102)
+
+- Consolidated duplicated atomic write logic into `pkg/atomicwrite/`
+- Added `SafePath`/`SafeOutputPath` helpers, eliminating 35 `os.Getwd()` boilerplate sites across 26 files
+- Added `RevokedKeySet`/`KeyStats` helpers to deduplicate revocation maps
+- Extracted shared gate pipeline helpers to `pkg/gate/` (`ResolveGateMode`, `FilterAccepted`, `ApplyEPSSEnrichment`, etc.)
+- Decomposed `runEvaluate()` (CC=123) into focused helpers each with CC<15
+- Decomposed `runWardex()` to use shared pipeline helpers
+- Removed 39 "what" comments for Go skill compliance
+- Fixed temp-file leak in atomic write cleanup
+
 ## [2.2.2] — 2026-07-06
 
 ### Security (Cordyceps Hardening — 2026-06-29)
