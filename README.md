@@ -408,6 +408,31 @@ As aceitações são assinadas com HMAC-SHA256 e registadas em log append-only (
 
 ---
 
+## Gestão de Chaves Criptográficas
+
+Todas as chaves Ed25519 são armazenadas em `~/.crypto/` com subdiretórios por finalidade:
+
+```
+~/.crypto/
+├── provenance/          # Assinatura de manifestos de provenance
+│   ├── signing.key      # Ed25519 privada (mode 0400)
+│   └── signing.key.pub  # Ed25519 pública
+└── trust/               # Sistema de confiança wardex
+    └── root.key         # Chave raiz (gerada por wardex keygen)
+```
+
+**Permissões**: Directórios `700`, chaves privadas `0400`, chaves públicas `0644`.
+
+```bash
+# Gerar chave de trust (CISO/admin)
+wardex keygen
+
+# Gerar chave de provenance (manualmente ou via OpenSSL)
+# A chave é usada com immutable-provenance seal --keyring ~/.crypto/provenance/signing.key
+```
+
+---
+
 ## Governação: Trust Store & Sealed Config (WexState)
 
 Para conformidade **DORA** e cadeias de custódia não-repudiáveis, o Wardex permite selar as políticas de risco (`wardex-config.yaml`) num envelope criptográfico assinado (`.wexstate`).

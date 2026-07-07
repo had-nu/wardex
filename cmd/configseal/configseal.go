@@ -45,7 +45,7 @@ any subsequent trust store changes require re-sealing.`,
 
 func init() {
 	home, _ := os.UserHomeDir()
-	defaultKeyring := filepath.Join(home, ".wardex", "keyring.wex")
+	defaultKeyring := filepath.Join(home, ".crypto", "trust", "root.key")
 
 	SealCmd.Flags().StringVar(&keyringPath, "keyring", defaultKeyring, "Path to private key (required)")
 	SealCmd.Flags().StringVar(&inputPath, "input", "", "Path to wardex-config.yaml draft (required)")

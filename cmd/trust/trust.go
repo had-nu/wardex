@@ -83,7 +83,7 @@ Any sealed configs signed by the revoked key will be rejected by
 
 func init() {
 	home, _ := os.UserHomeDir()
-	defaultKeyring := filepath.Join(home, ".wardex", "keyring.wex")
+	defaultKeyring := filepath.Join(home, ".crypto", "trust", "root.key")
 
 	// init
 	initCmd.Flags().StringVar(&keyringPath, "keyring", defaultKeyring, "Path to admin private key")

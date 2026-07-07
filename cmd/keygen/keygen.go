@@ -25,14 +25,14 @@ var KeygenCmd = &cobra.Command{
 	Long: `Generate an ed25519 keypair. The private key is written with mode 0400
 (read-only for the owner). The public key is written alongside with a .pub extension.
 
-The keypair has no role until an admin adds the public key to the trust store
-via 'wardex trust add'.`,
+Keys are stored in ~/.crypto/trust/ by default. The keypair has no role until
+an admin adds the public key to the trust store via 'wardex trust add'.`,
 	RunE: runKeygen,
 }
 
 func init() {
 	home, _ := os.UserHomeDir()
-	defaultPath := filepath.Join(home, ".wardex", "keyring.wex")
+	defaultPath := filepath.Join(home, ".crypto", "trust", "root.key")
 
 	KeygenCmd.Flags().StringVar(&outPath, "out", defaultPath, "Path for the private key")
 	KeygenCmd.Flags().BoolVarP(&force, "force", "f", false, "Overwrite existing key (requires confirmation)")
