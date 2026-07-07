@@ -25,9 +25,57 @@
 
 Wardex é uma CLI e biblioteca Go que transforma decisões de segurança e conformidade em evidência auditável. Opera em dois modos independentes — nenhum exige o outro.
 
-O release gate avalia cada vulnerabilidade no contexto do ativo que a contém: criticidade do sistema, exposição efectiva, controlos compensatórios já ativos. Em vez de um limiar CVSS estático que bloqueia tudo ou nada, o resultado é uma decisão com registo datado e assinado, que sobrevive a uma auditoria.
+**Posicionamento europeu:** O Wardex é construído de raiz para os regulamentos europeus — NIS2, DORA, CRA — e para o padrão de compliance que está a emergir na UE. Cada decisão do release gate, cada aceitação de risco, cada artefacto Art14 é selado criptograficamente e registado num audit log encadeado que sobrevive a auditorias externas.
 
-A análise de lacunas cruza o que a função de segurança declarou com o que está operacionalmente confirmado, mapeando ambos contra o catálogo do framework escolhido. O resultado não é uma lista de controlos — é a separação entre cobertura genuína, o que existe apenas como política e o que opera fora da governação.
+---
+
+## Audit Log Encadeado — Feature Principal
+
+O audit log encadeado é o coração do Wardex. Cada entrada é ligada criptograficamente à anterior, formando uma cadeia inviolável de evidência.
+
+```
+┌─────────────┐    SHA-256    ┌─────────────┐    SHA-256    ┌─────────────┐
+│  Entrada 1  │──────────────▶│  Entrada 2  │──────────────▶│  Entrada 3  │
+│  (genesis)  │               │  (decisão)  │               │  (aceitação)│
+└─────────────┘               └─────────────┘               └─────────────┘
+       │                             │                             │
+       ▼                             ▼                             ▼
+  Config hash                 Config hash                   Config hash
+  (CPL v2.2)                  (CPL v2.2)                   (CPL v2.2)
+```
+
+**O que torna inviolável:**
+- Cada entrada inclui o hash da entrada anterior (hash encadeado)
+- O hash da configuração (CPL) liga cada decisão à política em vigor
+- Alterações ao audit log ou à configuração são detectadas imediatamente
+- Exportável como JSONL para SIEM, Datadog, ou auditoria externa
+
+```bash
+# Verificar integridade da cadeia
+wardex audit verify-chain --audit-log wardex-gate-audit.log
+
+# Verificar ligação com configurações arquivadas
+wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./configs/
+```
+
+---
+
+## What's New — v2.2.2
+
+**Security Hardening:**
+- Workspace confinement: `evaluate` restringe acesso a ficheiros ao projecto raiz
+- Pathguard: substitui SafePath ad-hoc por validação de paths
+- SBOM generation com syft pinned e verificação SHA-256
+
+**Code Quality (PR #102):**
+- Atomic writes consolidados (`pkg/atomicwrite`) — corrigido bug de temp-file leak
+- Gate pipeline compartilhado (`pkg/gate`) — DRY entre evaluate e wardex
+- `runEvaluate()` decomposto de CC=123 em 11 helpers focados
+
+**Immutable Provenance (v2.3.0 branch):**
+- Manifesto criptográfico de provenance com BLAKE3 + Ed25519
+- Âncora Bitcoin via OpenTimestamps
+- Âncora Ethereum/Polygon via smart contract `ProvenanceAnchor`
 
 ---
 
@@ -61,7 +109,7 @@ cd wardex && make build
 ### Docker
 
 ```bash
-docker pull ghcr.io/had-nu/wardex:2.2.0
+docker pull ghcr.io/had-nu/wardex:2.2.2
 ```
 
 ### Helm (Kubernetes)
@@ -77,7 +125,7 @@ Consulta [deploy/helm/wardex/](deploy/helm/wardex/) para a referência completa 
 
 ## Quickstart
 
-Testa o Wardex com os ficheiros de exemplo incluídos no repositório:
+### 1. Avaliar risco de vulnerabilidades
 
 ```bash
 # Converter output do Grype para formato Wardex
@@ -90,171 +138,63 @@ wardex evaluate \
 
 # Dry-run — pré-visualizar sem escrever artefactos
 wardex evaluate --evidence vulns.yaml --config doc/examples/wardex-config.yaml --dry-run
-
-# Exit codes: 0 (ALLOW) · 3 (Adulterado) · 4 (Armazém inconsistente) · 10 (BLOCK) · 11 (Gap) · 12 (Explorado)
 ```
+
+### 2. Gerar e gerir chaves
+
+```bash
+# Gerar chave Ed25519 para o sistema de confiança
+wardex keygen
+
+# A chave é criada em ~/.crypto/trust/root.key
+# A pública é ~/.crypto/trust/root.key.pub (enviar ao admin)
+```
+
+### 3. Selar e verificar provenance
+
+```bash
+# Selar source tree (a partir da branch v2.3.0)
+immutable-provenance seal \
+  --dir . \
+  --output provenance.yaml \
+  --version v2.2.2 \
+  --keyring ~/.crypto/provenance/signing.key
+
+# Verificar integridade
+immutable-provenance verify --manifest provenance.yaml --dir .
+```
+
+**Exit codes:** `0` ALLOW · `3` Adulterado · `4` Armazém inconsistente · `10` BLOCK · `11` Gap · `12` Explorado activamente
 
 ---
 
-## CRA Article 14 (v2.0)
+## Comandos Principais
 
-As obrigações de notificação por exploração activa do Regulamento Europeu de Resiliência Cibernética entram em vigor em setembro de 2026. O Wardex v2.0 implementa o caminho de reporte do Article 14.
-
-### KEV Correlation
-
-```bash
-# Descarregar o catálogo CISA KEV
-curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json
-
-# Converter output do Grype com correlação KEV
-wardex convert grype grype-output.json --kev kev-catalogue.json
-```
-
-### Active Exploitation Hard Stop
-
-Quando uma vulnerabilidade é classificada como activamente explorada (`actively_exploited: true`), o `wardex evaluate`:
-- Termina com o código **12** (`ActivelyExploited`) — distinto do bloqueio normal de gate (10)
-- Gera um artefacto de notificação Article 14 assinado com HMAC-SHA256
-- Regista uma entrada de auditoria encadeada com os três prazos CRA
-- **Não pode** ser substituído por aceitações de risco
-
-```bash
-wardex evaluate --evidence vulns.yaml --config wardex-config.yaml frameworks/iso27001/*.yml
-```
-
-### Ciclo de vida do artefacto (`wardex art14`)
-
-```bash
-wardex art14 list
-wardex art14 show <artefact-id>
-wardex art14 verify <artefact-id>
-wardex art14 mark-dispatched <artefact-id> --phase early-warning
-wardex art14 finalize <artefact-id> --patch-date 2026-06-09T12:00:00Z
-```
-
-### Reconhecimento de exploração activa
-
-```bash
-wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
-```
-
-**Exit codes (v2.2):** `0` Entrada CPL verificada · `1` CPL MISMATCH/MISSING · `2` CPL Erro operacional · `3` Falha de integridade / Adulterado · `4` Armazém inconsistente · `10` Gate bloqueado · `11` Falha de conformidade · **`12` Activamente explorado**
-
-### Configuration Provenance Link (CPL) — v2.2
-
-```bash
-# Calcular hash canónico da configuração (SHA-256 ou BLAKE3)
-wardex config hash --config wardex-config.yaml
-wardex config hash --config wardex-config.yaml --algorithm blake3
-
-# Verificar integridade do audit log
-wardex audit verify-chain --audit-log wardex-gate-audit.log
-
-# Verificar que hashes no audit log correspondem a configurações arquivadas
-wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./configs/
-```
-
-O CPL estabelece uma ligação criptográfica entre cada decisão do release gate e a configuração em vigor. O hash é calculado sobre o conteúdo YAML canónico (chaves ordenadas, comentários removidos, whitespace normalizado) — garantindo reprodutibilidade entre ambientes. Suporta SHA-256 e **BLAKE3** (algoritmo moderno com performance superior). Hashes com algoritmos diferentes são distinguidos pelo prefixo (`sha256:`, `blake3:`) e nunca comparados silenciosamente. Divergências entre o audit log e configurações arquivadas podem ser notificadas via webhook para SIEM.
-
-**Exit codes do CPL:** `0` Todas as entradas OK · `1` MISMATCH/MISSING detectado · `2` Erro operacional
-
----
-## Análise de gaps de conformidade
-
-O Wardex compara o que o infosec declarou com o que está operacionalmente activo, e identifica o delta em relação ao framework.
-
-### Input
-
-Dois ficheiros YAML com o campo `layer` a identificar a origem:
-
-```yaml
-# documented-controls.yaml — políticas declaradas pelo infosec
-- id: CTRL-IAM-001
-  name: Multi-Factor Authentication
-  layer: documented
-  domains: [access_control]
-  maturity: 4
-  evidences:
-    - type: policy
-      ref: https://wiki.internal/sec/mfa-policy
-
-# implemented-controls.yaml — controlos operacionais confirmados
-# (produzido por Bridgr ou mantido manualmente)
-- id: CTRL-IAM-001
-  name: Multi-Factor Authentication
-  layer: implemented
-  domains: [access_control]
-  maturity: 4
-  effectiveness: 0.90
-  evidences:
-    - type: tool
-      ref: okta-mfa-config-2026
-```
-
-O mesmo ID em ambos os ficheiros é o caso esperado: controlo declarado e confirmado operacional. IDs presentes apenas num dos ficheiros são o sinal que interessa.
-
-### Execução
-
-```bash
-wardex assess documented-controls.yaml implemented-controls.yaml \
-  --framework iso27001 \
-  -o markdown
-```
-
-### O que o report produz
-
-O report separa os resultados em quatro estados de conformidade:
-
-| Categoria | Significado |
-|---|---|
-| **Coberto** | Presente na camada `implemented`, maturidade >= 3, com evidência operacional. |
-| **Política sem execução** | Documentado apenas. Nenhum controlo implementado correspondente. |
-| **Prática sem governação** | Implementado mas sem política documentada. |
-| **Lacuna** | Ausente em ambas as camadas para um controlo do catálogo. |
-
-A secção `LayerDelta` identifica o desvio real entre a intenção (política) e a execução (código), expondo a ilusão de conformidade.
-
-### Com activos
-
-Se o teu inventário de activos estiver declarado, o report produz uma tabela de conformidade por activo:
-
-```bash
-wardex assess documented-controls.yaml implemented-controls.yaml \
-  --assets assets.yaml \
-  --framework iso27001 \
-  -o json --out-file posture.json
-```
-
-```yaml
-# assets.yaml — v2.0.0 Schema
-- id: ASSET-PAY-001
-  name: Payment API
-  type: application
-  criticality: 0.9
-  scope: [iso27001]
-  controls: [CTRL-IAM-001, CTRL-CRYPTO-002]
-  exposure:
-    internet_facing: true
-    network_zone: dmz
-    data_classification: restricted
-  threats:
-    - id: T-01
-      scenario: "API abuse"
-      likelihood: high
-  owner: platform-team
-```
+| Comando | Descrição |
+|---------|-----------|
+| `wardex evaluate` | Avalia vulnerabilidades contra o release gate |
+| `wardex assess` | Análise de lacunas de conformidade |
+| `wardex convert grype/sbom` | Converte output de scanners para formato Wardex |
+| `wardex enrich epss` | Enriquece vulnerabilidades com dados EPSS |
+| `wardex accept request/verify/list` | Gestão de aceitações de risco |
+| `wardex art14 list/show/verify` | Ciclo de vida do artefacto CRA Article 14 |
+| `wardex config hash/seal` | CPL e sealed config |
+| `wardex audit verify-chain/verify-link` | Verificação do audit log encadeado |
+| `wardex trust init/add` | Gestão do trust store |
+| `wardex keygen` | Geração de chaves Ed25519 |
+| `wardex pki init/issue` | Modo PKI com CA Ed25519 |
+| `wardex policy show` | Mostra política de risco configurada |
+| `wardex simulate` | Simula decisões do gate com dados históricos |
 
 ---
 
-## Release gate baseado em risco
+## Release Gate Baseado em Risco
 
 O gate avalia cada vulnerabilidade com o modelo:
 
 ```
 R(v, α) = (CVSS(v)/10) × EPSS(v) × C(α) × E(α) × (1 − Φ(α))
 ```
-
-`CVSS/10` normaliza o score base para [0, 1]; combinado com `EPSS`, o produto representa severidade ponderada pela probabilidade de exploração activa. `C` é a criticidade do activo, `E` a exposição efectiva, e `Φ` a eficácia dos controlos compensatórios (limitado a 0.80 — um controlo compensatório reduz o risco no máximo 80%). O `R` final situa-se em [0, 1.5]. Os thresholds em `wardex-config.yaml` usam a mesma escala.
 
 O resultado é comparado com o apetite de risco definido em `wardex-config.yaml`. Três bandas possíveis: `ALLOW`, `WARN`, `BLOCK`.
 
@@ -278,8 +218,6 @@ release_gate:
 
 ### A mesma CVE, quatro contextos
 
-O que diferencia o ALLOW do BLOCK não é a CVE — é o contexto do activo. `R` situa-se em [0, 1.5]; cada perfil tem um threshold `risk_appetite` distinto (ver `data/calibration.json`).
-
 | CVE | CVSS | EPSS | [BANK] | [SAAS] | [INFRA] | [HOSP] |
 |---|---|---|---|---|---|---|
 | Log4Shell | 10.0 | 0.94 | **1.41** `BLOCK` | **0.75** `BLOCK` | **1.41** `BLOCK` | **1.13** `BLOCK` |
@@ -287,31 +225,11 @@ O que diferencia o ALLOW do BLOCK não é a CVE — é o contexto do activo. `R`
 | curl SOCKS5 | 9.8 | 0.26 | **0.38** `BLOCK` | **0.20** `WARN` | **0.38** `BLOCK` | **0.31** `BLOCK` |
 | minimist | 9.8 | 0.01 | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` |
 
-Calibrado contra 237 CVEs reais com EPSS da FIRST.org (`data/dataset_2025-03-01.json`):
-
-| Perfil | Apetite | BLOCK | ALLOW | % Block |
-|---|---|---|---|---|
-| Banco Tier-1 (DORA) | 0.5 | 176 | 57 | 74% |
-| Hospital (HIPAA) | 0.8 | 168 | 63 | 71% |
-| Startup SaaS | 2.0 | 111 | 86 | 47% |
-| Energia/Águas (NIS2) | 0.3 | 180 | 53 | 76% |
-
 ### Enriquecimento EPSS
-
-Quando o scanner não inclui EPSS, o Wardex assume EPSS 1.0 (pior caso) e bloqueia até validação explícita:
 
 ```bash
 wardex enrich epss wardex-vulns.yaml --output epss-enrich.yaml
 wardex evaluate --epss-enrichment epss-enrich.yaml --evidence vulns.yaml controls.yaml
-```
-
-O enriquecimento consulta `api.first.org` e assina o resultado via HMAC-SHA256.
-
-### Conversão de formatos
-
-```bash
-wardex convert grype results.json > vulns.yaml
-wardex convert sbom sbom.xml > vulns.yaml
 ```
 
 ### Integração CI/CD
@@ -323,92 +241,67 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install Wardex
         run: go install github.com/had-nu/wardex/v2@latest
-
       - name: Evaluate risk gate
         run: |
           wardex evaluate \
             --config .wardex/config.yaml \
             --evidence vulns.yaml \
             controls.yaml
-        # Exit 0 = ALLOW, Exit 10 = BLOCK, Exit 11 = compliance gap
 ```
 
 ---
 
-## Ambiente de desenvolvimento
+## Análise de Gaps de Conformidade
+
+O Wardex compara o que o infosec declarou com o que está operacionalmente activo, e identifica o delta em relação ao framework.
+
+| Categoria | Significado |
+|---|---|
+| **Coberto** | Presente na camada `implemented`, maturidade >= 3, com evidência operacional. |
+| **Política sem execução** | Documentado apenas. Nenhum controlo implementado correspondente. |
+| **Prática sem governação** | Implementado mas sem política documentada. |
+| **Lacuna** | Ausente em ambas as camadas para um controlo do catálogo. |
 
 ```bash
-docker compose up -d         # iniciar PostgreSQL, MinIO e Wardex API stub
-docker compose down          # parar tudo
+wardex assess documented-controls.yaml implemented-controls.yaml \
+  --framework iso27001 \
+  -o markdown
+
+# Com inventário de activos
+wardex assess documented-controls.yaml implemented-controls.yaml \
+  --assets assets.yaml \
+  --framework iso27001 \
+  -o json --out-file posture.json
 ```
 
-O Wardex inclui um [docker-compose.yml](docker-compose.yml) com PostgreSQL (armazém de auditoria), MinIO (bucket de artefactos) e um stub da API Wardex para testes de integração locais. Consulta o ficheiro compose para portas e configuração.
-
 ---
 
-## Environment & syslog
+## CRA Article 14
 
-O Wardex lê estas variáveis de ambiente no arranque:
+As obrigações de notificação por exploração activa do Regulamento Europeu de Resiliência Cibernética entram em vigor em setembro de 2026.
 
-| Variável | Predefinição | Descrição |
-|---|---|---|
-| `WARDEX_ACCEPT_SECRET` | — | Chave HMAC-SHA256 para assinar aceitações e artefactos Art14 (mín 32 car.) |
-| `WARDEX_ACTOR` | `cli` | Identidade registada nas entradas de auditoria |
-| `WARDEX_SYSLOG_ENDPOINT` | — | `tcp://syslog.example.com:514` — encaminhar eventos para syslog central |
-| `WARDEX_SYSLOG_PROTO` | `tcp` | Transporte syslog: `tcp`, `udp`, ou `tls` |
-| `WARDEX_SYSLOG_CERT` | — | Caminho para cert TLS cliente para `tls` |
-| `WARDEX_SYSLOG_KEY` | — | Caminho para key TLS cliente para `tls` |
-| `WARDEX_SYSLOG_CA` | — | Caminho para CA personalizada para `tls` |
-
-O encaminhamento syslog é **opt-in**. Quando `WARDEX_SYSLOG_ENDPOINT` está definido, cada decisão do gate, aceitação e evento do ciclo de vida Art14 é também enviado como mensagem RFC 5424 para o endpoint configurado. A ligação é estabelecida no arranque e restabelecida em caso de falha com backoff exponencial.
-
----
-
-## Modo PKI
-
-Para ambientes que exigem identidade baseada em certificados em vez de segredos partilhados:
+**Active Exploitation Hard Stop:** Quando uma vulnerabilidade é classificada como activamente explorada (`actively_exploited: true`), o `wardex evaluate` termina com código **12** — distinto do bloqueio normal (10). Não pode ser substituído por aceitações de risco.
 
 ```bash
-wardex pki init --org "A Tua Empresa" --validity 3650d
-wardex pki issue --name ci-agent --out ci-agent.wex
-wardex config seal --keyring ci-agent.wex --input config.yaml --out config.wexstate
+# Artefacto Art14
+wardex art14 list
+wardex art14 show <artefact-id>
+wardex art14 verify <artefact-id>
+wardex art14 mark-dispatched <artefact-id> --phase early-warning
+
+# Aceitação de exploit activo
+wardex accept active-exploit --cve CVE-2024-3094 --justification "..." --art14-artefact wardex-art14-....json
 ```
 
-O modo PKI cria uma CA Ed25519 e emite certificados de operador com validade limitada. Configurações seladas com certificados PKI transportam a cadeia X.509 completa, permitindo verificação automática de expiração sem um trust store externo.
+Consulta o [Playbook de Governação](doc/operations/WARDEX_TRUST_PLAYBOOK.md) para o fluxo completo.
 
 ---
 
-## Aceitação de risco
+## Gestão de Chaves & Governação
 
-Quando o gate bloqueia e existe um caso de negócio para prosseguir, o Wardex formaliza a excepção com dono nomeado, justificação e TTL. Expirações silenciosas e drift de configuração são detectados automaticamente.
-
-```bash
-# Solicitar aceitação
-wardex accept request \
-  --report report.json \
-  --cve CVE-2024-1234 \
-  --accepted-by sec-lead@company.com \
-  --justification "WAF mitiga o vector de exploração; patch previsto para Q3" \
-  --expiry 90d
-
-# Verificar integridade de todas as aceitações activas
-wardex accept verify
-
-# Exportar relatório de verificação como artefacto JSON
-wardex accept verify --output verification-report.json
-
-# Listar aceitações e estado
-wardex accept list --active
-```
-
-As aceitações são assinadas com HMAC-SHA256 e registadas em log append-only (JSONL). O Wardex rejeita aceitações expiradas, adulteradas, ou cujo `wardex-config.yaml` sofreu drift desde a assinatura.
-
----
-
-## Gestão de Chaves Criptográficas
+### Chaves Criptográficas
 
 Todas as chaves Ed25519 são armazenadas em `~/.crypto/` com subdiretórios por finalidade:
 
@@ -423,33 +316,45 @@ Todas as chaves Ed25519 são armazenadas em `~/.crypto/` com subdiretórios por 
 
 **Permissões**: Directórios `700`, chaves privadas `0400`, chaves públicas `0644`.
 
-```bash
-# Gerar chave de trust (CISO/admin)
-wardex keygen
+### Trust Store & Sealed Config (WexState)
 
-# Gerar chave de provenance (manualmente ou via OpenSSL)
-# A chave é usada com immutable-provenance seal --keyring ~/.crypto/provenance/signing.key
-```
-
----
-
-## Governação: Trust Store & Sealed Config (WexState)
-
-Para conformidade **DORA** e cadeias de custódia não-repudiáveis, o Wardex permite selar as políticas de risco (`wardex-config.yaml`) num envelope criptográfico assinado (`.wexstate`).
+Para conformidade **DORA** e cadeias de custódia não-repudiáveis:
 
 - **Identidade forte**: Chaves Ed25519 para Admins, CISOs e Analistas.
-- **Sealed config**: As políticas de risco não podem ser alteradas em CI/CD sem aprovação executiva.
+- **Sealed config**: As políticas de risco não podem ser alteradas sem aprovação executiva.
 - **Trust store append-only**: Registo central de chaves autorizadas e revogações.
 
 ```bash
 # Sela a política (acção do CISO)
-wardex config seal --keyring ciso.wex --input config.yaml --out config.wexstate
+wardex config seal --keyring ~/.crypto/trust/root.key --input config.yaml --out config.wexstate
 
 # Avalia com verificação obrigatória do selo
 wardex evaluate --config config.wexstate --evidence vulns.yaml --strict
 ```
 
-Consulta o [Playbook de Governação](doc/operations/WARDEX_TRUST_PLAYBOOK.md) para o fluxo completo.
+### Modo PKI
+
+Para ambientes que exigem identidade baseada em certificados:
+
+```bash
+wardex pki init --org "A Tua Empresa" --validity 3650d
+wardex pki issue --name ci-agent --out ci-agent.wex
+wardex config seal --keyring ci-agent.wex --input config.yaml --out config.wexstate
+```
+
+---
+
+## Environment & Syslog
+
+| Variável | Predefinição | Descrição |
+|---|---|---|
+| `WARDEX_ACCEPT_SECRET` | — | Chave HMAC-SHA256 para assinar aceitações e artefactos Art14 (mín 32 car.) |
+| `WARDEX_ACTOR` | `cli` | Identidade registada nas entradas de auditoria |
+| `WARDEX_SYSLOG_ENDPOINT` | — | `tcp://syslog.example.com:514` — encaminhar eventos para syslog central |
+| `WARDEX_SYSLOG_PROTO` | `tcp` | Transporte syslog: `tcp`, `udp`, ou `tls` |
+| `WARDEX_SYSLOG_CERT` | — | Caminho para cert TLS cliente para `tls` |
+| `WARDEX_SYSLOG_KEY` | — | Caminho para key TLS cliente para `tls` |
+| `WARDEX_SYSLOG_CA` | — | Caminho para CA personalizada para `tls` |
 
 ---
 
