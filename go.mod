@@ -11,8 +11,6 @@ require (
 	lukechampine.com/blake3 v1.4.1
 )
 
-replace github.com/had-nu/gleipnir => /home/hadnu/workspace/homelab/gleipnir-ipc
-
 require (
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.0 // indirect
