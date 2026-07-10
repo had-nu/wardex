@@ -12,6 +12,7 @@ import (
 	"github.com/had-nu/wardex/v2/cmd/assess"
 	"github.com/had-nu/wardex/v2/cmd/assets"
 	"github.com/had-nu/wardex/v2/cmd/audit"
+	provenancecmd "github.com/had-nu/wardex/v2/cmd/provenance"
 	authcmd "github.com/had-nu/wardex/v2/cmd/auth"
 	"github.com/had-nu/wardex/v2/cmd/chain"
 	"github.com/had-nu/wardex/v2/cmd/configseal"
@@ -46,7 +47,7 @@ import (
 )
 
 var (
-	Version       = "2.2.0"
+	Version       = "2.3.0"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -184,6 +185,7 @@ func init() {
 	rootCmd.AddCommand(chain.ChainCmd)
 	rootCmd.AddCommand(hmaccmd.HMACCmd)
 	rootCmd.AddCommand(assets.AssetsCmd)
+	rootCmd.AddCommand(provenancecmd.ProvenanceCmd)
 }
 
 func main() {

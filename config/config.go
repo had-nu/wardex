@@ -111,14 +111,21 @@ type StateStoreConfig struct {
 	WORM            bool   `yaml:"worm"`              // enable WORM protection
 }
 
+type ProvenanceConfig struct {
+	Enabled string            `yaml:"enabled"` // "noop" | "grpc" | "gleipnir-embedded"
+	Address string            `yaml:"address"` // host:port for grpc driver
+	Options map[string]string `yaml:"options"` // driver-specific options
+}
+
 type Config struct {
 	ReleaseGate      ReleaseGate        `yaml:"release_gate"`
 	AcceptanceConfig AcceptanceConfig   `yaml:"acceptance"`
 	Reporting        ReportingConfig    `yaml:"reporting"`
 	Profiles         map[string]Profile `yaml:"profiles"`
-	CRA              CRAConfig          `yaml:"cra"`              // NEW in v2.0
-	Notifications    NotificationConfig `yaml:"notifications"`    // NEW in v2.2 — CPL
-	StateStore       StateStoreConfig   `yaml:"state_store"`      // NEW in v2.3 — persistent state
+	CRA              CRAConfig          `yaml:"cra"`             // NEW in v2.0
+	Notifications    NotificationConfig `yaml:"notifications"`   // NEW in v2.2 — CPL
+	StateStore       StateStoreConfig   `yaml:"state_store"`     // NEW in v2.3 — persistent state
+	Provenance       ProvenanceConfig   `yaml:"provenance"`      // NEW in v2.3 — provenance anchor
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
