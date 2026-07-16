@@ -10,8 +10,6 @@ import (
 	"fmt"
 )
 
-type grpcAnchorer struct{}
-
 func newGRPCAnchorer(_ context.Context, _ string) (Anchorer, error) {
 	return nil, fmt.Errorf("grpc provenance driver not available: build with -tags grpc")
 }

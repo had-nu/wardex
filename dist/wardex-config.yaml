@@ -1,0 +1,26 @@
+release_gate:
+  enabled: false
+  mode: any
+  risk_appetite: 7.0
+  warn_above: 5.0
+
+provenance:
+  enabled: gleipnir-embedded
+  options:
+    cycle_interval: 3s
+    node_id: "wardex-release-v2.4.0"
+
+acceptance:
+  signing_secret_file: ""
+  limits:
+    max_acceptance_days: 30
+    min_justification_chars: 50
+    max_report_age_hours: 72
+  banned_justification_phrases: []
+
+reporting:
+  format: markdown
+  output: stdout
+  gate_log:
+    path: wardex-gate-audit.log
+    on_fail: warn

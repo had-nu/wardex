@@ -67,6 +67,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 			return nil
 		}
 
+		//nolint:gosec // path validated by cli.ValidateInputPath above
 		data, err := os.ReadFile(path)
 		if err != nil {
 			return nil
@@ -117,7 +118,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(cmd.ErrOrStderr(), "  Seal saved locally; submit with: wardex provenance submit %s\n", chainHashHex)
 		return nil
 	}
-	defer anchorer.Close()
+	defer func() { _ = anchorer.Close() }()
 
 	hashBytes, _ := hex.DecodeString(chainHashHex)
 	result, err := anchorer.Submit(cmd.Context(), hashBytes, sealLabel)
