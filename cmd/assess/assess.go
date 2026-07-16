@@ -68,7 +68,7 @@ func runAssess(cmd *cobra.Command, args []string) error {
 	// 2. Load Framework Catalog
 	cat, err := catalog.Load(framework)
 	if err != nil {
-		return fmt.Errorf("assess: %w\n[HINT] Use --framework para especificar um framework válido: iso27001, soc2, nis2, dora", err)
+		return fmt.Errorf("assess: %w\n[HINT] Use --framework para especificar um framework válido: iso27001, soc2, nis2, dora, nist_csf, eu_ai_act", err)
 	}
 	fmt.Fprintf(os.Stderr, "[INFO] Using framework: %s (%d controls in catalog).\n", framework, len(cat))
 

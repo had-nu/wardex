@@ -1,0 +1,78 @@
+framework: eu_ai_act
+version: "2024"
+domain: ai_governance
+last_reviewed: "2026-07-16"
+reviewed_by: "hadnu"
+
+controls:
+  - id: EUAIA.Art4
+    name: "AI Literacy"
+    maturity: 3
+    layer: documented
+    domains: ["people"]
+    status: partial
+    owner: "AI Governance"
+    implementation_note: "AI awareness training programme under development"
+    evidence_refs: []
+    last_assessed: "2026-07-01"
+    exceptions: []
+
+  - id: EUAIA.Art5
+    name: "Prohibited AI Practices"
+    maturity: 2
+    layer: documented
+    domains: ["prohibited"]
+    status: partial
+    owner: "Legal & Compliance"
+    implementation_note: "Prohibited use cases documented in AI policy. Screening process pending."
+    evidence_refs: []
+    last_assessed: "2026-07-01"
+    exceptions: []
+
+  - id: EUAIA.Art9
+    name: "Risk Management System"
+    maturity: 2
+    layer: documented
+    domains: ["risk_management"]
+    status: partial
+    owner: "AI Governance"
+    implementation_note: "Initial risk assessment framework defined. Full lifecycle integration pending."
+    evidence_refs: []
+    last_assessed: "2026-07-01"
+    exceptions: []
+
+  - id: EUAIA.Art14
+    name: "Human Oversight"
+    maturity: 1
+    layer: documented
+    domains: ["human_oversight"]
+    status: non_compliant
+    owner: "Engineering"
+    implementation_note: "Human oversight measures not yet designed for AI systems in development pipeline"
+    evidence_refs: []
+    last_assessed: "2026-07-01"
+    exceptions: []
+
+  - id: EUAIA.Art15
+    name: "Accuracy, Robustness and Cybersecurity"
+    maturity: 1
+    layer: documented
+    domains: ["technical"]
+    status: non_compliant
+    owner: "Engineering"
+    implementation_note: "No formal AI accuracy benchmarks or adversarial testing established"
+    evidence_refs: []
+    last_assessed: "2026-07-01"
+    exceptions: []
+
+  - id: EUAIA.Art50
+    name: "Transparency Obligations"
+    maturity: 2
+    layer: documented
+    domains: ["transparency"]
+    status: partial
+    owner: "Product"
+    implementation_note: "Synthetic content labelling policy drafted. Technical implementation pending."
+    evidence_refs: []
+    last_assessed: "2026-07-01"
+    exceptions: []

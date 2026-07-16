@@ -29,8 +29,10 @@ func Load(framework string) ([]model.CatalogControl, error) {
 		filename = "dora.yaml"
 	case "nist_csf":
 		filename = "nist_csf.yaml"
+	case "eu_ai_act":
+		filename = "eu_ai_act.yaml"
 	default:
-		return nil, fmt.Errorf("framework não suportado: %s. Use: iso27001, soc2, nis2, dora", framework)
+		return nil, fmt.Errorf("framework não suportado: %s. Use: iso27001, soc2, nis2, dora, nist_csf, eu_ai_act", framework)
 	}
 
 	data, err := catalogFS.ReadFile(filename)
