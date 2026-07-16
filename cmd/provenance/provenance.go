@@ -4,6 +4,8 @@
 package provenance
 
 import (
+	"context"
+
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/provenance"
 	"github.com/spf13/cobra"
@@ -42,5 +44,5 @@ func getAnchorer() (provenance.Anchorer, error) {
 	if err != nil {
 		return nil, err
 	}
-	return provenance.New(nil, cfg.Provenance)
+	return provenance.New(context.Background(), cfg.Provenance)
 }

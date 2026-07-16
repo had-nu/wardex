@@ -12,7 +12,6 @@ import (
 
 var (
 	submitLabel  string
-	submitHash   string
 )
 
 var submitCmd = &cobra.Command{
@@ -29,7 +28,7 @@ var submitCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		defer anchorer.Close()
+		defer func() { _ = anchorer.Close() }()
 
 		result, err := anchorer.Submit(cmd.Context(), hash, submitLabel)
 		if err != nil {

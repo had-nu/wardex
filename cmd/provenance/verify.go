@@ -25,7 +25,7 @@ var verifyCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		defer anchorer.Close()
+		defer func() { _ = anchorer.Close() }()
 
 		result, err := anchorer.Verify(cmd.Context(), hash)
 		if err != nil {
