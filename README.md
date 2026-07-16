@@ -20,12 +20,14 @@
 
 > [!IMPORTANT]
 > **CRA Article 14 (v2.0):** As obrigações de notificação por exploração activa do Cyber Resilience Act entram em vigor em setembro de 2026. O Wardex v2.0 implementa o caminho completo: correlação com o catálogo CISA KEV, exit code distinto (`12`), artefacto de notificação assinado com HMAC-SHA256, e registo de auditoria encadeado com os três prazos regulatórios. Este caminho não pode ser substituído por aceitações de risco.
+>
+> **EU AI Act (v2.4.0):** O Regulamento da Inteligência Artificial (UE 2024/1689) já está disponível como framework de controlos. 31 controlos catalogados cobrindo todos os artigos-chave: práticas proibidas, gestão de riscos, governação de dados, transparência, supervisão humana, exatidão/solidez/cibersegurança, obrigações de prestadores e implantadores, GPAI, acompanhamento pós-comercialização e comunicação de incidentes. Usa `--framework eu_ai_act` para avaliar a conformidade.
 
 ---
 
 Wardex é uma CLI e biblioteca Go que transforma decisões de segurança e conformidade em evidência auditável. Opera em dois modos independentes — nenhum exige o outro.
 
-**Posicionamento europeu:** O Wardex é construído de raiz para os regulamentos europeus — NIS2, DORA, CRA — e para o padrão de compliance que está a emergir na UE. Cada decisão do release gate, cada aceitação de risco, cada artefacto Art14 é selado criptograficamente e registado num audit log encadeado que sobrevive a auditorias externas.
+**Posicionamento europeu:** O Wardex é construído de raiz para os regulamentos europeus — NIS2, DORA, CRA, **EU AI Act** — e para o padrão de compliance que está a emergir na UE. Cada decisão do release gate, cada aceitação de risco, cada artefacto Art14 é selado criptograficamente e registado num audit log encadeado que sobrevive a auditorias externas.
 
 ---
 
@@ -60,33 +62,31 @@ wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./co
 
 ---
 
-## What's New — v2.2.2
+## What's New — v2.4.0
 
-**Security Hardening:**
-- Workspace confinement: `evaluate` restringe acesso a ficheiros ao projecto raiz
-- Pathguard: substitui SafePath ad-hoc por validação de paths
-- SBOM generation com syft pinned e verificação SHA-256
+**EU AI Act Framework (31 controlos):**
+- Catálogo completo do Regulamento (UE) 2024/1689: práticas proibidas, gestão de riscos, governação de dados, documentação técnica, transparência, supervisão humana, exatidão/solidez/cibersegurança, obrigações de prestadores e implantadores, avaliação de impacto sobre direitos fundamentais, GPAI, acompanhamento pós-comercialização, comunicação de incidentes
+- Usar: `wardex --framework eu_ai_act ./frameworks/eu_ai_act/*.yml`
 
-**Code Quality (PR #102):**
-- Atomic writes consolidados (`pkg/atomicwrite`) — corrigido bug de temp-file leak
-- Gate pipeline compartilhado (`pkg/gate`) — DRY entre evaluate e wardex
-- `runEvaluate()` decomposto de CC=123 em 11 helpers focados
+**Gleipnir Provenance Anchoring:**
+- Prova de integridade imutável para artefactos de release via `wardex provenance seal`
+- Suporte a embedded consensus engine (gleipnir-embedded) ou servidor gRPC remoto
+- Chain seal com SHA-256 de todos os artefactos + âncora criptográfica
 
-**Immutable Provenance (v2.3.0 branch):**
-- Manifesto criptográfico de provenance com BLAKE3 + Ed25519
-- Âncora Bitcoin via OpenTimestamps
-- Âncora Ethereum/Polygon via smart contract `ProvenanceAnchor`
+**Isolamento do driver gRPC:**
+- O driver de proveniência gRPC (com protobuf) foi isolado atrás da build tag `grpc` para evitar panic ao init. Para usar: `go build -tags grpc`.
 
 ---
 
 ## Frameworks suportados
 
-ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · CRA Article 14 · NIST CSF 2.0
+ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · CRA Article 14 · NIST CSF 2.0 · **EU AI Act**
 
 ```bash
-wardex assess controls.yaml --framework iso27001  # predefinição
+wardex assess controls.yaml --framework iso27001     # predefinição
 wardex assess controls.yaml --framework nis2
 wardex assess controls.yaml --framework dora
+wardex assess controls.yaml --framework eu_ai_act    # novo v2.4.0
 ```
 
 ---
@@ -153,15 +153,14 @@ wardex keygen
 ### 3. Selar e verificar provenance
 
 ```bash
-# Selar source tree (a partir da branch v2.3.0)
-immutable-provenance seal \
-  --dir . \
-  --output provenance.yaml \
-  --version v2.2.2 \
-  --keyring ~/.crypto/provenance/signing.key
+# Selar diretório de artefactos com Gleipnir (v2.4.0+)
+wardex provenance seal \
+  --dir ./dist \
+  --output chain-seal.json \
+  --label "release-v2.4.0"
 
 # Verificar integridade
-immutable-provenance verify --manifest provenance.yaml --dir .
+wardex provenance verify <chain-hash>
 ```
 
 **Exit codes:** `0` ALLOW · `3` Adulterado · `4` Armazém inconsistente · `10` BLOCK · `11` Gap · `12` Explorado activamente
@@ -178,6 +177,7 @@ immutable-provenance verify --manifest provenance.yaml --dir .
 | `wardex enrich epss` | Enriquece vulnerabilidades com dados EPSS |
 | `wardex accept request/verify/list` | Gestão de aceitações de risco |
 | `wardex art14 list/show/verify` | Ciclo de vida do artefacto CRA Article 14 |
+| `wardex provenance seal/submit/verify/status` | Proveniência criptográfica com Gleipnir |
 | `wardex config hash/seal` | CPL e sealed config |
 | `wardex audit verify-chain/verify-link` | Verificação do audit log encadeado |
 | `wardex trust init/add` | Gestão do trust store |
@@ -299,6 +299,58 @@ Consulta o [Playbook de Governação](doc/operations/WARDEX_TRUST_PLAYBOOK.md) p
 
 ---
 
+## EU AI Act (Regulamento da Inteligência Artificial)
+
+O Regulamento (UE) 2024/1689 — EU AI Act — está disponível como framework de controlos no Wardex v2.4.0. São 31 controlos catalogados que cobrem todas as obrigações aplicáveis a sistemas de IA de risco elevado, modelos de IA de finalidade geral (GPAI) e práticas proibidas.
+
+### Controlos por domínio
+
+| Domínio | Controlos | Artigos |
+|---|---|---|
+| Prohibited practices | 1 | Art 5 |
+| Governance & classification | 4 | Arts 6, 21, 49, 99 |
+| Risk management | 1 | Art 9 |
+| Data governance | 1 | Art 10 |
+| Documentation & records | 4 | Arts 11, 12, 18, 19 |
+| Transparency | 2 | Arts 13, 50 |
+| Human oversight | 1 | Art 14 |
+| Technical (accuracy, robustness, security) | 2 | Arts 15, 19 |
+| Provider obligations | 2 | Arts 16, 20 |
+| Quality management | 1 | Art 17 |
+| Deployer obligations | 2 | Arts 26, 27 |
+| Value chain (importer, distributor, rep) | 4 | Arts 22, 23, 24, 25 |
+| Conformity assessment | 2 | Arts 43, 47 |
+| GPAI (general-purpose AI) | 2 | Arts 53, 55 |
+| Post-market & incident reporting | 2 | Arts 72, 73 |
+
+```bash
+# Avaliar conformidade com EU AI Act
+wardex --framework eu_ai_act ./frameworks/eu_ai_act/*.yml
+
+# Listar controlos do catálogo
+wardex --framework eu_ai_act --output json ./frameworks/eu_ai_act/*.yml
+```
+
+### Proveniência com Gleipnir
+
+Cada release pode ser selado criptograficamente com o Gleipnir embedded consensus engine:
+
+```bash
+# Selar artefactos de release
+wardex provenance seal \
+  --dir ./dist \
+  --output chain-seal.json \
+  --label "wardex-v2.4.0-eu-ai-act"
+
+# Ancorar commit de tag
+wardex provenance submit $(git rev-parse v2.4.0) --label "git-tag-v2.4.0"
+
+# Verificar estado da cadeia
+wardex provenance status
+```
+
+---
+
 ## Gestão de Chaves & Governação
 
 ### Chaves Criptográficas
@@ -316,9 +368,19 @@ Todas as chaves Ed25519 são armazenadas em `~/.crypto/` com subdiretórios por 
 
 **Permissões**: Directórios `700`, chaves privadas `0400`, chaves públicas `0644`.
 
-### Verificação de Provenance — v2.2.2
+### Verificação de Provenance
 
-Para verificar a integridade do source tree v2.2.2, use a chave pública abaixo e o root hash do manifesto:
+Para releases recentes (v2.4.0+), usar o Gleipnir embedded:
+
+```bash
+# Verificar chain seal de release
+wardex provenance verify <chain-hash>
+
+# Verificar estado da cadeia
+wardex provenance status
+```
+
+Para releases anteriores (v2.2.2), a chave pública abaixo permite verificar o manifesto de proveniência:
 
 > **Chave pública de assinatura (v2.2.2):**
 > ```
