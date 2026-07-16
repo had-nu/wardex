@@ -17,7 +17,7 @@ var statusCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		defer anchorer.Close()
+		defer func() { _ = anchorer.Close() }()
 
 		health, err := anchorer.Status(cmd.Context())
 		if err != nil {

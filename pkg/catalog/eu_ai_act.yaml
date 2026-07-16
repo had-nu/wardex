@@ -1,0 +1,341 @@
+- id: EUAIA.Art4
+  name: "AI Literacy — Ensure AI literacy among staff and deployers"
+  domain: "people"
+  base_score: 7.0
+  keywords:
+    - literacia
+    - training
+    - awareness
+    - competence
+    - literacy
+- id: EUAIA.Art5
+  name: "Prohibited AI Practices — Identification, governance and prevention of unacceptable risk AI"
+  domain: "prohibited"
+  base_score: 10.0
+  keywords:
+    - prohibited
+    - unacceptable risk
+    - social scoring
+    - biometric categorisation
+    - prohibited practices
+  practices:
+    - id: PR.EUAIA.Art5.1
+      name: "Inventory screening against prohibited AI use cases"
+      min_maturity: 3
+      gate_relevant: true
+- id: EUAIA.Art6
+  name: "High-Risk AI Classification — Rules for classifying AI systems as high-risk"
+  domain: "governance"
+  base_score: 8.0
+  keywords:
+    - classification
+    - high-risk
+    - risk classification
+    - annex iii
+- id: EUAIA.Art9
+  name: "Risk Management System — Continuous iterative risk management throughout AI system lifecycle"
+  domain: "risk_management"
+  base_score: 10.0
+  keywords:
+    - risk management
+    - risk identification
+    - risk analysis
+    - residual risk
+    - testing
+  practices:
+    - id: PR.EUAIA.Art9.1
+      name: "Document and maintain continuous risk management process"
+      min_maturity: 3
+      gate_relevant: true
+- id: EUAIA.Art10
+  name: "Data and Data Governance — Training, validation and test data quality, bias detection, representativeness"
+  domain: "data"
+  base_score: 9.5
+  keywords:
+    - data governance
+    - data quality
+    - bias
+    - training data
+    - representativeness
+    - data provenance
+- id: EUAIA.Art11
+  name: "Technical Documentation — Comprehensive technical documentation per Annex IV"
+  domain: "documentation"
+  base_score: 9.0
+  keywords:
+    - technical documentation
+    - design specification
+    - system description
+    - annex iv
+- id: EUAIA.Art12
+  name: "Record-Keeping — Automatic event logging for traceability throughout system lifetime"
+  domain: "technical"
+  base_score: 8.5
+  keywords:
+    - logging
+    - record keeping
+    - traceability
+    - automatic log
+    - event logging
+- id: EUAIA.Art13
+  name: "Transparency and Information to Deployers — Instructions for use, performance characteristics, limitations"
+  domain: "transparency"
+  base_score: 9.0
+  keywords:
+    - transparency
+    - instructions for use
+    - performance
+    - accuracy
+    - limitations
+    - deployer information
+- id: EUAIA.Art14
+  name: "Human Oversight — Design and development for effective human supervision, intervention and override"
+  domain: "human_oversight"
+  base_score: 9.5
+  keywords:
+    - human oversight
+    - supervision
+    - human-in-the-loop
+    - override
+    - automation bias
+    - stop button
+- id: EUAIA.Art15
+  name: "Accuracy, Robustness and Cybersecurity — Appropriate levels of accuracy, robustness, and security against adversarial attacks"
+  domain: "technical"
+  base_score: 9.5
+  keywords:
+    - accuracy
+    - robustness
+    - cybersecurity
+    - adversarial
+    - data poisoning
+    - model evasion
+- id: EUAIA.Art16
+  name: "Provider Obligations — Overall compliance responsibilities for high-risk AI system providers"
+  domain: "provider"
+  base_score: 9.5
+  keywords:
+    - provider
+    - obligations
+    - conformity
+    - ce marking
+    - registration
+- id: EUAIA.Art17
+  name: "Quality Management System — Documented QMS with policies, procedures, risk management, post-market monitoring"
+  domain: "quality"
+  base_score: 9.5
+  keywords:
+    - quality management
+    - qms
+    - procedures
+    - regulatory compliance
+    - change management
+  practices:
+    - id: PR.EUAIA.Art17.1
+      name: "Establish and maintain documented QMS for AI systems"
+      min_maturity: 3
+      gate_relevant: false
+- id: EUAIA.Art18
+  name: "Documentation Keeping — Retention of technical documentation and QMS records for 10 years"
+  domain: "documentation"
+  base_score: 8.0
+  keywords:
+    - documentation retention
+    - record keeping
+    - 10 years
+    - technical documentation
+- id: EUAIA.Art19
+  name: "Automatically Generated Logs — Retention of logs under provider control, minimum 6 months"
+  domain: "technical"
+  base_score: 8.0
+  keywords:
+    - logs
+    - automatic logs
+    - retention
+    - 6 months
+    - audit trail
+- id: EUAIA.Art20
+  name: "Corrective Actions and Duty of Information — Immediate corrective measures and notification of non-compliance"
+  domain: "provider"
+  base_score: 8.5
+  keywords:
+    - corrective action
+    - duty to inform
+    - recall
+    - decommission
+    - non-compliance
+- id: EUAIA.Art21
+  name: "Cooperation with Competent Authorities — Information provision, documentation access and cooperation"
+  domain: "governance"
+  base_score: 7.5
+  keywords:
+    - cooperation
+    - competent authority
+    - information
+    - documentation access
+    - market surveillance
+- id: EUAIA.Art22
+  name: "Authorised Representative — Third-country providers must appoint an EU-established authorised representative"
+  domain: "value_chain"
+  base_score: 7.5
+  keywords:
+    - authorised representative
+    - third country
+    - EU representative
+    - mandate
+- id: EUAIA.Art23
+  name: "Importer Obligations — Verification of conformity assessment, technical documentation, CE marking before placing on market"
+  domain: "value_chain"
+  base_score: 8.0
+  keywords:
+    - importer
+    - conformity verification
+    - ce marking
+    - declaration
+    - documentation
+- id: EUAIA.Art24
+  name: "Distributor Obligations — Verification of CE marking, declaration, instructions; corrective actions"
+  domain: "value_chain"
+  base_score: 8.0
+  keywords:
+    - distributor
+    - availability
+    - ce marking
+    - declaration
+    - corrective action
+- id: EUAIA.Art25
+  name: "Responsibilities Along the AI Value Chain — Substantial modification, change of intended purpose, downstream obligations"
+  domain: "value_chain"
+  base_score: 8.5
+  keywords:
+    - value chain
+    - substantial modification
+    - downstream
+    - third party
+    - integration
+- id: EUAIA.Art26
+  name: "Deployer Obligations — Technical/organisational measures, human oversight assignment, input data control, monitoring"
+  domain: "deployer"
+  base_score: 9.0
+  keywords:
+    - deployer
+    - user
+    - instructions for use
+    - human oversight
+    - input data
+    - monitoring
+    - workers information
+- id: EUAIA.Art27
+  name: "Fundamental Rights Impact Assessment — FRIA before deployment for public bodies and specified deployers"
+  domain: "deployer"
+  base_score: 8.5
+  keywords:
+    - fundamental rights
+    - impact assessment
+    - fria
+    - rights protection
+    - deployer
+- id: EUAIA.Art43
+  name: "Conformity Assessment — Conformity assessment procedures based on internal control or notified body"
+  domain: "conformity"
+  base_score: 9.0
+  keywords:
+    - conformity assessment
+    - notified body
+    - internal control
+    - annex vi
+    - assessment procedure
+- id: EUAIA.Art47
+  name: "EU Declaration of Conformity and CE Marking — Draft declaration per Annex V and affix CE marking"
+  domain: "conformity"
+  base_score: 8.5
+  keywords:
+    - declaration of conformity
+    - ce marking
+    - annex v
+    - conformity marking
+- id: EUAIA.Art49
+  name: "Registration in EU Database — Register high-risk AI systems in EU-wide database per Annex VIII"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - registration
+    - eu database
+    - annex viii
+    - provider
+    - deployer
+- id: EUAIA.Art50
+  name: "Transparency Obligations for Certain AI Systems — Information about AI interaction, synthetic content marking, emotion recognition"
+  domain: "transparency"
+  base_score: 9.0
+  keywords:
+    - transparency
+    - synthetic content
+    - deepfake
+    - emotion recognition
+    - biometric categorisation
+    - watermarking
+- id: EUAIA.Art53
+  name: "General-Purpose AI Model Provider Obligations — Technical documentation, downstream information, copyright policy, training data summary"
+  domain: "gpai"
+  base_score: 9.5
+  keywords:
+    - general purpose ai
+    - gpai
+    - foundation model
+    - technical documentation
+    - copyright
+    - training data
+    - downstream
+- id: EUAIA.Art55
+  name: "Systemic Risk GPAI Obligations — Model evaluation, adversarial testing, incident reporting, cybersecurity for systemic-risk models"
+  domain: "gpai"
+  base_score: 9.5
+  keywords:
+    - systemic risk
+    - gpai
+    - model evaluation
+    - red teaming
+    - incident reporting
+    - cybersecurity
+  practices:
+    - id: PR.EUAIA.Art55.1
+      name: "Conduct adversarial testing (red teaming) for systemic-risk models"
+      min_maturity: 4
+      gate_relevant: true
+- id: EUAIA.Art72
+  name: "Post-Market Monitoring — Active and systematic collection and analysis of performance data post-deployment"
+  domain: "post_market"
+  base_score: 8.5
+  keywords:
+    - post-market monitoring
+    - pms
+    - performance monitoring
+    - lifecycle
+    - data collection
+- id: EUAIA.Art73
+  name: "Serious Incident Reporting — Report serious incidents to market surveillance authorities, investigation and corrective measures"
+  domain: "reporting"
+  base_score: 9.5
+  keywords:
+    - incident reporting
+    - serious incident
+    - market surveillance
+    - notification
+    - investigation
+    - corrective measures
+  practices:
+    - id: PR.EUAIA.Art73.1
+      name: "Establish serious incident reporting process with 15-day/2-day escalation"
+      min_maturity: 3
+      gate_relevant: true
+- id: EUAIA.Art99
+  name: "Penalties and Enforcement — Sanctions framework, fines up to 7% global annual turnover or 35M EUR"
+  domain: "governance"
+  base_score: 6.0
+  keywords:
+    - penalties
+    - fines
+    - sanctions
+    - enforcement
+    - non-compliance

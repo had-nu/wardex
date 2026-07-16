@@ -162,7 +162,7 @@ func init() {
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
 	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
 	rootCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override (Warning: Identity is cryptographically trusted only in CI environments via WARDEX_ACTOR)")
-	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora")
+	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora|nist_csf|eu_ai_act")
 	rootCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a cryptographically signed EPSS enrichment file")
 
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd, convert.KevCmd)

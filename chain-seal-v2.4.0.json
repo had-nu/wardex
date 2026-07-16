@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "timestamp": "82049",
+  "total_files": 3,
+  "chain_hash": "8a27724ac1d9abaa316e448dbc6b2153dde53575308d6e56b4c2bf7156e9a22b",
+  "artifacts": {
+    "README.md": "1b43bbc6b983a4f50f8701e5b9093dbcae9c70e9ca2fe08c5380006a041524d4",
+    "wardex": "2a777b8532e411e5af35c15a28cfe20083460f1f88463c0d68696874b373c46d",
+    "wardex-config.yaml": "eaa2929ea82fe78d0d4f1cef28c0fe59090d95b979f50d61c431e5f234d957f5"
+  }
+}

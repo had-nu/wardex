@@ -39,7 +39,9 @@ func newEmbeddedGleipnir(opts map[string]string) (*embeddedGleipnir, error) {
 	}
 
 	uid := identity.NewUIDZero(nodeID, simulated)
-	uid.Seal()
+	if err := uid.Seal(); err != nil {
+		return nil, fmt.Errorf("sealing identity: %w", err)
+	}
 
 	node := consensus.Node{
 		UID:  *uid,
