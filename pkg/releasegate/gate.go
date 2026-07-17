@@ -23,7 +23,7 @@ type Gate struct {
 func (g *Gate) Evaluate(vulns []model.Vulnerability) model.GateReport {
 	report := model.GateReport{
 		GateMaturityLevel: InferMaturityLevel(g.AssetContext, g.CompensatingControls),
-		OverallDecision:   "allow",
+		OverallDecision:   model.DecisionAllow,
 	}
 
 	var totalRisk float64
@@ -32,16 +32,16 @@ func (g *Gate) Evaluate(vulns []model.Vulnerability) model.GateReport {
 	for _, v := range vulns {
 		brk := CalculateRisk(v, g.AssetContext, g.CompensatingControls)
 
-		decisionStr := "allow"
+		decisionStr := model.DecisionAllow
 		if brk.FinalReleaseRisk > g.RiskAppetite && g.Mode != "aggregate" {
-			decisionStr = "block"
+			decisionStr = model.DecisionBlock
 			report.BlockedCount++
-			report.OverallDecision = "block"
+			report.OverallDecision = model.DecisionBlock
 		} else if g.WarnAbove > 0 && brk.FinalReleaseRisk > g.WarnAbove && g.Mode != "aggregate" {
-			decisionStr = "warn"
+			decisionStr = model.DecisionWarn
 			report.WarnCount++
-			if report.OverallDecision != "block" {
-				report.OverallDecision = "warn" // Ensure 'block' overrides 'warn'
+			if report.OverallDecision != model.DecisionBlock {
+				report.OverallDecision = model.DecisionWarn
 			}
 		} else {
 			report.AllowedCount++
@@ -73,7 +73,7 @@ func (g *Gate) Evaluate(vulns []model.Vulnerability) model.GateReport {
 		aggregateThreshold = g.AggregateLimit
 	}
 	if g.Mode == "aggregate" && totalRisk > aggregateThreshold {
-		report.OverallDecision = "block"
+		report.OverallDecision = model.DecisionBlock
 	}
 
 	return report

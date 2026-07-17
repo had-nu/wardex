@@ -64,33 +64,8 @@ func loadEvalConfig(configPath string, strict bool, profileName string) (*config
 		}
 	}
 
-	// RBAC profile override
-	if profileName != "" {
-		if p, ok := cfg.Profiles[profileName]; ok {
-			actor := os.Getenv("WARDEX_ACTOR")
-			if actor == "" {
-				actor = os.Getenv("GITHUB_ACTOR")
-			}
-			if actor == "" {
-				actor = os.Getenv("USER")
-			}
-			allowed := len(p.AllowedActors) == 0
-			for _, a := range p.AllowedActors {
-				if a == "*" || a == actor {
-					allowed = true
-					break
-				}
-			}
-			if !allowed {
-				fmt.Fprintf(stderr, "[RBAC VIOLATION] Actor %q is not authorized for profile %q!\n[RBAC ENFORCEMENT] Override rejected. Falling back to strict baseline configuration.\n", actor, profileName)
-			} else {
-				cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
-				cfg.ReleaseGate.WarnAbove = p.WarnAbove
-				fmt.Fprintf(stderr, "[INFO] RBAC Verified. Profile %q loaded (RiskAppetite: %.2f)\n", profileName, p.RiskAppetite)
-			}
-		} else {
-			fmt.Fprintf(stderr, "Warning: Profile %q not found. Using defaults.\n", profileName)
-		}
+	if msg := config.ApplyProfile(cfg, profileName, stderr); msg != "" {
+		fmt.Fprintf(stderr, "[INFO] %s\n", msg)
 	}
 
 	return cfg, nil

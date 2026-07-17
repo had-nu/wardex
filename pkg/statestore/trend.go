@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // FormatTrend formats the trend analysis for CLI output.
@@ -57,10 +59,11 @@ func FormatTrend(analysis *TrendAnalysis, history []TrendPoint) string {
 
 			indicator := " "
 			switch p.Decision {
-			case "block":
+			case model.DecisionBlock:
 				indicator = "!"
-			case "warn":
+			case model.DecisionWarn:
 				indicator = "~"
+			case model.DecisionAllow:
 			}
 
 			fmt.Fprintf(&sb, "%s %s %5.1f%% %s\n",
@@ -110,7 +113,7 @@ func FormatHistory(records []HistoryRecord) string {
 		fmt.Fprintf(&sb, "%-20s %-8s %-8s %-10d %-8d\n",
 			r.Timestamp.Format("2006-01-02 15:04:05"),
 			fmt.Sprintf("%.1f%%", r.State.LastRisk*100),
-			strings.ToUpper(r.State.LastDecision),
+			strings.ToUpper(string(r.State.LastDecision)),
 			countTrendVulns(r.State.Trend),
 			r.State.ActiveAccepts,
 		)
@@ -140,7 +143,7 @@ func FormatDashboard(state *State, analysis *TrendAnalysis) string {
 	sb.WriteString(strings.Repeat("-", 50) + "\n")
 	fmt.Fprintf(&sb, "Version:        %s\n", state.Version)
 	fmt.Fprintf(&sb, "Last Run:       %s\n", state.LastRun.Format("2006-01-02 15:04:05 UTC"))
-	fmt.Fprintf(&sb, "Last Decision:  %s\n", strings.ToUpper(state.LastDecision))
+	fmt.Fprintf(&sb, "Last Decision:  %s\n", strings.ToUpper(string(state.LastDecision)))
 	fmt.Fprintf(&sb, "Risk Score:     %.1f%%\n", state.LastRisk*100)
 	fmt.Fprintf(&sb, "Total Runs:     %d\n", state.RunCount)
 	fmt.Fprintf(&sb, "Active Accepts: %d\n", state.ActiveAccepts)
@@ -179,7 +182,7 @@ func FormatDashboard(state *State, analysis *TrendAnalysis) string {
 			fmt.Fprintf(&sb, "  %s  %5.1f%%  %-5s  %s\n",
 				p.Date.Format("01-02"),
 				p.Risk*100,
-				strings.ToUpper(p.Decision),
+				strings.ToUpper(string(p.Decision)),
 				strings.Repeat("█", barLen),
 			)
 		}

@@ -3,31 +3,35 @@
 
 package statestore
 
-import "time"
+import (
+	"time"
+
+	"github.com/had-nu/wardex/v2/pkg/model"
+)
 
 // StateVersion is the current state format version.
 const StateVersion = "1.0"
 
 // State represents the consolidated cross-execution state.
 type State struct {
-	Version       string       `json:"version"`
-	LastRun       time.Time    `json:"last_run"`
-	LastDecision  string       `json:"last_decision"` // "allow"|"warn"|"block"
-	LastRisk      float64      `json:"last_risk"`
-	RunCount      int          `json:"run_count"`
-	Trend         []TrendPoint `json:"trend"`
-	ActiveAccepts int          `json:"active_accepts"`
-	ExpiringSoon  []string     `json:"expiring_soon"`
-	ConfigHash    string       `json:"config_hash"`
-	TrustRootSig  string       `json:"trust_root_sig"`
+	Version       string          `json:"version"`
+	LastRun       time.Time       `json:"last_run"`
+	LastDecision  model.Decision  `json:"last_decision"`
+	LastRisk      float64         `json:"last_risk"`
+	RunCount      int             `json:"run_count"`
+	Trend         []TrendPoint    `json:"trend"`
+	ActiveAccepts int             `json:"active_accepts"`
+	ExpiringSoon  []string        `json:"expiring_soon"`
+	ConfigHash    string          `json:"config_hash"`
+	TrustRootSig  string          `json:"trust_root_sig"`
 }
 
 // TrendPoint is a single data point in the risk trend.
 type TrendPoint struct {
-	Date      time.Time `json:"date"`
-	Risk      float64   `json:"risk"`
-	Decision  string    `json:"decision"`
-	VulnCount int       `json:"vuln_count"`
+	Date      time.Time      `json:"date"`
+	Risk      float64        `json:"risk"`
+	Decision  model.Decision `json:"decision"`
+	VulnCount int            `json:"vuln_count"`
 }
 
 // TrendDirection indicates whether risk is improving or worsening.
@@ -58,7 +62,7 @@ type TrendAnalysis struct {
 func EmptyState() *State {
 	return &State{
 		Version:      StateVersion,
-		LastDecision: "allow",
+		LastDecision: model.DecisionAllow,
 		Trend:        make([]TrendPoint, 0),
 		ExpiringSoon: make([]string, 0),
 	}

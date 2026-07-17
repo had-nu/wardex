@@ -51,10 +51,11 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 	if report.Gate != nil {
 		icon := "[OK] ALLOW"
 		switch report.Gate.OverallDecision {
-		case "block":
+		case model.DecisionBlock:
 			icon = "[X] BLOCK"
-		case "warn":
+		case model.DecisionWarn:
 			icon = "[!] WARN"
+		case model.DecisionAllow:
 		}
 		_, _ = fmt.Fprintf(f, "| Release Gate Decision | %s |\n", icon)
 		_, _ = fmt.Fprintf(f, "| Gate Maturity Level | %d / 5 |\n", report.Gate.GateMaturityLevel)
@@ -100,10 +101,11 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 		for _, dec := range report.Gate.Decisions {
 			icon := "[OK] ALLOW"
 			switch dec.Decision {
-			case "block":
+			case model.DecisionBlock:
 				icon = "[X] BLOCK"
-			case "warn":
+			case model.DecisionWarn:
 				icon = "[!] WARN"
+			case model.DecisionAllow:
 			}
 			_, _ = fmt.Fprintf(f, "| %s | %.1f | %.2f | **%.1f** | %s |\n",
 				dec.Vulnerability.CVEID, dec.Breakdown.CVSSBase, dec.Breakdown.EPSSFactor, dec.ReleaseRisk, icon)

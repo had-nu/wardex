@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/v2/pkg/atomicwrite"
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 // Store manages the persistent state directory.
@@ -75,7 +76,7 @@ func (s *Store) SaveState(state *State) error {
 }
 
 // RecordDecision records a gate decision to the state and history.
-func (s *Store) RecordDecision(decision string, risk float64, vulnCount int, activeAccepts int, expiringSoon []string) error {
+func (s *Store) RecordDecision(decision model.Decision, risk float64, vulnCount int, activeAccepts int, expiringSoon []string) error {
 	state, err := s.LoadState()
 	if err != nil {
 		return err
@@ -175,11 +176,11 @@ func (s *Store) TrendAnalysis() (*TrendAnalysis, error) {
 			analysis.MaxRisk = p.Risk
 		}
 		switch p.Decision {
-		case "allow":
+		case model.DecisionAllow:
 			analysis.AllowCount++
-		case "warn":
+		case model.DecisionWarn:
 			analysis.WarnCount++
-		case "block":
+		case model.DecisionBlock:
 			analysis.BlockCount++
 		}
 	}

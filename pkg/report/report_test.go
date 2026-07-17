@@ -24,10 +24,10 @@ func TestReportGeneration(t *testing.T) {
 			},
 		},
 		Gate: &model.GateReport{
-			OverallDecision:   "block",
+			OverallDecision:   model.DecisionBlock,
 			GateMaturityLevel: 3,
 			Decisions: []model.ReleaseDecision{
-				{Decision: "block"},
+				{Decision: model.DecisionBlock},
 			},
 		},
 		Roadmap: []model.Finding{
@@ -79,11 +79,11 @@ func TestHTMLReportEdgeCases(t *testing.T) {
 	tests := []struct {
 		name     string
 		coverage float64
-		decision string
+		decision model.Decision
 	}{
-		{"high coverage", 85.0, "allow"},
-		{"low coverage", 30.0, "block"},
-		{"warning", 55.0, "warn"},
+		{"high coverage", 85.0, model.DecisionAllow},
+		{"low coverage", 30.0, model.DecisionBlock},
+		{"warning", 55.0, model.DecisionWarn},
 	}
 
 	for _, tc := range tests {

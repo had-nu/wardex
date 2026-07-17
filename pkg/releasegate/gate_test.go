@@ -39,10 +39,10 @@ func TestRiskBasedGateVsBinaryThreshold(t *testing.T) {
 	lowReport := lowRiskGate.Evaluate([]model.Vulnerability{vuln})
 	highReport := highRiskGate.Evaluate([]model.Vulnerability{vuln})
 
-	if lowReport.OverallDecision != "allow" {
+	if lowReport.OverallDecision != model.DecisionAllow {
 		t.Errorf("esperado allow em contexto de baixo risco, got: %s (risk score: %f)", lowReport.OverallDecision, lowReport.Decisions[0].ReleaseRisk)
 	}
-	if highReport.OverallDecision != "block" {
+	if highReport.OverallDecision != model.DecisionBlock {
 		t.Errorf("esperado block em contexto de alto risco, got: %s (risk score: %f)", highReport.OverallDecision, highReport.Decisions[0].ReleaseRisk)
 	}
 }

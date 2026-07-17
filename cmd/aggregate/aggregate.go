@@ -85,7 +85,7 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 		}
 		results = append(results, fileResult{
 			file:     path,
-			decision: gr.Gate.OverallDecision,
+			decision: string(gr.Gate.OverallDecision),
 			blocked:  gr.Gate.BlockedCount,
 			allowed:  gr.Gate.AllowedCount,
 			warned:   gr.Gate.WarnCount,

@@ -187,17 +187,19 @@ func generateHTML(report model.GapReport, outFile string) error {
 	if report.Gate != nil {
 		decClass := "allow"
 		switch report.Gate.OverallDecision {
-		case "block":
+		case model.DecisionBlock:
 			decClass = "block"
-		case "warn":
+		case model.DecisionWarn:
 			decClass = "warn"
+		case model.DecisionAllow:
 		}
 		icon := "ALLOW"
 		switch report.Gate.OverallDecision {
-		case "block":
+		case model.DecisionBlock:
 			icon = "BLOCK"
-		case "warn":
+		case model.DecisionWarn:
 			icon = "WARN"
+		case model.DecisionAllow:
 		}
 		gate := templateGate{
 			Decision:      strings.ToUpper(icon),
@@ -207,17 +209,18 @@ func generateHTML(report model.GapReport, outFile string) error {
 		for _, dec := range report.Gate.Decisions {
 			dClass := "allow"
 			switch dec.Decision {
-			case "block":
+			case model.DecisionBlock:
 				dClass = "block"
-			case "warn":
+			case model.DecisionWarn:
 				dClass = "warn"
+			case model.DecisionAllow:
 			}
 			gate.Decisions = append(gate.Decisions, templateGateDecision{
 				CVE:      dec.Vulnerability.CVEID,
 				CVSS:     fmt.Sprintf("%.1f", dec.Breakdown.CVSSBase),
 				EPSS:     fmt.Sprintf("%.2f", dec.Breakdown.EPSSFactor),
 				Risk:     fmt.Sprintf("%.2f", dec.ReleaseRisk),
-				Decision: strings.ToUpper(dec.Decision),
+				Decision: strings.ToUpper(string(dec.Decision)),
 				Class:    dClass,
 			})
 		}

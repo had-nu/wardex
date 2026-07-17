@@ -23,8 +23,8 @@ type AuditEntry struct {
 	Detail        string    `json:"detail,omitempty"`
 
 	// New in v1.9.2 for gate decision logging
-	EvidenceHash    string `json:"evidence_hash,omitempty"`
-	OverallDecision string `json:"overall_decision,omitempty"`
+	EvidenceHash    string   `json:"evidence_hash,omitempty"`
+	OverallDecision Decision `json:"overall_decision,omitempty"`
 
 	// NEW in v2.2 — CPL: CLI override flags that affected the evaluation
 	CliOverrides map[string]string `json:"cli_overrides,omitempty"`

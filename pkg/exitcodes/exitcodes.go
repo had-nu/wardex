@@ -27,10 +27,6 @@ const (
 	// verification failures (revoked key, trust store drift, invalid sig).
 	IntegrityFailure = 3
 
-	// Tampered is a legacy alias for IntegrityFailure.
-	// Deprecated: use IntegrityFailure instead.
-	Tampered = IntegrityFailure
-
 	// StoreInconsistent indicates a mismatch between the store
 	// file and the audit log (entries missing from the YAML file).
 	StoreInconsistent = 4

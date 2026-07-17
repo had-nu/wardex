@@ -43,7 +43,7 @@ func runVerify(cmd *cobra.Command, args []string) {
 	if err != nil {
 		if errors.Is(err, accept.ErrTampered) {
 			fmt.Fprintf(stderr, "Tampered validation check failed: %v\n", err)
-			exitFunc(exitcodes.Tampered)
+			exitFunc(exitcodes.IntegrityFailure)
 		}
 		if errors.Is(err, accept.ErrStoreInconsistent) {
 			fmt.Fprintf(stderr, "Store trace validation failed: %v\n", err)
@@ -294,7 +294,7 @@ func runActiveExploit(cmd *cobra.Command, args []string) {
 		Timestamp:                     time.Now().UTC(),
 		Event:                         "active-exploit.acknowledged",
 		ConfigHash:                    configHash,
-		OverallDecision:               "block",
+		OverallDecision:               model.DecisionBlock,
 		Status:                        "block",
 		Detail:                        fmt.Sprintf("Active exploitation acknowledged for CVE: %s. Justification: %s", aeCVE, aeJustif),
 		ActivelyExploited:             []string{aeCVE},
@@ -418,7 +418,7 @@ func runList(cmd *cobra.Command, args []string) {
 	if err != nil {
 		if errors.Is(err, accept.ErrTampered) {
 			fmt.Fprintf(stderr, "Tampered acceptance detected: %v\n", err)
-			exitFunc(exitcodes.Tampered)
+			exitFunc(exitcodes.IntegrityFailure)
 		}
 		if errors.Is(err, accept.ErrStoreInconsistent) {
 			fmt.Fprintf(stderr, "Store inconsistent: %v\n", err)

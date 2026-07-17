@@ -64,7 +64,7 @@ func TestEvaluateWritesGateAuditLog(t *testing.T) {
 	if entry.Event != "gate.evaluated" {
 		t.Errorf("Expected event gate.evaluated, got %s", entry.Event)
 	}
-	if entry.OverallDecision != "allow" {
+	if entry.OverallDecision != model.DecisionAllow {
 		t.Errorf("Expected decision allow, got %s", entry.OverallDecision)
 	}
 }
