@@ -71,6 +71,28 @@ func (g *embeddedGleipnir) Submit(ctx context.Context, hash []byte, label string
 	}, nil
 }
 
+func (g *embeddedGleipnir) SubmitAttested(ctx context.Context, hash []byte, label string, reference []byte) (*AnchorResult, error) {
+	var h [32]byte
+	copy(h[:], hash)
+
+	env := SubmitEnvelope{
+		Hash:      hash,
+		Submitter: g.submitter,
+		Label:     label,
+		Reference: reference,
+	}
+
+	_, err := g.engine.Submit(ctx, h, g.submitter, label)
+	if err != nil {
+		return nil, err
+	}
+	_ = env
+	return &AnchorResult{
+		Found: false,
+		Label: label,
+	}, nil
+}
+
 func (g *embeddedGleipnir) Verify(ctx context.Context, hash []byte) (*AnchorResult, error) {
 	var h [32]byte
 	copy(h[:], hash)

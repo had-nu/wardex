@@ -67,12 +67,8 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	requestCmd.Flags().StringVar(&reqExpires, "expires", "", "Data de expiração: ISO 8601 ou relativa (ex: 30d)")
 	requestCmd.Flags().StringVar(&reqTicket, "ticket", "", "Referência externa opcional")
 	requestCmd.Flags().BoolVar(&reqYes, "yes", false, "Salta confirmação interactiva")
-	if err := requestCmd.MarkFlagRequired("report"); err != nil {
-		panic(err)
-	}
-	if err := requestCmd.MarkFlagRequired("accepted-by"); err != nil {
-		panic(err)
-	}
+	_ = requestCmd.MarkFlagRequired("report")
+	_ = requestCmd.MarkFlagRequired("accepted-by")
 
 	listCmd := &cobra.Command{
 		Use:   "list",
@@ -109,15 +105,9 @@ func AddCommands(rootCmd *cobra.Command, configPathPtr *string) {
 	revokeCmd.Flags().StringVar(&revokeID, "id", "", "ID da aceitação (obrigatório)")
 	revokeCmd.Flags().StringVar(&revokeRevokeBy, "revoked-by", "", "Email do responsável (obrigatório)")
 	revokeCmd.Flags().StringVar(&revokeReason, "reason", "", "Motivo da revogação (obrigatório)")
-	if err := revokeCmd.MarkFlagRequired("id"); err != nil {
-		panic(err)
-	}
-	if err := revokeCmd.MarkFlagRequired("revoked-by"); err != nil {
-		panic(err)
-	}
-	if err := revokeCmd.MarkFlagRequired("reason"); err != nil {
-		panic(err)
-	}
+	_ = revokeCmd.MarkFlagRequired("id")
+	_ = revokeCmd.MarkFlagRequired("revoked-by")
+	_ = revokeCmd.MarkFlagRequired("reason")
 
 	checkExpiryCmd := &cobra.Command{
 		Use:   "check-expiry",

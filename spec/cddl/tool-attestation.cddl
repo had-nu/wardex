@@ -1,0 +1,29 @@
+;; 3CP — Cryptographic Chain of Custody Protocol
+;; Tool Provenance Attestation envelope.
+
+tool-attestation = {
+  0: tstr,                     ; tool name
+  1: tstr,                     ; tool version
+  2: bytes,                    ; input_hash (e.g. SHA-256 of input)
+  3: bytes,                    ; output_hash (e.g. SHA-256 of output)
+  4: tstr,                     ; config_hash "sha256:<hex>"
+  5: tdate,                    ; timestamp RFC3339
+  6: tstr,                     ; converted_by (tool identity string)
+}
+
+;; Signed envelope — what the tool actually signs.
+signed-attestation = {
+  attestation: tool-attestation,
+  signatures: { + tstr => bytes },  ; "ed25519:<key-id>" => signature bytes
+}
+
+;; Provenance submission to Gleipnir (reference 3CP implementation).
+provenance-submit = {
+  hash: bytes,                 ; hash being anchored
+  submitter: bytes,            ; UID0 RootID
+  signature: bytes,            ; ed25519 or dilithium signature
+  timestamp: int64,            ; unix epoch
+  label: tstr,                 ; human-readable label
+  ? approver: bytes,           ; approval signature (multi-party)
+  ? reference: bytes,          ; opaque reference (e.g. tool-attestation CBOR)
+}

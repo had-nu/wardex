@@ -2,11 +2,8 @@ package cpl
 
 import (
 	"crypto/sha256"
-	"encoding/json"
 	"fmt"
 	"strings"
-
-	"gopkg.in/yaml.v3"
 )
 
 type Algorithm int
@@ -50,15 +47,7 @@ func ParseAlgorithmPrefix(hash string) (Algorithm, error) {
 }
 
 func canonicalConfig(raw []byte) ([]byte, error) {
-	var data any
-	if err := yaml.Unmarshal(raw, &data); err != nil {
-		return nil, fmt.Errorf("canonical: parse: %w", err)
-	}
-	out, err := json.Marshal(data)
-	if err != nil {
-		return nil, fmt.Errorf("canonical: marshal: %w", err)
-	}
-	return out, nil
+	return canonicalConfigCBOR(raw)
 }
 
 func ComputeConfigHash(raw []byte, algo Algorithm) (string, error) {

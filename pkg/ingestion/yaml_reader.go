@@ -45,10 +45,13 @@ func loadYAML(path string) ([]model.ExistingControl, error) {
 
 	var parsed yamlFormat
 	decoder := yaml.NewDecoder(bytes.NewReader(data))
+	decoder.KnownFields(true)
 	if err := decoder.Decode(&parsed); err != nil || len(parsed.Controls) == 0 {
 		// Try root list format if wrapped format fails or is empty
 		var rootList []yamlExistingControl
-		if err2 := yaml.Unmarshal(data, &rootList); err2 == nil && len(rootList) > 0 {
+		dec2 := yaml.NewDecoder(bytes.NewReader(data))
+		dec2.KnownFields(true)
+		if err2 := dec2.Decode(&rootList); err2 == nil && len(rootList) > 0 {
 			parsed.Controls = rootList
 		} else if err != nil {
 			return nil, fmt.Errorf("parsing YAML: %w", err)

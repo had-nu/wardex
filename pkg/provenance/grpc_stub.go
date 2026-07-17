@@ -7,9 +7,10 @@ package provenance
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 )
 
-func newGRPCAnchorer(_ context.Context, _ string) (Anchorer, error) {
+func newGRPCAnchorer(_ context.Context, _ string, _ *tls.Config) (Anchorer, error) {
 	return nil, fmt.Errorf("grpc provenance driver not available: build with -tags grpc")
 }

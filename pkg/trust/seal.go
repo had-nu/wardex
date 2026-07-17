@@ -71,9 +71,9 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 		return fmt.Errorf("%s", msg)
 	}
 
-	// 4. Build WexState
+	// 4. Build WexState (version 2 — CBOR deterministic signing)
 	state := &WexState{
-		Version:       "1",
+		Version:       "2",
 		SealedAt:      time.Now().UTC().Truncate(time.Second),
 		SealedBy:      signerEntry.Actor,
 		SealedByKeyID: signerEntry.ID,
@@ -82,8 +82,11 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 		Payload:       string(draftData),
 	}
 
-	// 5. Sign
-	msg := SealMessage(state)
+	// 5. Sign (CBOR deterministic)
+	msg, err := SealMessage(state)
+	if err != nil {
+		return fmt.Errorf("config seal: seal message: %w", err)
+	}
 	state.Sig = Sign(priv, msg)
 
 	// 6. Write .wexstate
@@ -92,6 +95,7 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 
 // VerifySeal verifies the integrity of a sealed config against the trust store.
 // Called at the beginning of evaluate, before any access to the payload.
+// Supports version "1" (legacy \n-separated) and "2" (CBOR deterministic).
 func VerifySeal(state *WexState, store *TrustStore, storeRawBytes []byte) error {
 	// 1. Verify the signer key exists and is not revoked
 	key, err := ActiveKey(store, state.SealedByKeyID)
@@ -116,8 +120,20 @@ func VerifySeal(state *WexState, store *TrustStore, storeRawBytes []byte) error 
 		return fmt.Errorf("seal verification: decode pubkey: %w", err)
 	}
 
-	msg := SealMessage(state)
+	// Try version-appropriate seal message
+	msg, err := SealMessage(state)
+	if err != nil {
+		return fmt.Errorf("seal verification: seal message: %w", err)
+	}
 	if err := Verify(pub, msg, state.Sig); err != nil {
+		// Fallback: if version "2" fails, try legacy v1 format
+		if state.IsVersion2() {
+			legacyMsg := SealMessageV1(state)
+			if legacyErr := Verify(pub, legacyMsg, state.Sig); legacyErr != nil {
+				return fmt.Errorf("seal verification: signature invalid — file may have been tampered with")
+			}
+			return nil
+		}
 		return fmt.Errorf("seal verification: signature invalid — file may have been tampered with")
 	}
 

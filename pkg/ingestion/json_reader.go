@@ -4,6 +4,7 @@
 package ingestion
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -42,10 +43,14 @@ func loadJSON(path string) ([]model.ExistingControl, error) {
 	}
 
 	var parsed jsonFormat
-	if err := json.Unmarshal(data, &parsed); err != nil || len(parsed.Controls) == 0 {
+	dec1 := json.NewDecoder(bytes.NewReader(data))
+	dec1.DisallowUnknownFields()
+	if err := dec1.Decode(&parsed); err != nil || len(parsed.Controls) == 0 {
 		// Try root list format if wrapped format fails or is empty
 		var rootList []jsonExistingControl
-		if err2 := json.Unmarshal(data, &rootList); err2 == nil && len(rootList) > 0 {
+		dec2 := json.NewDecoder(bytes.NewReader(data))
+		dec2.DisallowUnknownFields()
+		if err2 := dec2.Decode(&rootList); err2 == nil && len(rootList) > 0 {
 			parsed.Controls = rootList
 		} else if err != nil {
 			return nil, fmt.Errorf("parsing JSON: %w", err)

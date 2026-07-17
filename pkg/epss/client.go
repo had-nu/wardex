@@ -14,6 +14,14 @@ import (
 	"time"
 )
 
+const maxEPSSResponseSize = 1 << 20 // 1 MiB
+
+// Overridable in tests.
+var (
+	firstAPIURL = "https://api.first.org/data/v1/epss"
+	httpClient  = &http.Client{Timeout: 10 * time.Second}
+)
+
 // FirstAPIResponse models the structured response from api.first.org/data/v1/epss
 type FirstAPIResponse struct {
 	Status     string `json:"status"`
@@ -47,8 +55,6 @@ func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]
 	chunkSize := 50 // FIRST API accepts multiple CVEs, let's chunk to avoid URI limits
 	var skippedMalformed, skippedOutOfRange int
 
-	client := &http.Client{Timeout: 10 * time.Second}
-
 	for i := 0; i < len(cves); i += chunkSize {
 		end := i + chunkSize
 		if end > len(cves) {
@@ -57,7 +63,7 @@ func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]
 
 		chunk := cves[i:end]
 		query := strings.Join(chunk, ",")
-		url := fmt.Sprintf("https://api.first.org/data/v1/epss?cve=%s", query)
+		url := fmt.Sprintf("%s?cve=%s", firstAPIURL, query)
 
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
@@ -67,7 +73,7 @@ func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]
 		// User-Agent is good practice for public APIs
 		req.Header.Set("User-Agent", "Wardex/2.1.2 (+https://github.com/had-nu/wardex)")
 
-		resp, err := client.Do(req)
+		resp, err := httpClient.Do(req)
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed executing EPSS request: %w", err)
 		}
@@ -85,7 +91,9 @@ func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]
 		}
 
 		var apiResp FirstAPIResponse
-		if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {
+		decoder := json.NewDecoder(io.LimitReader(resp.Body, maxEPSSResponseSize))
+		decoder.DisallowUnknownFields()
+		if err := decoder.Decode(&apiResp); err != nil {
 			return nil, nil, fmt.Errorf("failed decoding EPSS JSON response: %w", err)
 		}
 

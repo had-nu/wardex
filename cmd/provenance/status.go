@@ -13,7 +13,7 @@ var statusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Show provenance anchor health",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		anchorer, err := getAnchorer()
+		anchorer, err := getAnchorerFn()
 		if err != nil {
 			return err
 		}
