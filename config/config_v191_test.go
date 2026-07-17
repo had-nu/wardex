@@ -6,10 +6,9 @@ import (
 	"testing"
 )
 
-// TestLoadConfigWithRemovedFields garante que YAMLs escritos para v1.9.0,
-// contendo campos removidos em v1.9.1, continuam a carregar sem erro.
-// Os campos removidos eram já silenciosamente ignorados em runtime; este
-// teste codifica essa garantia para evitar regressão futura.
+// TestLoadConfigWithRemovedFields verifica que YAMLs com campos desconhecidos
+// são agora rejeitados devido a KnownFields(true). Antes da v2.3.0, campos
+// removidos eram silenciosamente ignorados.
 func TestLoadConfigWithRemovedFields(t *testing.T) {
 	legacyYAML := `
 organization:
@@ -49,20 +48,8 @@ reporting:
 		t.Fatalf("write legacy fixture: %v", err)
 	}
 
-	cfg, err := Load(path)
-	if err != nil {
-		t.Fatalf("legacy config should load without error, got: %v", err)
-	}
-	if !cfg.ReleaseGate.Enabled {
-		t.Error("ReleaseGate.Enabled should be true after load")
-	}
-	if cfg.ReleaseGate.RiskAppetite != 0.20 {
-		t.Errorf("expected RiskAppetite 0.20, got %v", cfg.ReleaseGate.RiskAppetite)
-	}
-	if cfg.ReleaseGate.WarnAbove != 0.12 {
-		t.Errorf("expected WarnAbove 0.12, got %v", cfg.ReleaseGate.WarnAbove)
-	}
-	if cfg.Reporting.Format != "markdown" {
-		t.Errorf("expected Reporting.Format 'markdown', got %q", cfg.Reporting.Format)
+	_, err := Load(path)
+	if err == nil {
+		t.Fatal("config with unknown fields should be rejected with KnownFields(true)")
 	}
 }
