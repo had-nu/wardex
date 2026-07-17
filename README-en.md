@@ -190,14 +190,6 @@ wardex provenance verify <chain-hash>
 
 ## Risk-Based Release Gate
 
-The gate evaluates each vulnerability with the model:
-
-```
-R(v, α) = (CVSS(v)/10) × EPSS(v) × C(α) × E(α) × (1 − Φ(α))
-```
-
-The result is compared against the `risk_appetite` defined in `wardex-config.yaml`. Three possible outcomes: `ALLOW`, `WARN`, `BLOCK`.
-
 ### Configuration
 
 ```yaml
