@@ -24,7 +24,7 @@ var submitCmd = &cobra.Command{
 			return fmt.Errorf("invalid hex hash: %w", err)
 		}
 
-		anchorer, err := getAnchorer()
+		anchorer, err := getAnchorerFn()
 		if err != nil {
 			return err
 		}

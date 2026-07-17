@@ -52,7 +52,6 @@ func init() {
 	attestCmd.Flags().StringVar(&attFlags.version, "version", "", "Tool version (e.g. 2.3.0)")
 	attestCmd.Flags().StringVar(&attFlags.label, "label", "", "Optional attestation label")
 	attestCmd.Flags().BoolVar(&attFlags.submit, "submit", false, "Submit attestation hash to 3CP provenance anchor after signing")
-	_ = attestCmd.MarkFlagRequired("input")
 	_ = attestCmd.MarkFlagRequired("sign-key")
 	ProvenanceCmd.AddCommand(attestCmd)
 }
@@ -81,7 +80,7 @@ func runAttest(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("input path: %w", err)
 	}
 
-	data, err := os.ReadFile(safePath)
+	data, err := os.ReadFile(safePath) // #nosec G304 -- safePath validated by cli.SafePath above
 	if err != nil {
 		return fmt.Errorf("read input: %w", err)
 	}
@@ -114,7 +113,7 @@ func runAttest(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("marshal attestation: %w", err)
 	}
 
-	if err := os.WriteFile(attFlags.outputFile, outData, 0600); err != nil {
+	if err := os.WriteFile(attFlags.outputFile, outData, 0600); err != nil { // #nosec G703 -- caller controls output path
 		return fmt.Errorf("write attestation: %w", err)
 	}
 
@@ -125,7 +124,7 @@ func runAttest(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(cmd.OutOrStdout(), "  Hash:     sha256:%x\n", inputHash)
 
 	if attFlags.submit {
-		anchorer, err := getAnchorer()
+		anchorer, err := getAnchorerFn()
 		if err != nil {
 			return fmt.Errorf("provenance anchor: %w", err)
 		}

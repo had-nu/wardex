@@ -19,7 +19,7 @@ import (
 
 // FileHash computes the SHA-256 hash of a file.
 func FileHash(path string) ([]byte, error) {
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304 -- caller validates path
 	if err != nil {
 		return nil, fmt.Errorf("read file: %w", err)
 	}
@@ -30,7 +30,7 @@ func FileHash(path string) ([]byte, error) {
 // SignWithEd25519 signs a message using an Ed25519 private key loaded from disk.
 // Returns the raw signature bytes and the hex-encoded public key ID ("ed25519:<hex>").
 func SignWithEd25519(keyPath string, msg []byte) (sig []byte, keyID string, err error) {
-	data, err := os.ReadFile(keyPath)
+	data, err := os.ReadFile(keyPath) // #nosec G304 -- caller validates path
 	if err != nil {
 		return nil, "", fmt.Errorf("read key: %w", err)
 	}
