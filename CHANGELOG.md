@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] — 2026-07-17
+
+### Changed
+
+- **Version bump** to `2.4.1`.
+- **`wardex-config.yaml`**: `provenance.node_id` updated to `wardex-release-v2.4.1`.
+- **README**: Removed the heuristic scoring formula from `README.md` (PT) and `README-en.md` (EN) — the formula was documentation-only and never consumed by the scorer.
+
+### Refactor (Code Health Audit — Phases 1–3)
+
+- **Typed `model.Decision`**: Introduced `model.Decision` type with `DecisionAllow`, `DecisionBlock`, `DecisionWarn` constants. Replaced all raw `"allow"`/`"block"`/`"warn"` string comparisons across `pkg/releasegate`, `pkg/statestore`, `pkg/report`, `cmd/evaluate`, `cmd/art14`, `cmd/aggregate`, `pkg/accept`, and `main.go`.
+- **Dead code removal**: Removed deprecated `exitcodes.Tampered` alias (superseded by `StoreInconsistent` / `Tampered` split since v2.1.2).
+- **Tool relocation**: `cmd/gen-sbom/` moved to `tools/gen-sbom/` to separate build-time tooling from the CLI command tree.
+- **RBAC extraction**: Duplicated RBAC/profile logic extracted into `config.ApplyProfile`; both `main.go` and `evaluate_helpers.go` now use the shared implementation.
+- **Exhaustive switch lint**: All `Decision` switches made exhaustive to satisfy the `exhaustive` linter (zero issues).
+
 ## [2.3.0] — 2026-07-17
 
 ### Added

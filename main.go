@@ -47,7 +47,7 @@ import (
 )
 
 var (
-	Version       = "2.3.0"
+	Version       = "2.4.1"
 	configPath    string
 	outputFormat  string
 	outFile       string

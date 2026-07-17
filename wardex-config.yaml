@@ -8,7 +8,7 @@ provenance:
   enabled: gleipnir-embedded
   options:
     cycle_interval: 3s
-    node_id: "wardex-release-v2.4.0"
+    node_id: "wardex-release-v2.4.1"
 
 acceptance:
   signing_secret_file: ""

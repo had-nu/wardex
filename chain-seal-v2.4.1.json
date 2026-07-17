@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "timestamp": "186345",
+  "total_files": 5,
+  "chain_hash": "65aac744766e960460235fcccbba61034182b5223c47d75b6e0be2a3114f2509",
+  "artifacts": {
+    "CHANGELOG.md": "55afd3a139ab526f883ca3225300280dd498e13d0e34db32bb78aea60620b192",
+    "README-en.md": "087d307772f0c5a93990469f77ccc13eb289c188de865f632d34487c11eb9b08",
+    "README.md": "0a9007db86f1e915c2ef02bf1c2fe69cb3e96bd20dacd1516b24688fab143f93",
+    "wardex": "389b6e0a7dc33e0a1170710811e35959cb2db27cecd89194cba5505dacfb30f7",
+    "wardex-config.yaml": "012609115a1036bae20c3e785e8e9ec52a1698201cc84fcefd49b85533ba746d"
+  }
+}
