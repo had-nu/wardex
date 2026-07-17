@@ -11,10 +11,12 @@ package provenance
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 
 	pb "github.com/had-nu/gleipnir/pkg/server/pb"
@@ -25,11 +27,16 @@ type grpcAnchorer struct {
 	client pb.ProvenanceAnchorClient
 }
 
-func newGRPCAnchorer(ctx context.Context, address string) (*grpcAnchorer, error) {
-	conn, err := grpc.DialContext(ctx, address,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithBlock(),
-	)
+func newGRPCAnchorer(ctx context.Context, address string, tlsConfig *tls.Config) (*grpcAnchorer, error) {
+	var opts []grpc.DialOption
+	if tlsConfig != nil {
+		opts = append(opts, grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)))
+	} else {
+		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	}
+	opts = append(opts, grpc.WithBlock())
+
+	conn, err := grpc.DialContext(ctx, address, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("connecting to provenance anchor: %w", err)
 	}

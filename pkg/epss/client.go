@@ -14,6 +14,8 @@ import (
 	"time"
 )
 
+const maxEPSSResponseSize = 1 << 20 // 1 MiB
+
 // FirstAPIResponse models the structured response from api.first.org/data/v1/epss
 type FirstAPIResponse struct {
 	Status     string `json:"status"`
@@ -85,7 +87,9 @@ func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]
 		}
 
 		var apiResp FirstAPIResponse
-		if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {
+		decoder := json.NewDecoder(io.LimitReader(resp.Body, maxEPSSResponseSize))
+		decoder.DisallowUnknownFields()
+		if err := decoder.Decode(&apiResp); err != nil {
 			return nil, nil, fmt.Errorf("failed decoding EPSS JSON response: %w", err)
 		}
 
