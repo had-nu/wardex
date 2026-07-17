@@ -13,6 +13,9 @@ import (
 
 var configPath string
 
+// Override in tests to inject a mock anchorer.
+var getAnchorerFn = getAnchorerDefault
+
 var ProvenanceCmd = &cobra.Command{
 	Use:   "provenance",
 	Short: "Cryptographic provenance anchoring",
@@ -39,7 +42,7 @@ func init() {
 	ProvenanceCmd.AddCommand(sealCmd)
 }
 
-func getAnchorer() (provenance.Anchorer, error) {
+func getAnchorerDefault() (provenance.Anchorer, error) {
 	cfg, err := config.Load(configPath)
 	if err != nil {
 		return nil, err

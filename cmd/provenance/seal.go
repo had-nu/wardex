@@ -112,7 +112,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
 	fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
 
-	anchorer, err := getAnchorer()
+	anchorer, err := getAnchorerFn()
 	if err != nil {
 		fmt.Fprintf(cmd.ErrOrStderr(), "Warning: provenance anchor unavailable: %v\n", err)
 		fmt.Fprintf(cmd.ErrOrStderr(), "  Seal saved locally; submit with: wardex provenance submit %s\n", chainHashHex)
