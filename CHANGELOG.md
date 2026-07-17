@@ -4,6 +4,79 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] — 2026-07-17
+
+### Added
+
+- **CDDL schemas** (`spec/cddl/`): Formal schema definitions for CPL audit entries
+  (`cpl-entry.cddl`), WexState sealed configs (`wexstate.cddl`), and 3CP tool
+  provenance attestations (`tool-attestation.cddl`). These are both design
+  artifacts and the foundation for conformance testing.
+  ([spec/cddl/](spec/cddl/))
+
+- **CBOR deterministic encoding** in CPL canonicalization: `canonicalConfig()` now
+  uses CBOR Core Deterministic Encoding (RFC 8949 §4.2.3) via
+  `github.com/fxamacker/cbor/v2` instead of `encoding/json`. This guarantees
+  byte-identical serialization across implementations for the same semantic data.
+  (`internal/cpl/hash.go`, `internal/cpl/cbor.go`)
+
+- **WexState v2** (`version: "2"`): `SealMessage()` now produces CBOR
+  deterministic bytes instead of `\n`-separated text. The `.wexstate` file format
+  remains YAML for human readability; only the signed message changes. Timestamps
+  use CBOR RFC3339 encoding. (`pkg/trust/wexstate.go`, `pkg/trust/wexstate_cbor.go`)
+
+- **`pkg/attest/` — Tool Attestation package**: Defines 3CP tool provenance
+  envelopes with CBOR deterministic signing and verification. New `ToolAttestation`
+  struct carries tool identity, input/output hashes, config hash, and timestamp.
+  `SignedAttestation` wraps the attestation with Ed25519 signatures.
+  (`pkg/attest/attestation.go`, `spec/cddl/tool-attestation.cddl`)
+
+- **WexState v1→v2 fallback**: `VerifySeal` tries CBOR deterministic verification
+  first, falls back to legacy `\n`-separated format for v1 states. This enables
+  safe migration without breaking existing `.wexstate` files. (`pkg/trust/seal.go`)
+
+- **`IsVersion2()` method** on WexState for programmatic version detection.
+  (`pkg/trust/wexstate.go`)
+
+- **`SealMessageV1()` legacy function**: Preserved for verification fallback.
+  (`pkg/trust/wexstate.go`)
+
+### Changed
+
+- **BREAKING**: `SealMessage()` now returns `([]byte, error)` instead of `[]byte`.
+  Callers updated: `SealConfig()` and `VerifySeal()` in `pkg/trust/seal.go`.
+
+- **BREAKING**: CPL config hash values changed due to CBOR deterministic encoding
+  replacing JSON. Existing CPL audit logs with `config_hash` computed before v2.3.0
+  will fail link verification if the config is re-hashed. Migrate existing audit
+  logs by re-hashing configs with the new canonicalizer.
+
+- **`go.mod`**: `github.com/fxamacker/cbor/v2 v2.9.0` promoted from indirect to
+  direct dependency.
+
+### Security
+
+- **Canonicalization hardening**: CBOR deterministic encoding resolves edge cases
+  that JSON canonicalization left open (float/int representation, unicode
+  normalization, map key ordering guarantees). The same logical config always
+  produces the same signed bytes across any CBOR implementation.
+
+- **3CP provenance attestation**: Signed tool attestation provides cryptographic
+  non-repudiation for the `converted_by` provenance chain, upgrading from a
+  best-effort string field to a verifiable cryptographically-bound envelope.
+  The `Anchorer.SubmitAttested()` method anchors hash + CBOR attestation.
+
+- **3CP protocol abstraction**: `Anchorer` interface is purely 3CP-agnostic.
+  Gleipnir is one backend among equals (embedded, grpc, noop). The attestation
+  format (`spec/cddl/tool-attestation.cddl`) is the canonical 3CP envelope,
+  independent of any specific implementation. (`pkg/provenance/anchorer.go`,
+  `pkg/provenance/factory.go`)
+
+### Migration Notes
+
+See `internal/doc/CBOR_MIGRATION_v2.3.0.md` for detailed migration instructions,
+including verifying test fixtures and updating CI pipelines.
+
 ## [2.2.2] — 2026-07-06
 
 ### Security (Cordyceps Hardening — 2026-06-29)

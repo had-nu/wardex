@@ -88,7 +88,7 @@ func TestCanonicalConfigEnvVarsNotExpanded(t *testing.T) {
 func TestCanonicalConfigKnownVector(t *testing.T) {
 	input := []byte("risk_appetite: low\nthresholds:\n  critical: 0\n  high: 2\n")
 
-	const expected = "sha256:9fb10556b293b483c9ad27d8e6f2b3f1168368169ebdea3502006de93b5820ea"
+	const expected = "sha256:64110201d1499240e24d9aaf01b301267342cf74f230e8cc78b1aa3885480c34"
 
 	got, err := cpl.ComputeConfigHash(input, cpl.AlgoSHA256)
 	if err != nil {

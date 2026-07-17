@@ -56,8 +56,28 @@ func SaveWexState(path string, state *WexState) error {
 }
 
 // SealMessage computes the canonical message for signing a WexState.
-// The message is: Version + Payload + SealedAt(RFC3339) + SealedBy + TrustStoreRef + TrustStoreSig.
-func SealMessage(state *WexState) []byte {
+// Version "1": legacy \n-separated format.
+// Version "2+": CBOR deterministic encoding (Core Deterministic Encoding, RFC 8949 §4.2.3).
+func SealMessage(state *WexState) ([]byte, error) {
+	switch state.Version {
+	case "1":
+		msg := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s",
+			state.Version,
+			state.Payload,
+			state.SealedAt.UTC().Format(time.RFC3339),
+			state.SealedBy,
+			state.TrustStoreRef,
+			state.TrustStoreSig,
+		)
+		return []byte(msg), nil
+	default:
+		return sealMessageCBOR(state)
+	}
+}
+
+// SealMessageV1 computes the legacy \n-separated canonical message.
+// Provided for backward compatibility during migration.
+func SealMessageV1(state *WexState) []byte {
 	msg := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s",
 		state.Version,
 		state.Payload,
@@ -67,6 +87,11 @@ func SealMessage(state *WexState) []byte {
 		state.TrustStoreSig,
 	)
 	return []byte(msg)
+}
+
+// IsVersion2 returns true if the WexState uses CBOR deterministic signing.
+func (s *WexState) IsVersion2() bool {
+	return s.Version != "" && s.Version != "1"
 }
 
 // pendingApprovalSentinel is the magic string that blocks config sealing.

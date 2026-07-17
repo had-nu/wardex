@@ -62,9 +62,27 @@ wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./co
 
 ---
 
-## What's New — v2.4.0
+## What's New — v2.3.0 / v2.4.0
 
-**EU AI Act Framework (31 controlos):**
+**CBOR Deterministic Canonicalization (v2.3.0):**
+- Toda a canonicalização para assinatura migrou de formatos ad-hoc para CBOR
+  Core Deterministic Encoding (RFC 8949 §4.2.3) via `fxamacker/cbor/v2`
+- CPL config hash, WexState seal message, e tool attestation usam o mesmo
+  mecanismo determinístico, garantindo byte-identicidade entre plataformas
+
+**CDDL Schemas (v2.3.0):**
+- `spec/cddl/` define formalmente CPL audit entries, WexState envelopes,
+  e 3CP tool attestations em CDDL (RFC 8610)
+- Servem como fonte da verdade para serialização e confluência entre
+  implementações
+
+**3CP Tool Provenance Attestation (v2.3.0):**
+- `pkg/attest/` — atestação Ed25519 + CBOR determinístico para provenance
+  de ferramentas (grype, sbom, kev)
+- Interface `Anchorer` abstrai o backend 3CP (Gleipnir embedded, gRPC, noop)
+- `--attest` flag nos converters + `wardex provenance attest` CLI
+
+**EU AI Act Framework (v2.4.0):**
 - Catálogo completo do Regulamento (UE) 2024/1689: práticas proibidas, gestão de riscos, governação de dados, documentação técnica, transparência, supervisão humana, exatidão/solidez/cibersegurança, obrigações de prestadores e implantadores, avaliação de impacto sobre direitos fundamentais, GPAI, acompanhamento pós-comercialização, comunicação de incidentes
 - Usar: `wardex --framework eu_ai_act ./frameworks/eu_ai_act/*.yml`
 
@@ -177,8 +195,8 @@ wardex provenance verify <chain-hash>
 | `wardex enrich epss` | Enriquece vulnerabilidades com dados EPSS |
 | `wardex accept request/verify/list` | Gestão de aceitações de risco |
 | `wardex art14 list/show/verify` | Ciclo de vida do artefacto CRA Article 14 |
-| `wardex provenance seal/submit/verify/status` | Proveniência criptográfica com Gleipnir |
-| `wardex config hash/seal` | CPL e sealed config |
+| `wardex provenance seal/submit/attest/verify/status` | Proveniência criptográfica 3CP com Gleipnir |
+| `wardex config hash/seal` | CPL e sealed config (CBOR determinístico v2.3.0+) |
 | `wardex audit verify-chain/verify-link` | Verificação do audit log encadeado |
 | `wardex trust init/add` | Gestão do trust store |
 | `wardex keygen` | Geração de chaves Ed25519 |
@@ -331,9 +349,11 @@ wardex --framework eu_ai_act ./frameworks/eu_ai_act/*.yml
 wardex --framework eu_ai_act --output json ./frameworks/eu_ai_act/*.yml
 ```
 
-### Proveniência com Gleipnir
+### Proveniência 3CP com Gleipnir
 
-Cada release pode ser selado criptograficamente com o Gleipnir embedded consensus engine:
+Cada release pode ser selado criptograficamente com o Gleipnir embedded consensus engine.
+O Wardex abstrai o backend 3CP através da interface `Anchorer` — Gleipnir é a referência,
+mas qualquer motor 3CP compatível funciona.
 
 ```bash
 # Selar artefactos de release
@@ -344,6 +364,12 @@ wardex provenance seal \
 
 # Ancorar commit de tag
 wardex provenance submit $(git rev-parse v2.4.0) --label "git-tag-v2.4.0"
+
+# Atestar provenance de ferramenta (v2.3.0+)
+wardex provenance attest input.txt --tool my-scanner --version 1.0 --sign-key key.wex
+
+# Converter e atestar num passo
+wardex convert grype grype-output.json --attest key.wex
 
 # Verificar estado da cadeia
 wardex provenance status
@@ -359,7 +385,7 @@ Todas as chaves Ed25519 são armazenadas em `~/.crypto/` com subdiretórios por 
 
 ```
 ~/.crypto/
-├── provenance/          # Assinatura de manifestos de provenance
+├── provenance/          # Assinatura de manifestos de provenance + atestações 3CP
 │   ├── signing.key      # Ed25519 privada (mode 0400)
 │   └── signing.key.pub  # Ed25519 pública
 └── trust/               # Sistema de confiança wardex
@@ -370,7 +396,7 @@ Todas as chaves Ed25519 são armazenadas em `~/.crypto/` com subdiretórios por 
 
 ### Verificação de Provenance
 
-Para releases recentes (v2.4.0+), usar o Gleipnir embedded:
+Para releases recentes (v2.3.0+), usar o Gleipnir embedded com CBOR deterministic attestation:
 
 ```bash
 # Verificar chain seal de release
@@ -378,6 +404,9 @@ wardex provenance verify <chain-hash>
 
 # Verificar estado da cadeia
 wardex provenance status
+
+# Verificar atestação de ferramenta
+# (o .attest é CBOR determinístico, verificável com qualquer implementação 3CP)
 ```
 
 Para releases anteriores (v2.2.2), a chave pública abaixo permite verificar o manifesto de proveniência:
@@ -391,16 +420,6 @@ Para releases anteriores (v2.2.2), a chave pública abaixo permite verificar o m
 > ```
 > sha256:6f972edf99f5457f8fb13668c529f4343dab7a76d20b67ea746ebdf54d910fee
 > ```
-
-```bash
-# Descarregar o manifesto assinado do release
-gh release download v2.2.2 --pattern "provenance-manifest*"
-
-# Verificar (requer o binário immutable-provenance da branch v2.3.0)
-immutable-provenance verify \
-  --manifest provenance-manifest-v2.2.2-signed.yaml \
-  --dir /caminho/para/wardex-v2.2.2
-```
 
 ### Trust Store & Sealed Config (WexState)
 
@@ -488,11 +507,15 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 
 - [Arquitectura e funcionamento interno](doc/architecture/TECHNICAL_VIEW.md)
 - [Contexto de negócio e o problema do gate binário](doc/architecture/BUSINESS_VIEW.md)
+- [Arquitectura Criptográfica (CBOR, CDDL, 3CP)](doc/architecture/CRYPTO_ARCHITECTURE.md)
+- [REC + Provenance — Plano de Mitigação](doc/architecture/REC_PROVENANCE_ENHANCEMENT.md)
 - [Playbook — casos de uso com comandos completos](doc/operations/WARDEX_PLAYBOOK.md)
 - [Governação — Trust Store & Sealed Config Playbook](doc/operations/WARDEX_TRUST_PLAYBOOK.md)
 - [Integração com GitHub Actions](doc/operations/github-actions-integration.md)
 - [Helm chart (referência)](deploy/helm/wardex/)
 - [Exit codes](doc/operations/EXIT_CODES.md)
+- [Migração CBOR v2.3.0](internal/doc/CBOR_MIGRATION_v2.3.0.md)
+- [Esquemas CDDL](spec/cddl/)
 - [Ambiente de desenvolvimento (docker-compose)](docker-compose.yml)
 - [CHANGELOG](CHANGELOG.md)
 - [Contribuir](CONTRIBUTING.md)

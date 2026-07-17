@@ -9,6 +9,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/had-nu/wardex/v2/internal/cpl"
+	"github.com/had-nu/wardex/v2/pkg/attest"
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/sboms"
@@ -17,6 +19,7 @@ import (
 )
 
 var sbomOutFile string
+var sbomAttestKey string
 
 var SbomCmd = &cobra.Command{
 	Use:   "sbom <input.[json|xml]>",
@@ -27,6 +30,7 @@ var SbomCmd = &cobra.Command{
 
 func init() {
 	SbomCmd.Flags().StringVarP(&sbomOutFile, "output", "o", "wardex-vulns.yaml", "Output file for Wardex YAML")
+	SbomCmd.Flags().StringVar(&sbomAttestKey, "attest", "", "Path to Ed25519 private key for 3CP tool attestation signing")
 }
 
 // peekSbomFormat attempts a naive peek into the JSON structure to determine
@@ -105,13 +109,68 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	if sbomOutFile == "stdout" || sbomOutFile == "-" {
+	outputPath := sbomOutFile
+	if outputPath == "stdout" || outputPath == "-" {
 		fmt.Print(string(yamlData))
 	} else {
-		if err := os.WriteFile(sbomOutFile, yamlData, 0600); err != nil {
+		if err := os.WriteFile(outputPath, yamlData, 0600); err != nil {
 			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), sbomOutFile)
+		fmt.Printf("Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), outputPath)
 	}
+
+	if sbomAttestKey != "" && outputPath != "stdout" && outputPath != "-" {
+		if err := attestSBOM(inFile, outputPath, sbomAttestKey); err != nil {
+			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+		}
+	}
+}
+
+func attestSBOM(inputFile, outputFile, keyPath string) error {
+	inHash, err := attest.FileHash(inputFile)
+	if err != nil {
+		return fmt.Errorf("hash input: %w", err)
+	}
+	outHash, err := attest.FileHash(outputFile)
+	if err != nil {
+		return fmt.Errorf("hash output: %w", err)
+	}
+
+	a := attest.New("wardex-convert/sbom", "2.3.0").
+		SetInputHash(inHash).
+		SetOutputHash(outHash).
+		SetConvertedBy("wardex-convert/sbom")
+
+	signer := func(msg []byte) ([]byte, error) {
+		sig, _, err := attest.SignWithEd25519(keyPath, msg)
+		return sig, err
+	}
+
+	_, keyID, err := attest.SignWithEd25519(keyPath, []byte("probe"))
+	if err != nil {
+		return fmt.Errorf("load key: %w", err)
+	}
+
+	signed, err := a.Sign(signer, keyID)
+	if err != nil {
+		return fmt.Errorf("sign: %w", err)
+	}
+
+	attestPath := outputFile + ".attest"
+	out, err := yaml.Marshal(signed)
+	if err != nil {
+		return fmt.Errorf("marshal attestation: %w", err)
+	}
+	if err := os.WriteFile(attestPath, out, 0600); err != nil {
+		return fmt.Errorf("write attestation: %w", err)
+	}
+
+	cfgHash, err := cpl.ComputeConfigHash(outHash, cpl.AlgoSHA256)
+	if err == nil {
+		a.SetConfigHash(cfgHash)
+	}
+
+	fmt.Fprintf(os.Stderr, "[PROVENANCE] Signed attestation written to %s\n", attestPath)
+	return nil
 }

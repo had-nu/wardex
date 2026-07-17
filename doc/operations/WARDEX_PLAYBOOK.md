@@ -1,8 +1,8 @@
-# Wardex Playbook v2.2.0
+# Wardex Playbook v2.3.0
 
-Guia operacional para release gates baseados em risco, análise de gaps de conformidade, e notificação CRA Article 14.
+Guia operacional para release gates baseados em risco, análise de gaps de conformidade, notificação CRA Article 14, e provenance 3CP.
 
-**Versão:** v2.2.0 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
+**Versão:** v2.3.0 · **Público:** DevSecOps, CISOs, Compliance Engineers, Platform Teams
 
 ---
 
@@ -413,9 +413,15 @@ wardex config hash --config wardex-config.yaml --algorithm blake3
 # blake3:fe7c61a3e9f4b188d1b58d4e0c0d98b53f3decd04deff13dc517028ddcf34b02
 ```
 
-O hash é calculado sobre o conteúdo YAML canónico (chaves ordenadas, comentários removidos,
-whitespace normalizado). Isto garante que configurações semanticamente idênticas produzem
-o mesmo hash independentemente de formatação.
+O hash é calculado sobre o conteúdo canónico da configuração. A partir da v2.3.0,
+a canonicalização usa **CBOR Core Deterministic Encoding** (RFC 8949 §4.2.3) em
+vez de `json.Marshal`, garantindo byte-identicidade entre implementações em
+diferentes linguagens.
+
+Nota sobre WexState: o ficheiro `.wexstate` mantém-se YAML para legibilidade humana.
+Apenas o campo `seal_message` (a mensagem assinada) muda de formato conforme a
+versão — `\n`-separado na v1, CBOR determinístico na v2. A verificação tenta v2
+primeiro com fallback para v1.
 
 ### 6.5.2. Verificar a hash chain do audit log
 
@@ -482,6 +488,66 @@ notifications:
 
 ---
 
+## 6.6. 3CP Tool Provenance Attestation (v2.3.0)
+
+O Wardex suporta atestação de provenance de ferramentas segundo o protocolo 3CP
+(Cryptographic Chain of Custody Protocol). A assinatura usa **CBOR determinístico**
++ **Ed25519**, sem dependência directa de nenhuma implementação 3CP específica
+(Gleipnir é a referência, Carcosa é 3CP+ZKP).
+
+### 6.6.1. Atestar uma conversão
+
+```bash
+# Converter e atestar num passo
+wardex convert grype grype-output.json --attest ~/.wardex/signing-key.wex
+# Produz: vulns.yaml + vulns.yaml.attest
+
+wardex convert sbom bom.json --attest ~/.wardex/signing-key.wex
+# Produz: sbom.yaml + sbom.yaml.attest
+
+wardex convert kev --input kev.json --attest ~/.wardex/signing-key.wex
+# Produz: kev.yaml + kev.yaml.attest
+```
+
+### 6.6.2. Atestar standalone
+
+```bash
+wardex provenance attest input.txt \
+  --tool "my-scanner" \
+  --version "1.0" \
+  --sign-key ~/.wardex/signing-key.wex
+```
+
+### 6.6.3. Submeter atestação para 3CP
+
+```bash
+# Com Gleipnir embedded
+wardex provenance attest input.txt --sign-key key.wex --submit
+
+# Com servidor gRPC (requer build tag grpc)
+go build -tags grpc -o wardex .
+wardex provenance attest input.txt --sign-key key.wex --submit
+```
+
+### 6.6.4. Formato do atestado
+
+O ficheiro `.attest` contém CBOR determinístico com:
+
+| Campo | Conteúdo |
+|-------|----------|
+| `tool_id` | Identificador da ferramenta |
+| `tool_version` | Versão da ferramenta |
+| `input_hash` | SHA-256 do ficheiro de input |
+| `output_hash` | SHA-256 do ficheiro de output |
+| `config_hash` | SHA-256 da configuração em vigor |
+| `timestamp` | Timestamp RFC 3339 |
+
+O envelope é assinado com Ed25519 e inclui a chave pública para verificação.
+
+Para verificação externa, usar o schema CDDL em `spec/cddl/tool-attestation.cddl`.
+
+---
+
 ## 7. Risk Acceptance & Audit Chain
 
 Quando o gate bloqueia e existe caso de negócio para prosseguir:
@@ -508,7 +574,7 @@ Aceitações são assinadas com HMAC-SHA256 e registadas em log append-only (JSO
 
 ## 8. Governance: Trust Store & Sealed Config
 
-Para conformidade DORA e cadeias de custódia não-repudiáveis, o Wardex permite selar as políticas de risco num envelope criptográfico assinado (`.wexstate`).
+Para conformidade DORA e cadeias de custódia não-repudiáveis, o Wardex permite selar as políticas de risco num envelope criptográfico assinado (`.wexstate`). A partir da v2.3.0, a selagem usa **CBOR determinístico** (RFC 8949 §4.2.3); versões anteriores usavam formato `\n`-separado. A verificação tenta CBOR v2 primeiro com fallback para v1.
 
 ### Gerar chaves
 

@@ -1,0 +1,24 @@
+;; Wardex Sealed Config (WexState) — CDDL Schema
+;; Version 2 with CBOR deterministic signing.
+
+wexstate = {
+  version: tstr,               ; "1" (legacy) or "2" (CBOR deterministic)
+  sealed_at: tdate,            ; RFC3339 UTC
+  sealed_by: tstr,             ; actor email
+  sealed_by_key_id: tstr,      ; KeyEntry.ID
+  trust_store_ref: tstr,       ; URL or path
+  trust_store_sig: tstr,       ; "sha256:<hex>"
+  payload: tstr,               ; YAML content (human-readable)
+  ? sig: tstr,                 ; "ed25519sig:<base64>"
+}
+
+;; The message actually signed in version 2.
+;; Encoded as CBOR with Core Deterministic Encoding (RFC 8949 §4.2.3).
+seal-message-v2 = {
+  0: tstr,                     ; version
+  1: bytes,                    ; payload_cbor — CBOR deterministic of config
+  2: tdate,                    ; sealed_at — RFC3339
+  3: tstr,                     ; sealed_by
+  4: tstr,                     ; trust_store_ref
+  5: tstr,                     ; trust_store_sig
+}
