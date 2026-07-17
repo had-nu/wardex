@@ -204,38 +204,8 @@ func runWardex(cmd *cobra.Command, args []string) {
 		cfg = &config.Config{}
 	}
 
-	if profileName != "" {
-		if p, ok := cfg.Profiles[profileName]; ok {
-			actor := os.Getenv("WARDEX_ACTOR")
-			if actor == "" {
-				actor = os.Getenv("GITHUB_ACTOR")
-			}
-			if actor == "" {
-				actor = os.Getenv("USER")
-			}
-
-			allowed := false
-			if len(p.AllowedActors) == 0 {
-				allowed = true // Fallback to open access for legacy configs
-			} else {
-				for _, a := range p.AllowedActors {
-					if a == "*" || a == actor {
-						allowed = true
-						break
-					}
-				}
-			}
-
-			if !allowed {
-				fmt.Fprintf(os.Stderr, "[RBAC VIOLATION] Actor '%s' is not authorized for profile '%s'!\n[RBAC ENFORCEMENT] Override rejected. Falling back to stict baseline configuration.\n", actor, profileName)
-			} else {
-				cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
-				cfg.ReleaseGate.WarnAbove = p.WarnAbove
-				fmt.Fprintf(os.Stderr, "[INFO] RBAC Verified. Loaded profile '%s' for actor '%s' (RiskAppetite: %.2f, WarnAbove: %.2f)\n", profileName, actor, p.RiskAppetite, p.WarnAbove)
-			}
-		} else {
-			fmt.Fprintf(os.Stderr, "Warning: Profile '%s' not found in config. Using defaults.\n", profileName)
-		}
+	if msg := config.ApplyProfile(cfg, profileName, os.Stderr); msg != "" {
+		fmt.Fprintf(os.Stderr, "[INFO] %s\n", msg)
 	}
 
 	extControls, err := ingestion.LoadMany(args)
@@ -378,7 +348,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 		gateReport := rg.Evaluate(vulnsFormat.Vulnerabilities)
 		rep.Gate = &gateReport
 		switch gateReport.OverallDecision {
-		case "block":
+		case model.DecisionBlock:
 			gateFailed = true
 			missingEpss := 0
 			for _, v := range vulnsFormat.Vulnerabilities {
@@ -390,8 +360,9 @@ func runWardex(cmd *cobra.Command, args []string) {
 				fmt.Fprintf(os.Stderr, "\n[HINT] %d vulnerabilities lacked EPSS scores and defaulted to worst-case (1.0).\n", missingEpss)
 				fmt.Fprintf(os.Stderr, "       Run 'wardex enrich epss %s' to fetch real probabilities from FIRST.org and sign the enrichment.\n", gateFile)
 			}
-		case "warn":
+		case model.DecisionWarn:
 			fmt.Fprintf(os.Stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
+		case model.DecisionAllow:
 		}
 	}
 

@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"testing"
 	"time"
+
+	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
 func TestNewStore(t *testing.T) {
@@ -54,7 +56,7 @@ func TestSaveAndLoadState(t *testing.T) {
 	}
 
 	state := EmptyState()
-	state.LastDecision = "block"
+	state.LastDecision = model.DecisionBlock
 	state.LastRisk = 0.75
 	state.RunCount = 5
 
@@ -66,7 +68,7 @@ func TestSaveAndLoadState(t *testing.T) {
 	if err != nil {
 		t.Fatalf("LoadState() error = %v", err)
 	}
-	if loaded.LastDecision != "block" {
+	if loaded.LastDecision != model.DecisionBlock {
 		t.Errorf("loaded.LastDecision = %q, want %q", loaded.LastDecision, "block")
 	}
 	if loaded.LastRisk != 0.75 {
@@ -84,7 +86,7 @@ func TestRecordDecision(t *testing.T) {
 		t.Fatalf("New() error = %v", err)
 	}
 
-	err = store.RecordDecision("allow", 0.1, 10, 0, nil)
+	err = store.RecordDecision(model.DecisionAllow, 0.1, 10, 0, nil)
 	if err != nil {
 		t.Fatalf("RecordDecision() error = %v", err)
 	}
@@ -93,7 +95,7 @@ func TestRecordDecision(t *testing.T) {
 	if err != nil {
 		t.Fatalf("LoadState() error = %v", err)
 	}
-	if state.LastDecision != "allow" {
+	if state.LastDecision != model.DecisionAllow {
 		t.Errorf("state.LastDecision = %q, want %q", state.LastDecision, "allow")
 	}
 	if state.RunCount != 1 {
@@ -112,12 +114,12 @@ func TestRecordDecisionMultiple(t *testing.T) {
 	}
 
 	decisions := []struct {
-		decision string
+		decision model.Decision
 		risk     float64
 	}{
-		{"allow", 0.1},
-		{"warn", 0.5},
-		{"block", 0.9},
+		{model.DecisionAllow, 0.1},
+		{model.DecisionWarn, 0.5},
+		{model.DecisionBlock, 0.9},
 	}
 
 	for _, d := range decisions {
@@ -133,7 +135,7 @@ func TestRecordDecisionMultiple(t *testing.T) {
 	if state.RunCount != 3 {
 		t.Errorf("state.RunCount = %d, want 3", state.RunCount)
 	}
-	if state.LastDecision != "block" {
+	if state.LastDecision != model.DecisionBlock {
 		t.Errorf("state.LastDecision = %q, want %q", state.LastDecision, "block")
 	}
 	if len(state.Trend) != 3 {
@@ -150,7 +152,7 @@ func TestHistory(t *testing.T) {
 
 	// Record some decisions
 	for i := 0; i < 5; i++ {
-		if err := store.RecordDecision("allow", 0.1, 10, 0, nil); err != nil {
+		if err := store.RecordDecision(model.DecisionAllow, 0.1, 10, 0, nil); err != nil {
 			t.Fatalf("RecordDecision() error = %v", err)
 		}
 	}
@@ -174,7 +176,7 @@ func TestTrendAnalysis(t *testing.T) {
 	// Record decisions with increasing risk
 	risks := []float64{0.1, 0.2, 0.3, 0.4, 0.5}
 	for _, r := range risks {
-		if err := store.RecordDecision("allow", r, 10, 0, nil); err != nil {
+		if err := store.RecordDecision(model.DecisionAllow, r, 10, 0, nil); err != nil {
 			t.Fatalf("RecordDecision() error = %v", err)
 		}
 	}
@@ -200,7 +202,7 @@ func TestCleanup(t *testing.T) {
 	}
 
 	// Record a decision
-	if err := store.RecordDecision("allow", 0.1, 10, 0, nil); err != nil {
+	if err := store.RecordDecision(model.DecisionAllow, 0.1, 10, 0, nil); err != nil {
 		t.Fatalf("RecordDecision() error = %v", err)
 	}
 
@@ -237,7 +239,7 @@ func TestVerifyChain(t *testing.T) {
 
 	// Record some decisions to build chain
 	for i := 0; i < 3; i++ {
-		if err := store.RecordDecision("allow", 0.1, 10, 0, nil); err != nil {
+		if err := store.RecordDecision(model.DecisionAllow, 0.1, 10, 0, nil); err != nil {
 			t.Fatalf("RecordDecision() error = %v", err)
 		}
 	}
@@ -319,7 +321,7 @@ func TestHistoryCount(t *testing.T) {
 	}
 
 	// Record a decision
-	if err := store.RecordDecision("allow", 0.1, 10, 0, nil); err != nil {
+	if err := store.RecordDecision(model.DecisionAllow, 0.1, 10, 0, nil); err != nil {
 		t.Fatalf("RecordDecision() error = %v", err)
 	}
 
@@ -386,7 +388,7 @@ func TestTrendPointSerialization(t *testing.T) {
 	state.Trend = append(state.Trend, TrendPoint{
 		Date:      now,
 		Risk:      0.5,
-		Decision:  "warn",
+		Decision:  model.DecisionWarn,
 		VulnCount: 42,
 	})
 

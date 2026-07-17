@@ -13,6 +13,49 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// getActor resolves the actor identity from environment variables.
+func getActor() string {
+	if a := os.Getenv("WARDEX_ACTOR"); a != "" {
+		return a
+	}
+	if a := os.Getenv("GITHUB_ACTOR"); a != "" {
+		return a
+	}
+	return os.Getenv("USER")
+}
+
+// ApplyProfile applies an RBAC profile override to the config.
+// If the profile exists and the actor is authorized, the config's gate thresholds
+// are overridden. Returns a descriptive message for CLI output.
+func ApplyProfile(cfg *Config, profileName string, stderr *os.File) string {
+	if profileName == "" {
+		return ""
+	}
+
+	p, ok := cfg.Profiles[profileName]
+	if !ok {
+		return fmt.Sprintf("Warning: Profile %q not found. Using defaults.", profileName)
+	}
+
+	actor := getActor()
+	allowed := len(p.AllowedActors) == 0
+	for _, a := range p.AllowedActors {
+		if a == "*" || a == actor {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		fmt.Fprintf(stderr, "[RBAC VIOLATION] Actor %q is not authorized for profile %q!\n[RBAC ENFORCEMENT] Override rejected. Falling back to strict baseline configuration.\n", actor, profileName)
+		return ""
+	}
+
+	cfg.ReleaseGate.RiskAppetite = p.RiskAppetite
+	cfg.ReleaseGate.WarnAbove = p.WarnAbove
+	return fmt.Sprintf("RBAC Verified. Profile %q loaded (RiskAppetite: %.2f)", profileName, p.RiskAppetite)
+}
+
 type ReleaseGate struct {
 	Enabled              bool                        `yaml:"enabled"`
 	Mode                 string                      `yaml:"mode"` // "any" | "aggregate"

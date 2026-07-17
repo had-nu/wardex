@@ -53,20 +53,29 @@ type RiskBreakdown struct {
 	FinalReleaseRisk   float64
 }
 
+// Decision is the result of a gate evaluation.
+type Decision string
+
+const (
+	DecisionAllow Decision = "allow"
+	DecisionBlock Decision = "block"
+	DecisionWarn  Decision = "warn"
+)
+
 // ReleaseDecision representa o resultado da avaliação de uma vulnerabilidade.
 type ReleaseDecision struct {
 	Vulnerability Vulnerability
 	ReleaseRisk   float64
 	RiskAppetite  float64
-	Decision      string // "block" | "allow" | "warn"
+	Decision      Decision
 	Breakdown     RiskBreakdown
 	AuditTrail    string // Texto legível para auditoria
 }
 
 // GateReport agrega todas as decisões para um conjunto de vulnerabilidades.
 type GateReport struct {
-	OverallDecision   string // "block" | "allow"
-	GateMaturityLevel int    // 1–5, inferido dos campos preenchidos
+	OverallDecision   Decision
+	GateMaturityLevel int // 1–5, inferido dos campos preenchidos
 	Decisions         []ReleaseDecision
 	BlockedCount      int
 	AllowedCount      int

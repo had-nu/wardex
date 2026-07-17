@@ -158,7 +158,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		renderGateTable(w, gateReport, cfg.ReleaseGate.RiskAppetite, cfg.ReleaseGate.WarnAbove)
 	}
 
-	if gateReport.OverallDecision == "warn" && !suppressTable {
+	if gateReport.OverallDecision == model.DecisionWarn && !suppressTable {
 		fmt.Fprintf(stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
 	}
 
@@ -177,7 +177,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 
 	writeStructuredOutput(gateReport)
 
-	if gateReport.OverallDecision == "block" {
+	if gateReport.OverallDecision == model.DecisionBlock {
 		hintMissingEPSS(vulns)
 		exitFunc(exitcodes.GateBlocked)
 		return nil
@@ -297,7 +297,7 @@ func handleActiveExploitation(cfg *config.Config, vulns []model.Vulnerability, e
 		ConfigHash:                    configHash,
 		CliOverrides:                  collectCLIOverrides(),
 		EvidenceHash:                  evidenceHash,
-		OverallDecision:               "block",
+		OverallDecision:               model.DecisionBlock,
 		Status:                        "block",
 		Detail:                        fmt.Sprintf("Active exploitation detected for CVE(s): %s. Article 14 notification artefact generated.", strings.Join(cves, ", ")),
 		ActivelyExploited:             cves,
@@ -375,21 +375,22 @@ func renderGateTable(w io.Writer, report model.GateReport, riskApp, warnAbove fl
 	}
 	t.Render(w)
 	fmt.Fprintf(w, "\n%s  Gate Maturity: Level %d\n\n",
-		ui.Colorize("Overall Decision: "+strings.ToUpper(report.OverallDecision), ui.Bold),
+		ui.Colorize("Overall Decision: "+strings.ToUpper(string(report.OverallDecision)), ui.Bold),
 		report.GateMaturityLevel,
 	)
 }
 
 // gateLabel returns the ANSI color and label for a gate decision.
-func gateLabel(decision string) (color, label string) {
+func gateLabel(decision model.Decision) (color, label string) {
 	switch decision {
-	case "block":
+	case model.DecisionBlock:
 		return ui.Red + ui.Bold, "BLOCK"
-	case "warn":
+	case model.DecisionWarn:
 		return ui.Yellow + ui.Bold, "WARN"
-	default:
+	case model.DecisionAllow:
 		return ui.Green + ui.Bold, "ALLOW"
 	}
+	return ui.Green + ui.Bold, "ALLOW"
 }
 
 // riskColor returns the ANSI color for a risk score relative to thresholds.
@@ -406,7 +407,7 @@ func riskColor(risk, riskApp, warnAbove float64) string {
 // handleDryRunGate prints what would happen without executing.
 func handleDryRunGate(report model.GateReport, logPath string) {
 	exitReason := "Gate passed (ALLOW) — exit 0"
-	if report.OverallDecision == "block" {
+	if report.OverallDecision == model.DecisionBlock {
 		exitReason = fmt.Sprintf("Gate would BLOCK with exit code %d (GateBlocked)", exitcodes.GateBlocked)
 	} else if failAbove > 0 {
 		for _, d := range report.Decisions {
@@ -433,7 +434,7 @@ func writeGateAuditLog(logPath string, cfg *config.Config, report model.GateRepo
 		EvidenceHash:    evidenceHash,
 		OverallDecision: report.OverallDecision,
 		Risk:            report.HighestRisk,
-		Status:          report.OverallDecision,
+		Status:          string(report.OverallDecision),
 		Detail:          fmt.Sprintf("%d vulnerabilities evaluated; %d blocked, %d warned", len(vulns), report.BlockedCount, report.WarnCount),
 	}
 
@@ -465,7 +466,7 @@ func recordStateStore(cfg *config.Config, report model.GateReport, vulnCount int
 
 	activeAccepts := 0
 	for _, d := range report.Decisions {
-		if d.Decision == "block" || d.Decision == "warn" {
+		if d.Decision == model.DecisionBlock || d.Decision == model.DecisionWarn {
 			activeAccepts++
 		}
 	}
@@ -542,7 +543,7 @@ func writeCSVOutput(dest io.Writer, report model.GateReport) {
 			fmt.Sprintf("%.2f", d.Breakdown.CompensatingEffect),
 			fmt.Sprintf("%.2f", d.Breakdown.AssetCriticality),
 			fmt.Sprintf("%.1f", d.ReleaseRisk),
-			d.Decision,
+			string(d.Decision),
 		})
 	}
 	wr.Flush()

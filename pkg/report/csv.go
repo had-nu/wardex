@@ -81,7 +81,7 @@ func generateCSV(report model.GapReport, outFile string) error {
 					fmt.Sprintf("%.1f", dec.Breakdown.CVSSBase),
 					fmt.Sprintf("%.2f", dec.Breakdown.EPSSFactor),
 					fmt.Sprintf("%.1f", dec.ReleaseRisk),
-					dec.Decision,
+					string(dec.Decision),
 				}
 				if err := writer.Write(row); err != nil {
 					return fmt.Errorf("failed to write gate row: %w", err)

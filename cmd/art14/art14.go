@@ -292,7 +292,7 @@ func runMarkDispatched(cmd *cobra.Command, args []string) error {
 		Timestamp:                     time.Now().UTC(),
 		Event:                         "active-exploit.dispatched",
 		ConfigHash:                    configHash,
-		OverallDecision:               "block",
+		OverallDecision:               model.DecisionBlock,
 		Status:                        "block",
 		Detail:                        fmt.Sprintf("Article 14 notification marked as dispatched (phase: %s) for CVE(s): %s", phase, strings.Join(art.Notification.CVEIDs, ", ")),
 		ActivelyExploited:             art.Notification.CVEIDs,

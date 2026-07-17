@@ -73,7 +73,7 @@ func ReadReport(path string, maxAgeHours int) ([]model.Vulnerability, string, er
 
 	var blockedCVEs []model.Vulnerability
 	for _, v := range report.Gate.Decisions {
-		if v.Decision == "block" {
+		if v.Decision == model.DecisionBlock {
 			blockedCVEs = append(blockedCVEs, v.Vulnerability)
 		}
 	}

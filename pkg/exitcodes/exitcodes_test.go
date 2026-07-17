@@ -16,7 +16,6 @@ func TestNoReservedPOSIXCodes(t *testing.T) {
 	}{
 		{"OK", OK},
 		{"GenericError", GenericError},
-		{"Tampered", Tampered},
 		{"StoreInconsistent", StoreInconsistent},
 		{"ExpiringSoon", ExpiringSoon},
 		{"GateBlocked", GateBlocked},
@@ -43,7 +42,6 @@ func TestNoCollisions(t *testing.T) {
 	allCodes := map[int]string{
 		OK:                "OK",
 		GenericError:      "GenericError",
-		Tampered:          "Tampered",
 		StoreInconsistent: "StoreInconsistent",
 		ExpiringSoon:      "ExpiringSoon",
 		GateBlocked:       "GateBlocked",
@@ -51,7 +49,7 @@ func TestNoCollisions(t *testing.T) {
 	}
 
 	// If any two constants share a value, the map would have fewer entries
-	expectedCount := 7
+	expectedCount := 6
 	if len(allCodes) != expectedCount {
 		t.Errorf("exit code collision detected: expected %d unique codes, got %d", expectedCount, len(allCodes))
 	}
@@ -74,7 +72,6 @@ func TestExpectedValues(t *testing.T) {
 	}{
 		{"OK", OK, 0},
 		{"GenericError", GenericError, 1},
-		{"Tampered", Tampered, 3},
 		{"StoreInconsistent", StoreInconsistent, 4},
 		{"ExpiringSoon", ExpiringSoon, 5},
 		{"GateBlocked", GateBlocked, 10},
