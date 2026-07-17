@@ -8,6 +8,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/had-nu/wardex/v2/internal/cpl"
+	"github.com/had-nu/wardex/v2/pkg/attest"
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/spf13/cobra"
@@ -15,6 +17,7 @@ import (
 )
 
 var kevOutFile string
+var kevAttestKey string
 
 // KevCmd converts a CISA KEV catalogue JSON to Wardex YAML format.
 var KevCmd = &cobra.Command{
@@ -23,7 +26,7 @@ var KevCmd = &cobra.Command{
 	Long: `Load a CISA Known Exploited Vulnerabilities (KEV) catalogue and
 convert it to a Wardex-compatible YAML file for correlation with
 vulnerability evidence.
-
+	
 Download the catalogue with:
   curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json`,
 	Args: cobra.ExactArgs(1),
@@ -32,6 +35,7 @@ Download the catalogue with:
 
 func init() {
 	KevCmd.Flags().StringVarP(&kevOutFile, "output", "o", "wardex-kev.yaml", "Output file for Wardex YAML")
+	KevCmd.Flags().StringVar(&kevAttestKey, "attest", "", "Path to Ed25519 private key for 3CP tool attestation signing")
 }
 
 func runConvertKEV(cmd *cobra.Command, args []string) error {
@@ -96,5 +100,59 @@ func runConvertKEV(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(cmd.OutOrStdout(), "Converted %d KEV entries to %s\n", len(out.Vulnerabilities), kevOutFile)
 	}
 
+	if kevAttestKey != "" && kevOutFile != "stdout" && kevOutFile != "-" {
+		if err := attestKEV(inFile, kevOutFile, kevAttestKey); err != nil {
+			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+		}
+	}
+
+	return nil
+}
+
+func attestKEV(inputFile, outputFile, keyPath string) error {
+	inHash, err := attest.FileHash(inputFile)
+	if err != nil {
+		return fmt.Errorf("hash input: %w", err)
+	}
+	outHash, err := attest.FileHash(outputFile)
+	if err != nil {
+		return fmt.Errorf("hash output: %w", err)
+	}
+
+	a := attest.New("wardex-convert/kev", "2.3.0").
+		SetInputHash(inHash).
+		SetOutputHash(outHash).
+		SetConvertedBy("wardex-convert/kev")
+
+	signer := func(msg []byte) ([]byte, error) {
+		sig, _, err := attest.SignWithEd25519(keyPath, msg)
+		return sig, err
+	}
+
+	_, keyID, err := attest.SignWithEd25519(keyPath, []byte("probe"))
+	if err != nil {
+		return fmt.Errorf("load key: %w", err)
+	}
+
+	signed, err := a.Sign(signer, keyID)
+	if err != nil {
+		return fmt.Errorf("sign: %w", err)
+	}
+
+	attestPath := outputFile + ".attest"
+	out, err := yaml.Marshal(signed)
+	if err != nil {
+		return fmt.Errorf("marshal attestation: %w", err)
+	}
+	if err := os.WriteFile(attestPath, out, 0600); err != nil {
+		return fmt.Errorf("write attestation: %w", err)
+	}
+
+	cfgHash, err := cpl.ComputeConfigHash(outHash, cpl.AlgoSHA256)
+	if err == nil {
+		a.SetConfigHash(cfgHash)
+	}
+
+	fmt.Fprintf(os.Stderr, "[PROVENANCE] Signed attestation written to %s\n", attestPath)
 	return nil
 }

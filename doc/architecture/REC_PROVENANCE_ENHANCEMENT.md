@@ -1,7 +1,11 @@
 # REC + Provenance: Análise de Resiliência e Plano de Mitigação v2.2.3
 
 > **REC** = Registro Encadeado Criptografado (Chained Audit Log)
-> **Provenance** = Immutable Provenance Module (v2.3, branch `feat/immutable-provenance`)
+> **Provenance** = 3CP (Cryptographic Chain of Custody Protocol) via Gleipnir reference implementation
+>
+> **Status**: Este documento foi o plano original para v2.2.3. As secções marcadas com ✓ foram
+> implementadas na v2.3.0 com a migração CBOR determinística e pacote `pkg/attest/`. As secções
+> marcadas com △ permanecem como planeamento para versões futuras.
 
 ---
 
@@ -52,8 +56,7 @@ Os dois formatos precisam ser unificados.
 
 ## 2. Como o Provenance (v2.3) Pode Reforçar o REC
 
-O módulo de provenance (branch `feat/immutable-provenance`) tem 4 conceitos
-adaptáveis ao REC:
+O módulo de provenance (3CP via Gleipnir) tem 4 conceitos adaptáveis ao REC:
 
 ### 2.1 Merkle Root sobre Conjunto de Dados
 
@@ -94,13 +97,16 @@ blockchain.
 **Aplicado ao REC**: O root hash do segmento é registrado na Ethereum/Polygon
 como prova pública e replicada. Qualquer auditor verifica independentemente.
 
-### 2.4 Assinatura Ed25519
+### 2.4 Assinatura Ed25519 ✓
 
-**No provenance**: `manifest.go` gera `CanonicalMessage()` → `Sign()` com
-chave Ed25519, provando autoria e integridade.
+**No provenance (v2.3.0)**: `pkg/attest/attestation.go` gera CBOR determinístico
+do `ToolAttestation` → `SignWithEd25519()`, provando autoria e integridade.
+Usa `cbor.CanonicalEncOptions()` + `cbor.TimeRFC3339` para garantir
+byte-identicidade entre plataformas.
 
-**Aplicado ao REC**: Cada segment seal é assinado pelo operador/CI que gerou
-as decisões. Adiciona **não-repúdio**.
+**Aplicado ao REC (△)**: Cada segment seal pode ser assinado com o mesmo
+mecanismo. O `signed_by` e `sig` no `SealEntry` seguem o formato do
+`SignedAttestation`.
 
 ### 2.5 Matriz: Provenance → REC Weaknesses
 
@@ -338,14 +344,28 @@ type Config struct {
 
 ---
 
-## 5. Próximos Passos (Pós v2.2.3)
+## 5. Implementado na v2.3.0
 
-Para v2.3 (provenance completo, branch `feat/immutable-provenance`):
+O que foi realizado como parte da migração CBOR + 3CP:
 
-- [ ] Integrar `pkg/segment` com `immutable-provenance/ots`:
-      enviar segment root hash para OpenTimestamps
-- [ ] Integrar `pkg/segment` com `immutable-provenance/ethanchor`:
-      registrar segment root hash no `ProvenanceAnchor.sol`
-- [ ] CLI `wardex provenance seal --audit-log` para selar manualmente
-- [ ] CLI `wardex provenance verify --audit-log` para verificar âncora blockchain
-- [ ] Documentação: playbook de disaster recovery com segmentos + blockchain
+- [x] **CBOR determinístico** para CPL canonicalization (`internal/cpl/cbor.go`)
+- [x] **WexState v2** com CBOR deterministic sealing (`pkg/trust/wexstate_cbor.go`)
+- [x] **`pkg/attest/`** — Tool attestation com Ed25519 + CBOR (`pkg/attest/attestation.go`)
+- [x] **CDDL schemas** em `spec/cddl/` (cpl-entry, wexstate, tool-attestation)
+- [x] **CLI `wardex provenance attest`** (`cmd/provenance/attest.go`)
+- [x] **Converters com `--attest`** (`cmd/convert/grype.go`, `cmd/convert/kev_cmd.go`,
+      `cmd/convert/sbom.go`)
+- [x] **3CP abstraction** — interface `Anchorer` + backends embedded/gRPC/noop
+      (`pkg/provenance/`)
+
+## 6. Próximos Passos (△)
+
+Itens do plano original que permanecem como planeamento:
+
+- [ ] △ Integrar `pkg/segment` com OTS: enviar segment root hash para
+      OpenTimestamps
+- [ ] △ Integrar `pkg/segment` com Ethereum anchor: registrar segment root hash
+      no `ProvenanceAnchor.sol`
+- [ ] △ CLI `wardex provenance seal --audit-log` para selar manualmente
+- [ ] △ CLI `wardex provenance verify --audit-log` para verificar âncora blockchain
+- [ ] △ Documentação: playbook de disaster recovery com segmentos + blockchain

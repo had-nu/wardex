@@ -1,0 +1,11 @@
+;; CPL — Chain of Provenance Ledger
+;; Schema for CPL audit log entries.
+
+cpl-entry = {
+  ts: tdate,                   ; RFC3339 UTC timestamp
+  event: text,                 ; e.g. "gate.evaluated"
+  ? config_hash: text,         ; "sha256:<hex>" or "blake3:<hex>"
+  ? prev_hash: text,           ; "genesis" or hash of previous entry
+  ? cli_overrides: {* text => any },  ; new in v2.2
+  ? evaluated_at: tdate,       ; new in v2.0
+}

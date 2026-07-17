@@ -3,6 +3,10 @@
 
 //go:build grpc
 
+// 3CP gRPC backend — Gleipnir reference implementation adapter.
+// Maps 3CP SubmitEnvelope types to Gleipnir's protobuf wire format.
+// Replaceable with any 3CP-compatible gRPC service (Carcosa, etc.).
+
 package provenance
 
 import (
@@ -40,6 +44,28 @@ func (g *grpcAnchorer) Submit(ctx context.Context, hash []byte, label string) (*
 		Hash:      hash,
 		Label:     label,
 		Timestamp: time.Now().UnixNano(),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &AnchorResult{
+		Found: resp.Accepted,
+		Label: label,
+	}, nil
+}
+
+func (g *grpcAnchorer) SubmitAttested(ctx context.Context, hash []byte, label string, reference []byte) (*AnchorResult, error) {
+	env := SubmitEnvelope{
+		Hash:      hash,
+		Label:     label,
+		Reference: reference,
+		Timestamp: time.Now().UnixNano(),
+	}
+
+	resp, err := g.client.SubmitHash(ctx, &pb.SubmitRequest{
+		Hash:      env.Hash,
+		Label:     env.Label,
+		Timestamp: env.Timestamp,
 	})
 	if err != nil {
 		return nil, err

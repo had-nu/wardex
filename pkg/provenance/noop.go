@@ -11,6 +11,10 @@ func (*noopAnchorer) Submit(_ context.Context, hash []byte, label string) (*Anch
 	return &AnchorResult{Found: false, Label: label}, nil
 }
 
+func (*noopAnchorer) SubmitAttested(_ context.Context, hash []byte, label string, reference []byte) (*AnchorResult, error) {
+	return &AnchorResult{Found: false, Label: label}, nil
+}
+
 func (*noopAnchorer) Verify(_ context.Context, _ []byte) (*AnchorResult, error) {
 	return &AnchorResult{Found: false}, nil
 }

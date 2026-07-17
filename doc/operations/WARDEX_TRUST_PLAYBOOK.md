@@ -118,6 +118,10 @@ wardex trust add \
 
 ### 6.1 O CISO Sela a Configuração
 O CISO aprova o draft do `wardex-config.yaml` e gera o selo criptográfico.
+O `.wexstate` continua em YAML legível, mas a mensagem selada (`seal_message`)
+usa **CBOR determinístico** (RFC 8949 §4.2.3) a partir da v2.3.0, garantindo
+byte-identicidade entre plataformas.
+
 ```bash
 wardex config seal \
   --keyring ~/.wardex/ciso-key.wex \
