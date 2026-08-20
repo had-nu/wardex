@@ -4,6 +4,7 @@
 package epss
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
@@ -12,6 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 const maxEPSSResponseSize = 1 << 20 // 1 MiB
@@ -44,8 +47,9 @@ type Data struct {
 
 // FetchScores queries the FIRST.org API for a list of CVE IDs and parses
 // the returned EPSS probabilities. It batches requests natively (the API allows
-// comma-separated CVEs). Malformed/out-of-range scores are logged to logw when non-nil.
-func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]string, error) {
+// comma-separated CVEs). ctx cancels the underlying HTTP requests.
+// Malformed/out-of-range scores are logged via the structured logger.
+func FetchScores(ctx context.Context, cves []string) (map[string]float64, map[string]string, error) {
 	if len(cves) == 0 {
 		return nil, nil, nil // Nothing to fetch
 	}
@@ -62,7 +66,7 @@ func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]
 		query := strings.Join(chunk, ",")
 		url := fmt.Sprintf("%s?cve=%s", firstAPIURL, query)
 
-		req, err := http.NewRequest("GET", url, nil)
+		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed creating EPSS request: %w", err)
 		}
@@ -116,13 +120,11 @@ func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]
 		}
 	}
 
-	if logw != nil {
-		if skippedMalformed > 0 {
-			fmt.Fprintf(logw, "[WARN] %d EPSS scores skipped — malformed float values (will default to worst-case 1.0)\n", skippedMalformed)
-		}
-		if skippedOutOfRange > 0 {
-			fmt.Fprintf(logw, "[WARN] %d EPSS scores skipped — out of range [0.0, 1.0] (will default to worst-case 1.0)\n", skippedOutOfRange)
-		}
+	if skippedMalformed > 0 {
+		ui.Warnf("%d EPSS scores skipped — malformed float values (will default to worst-case 1.0)", skippedMalformed)
+	}
+	if skippedOutOfRange > 0 {
+		ui.Warnf("%d EPSS scores skipped — out of range [0.0, 1.0] (will default to worst-case 1.0)", skippedOutOfRange)
 	}
 
 	return scores, provenance, nil

@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 )
@@ -31,10 +30,10 @@ func ResolveTrustStoreRef(flagValue, configValue string) string {
 }
 
 // FetchTrustStore resolves and reads a trust store from a URL or local path.
-// Remote URLs are fetched via HTTP with a 10s timeout and 1MB limit.
-func FetchTrustStore(ref string) ([]byte, error) {
+// Remote URLs are fetched via HTTP with the request context and a 1MB limit.
+func FetchTrustStore(ctx context.Context, ref string) ([]byte, error) {
 	if strings.HasPrefix(ref, "https://") || strings.HasPrefix(ref, "http://") {
-		return fetchRemote(ref)
+		return fetchRemote(ctx, ref)
 	}
 	// Local path
 	data, err := cli.ReadFile(ref) // #nosec G304 -- resolved by ResolveTrustStoreRef
@@ -44,10 +43,7 @@ func FetchTrustStore(ref string) ([]byte, error) {
 	return data, nil
 }
 
-func fetchRemote(url string) ([]byte, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
+func fetchRemote(ctx context.Context, url string) ([]byte, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("trust store: build request: %w", err)

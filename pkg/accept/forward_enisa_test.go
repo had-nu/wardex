@@ -4,6 +4,7 @@
 package accept
 
 import (
+	"context"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -29,7 +30,7 @@ func TestENISABackend(t *testing.T) {
 		Detail:    "test active exploit forward",
 	}
 
-	err := backend.Send(entry)
+	err := backend.Send(context.Background(), entry)
 	if err != nil {
 		t.Fatalf("Send failed: %v", err)
 	}

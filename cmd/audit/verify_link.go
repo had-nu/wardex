@@ -1,6 +1,7 @@
 package audit
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -92,7 +93,7 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 
 	if summary.Mismatch > 0 || summary.Missing > 0 {
 		if webhookURL != "" {
-			dispatchNotification(auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, results)
+			dispatchNotification(cmd.Context(), auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, results)
 		}
 		os.Exit(1)
 	}
@@ -100,7 +101,7 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func dispatchNotification(auditLog string, total, ok, mismatch, missing int, results []cpl.LinkResult) {
+func dispatchNotification(ctx context.Context, auditLog string, total, ok, mismatch, missing int, results []cpl.LinkResult) {
 	payload := notification.DivergencePayload{
 		Source:    "wardex",
 		EventType: "cpl.verify_link.mismatch",
@@ -139,7 +140,7 @@ func dispatchNotification(auditLog string, total, ok, mismatch, missing int, res
 		},
 	}
 
-	if err := notification.Send(cfg, payload); err != nil {
+	if err := notification.Send(ctx, cfg, payload); err != nil {
 		fmt.Fprintf(os.Stderr, "[wardex] notification: webhook failed: %v\n", err)
 	}
 }

@@ -4,6 +4,7 @@
 package evaluate
 
 import (
+	"context"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
@@ -94,7 +95,7 @@ func init() {
 }
 
 func runEvaluate(cmd *cobra.Command, args []string) error {
-	cfg, err := loadEvalConfig(configPath, strict, profileName)
+	cfg, err := loadEvalConfig(cmd.Context(), configPath, strict, profileName)
 	if err != nil {
 		fmt.Fprintf(stderr, "Error: %v\n", err)
 		exitFunc(exitcodes.IntegrityFailure)
@@ -132,7 +133,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("evaluate: %w", err)
 	}
 
-	if exitCode := handleActiveExploitation(cfg, vulns, evidenceHash); exitCode >= 0 {
+	if exitCode := handleActiveExploitation(cmd.Context(), cfg, vulns, evidenceHash); exitCode >= 0 {
 		exitFunc(exitCode)
 		return nil
 	}
@@ -170,7 +171,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	}
 
 	if logPath != "/dev/null" {
-		writeGateAuditLog(logPath, cfg, gateReport, evidenceHash, vulns)
+		writeGateAuditLog(cmd.Context(), logPath, cfg, gateReport, evidenceHash, vulns)
 	}
 
 	recordStateStore(cfg, gateReport, len(vulns), w)
@@ -189,7 +190,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 
 // handleActiveExploitation checks for actively exploited CVEs and handles Article 14 notification.
 // Returns the exit code to use (>= 0) or -1 if no active exploitation was found.
-func handleActiveExploitation(cfg *config.Config, vulns []model.Vulnerability, evidenceHash string) int {
+func handleActiveExploitation(ctx context.Context, cfg *config.Config, vulns []model.Vulnerability, evidenceHash string) int {
 	var activelyExploited []model.Vulnerability
 	for _, v := range vulns {
 		if v.ActivelyExploited {
@@ -312,7 +313,7 @@ func handleActiveExploitation(cfg *config.Config, vulns []model.Vulnerability, e
 		fmt.Fprintf(stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
 	}
 
-	forwardAuditEntry(cfg, auditEntry, stderr)
+	forwardAuditEntry(ctx, cfg, auditEntry, stderr)
 
 	fmt.Fprintf(stderr, "\n[BLOCK] Active exploitation detected for CVE(s): %s\n", strings.Join(cves, ", "))
 	fmt.Fprintf(stderr, "        Awareness Timestamp: %s\n", awarenessAt.Format(time.RFC3339))
@@ -424,7 +425,7 @@ func handleDryRunGate(report model.GateReport, logPath string) {
 }
 
 // writeGateAuditLog writes the chained audit entry and forwards to configured backends.
-func writeGateAuditLog(logPath string, cfg *config.Config, report model.GateReport, evidenceHash string, vulns []model.Vulnerability) {
+func writeGateAuditLog(ctx context.Context, logPath string, cfg *config.Config, report model.GateReport, evidenceHash string, vulns []model.Vulnerability) {
 	configHash, _ := accept.ConfigHash(configPath)
 	entry := model.AuditEntry{
 		Timestamp:       time.Now().UTC(),
@@ -444,7 +445,7 @@ func writeGateAuditLog(logPath string, cfg *config.Config, report model.GateRepo
 		fmt.Fprintf(stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
 	}
 
-	forwardAuditEntry(cfg, entry, stderr)
+	forwardAuditEntry(ctx, cfg, entry, stderr)
 }
 
 // recordStateStore records the decision to the persistent state store and optionally shows trend.

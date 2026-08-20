@@ -57,7 +57,7 @@ func init() {
 }
 
 func runConfigSeal(cmd *cobra.Command, args []string) error {
-	if err := trust.SealConfig(keyringPath, inputPath, outPath, trustRef); err != nil {
+	if err := trust.SealConfig(cmd.Context(), keyringPath, inputPath, outPath, trustRef); err != nil {
 		return err
 	}
 

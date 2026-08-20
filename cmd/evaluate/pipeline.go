@@ -4,10 +4,12 @@
 package evaluate
 
 import (
+	"context"
+	"io"
+
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/gate"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"io"
 )
 
 func resolveGateMode(cfg *config.Config, flagMode string) string {
@@ -26,6 +28,6 @@ func resolveLogPath(cfg *config.Config, flagPath string) string {
 	return gate.ResolveLogPath(cfg, flagPath)
 }
 
-func forwardAuditEntry(cfg *config.Config, entry model.AuditEntry, logw io.Writer) {
-	gate.ForwardAuditEntry(cfg, entry, logw)
+func forwardAuditEntry(ctx context.Context, cfg *config.Config, entry model.AuditEntry, logw io.Writer) {
+	gate.ForwardAuditEntry(ctx, cfg, entry, logw)
 }

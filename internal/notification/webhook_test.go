@@ -1,6 +1,7 @@
 package notification_test
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -35,7 +36,7 @@ func TestWebhookCalledOnDivergence(t *testing.T) {
 		Summary:   notification.Summary{TotalEntries: 10, OK: 9, Mismatch: 1},
 	}
 
-	if err := notification.Send(cfg, payload); err != nil {
+	if err := notification.Send(context.Background(), cfg, payload); err != nil {
 		t.Fatalf("Send: %v", err)
 	}
 	if !called {
@@ -48,7 +49,7 @@ func TestWebhookCalledOnDivergence(t *testing.T) {
 
 func TestWebhookNotCalledWhenURLEmpty(t *testing.T) {
 	cfg := notification.WebhookConfig{URL: ""}
-	err := notification.Send(cfg, notification.DivergencePayload{})
+	err := notification.Send(context.Background(), cfg, notification.DivergencePayload{})
 	if err != nil {
 		t.Errorf("URL vazia deve retornar nil, obteve: %v", err)
 	}
@@ -66,7 +67,7 @@ func TestWebhookTimeoutDoesNotBlock(t *testing.T) {
 	}
 
 	start := time.Now()
-	err := notification.Send(cfg, notification.DivergencePayload{})
+	err := notification.Send(context.Background(), cfg, notification.DivergencePayload{})
 	elapsed := time.Since(start)
 
 	if err == nil {
@@ -91,7 +92,7 @@ func TestWebhookAuthHeaderPresent(t *testing.T) {
 		Token:          "test-token-abc",
 		TimeoutSeconds: 5,
 	}
-	_ = notification.Send(cfg, notification.DivergencePayload{})
+	_ = notification.Send(context.Background(), cfg, notification.DivergencePayload{})
 
 	if gotAuth != "Bearer test-token-abc" {
 		t.Errorf("Authorization header errado: %q", gotAuth)
@@ -105,7 +106,7 @@ func TestWebhookNonOKStatusReturnsError(t *testing.T) {
 	defer srv.Close()
 
 	cfg := notification.WebhookConfig{URL: srv.URL, TimeoutSeconds: 5}
-	err := notification.Send(cfg, notification.DivergencePayload{})
+	err := notification.Send(context.Background(), cfg, notification.DivergencePayload{})
 	if err == nil {
 		t.Error("status 500 deve retornar erro, obteve nil")
 	}

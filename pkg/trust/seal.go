@@ -4,6 +4,7 @@
 package trust
 
 import (
+	"context"
 	"crypto/ed25519"
 	"fmt"
 	"strings"
@@ -15,10 +16,10 @@ import (
 // SealConfig reads a draft wardex-config.yaml, verifies there are no
 // PENDING_APPROVAL fields, and produces a signed wardex.wexstate file.
 // Only ciso or admin roles can seal.
-func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
+func SealConfig(ctx context.Context, keyPath, inputPath, outPath, trustRef string) error {
 	// 1. Resolve and load trust store
 	ref := ResolveTrustStoreRef(trustRef, "")
-	storeData, err := FetchTrustStore(ref)
+	storeData, err := FetchTrustStore(ctx, ref)
 	if err != nil {
 		return fmt.Errorf("config seal: %w", err)
 	}

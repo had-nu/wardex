@@ -4,7 +4,6 @@
 package scorer
 
 import (
-
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 )

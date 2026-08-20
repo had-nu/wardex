@@ -1,6 +1,7 @@
 package evaluate
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -14,7 +15,7 @@ import (
 // loadEvalConfig loads the eval configuration from a sealed (.wexstate) or legacy (.yaml) config file,
 // applies optional RBAC profile overrides, and returns the resolved config.
 // Callers should check for a non-nil error and call exitFunc/return accordingly.
-func loadEvalConfig(configPath string, strict bool, profileName string) (*config.Config, error) {
+func loadEvalConfig(ctx context.Context, configPath string, strict bool, profileName string) (*config.Config, error) {
 	var cfg *config.Config
 
 	if trust.IsWexStatePath(configPath) {
@@ -27,7 +28,7 @@ func loadEvalConfig(configPath string, strict bool, profileName string) (*config
 		if state.TrustStoreRef != "" {
 			ref = trust.ResolveTrustStoreRef("", state.TrustStoreRef)
 		}
-		storeData, err := trust.FetchTrustStore(ref)
+		storeData, err := trust.FetchTrustStore(ctx, ref)
 		if err != nil {
 			return nil, fmt.Errorf("fetch trust store: %w", err)
 		}

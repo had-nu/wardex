@@ -4,6 +4,7 @@
 package trust_test
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"strings"
@@ -171,7 +172,7 @@ release_gate:
 	os.WriteFile(draftPath, []byte(draftYAML), 0644)
 
 	// Seal
-	err := trust.SealConfig(adminKeyPath, draftPath, wexPath, storePath)
+	err := trust.SealConfig(context.Background(), adminKeyPath, draftPath, wexPath, storePath)
 	if err != nil {
 		t.Fatalf("SealConfig failed: %v", err)
 	}

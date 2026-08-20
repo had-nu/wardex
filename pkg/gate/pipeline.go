@@ -5,6 +5,7 @@
 package gate
 
 import (
+	"context"
 	"fmt"
 	"io"
 
@@ -144,13 +145,13 @@ func ResolveLogPath(cfg *config.Config, flagPath string) string {
 }
 
 // ForwardAuditEntry dispatches an audit entry to configured forwarding backends.
-func ForwardAuditEntry(cfg *config.Config, entry model.AuditEntry, logw io.Writer) {
+func ForwardAuditEntry(ctx context.Context, cfg *config.Config, entry model.AuditEntry, logw io.Writer) {
 	backends := BuildForwarders(cfg)
 	if len(backends) == 0 {
 		return
 	}
 	mux := accept.NewForwardMultiplexer(backends, cfg.Reporting.GateLog.OnFail)
-	if err := mux.Dispatch(entry); err != nil {
+	if err := mux.Dispatch(ctx, entry); err != nil {
 		fmt.Fprintf(logw, "Error: gate log forwarding failed: %v\n", err)
 	}
 }

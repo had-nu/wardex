@@ -5,6 +5,7 @@ package accept
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -26,7 +27,7 @@ var (
 
 // Forwarder represents a destination backend for audit log entries.
 type Forwarder interface {
-	Send(entry model.AuditEntry) error
+	Send(ctx context.Context, entry model.AuditEntry) error
 	Name() string
 }
 
@@ -47,10 +48,10 @@ func NewForwardMultiplexer(backends []Forwarder, onFail string) *ForwardMultiple
 }
 
 // Dispatch sends the entry to all configured backends.
-func (m *ForwardMultiplexer) Dispatch(entry model.AuditEntry) error {
+func (m *ForwardMultiplexer) Dispatch(ctx context.Context, entry model.AuditEntry) error {
 	var errs []error
 	for _, backend := range m.backends {
-		if err := backend.Send(entry); err != nil {
+		if err := backend.Send(ctx, entry); err != nil {
 			errs = append(errs, err)
 		}
 	}
@@ -74,7 +75,7 @@ type NotificationEvent struct {
 
 // Notifier defines the interface for notification channels (Webhook, Email)
 type Notifier interface {
-	Notify(event NotificationEvent) error
+	Notify(ctx context.Context, event NotificationEvent) error
 	Name() string
 }
 
@@ -90,10 +91,10 @@ func NewNotifyMultiplexer(channels []Notifier) *NotifyMultiplexer {
 }
 
 // Dispatch sends the notification event to all configured channels.
-func (m *NotifyMultiplexer) Dispatch(event NotificationEvent) []error {
+func (m *NotifyMultiplexer) Dispatch(ctx context.Context, event NotificationEvent) []error {
 	var errs []error
 	for _, n := range m.notifiers {
-		if err := n.Notify(event); err != nil {
+		if err := n.Notify(ctx, event); err != nil {
 			errs = append(errs, err)
 		}
 	}
@@ -131,7 +132,7 @@ func (w *WebhookNotifier) Name() string {
 
 // Notify sends a templated HTTP POST notification for the given event.
 // Returns nil if the event type is not in the configured event set.
-func (w *WebhookNotifier) Notify(event NotificationEvent) error {
+func (w *WebhookNotifier) Notify(ctx context.Context, event NotificationEvent) error {
 	if !w.Events[event.EventName] {
 		return nil
 	}
@@ -166,7 +167,7 @@ func (w *WebhookNotifier) Notify(event NotificationEvent) error {
 		return fmt.Errorf("rendered template %s is not valid JSON", tmplName)
 	}
 
-	req, err := http.NewRequest(http.MethodPost, w.URL, bytes.NewBufferString(payloadStr))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, w.URL, bytes.NewBufferString(payloadStr))
 	if err != nil {
 		return err
 	}
@@ -216,7 +217,7 @@ func (e *ENISABackend) Name() string {
 }
 
 // Send appends the entry to the local queue file.
-func (e *ENISABackend) Send(entry model.AuditEntry) error {
+func (e *ENISABackend) Send(_ context.Context, entry model.AuditEntry) error {
 	safePath, err := cli.SafePath(e.QueuePath)
 	if err != nil {
 		return err

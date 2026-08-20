@@ -78,7 +78,7 @@ var epssCmd = &cobra.Command{
 
 		fmt.Printf("[INFO] Fetching EPSS scores for %d vulnerabilities from api.first.org...\n", len(cvesToFetch))
 
-		scores, provenance, err := epss.FetchScores(cvesToFetch, os.Stderr)
+		scores, provenance, err := epss.FetchScores(cmd.Context(), cvesToFetch)
 		if err != nil {
 			ui.Errorf("First.org API query failed: %v", err)
 			exitFunc(1)
