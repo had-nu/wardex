@@ -4,7 +4,7 @@
 
 ![Wardex Lockup](pkg/ui/wardex-lockup.svg)
 
-[![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
+[![Go](https://img.shields.io/badge/Go-1.27-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
 [![Coverage](https://img.shields.io/badge/coverage-40%25-yellow?style=flat-square)](#)
 [![Docker](https://img.shields.io/badge/Docker-ghcr.io/had--nu/wardex-2496ED?style=flat-square&logo=docker&logoColor=white)](https://github.com/had-nu/wardex/pkgs/container/wardex)
@@ -115,7 +115,7 @@ wardex assess controls.yaml --framework eu_ai_act    # novo v2.4.0
 go install github.com/had-nu/wardex/v2@latest
 ```
 
-Requer Go ≥ 1.26. Confirma que `$(go env GOPATH)/bin` está no teu `$PATH`.
+Requer Go ≥ 1.27. Confirma que `$(go env GOPATH)/bin` está no teu `$PATH`.
 
 Para compilar a partir do código-fonte:
 
