@@ -8,7 +8,7 @@ linters:
     - staticcheck
     - unused
     - gosec
-    - gomodguard
+    - gomodguard_v2
     - exhaustive
   settings:
     errcheck:

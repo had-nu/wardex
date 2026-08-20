@@ -99,7 +99,7 @@ wardex-helm-chart.zip
 epss-enrich.yaml
 wardex-erd.md.resolved
 specs/
-benchmarks/ 
+/benchmarks/ 
 
 # Stress Test Outputs
 stress-enrich.yaml
