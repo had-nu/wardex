@@ -6,6 +6,7 @@ package config
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
@@ -27,7 +28,7 @@ func getActor() string {
 // ApplyProfile applies an RBAC profile override to the config.
 // If the profile exists and the actor is authorized, the config's gate thresholds
 // are overridden. Returns a descriptive message for CLI output.
-func ApplyProfile(cfg *Config, profileName string, stderr *os.File) string {
+func ApplyProfile(cfg *Config, profileName string, stderr io.Writer) string {
 	if profileName == "" {
 		return ""
 	}
