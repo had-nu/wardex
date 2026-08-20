@@ -102,8 +102,8 @@ type ToolAttestation struct {
 }
 
 type SignedAttestation struct {
-	Attestation ToolAttestation          `cbor:"0,keyasint"`
-	Signatures  map[string][]byte        `cbor:"1,keyasint"`
+	Attestation ToolAttestation   `cbor:"0,keyasint"`
+	Signatures  map[string][]byte `cbor:"1,keyasint"`
 }
 
 func New(tool, version string) *ToolAttestation {

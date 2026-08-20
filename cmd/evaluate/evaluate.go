@@ -597,5 +597,3 @@ func loadEvidence(gateFile string, strict bool) ([]model.Vulnerability, string, 
 
 	return vulnsEnvelope.Vulnerabilities, evidenceHash, nil
 }
-
-

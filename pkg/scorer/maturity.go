@@ -27,7 +27,6 @@ func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 		}
 	}
 
-
 	for _, f := range findings {
 		d := f.Control.Domain
 		s, ok := summaries[d]

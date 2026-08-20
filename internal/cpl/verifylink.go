@@ -12,7 +12,7 @@ import (
 type LinkStatus string
 
 const (
-	StatusOK      LinkStatus = "OK"
+	StatusOK       LinkStatus = "OK"
 	StatusMismatch LinkStatus = "MISMATCH"
 	StatusMissing  LinkStatus = "MISSING"
 )

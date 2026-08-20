@@ -65,10 +65,10 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	}
 
 	summary := struct {
-		Total   int `json:"total"`
-		OK      int `json:"ok"`
+		Total    int `json:"total"`
+		OK       int `json:"ok"`
 		Mismatch int `json:"mismatch"`
-		Missing int `json:"missing"`
+		Missing  int `json:"missing"`
 	}{Total: len(results)}
 
 	for _, r := range results {
@@ -85,7 +85,7 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	enc := json.NewEncoder(cmd.OutOrStdout())
 	enc.SetIndent("", "  ")
 	_ = enc.Encode(struct {
-		Summary interface{}    `json:"summary"`
+		Summary any              `json:"summary"`
 		Results []cpl.LinkResult `json:"results"`
 	}{Summary: summary, Results: results})
 

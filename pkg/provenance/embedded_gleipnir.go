@@ -14,7 +14,7 @@ import (
 )
 
 type embeddedGleipnir struct {
-	engine   *consensus.Engine
+	engine    *consensus.Engine
 	submitter []byte
 }
 
@@ -52,7 +52,7 @@ func newEmbeddedGleipnir(opts map[string]string) (*embeddedGleipnir, error) {
 	engine.Start()
 
 	return &embeddedGleipnir{
-		engine:   engine,
+		engine:    engine,
 		submitter: uid.RootID,
 	}, nil
 }
@@ -66,8 +66,8 @@ func (g *embeddedGleipnir) Submit(ctx context.Context, hash []byte, label string
 		return nil, err
 	}
 	return &AnchorResult{
-		Found:      false,
-		Label:      label,
+		Found: false,
+		Label: label,
 	}, nil
 }
 

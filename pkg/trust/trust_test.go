@@ -182,7 +182,7 @@ release_gate:
 		t.Fatalf("LoadWexState failed: %v", err)
 	}
 	store, storeRaw, _ := trust.LoadStore(storePath)
-	
+
 	if err := trust.VerifySeal(state, store, storeRaw); err != nil {
 		t.Errorf("VerifySeal failed: %v", err)
 	}

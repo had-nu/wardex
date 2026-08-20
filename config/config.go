@@ -91,9 +91,9 @@ type ENISAQueueConfig struct {
 }
 
 type ReportingConfig struct {
-	Format     string          `yaml:"format"`
-	Output     string          `yaml:"output"`
-	GateLog    GateLogConfig   `yaml:"gate_log"`
+	Format     string           `yaml:"format"`
+	Output     string           `yaml:"output"`
+	GateLog    GateLogConfig    `yaml:"gate_log"`
 	ENISAQueue ENISAQueueConfig `yaml:"enisa_queue"` // NEW in v2.0
 }
 
@@ -149,10 +149,10 @@ type DivergenceWebhookConfig struct {
 
 // StateStoreConfig configures the persistent state store.
 type StateStoreConfig struct {
-	Enabled         bool   `yaml:"enabled"`
-	Dir             string `yaml:"dir"`              // default: ".wardex"
-	RetentionDays   int    `yaml:"retention_days"`   // default: 90
-	WORM            bool   `yaml:"worm"`              // enable WORM protection
+	Enabled       bool   `yaml:"enabled"`
+	Dir           string `yaml:"dir"`            // default: ".wardex"
+	RetentionDays int    `yaml:"retention_days"` // default: 90
+	WORM          bool   `yaml:"worm"`           // enable WORM protection
 }
 
 type ProvenanceConfig struct {
@@ -166,10 +166,10 @@ type Config struct {
 	AcceptanceConfig AcceptanceConfig   `yaml:"acceptance"`
 	Reporting        ReportingConfig    `yaml:"reporting"`
 	Profiles         map[string]Profile `yaml:"profiles"`
-	CRA              CRAConfig          `yaml:"cra"`             // NEW in v2.0
-	Notifications    NotificationConfig `yaml:"notifications"`   // NEW in v2.2 — CPL
-	StateStore       StateStoreConfig   `yaml:"state_store"`     // NEW in v2.3 — persistent state
-	Provenance       ProvenanceConfig   `yaml:"provenance"`      // NEW in v2.3 — provenance anchor
+	CRA              CRAConfig          `yaml:"cra"`           // NEW in v2.0
+	Notifications    NotificationConfig `yaml:"notifications"` // NEW in v2.2 — CPL
+	StateStore       StateStoreConfig   `yaml:"state_store"`   // NEW in v2.3 — persistent state
+	Provenance       ProvenanceConfig   `yaml:"provenance"`    // NEW in v2.3 — provenance anchor
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.

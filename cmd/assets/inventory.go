@@ -42,8 +42,8 @@ type assetEntry struct {
 	Scope       []string `yaml:"scope" json:"scope,omitempty"`
 	Controls    []string `yaml:"controls" json:"controls,omitempty"`
 	Exposure    struct {
-		InternetFacing    bool   `yaml:"internet_facing" json:"internet_facing"`
-		NetworkZone       string `yaml:"network_zone" json:"network_zone"`
+		InternetFacing     bool   `yaml:"internet_facing" json:"internet_facing"`
+		NetworkZone        string `yaml:"network_zone" json:"network_zone"`
 		DataClassification string `yaml:"data_classification" json:"data_classification"`
 	} `yaml:"exposure" json:"exposure"`
 	Owner            string `yaml:"owner" json:"owner"`

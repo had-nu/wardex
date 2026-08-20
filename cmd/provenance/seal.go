@@ -88,11 +88,11 @@ func runSeal(cmd *cobra.Command, args []string) error {
 	}
 	sort.Strings(keys)
 
-	chainInput := ""
+	var chainInput strings.Builder
 	for _, k := range keys {
-		chainInput += k + "|" + artifacts[k] + "\n"
+		chainInput.WriteString(k + "|" + artifacts[k] + "\n")
 	}
-	chainHash := sha256.Sum256([]byte(chainInput))
+	chainHash := sha256.Sum256([]byte(chainInput.String()))
 	chainHashHex := fmt.Sprintf("%x", chainHash)
 
 	seal := chainSeal{

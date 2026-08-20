@@ -7,6 +7,7 @@ import (
 	"crypto/ed25519"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
@@ -63,12 +64,13 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 		return fmt.Errorf("config seal: %w", err)
 	}
 	if len(pendingFields) > 0 {
-		msg := "config seal: draft contains unsettled fields:\n"
+		var msg strings.Builder
+		msg.WriteString("config seal: draft contains unsettled fields:\n")
 		for _, f := range pendingFields {
-			msg += fmt.Sprintf("  - %s: \"PENDING_APPROVAL\"\n", f)
+			msg.WriteString(fmt.Sprintf("  - %s: \"PENDING_APPROVAL\"\n", f))
 		}
-		msg += "\nThese fields require a decision from the risk owner before sealing."
-		return fmt.Errorf("%s", msg)
+		msg.WriteString("\nThese fields require a decision from the risk owner before sealing.")
+		return fmt.Errorf("%s", msg.String())
 	}
 
 	// 4. Build WexState (version 2 — CBOR deterministic signing)

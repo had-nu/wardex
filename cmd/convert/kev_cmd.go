@@ -56,10 +56,10 @@ func runConvertKEV(cmd *cobra.Command, args []string) error {
 	}
 
 	type kevYAML struct {
-		ConvertedBy     string               `yaml:"converted_by"`
-		CatalogVersion  string               `yaml:"catalog_version"`
-		DateReleased    string               `yaml:"date_released"`
-		Count           int                  `yaml:"count"`
+		ConvertedBy     string                `yaml:"converted_by"`
+		CatalogVersion  string                `yaml:"catalog_version"`
+		DateReleased    string                `yaml:"date_released"`
+		Count           int                   `yaml:"count"`
 		Vulnerabilities []model.Vulnerability `yaml:"vulnerabilities"`
 	}
 

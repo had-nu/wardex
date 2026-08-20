@@ -24,4 +24,3 @@ func PrintBanner(version string) {
 		clrPurple, clrReset,
 		clrWhite, version, clrReset)
 }
-

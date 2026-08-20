@@ -31,7 +31,6 @@ func newUUID() string {
 		b[0:4], b[4:6], b[6:8], b[8:10], b[10:16])
 }
 
-
 const (
 	// EarlyWarningWindow is the Art. 14(2)(a) deadline: 24 hours from awareness.
 	EarlyWarningWindow = 24 * time.Hour
@@ -244,9 +243,9 @@ func FindArtefactByID(dir string, id string) (string, *model.Art14NotificationAr
 // phase must be one of: "early-warning", "notification", "final-report".
 func MarkDispatched(path string, phase string, key []byte) error {
 	validPhases := map[string]bool{
-		"early-warning":  true,
-		"notification":   true,
-		"final-report":   true,
+		"early-warning": true,
+		"notification":  true,
+		"final-report":  true,
 	}
 	if !validPhases[phase] {
 		return fmt.Errorf("art14: invalid phase %q — must be early-warning, notification, or final-report", phase)

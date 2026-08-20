@@ -121,6 +121,7 @@ func runPolicyList(cmd *cobra.Command, args []string) error {
 	t.Render(cmd.OutOrStdout())
 	return nil
 }
+
 // ── check-expiry ─────────────────────────────────────────────────────────────
 
 var policyCheckExpiryCmd = &cobra.Command{

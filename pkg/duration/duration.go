@@ -20,8 +20,8 @@ func ParseExtended(s string) (time.Duration, error) {
 		return 0, fmt.Errorf("empty duration string")
 	}
 
-	if strings.HasSuffix(s, "d") {
-		dayStr := strings.TrimSuffix(s, "d")
+	if before, ok := strings.CutSuffix(s, "d"); ok {
+		dayStr := before
 		n, err := strconv.Atoi(dayStr)
 		if err != nil {
 			return 0, fmt.Errorf("invalid day duration %q: %w", s, err)

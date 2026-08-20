@@ -30,9 +30,9 @@ func generateMarkdown(report model.GapReport, outFile string, limit int) error {
 
 	// Simplify Markdown generation manually since lipgloss is for terminal ANSI colors
 
-	_, _ = fmt.Fprintf(f, "# ISO 27001:2022 — Compliance & Release Gate Report\n")                    // nolint:errcheck
+	_, _ = fmt.Fprintf(f, "# ISO 27001:2022 — Compliance & Release Gate Report\n")                           // nolint:errcheck
 	_, _ = fmt.Fprintf(f, "**Generated:** %s\n\n", report.Summary.GeneratedAt.Format("2006-01-02 15:04:05")) // nolint:errcheck
-	_, _ = fmt.Fprintf(f, "---\n\n## Executive Summary\n\n")                                                  // nolint:errcheck
+	_, _ = fmt.Fprintf(f, "---\n\n## Executive Summary\n\n")                                                 // nolint:errcheck
 
 	_, _ = fmt.Fprintf(f, "| Metric | Value |\n|---|---|\n")
 	_, _ = fmt.Fprintf(f, "| Global Compliance Coverage | %.1f%% |\n", report.Summary.GlobalCoverage)

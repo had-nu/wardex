@@ -30,9 +30,9 @@ func TestAddCommands_AllSubcommandsRegistered(t *testing.T) {
 	}
 
 	expected := []struct {
-		name    string
-		use     string
-		short   string
+		name  string
+		use   string
+		short string
 	}{
 		{"request", "request", "Request a new risk acceptance"},
 		{"list", "list", "List risk acceptances"},

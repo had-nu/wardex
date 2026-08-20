@@ -10,8 +10,8 @@ import (
 	"os"
 
 	"github.com/had-nu/wardex/v2/config"
-	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/accept"
+	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"gopkg.in/yaml.v3"

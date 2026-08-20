@@ -11,9 +11,9 @@ import (
 
 // PostureReport provides high-level security posture intelligence metrics.
 type PostureReport struct {
-	GlobalIndex         float64        // Overall coverage score (0-100)
-	RiskExposure        float64        // Sum of BaseScores for all identified gaps
-	DomainConcentration map[string]int // Number of gaps per domain
+	GlobalIndex         float64         // Overall coverage score (0-100)
+	RiskExposure        float64         // Sum of BaseScores for all identified gaps
+	DomainConcentration map[string]int  // Number of gaps per domain
 	CriticalGaps        []model.Finding // High-impact controls with 'gap' status
 }
 

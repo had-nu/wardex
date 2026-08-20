@@ -14,8 +14,8 @@ import (
 
 // HistoryRecord is a single historical state snapshot.
 type HistoryRecord struct {
-	State     *State   `json:"state"`
-	FilePath  string   `json:"-"`
+	State     *State    `json:"state"`
+	FilePath  string    `json:"-"`
 	Timestamp time.Time `json:"timestamp"`
 }
 

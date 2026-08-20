@@ -56,10 +56,7 @@ func FetchScores(cves []string, logw io.Writer) (map[string]float64, map[string]
 	var skippedMalformed, skippedOutOfRange int
 
 	for i := 0; i < len(cves); i += chunkSize {
-		end := i + chunkSize
-		if end > len(cves) {
-			end = len(cves)
-		}
+		end := min(i+chunkSize, len(cves))
 
 		chunk := cves[i:end]
 		query := strings.Join(chunk, ",")

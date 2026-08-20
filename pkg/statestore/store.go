@@ -16,8 +16,8 @@ import (
 
 // Store manages the persistent state directory.
 type Store struct {
-	root   string // .wardex/ directory
-	chain  *ChainFile
+	root  string // .wardex/ directory
+	chain *ChainFile
 }
 
 // New creates or opens a state store at the given root directory.
@@ -160,10 +160,10 @@ func (s *Store) TrendAnalysis() (*TrendAnalysis, error) {
 	}
 
 	analysis := &TrendAnalysis{
-		TotalRuns:  len(history),
-		OldestRun:  history[0].Date,
-		NewestRun:  history[len(history)-1].Date,
-		MinRisk:    1.0,
+		TotalRuns: len(history),
+		OldestRun: history[0].Date,
+		NewestRun: history[len(history)-1].Date,
+		MinRisk:   1.0,
 	}
 
 	var totalRisk float64
@@ -257,11 +257,11 @@ func atomicWrite(path string, data []byte) error {
 }
 
 // marshalJSON marshals to indented JSON.
-func marshalJSON(v interface{}) ([]byte, error) {
+func marshalJSON(v any) ([]byte, error) {
 	return json.MarshalIndent(v, "", "  ")
 }
 
 // unmarshalJSON unmarshals JSON data.
-func unmarshalJSON(data []byte, v interface{}) error {
+func unmarshalJSON(data []byte, v any) error {
 	return json.Unmarshal(data, v)
 }

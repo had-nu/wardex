@@ -355,8 +355,8 @@ func generateKeyID(fullName string, role string, existing []KeyEntry) string {
 
 	maxSeq := 0
 	for _, k := range existing {
-		if strings.HasPrefix(k.ID, prefix) {
-			suffix := strings.TrimPrefix(k.ID, prefix)
+		if after, ok := strings.CutPrefix(k.ID, prefix); ok {
+			suffix := after
 			var seq int
 			if _, err := fmt.Sscanf(suffix, "%d", &seq); err == nil {
 				if seq > maxSeq {
