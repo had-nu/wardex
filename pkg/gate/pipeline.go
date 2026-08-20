@@ -7,13 +7,13 @@ package gate
 import (
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/accept"
 	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"gopkg.in/yaml.v3"
 )
 
@@ -121,10 +121,10 @@ func BuildForwarders(cfg *config.Config) []accept.Forwarder {
 			if cfg.Reporting.ENISAQueue.Path != "" {
 				queuePath = cfg.Reporting.ENISAQueue.Path
 			}
-			fmt.Fprintf(os.Stderr, "[INFO] ENISABackend is a stub. No data will be transmitted.\n"+
+			ui.Infof("ENISABackend is a stub. No data will be transmitted.\n"+
 				"       Queue path: %s\n"+
 				"       When the ENISA single reporting platform API is published,\n"+
-				"       update Wardex and configure ENISABackend.endpoint.\n", queuePath)
+				"       update Wardex and configure ENISABackend.endpoint.", queuePath)
 			backends = append(backends, accept.NewENISABackend(queuePath))
 		}
 	}

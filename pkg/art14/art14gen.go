@@ -20,6 +20,7 @@ import (
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // newUUID generates a random UUID v4 using crypto/rand.
@@ -203,7 +204,7 @@ func ListArtefacts(dir string) ([]*model.Art14NotificationArtefact, error) {
 		artefacts = append(artefacts, a)
 	}
 	if skipped > 0 {
-		fmt.Fprintf(os.Stderr, "[WARN] %d malformed Art14 artefact(s) skipped\n", skipped)
+		ui.Warnf("%d malformed Art14 artefact(s) skipped", skipped)
 	}
 
 	return artefacts, nil

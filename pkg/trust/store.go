@@ -14,6 +14,7 @@ import (
 	"unicode"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"gopkg.in/yaml.v3"
 )
 
@@ -216,7 +217,7 @@ func VerifyRootSig(store *TrustStore) error {
 		}
 		pub, err := DecodePublicKey(k.PubKey)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "[WARN] Admin key %s failed to decode — skipped in root verification\n", k.ID)
+			ui.Warnf("Admin key %s failed to decode — skipped in root verification", k.ID)
 			continue
 		}
 		if err := Verify(pub, rootMsg, store.RootSig); err == nil {

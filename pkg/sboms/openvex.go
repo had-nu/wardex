@@ -6,10 +6,10 @@ package sboms
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // OpenVEXDocument partial schema based on https://openvex.dev
@@ -72,7 +72,7 @@ func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
 	}
 
 	if skippedStates > 0 {
-		fmt.Fprintf(os.Stderr, "[WARN] %d OpenVEX statement(s) skipped — unrecognized state\n", skippedStates)
+		ui.Warnf("%d OpenVEX statement(s) skipped — unrecognized state", skippedStates)
 	}
 
 	return vulns, nil

@@ -13,6 +13,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/atomicwrite"
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // Store manages the persistent state directory.
@@ -232,7 +233,7 @@ func (s *Store) Cleanup(retentionDays int) error {
 	}
 
 	if removed > 0 {
-		fmt.Fprintf(os.Stderr, "[INFO] Cleaned up %d old history snapshots\n", removed)
+		ui.Infof("Cleaned up %d old history snapshots", removed)
 	}
 	return nil
 }

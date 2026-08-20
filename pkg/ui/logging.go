@@ -10,44 +10,45 @@ import (
 
 // Log writes a bracket-prefixed message to w with colour when TTY.
 // Pattern: [PREFIX] message
-func Log(w io.Writer, prefix, msg string, args ...any) {
+//
+// Deprecated: the sink parameter is ignored. Logging is centralised on the
+// process-wide slog logger (see Default/SetLogger). Use Info/Warn/Error instead.
+func Log(_ io.Writer, prefix, msg string, args ...any) {
 	formatted := fmt.Sprintf(msg, args...)
-	if IsTerminal(w) {
-		var colour string
-		switch prefix {
-		case "REJECT", "BLOCK", "FAIL":
-			colour = Red + Bold
-		case "WARN":
-			colour = Yellow
-		case "INFO", "HINT":
-			colour = Cyan
-		case "PASS", "OK":
-			colour = Green
-		default:
-			colour = Gray
-		}
-		fmt.Fprintf(w, "%s[%s]%s %s\n", colour, prefix, Reset, formatted)
-	} else {
-		fmt.Fprintf(w, "[%s] %s\n", prefix, formatted)
+	switch prefix {
+	case "REJECT", "BLOCK", "FAIL":
+		Error(formatted)
+	case "WARN":
+		Warn(formatted)
+	default:
+		Info(formatted)
 	}
 }
 
 // LogReject writes a [REJECT] message (red+bold) — for denied acceptances, tampered data.
-func LogReject(w io.Writer, msg string, args ...any) {
-	Log(w, "REJECT", msg, args...)
+//
+// Deprecated: use Error.
+func LogReject(_ io.Writer, msg string, args ...any) {
+	Error(fmt.Sprintf(msg, args...))
 }
 
 // LogWarn writes a [WARN] message (yellow) — for discarded data that affects results.
-func LogWarn(w io.Writer, msg string, args ...any) {
-	Log(w, "WARN", msg, args...)
+//
+// Deprecated: use Warn.
+func LogWarn(_ io.Writer, msg string, args ...any) {
+	Warn(fmt.Sprintf(msg, args...))
 }
 
 // LogInfo writes a [INFO] message (cyan) — for informational notices.
-func LogInfo(w io.Writer, msg string, args ...any) {
-	Log(w, "INFO", msg, args...)
+//
+// Deprecated: use Info.
+func LogInfo(_ io.Writer, msg string, args ...any) {
+	Info(fmt.Sprintf(msg, args...))
 }
 
 // LogHint writes a [HINT] message (cyan) — for actionable suggestions.
-func LogHint(w io.Writer, msg string, args ...any) {
-	Log(w, "HINT", msg, args...)
+//
+// Deprecated: use Info.
+func LogHint(_ io.Writer, msg string, args ...any) {
+	Info(fmt.Sprintf(msg, args...))
 }
