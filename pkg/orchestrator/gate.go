@@ -239,7 +239,7 @@ func formatDuration(d time.Duration) string {
 // These are recorded in the audit log as cli_overrides for CPL provenance.
 func collectCLIOverrides(opts GateOptions) map[string]string {
 	overrides := make(map[string]string)
-	if opts.GateMode != "any" {
+	if opts.GateMode != "" && opts.GateMode != "any" {
 		overrides["gate-mode"] = opts.GateMode
 	}
 	if opts.FailAbove > 0 {

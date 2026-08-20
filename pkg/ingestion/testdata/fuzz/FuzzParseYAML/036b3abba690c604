@@ -1,0 +1,2 @@
+go test fuzz v1
+[]byte("  - id: 0\n    name: 0\n    maturity: 1\n    layer: 0")

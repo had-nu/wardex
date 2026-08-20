@@ -182,7 +182,7 @@ func (h *textHandler) Handle(_ context.Context, r slog.Record) error {
 		sb.WriteString(" ")
 		sb.WriteString(a.Key)
 		sb.WriteString("=")
-		sb.WriteString(fmt.Sprint(a.Value.Any()))
+		fmt.Fprint(&sb, a.Value.Any())
 		return true
 	})
 	sb.WriteString("\n")

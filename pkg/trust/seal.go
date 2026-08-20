@@ -62,7 +62,7 @@ func SealConfig(ctx context.Context, keyPath, inputPath, outPath, trustRef strin
 		var msg strings.Builder
 		msg.WriteString("config seal: draft contains unsettled fields:\n")
 		for _, f := range pendingFields {
-			msg.WriteString(fmt.Sprintf("  - %s: \"PENDING_APPROVAL\"\n", f))
+			fmt.Fprintf(&msg, "  - %s: \"PENDING_APPROVAL\"\n", f)
 		}
 		msg.WriteString("\nThese fields require a decision from the risk owner before sealing.")
 		return fmt.Errorf("%s", msg.String())

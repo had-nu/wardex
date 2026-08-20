@@ -122,7 +122,8 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 	// 3. Load catalog + correlate.
 	cat, err := catalog.Load(opts.Framework)
 	if err != nil {
-		return nil, fmt.Errorf("load framework catalog %q: %w\n[HINT] Use --framework para especificar um framework válido.", opts.Framework, err)
+		p.Logger.Info("use --framework to select a supported compliance framework")
+		return nil, fmt.Errorf("load framework catalog %q: %w", opts.Framework, err)
 	}
 	corr := correlator.New(cat)
 	mappings, err := corr.Correlate(extControls)
@@ -265,6 +266,7 @@ func (p *EvaluationPipeline) runGate(ctx context.Context, cfg *config.Config, re
 		}
 	case model.DecisionWarn:
 		p.Logger.Warn("risk threshold exceeded WarnAbove", "count", gr.WarnCount)
+	case model.DecisionAllow:
 	}
 	return &gr, nil
 }
