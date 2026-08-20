@@ -8,9 +8,9 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"os"
 
 	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 // tlsConfigFromOptions builds a *tls.Config from provenance options.
@@ -46,7 +46,7 @@ func tlsConfigFromOptions(opts map[string]string) (*tls.Config, error) {
 	}
 
 	if opts["tls_ca_file"] != "" {
-		caCert, err := os.ReadFile(opts["tls_ca_file"])
+		caCert, err := cli.ReadFile(opts["tls_ca_file"])
 		if err != nil {
 			return nil, fmt.Errorf("reading CA cert: %w", err)
 		}

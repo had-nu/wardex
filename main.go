@@ -324,12 +324,7 @@ func runWardex(cmd *cobra.Command, args []string) {
 			Mode:                 gateModeVal,
 		}
 
-		safePathStr, err := pathguard.SafePath(gateFile)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(1)
-		}
-		vdata, err := os.ReadFile(safePathStr) // #nosec G304
+		vdata, err := pathguard.SafeReadFile(gateFile)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to read gate file: %v\n", err)
 			os.Exit(1)

@@ -68,7 +68,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 		}
 
 		// #nosec G122 G304 — path validated by cli.ValidateInputPath above
-		data, err := os.ReadFile(path)
+		data, err := cli.SafeReadFile(path)
 		if err != nil {
 			return nil
 		}

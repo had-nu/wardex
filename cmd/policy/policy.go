@@ -230,7 +230,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	var d policy.DomainFile
 
 	// Load existing file if it exists; silently init a new struct otherwise.
-	data, err := os.ReadFile(abs) // #nosec G304
+	data, err := cli.SafeReadFile(file)
 	switch {
 	case err == nil:
 		if err := yaml.Unmarshal(data, &d); err != nil {

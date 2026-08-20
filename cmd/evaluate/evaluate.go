@@ -569,19 +569,12 @@ func hintMissingEPSS(vulns []model.Vulnerability) {
 
 // loadEvidence reads and parses a vulnerability evidence file.
 func loadEvidence(gateFile string, strict bool) ([]model.Vulnerability, string, error) {
-	safeGatePath, err := pathguard.SafePath(gateFile)
-	if err != nil {
-		return nil, "", fmt.Errorf("evidence path: %w", err)
-	}
-	vdata, err := os.ReadFile(safeGatePath) // #nosec G304
+	vdata, err := pathguard.SafeReadFile(gateFile)
 	if err != nil {
 		return nil, "", fmt.Errorf("read evidence file: %w", err)
 	}
 
-	evidenceHash := ""
-	if h, err := utils.HashFile(safeGatePath); err == nil {
-		evidenceHash = "sha256:" + h
-	}
+	evidenceHash := "sha256:" + utils.HashBytes(vdata)
 
 	var vulnsEnvelope model.VulnerabilityEnvelope
 	if err := yaml.Unmarshal(vdata, &vulnsEnvelope); err != nil {

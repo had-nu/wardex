@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/v2/pkg/atomicwrite"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
@@ -40,7 +41,7 @@ func New(root string) (*Store, error) {
 // LoadState returns the current consolidated state.
 func (s *Store) LoadState() (*State, error) {
 	path := filepath.Join(s.root, "state.json")
-	data, err := os.ReadFile(path) // #nosec G304
+	data, err := cli.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return EmptyState(), nil

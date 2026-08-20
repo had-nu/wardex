@@ -35,7 +35,7 @@ func Load(filename string) (*model.GapReport, error) {
 		return nil, nil // First run or snapshot deleted
 	}
 
-	data, err := os.ReadFile(safePathStr) // #nosec G304
+	data, err := cli.SafeReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read snapshot: %w", err)
 	}

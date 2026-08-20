@@ -74,13 +74,7 @@ func ApplyEPSSEnrichment(vulns []model.Vulnerability, cfg *config.Config, epssPa
 		return vulns
 	}
 
-	safeEnrichPath, err := pathguard.SafePath(epssPath)
-	if err != nil {
-		fmt.Fprintf(logw, "WARNING: EPSS enrichment path validation failed: %v\n", err)
-		return vulns
-	}
-
-	edata, err := os.ReadFile(safeEnrichPath) // #nosec G304
+	edata, err := pathguard.SafeReadFile(epssPath)
 	if err != nil {
 		return vulns
 	}

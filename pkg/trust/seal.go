@@ -6,7 +6,6 @@ package trust
 import (
 	"crypto/ed25519"
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
@@ -49,14 +48,9 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 	}
 
 	// 3. Read and validate the draft config
-	safePath, err := cli.SafePath(inputPath)
+	draftData, err := cli.SafeReadFile(inputPath)
 	if err != nil {
-		return fmt.Errorf("config seal: unsafe path %q: %w", inputPath, err)
-	}
-	// safePath was validated by SafePath above — no traversal possible
-	draftData, err := os.ReadFile(safePath) // #nosec G304
-	if err != nil {
-		return fmt.Errorf("config seal: read draft %q: %w", safePath, err)
+		return fmt.Errorf("config seal: read draft %q: %w", inputPath, err)
 	}
 
 	pendingFields, err := DetectPendingApproval(draftData)

@@ -6,7 +6,6 @@ package assets
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
@@ -52,12 +51,7 @@ type assetEntry struct {
 }
 
 func runAssetsInventory(cmd *cobra.Command, args []string) error {
-	safePath, err := cli.SafePath(assetsFile)
-	if err != nil {
-		return fmt.Errorf("validating assets path: %w", err)
-	}
-
-	data, err := os.ReadFile(safePath) // #nosec G304
+	data, err := cli.SafeReadFile(assetsFile)
 	if err != nil {
 		return fmt.Errorf("reading assets file: %w", err)
 	}

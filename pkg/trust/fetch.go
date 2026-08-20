@@ -11,6 +11,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 // ResolveTrustStoreRef resolves the trust store reference by precedence:
@@ -35,7 +37,7 @@ func FetchTrustStore(ref string) ([]byte, error) {
 		return fetchRemote(ref)
 	}
 	// Local path
-	data, err := os.ReadFile(ref) // #nosec G304
+	data, err := cli.ReadFile(ref) // #nosec G304 -- resolved by ResolveTrustStoreRef
 	if err != nil {
 		return nil, fmt.Errorf("trust store: read local %q: %w", ref, err)
 	}

@@ -174,12 +174,7 @@ type Config struct {
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
 func Load(path string) (*Config, error) {
-	safePathStr, err := cli.SafePath(path)
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := os.ReadFile(safePathStr) // #nosec G304
+	data, err := cli.SafeReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			// Return defaults

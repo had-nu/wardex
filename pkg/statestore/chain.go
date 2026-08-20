@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"lukechampine.com/blake3"
 )
 
@@ -43,7 +44,7 @@ type ChainFile struct {
 
 // LoadChain reads the chain file from disk.
 func LoadChain(path string) (*ChainFile, error) {
-	data, err := os.ReadFile(path) // #nosec G304
+	data, err := cli.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return &ChainFile{Entries: make([]ChainEntry, 0)}, nil

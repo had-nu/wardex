@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/had-nu/wardex/v2/internal/cpl"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +40,7 @@ func init() {
 }
 
 func runVerifyChain(cmd *cobra.Command, args []string) error {
-	logData, err := os.ReadFile(auditLogPath) // #nosec G304 — user-provided path via --audit-log flag
+	logData, err := cli.SafeReadFile(auditLogPath)
 	if err != nil {
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: reading audit log: %v\n", err)
 		os.Exit(2)

@@ -13,6 +13,7 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"gopkg.in/yaml.v3"
 )
 
@@ -177,7 +178,7 @@ func RevokeKey(storePath, keyPath, keyID, reason string) error {
 // LoadStore reads and parses a wardex-trust.yaml file.
 // Returns the parsed store and the raw bytes (needed for TrustStoreSig verification).
 func LoadStore(path string) (*TrustStore, []byte, error) {
-	data, err := os.ReadFile(path) // #nosec G304
+	data, err := cli.ReadFile(path)
 	if err != nil {
 		return nil, nil, fmt.Errorf("trust store: read %q: %w", path, err)
 	}

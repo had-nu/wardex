@@ -2,9 +2,9 @@ package configseal
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/had-nu/wardex/v2/internal/cpl"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -47,9 +47,9 @@ func runConfigHash(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unsupported algorithm %q: use sha256 or blake3", hashAlgorithm)
 	}
 
-	raw, err := os.ReadFile(hashConfigPath) // #nosec G304 — user-provided path via --config flag
+	raw, err := cli.SafeReadFile(hashConfigPath)
 	if err != nil {
-		return fmt.Errorf("read config: %w", err)
+		return fmt.Errorf("reading config file: %w", err)
 	}
 
 	hash, err := cpl.ComputeConfigHash(raw, algo)

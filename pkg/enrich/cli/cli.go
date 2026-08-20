@@ -49,12 +49,7 @@ var epssCmd = &cobra.Command{
 			exitFunc(1)
 		}
 
-		safePathStr, err := pathguard.SafePath(inFile)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Invalid input file path: %v\n", err)
-			exitFunc(1)
-		}
-		vdata, err := os.ReadFile(safePathStr) // #nosec G304
+		vdata, err := pathguard.SafeReadFile(inFile)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to read vulnerability file: %v\n", err)
 			exitFunc(1)

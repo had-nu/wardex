@@ -11,6 +11,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 const (
@@ -59,7 +61,7 @@ func LoadPrivateKey(path string) (ed25519.PrivateKey, error) {
 		return nil, err
 	}
 
-	data, err := os.ReadFile(path) // #nosec G304
+	data, err := cli.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("keyring: read %q: %w", path, err)
 	}
@@ -78,7 +80,7 @@ func LoadPrivateKey(path string) (ed25519.PrivateKey, error) {
 
 // LoadPublicKeyFile reads a public key from a .pub file.
 func LoadPublicKeyFile(path string) (ed25519.PublicKey, error) {
-	data, err := os.ReadFile(path) // #nosec G304
+	data, err := cli.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("keyring: read public key %q: %w", path, err)
 	}

@@ -40,12 +40,7 @@ func init() {
 }
 
 func runHMACSign(cmd *cobra.Command, args []string) error {
-	safePath, err := cli.SafePath(hmacFile)
-	if err != nil {
-		return fmt.Errorf("validating file path: %w", err)
-	}
-
-	data, err := os.ReadFile(safePath) // #nosec G304
+	data, err := cli.SafeReadFile(hmacFile)
 	if err != nil {
 		return fmt.Errorf("reading file: %w", err)
 	}

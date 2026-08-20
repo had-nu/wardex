@@ -18,6 +18,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
@@ -164,9 +165,9 @@ func WriteArtefact(a *model.Art14NotificationArtefact, dir string) (string, erro
 
 // ReadArtefact reads and deserialises an Art14 artefact from disk.
 func ReadArtefact(path string) (*model.Art14NotificationArtefact, error) {
-	data, err := os.ReadFile(path) // #nosec G304
+	data, err := cli.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("art14: read artefact: %w", err)
+		return nil, fmt.Errorf("reading artefact: %w", err)
 	}
 
 	var a model.Art14NotificationArtefact

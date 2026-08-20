@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 type LinkStatus string
@@ -74,7 +76,7 @@ func VerifyLink(log []byte, configDir string) ([]LinkResult, error) {
 		}
 		r.ConfigFile = configFile
 
-		raw, err := os.ReadFile(configFile) // #nosec G304
+		raw, err := cli.ReadFile(configFile)
 		if err != nil {
 			r.Status = StatusMissing
 			results = append(results, r)
@@ -102,9 +104,9 @@ func VerifyLink(log []byte, configDir string) ([]LinkResult, error) {
 }
 
 func VerifyLinkSingle(log []byte, configPath string) ([]LinkResult, error) {
-	raw, err := os.ReadFile(configPath) // #nosec G304
+	raw, err := cli.ReadFile(configPath)
 	if err != nil {
-		return nil, fmt.Errorf("cpl: read config: %w", err)
+		return nil, err
 	}
 
 	return VerifyLinkWithConfig(log, raw)

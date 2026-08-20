@@ -40,11 +40,7 @@ type CycloneDXVulnerability struct {
 // ParseCycloneDX reads a CycloneDX 1.5 JSON formatted SBOM and extracts
 // the embedded vulnerabilities into the Wardex model.
 func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
-	safePathStr, err := cli.SafePath(filepath)
-	if err != nil {
-		return nil, err
-	}
-	data, err := os.ReadFile(safePathStr) // #nosec G304
+	data, err := cli.SafeReadFile(filepath)
 	if err != nil {
 		if _, ok := err.(*fs.PathError); ok {
 			return nil, fmt.Errorf("file not found: %s", filepath)

@@ -28,11 +28,7 @@ type OpenVEXStatement struct {
 // It returns a slice of Wardex Vulnerabilities. When status is not_affected
 // or false_positive, it marks Reachable=false so the Release Gate suppresses them.
 func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
-	safePathStr, err := cli.SafePath(filePath)
-	if err != nil {
-		return nil, err
-	}
-	data, err := os.ReadFile(safePathStr) // #nosec G304
+	data, err := cli.SafeReadFile(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read openvex file: %w", err)
 	}

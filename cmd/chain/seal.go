@@ -82,7 +82,7 @@ func runChainSeal(cmd *cobra.Command, args []string) error {
 			return nil // skip invalid paths
 		}
 
-		data, err := os.ReadFile(path) // #nosec G304 G122 — path validated above via ValidateInputPath
+		data, err := cli.SafeReadFile(path)
 		if err != nil {
 			return nil
 		}
