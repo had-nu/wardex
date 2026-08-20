@@ -3,7 +3,7 @@
 
 //go:build !windows
 
-package accept
+package forward
 
 import (
 	"context"

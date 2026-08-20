@@ -30,7 +30,9 @@
 package sdk
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 
 	"github.com/had-nu/wardex/v2/pkg/analyzer"
 	"github.com/had-nu/wardex/v2/pkg/catalog"
@@ -80,13 +82,9 @@ func Analyze(controls []model.ExistingControl, framework string) (*AssessmentRes
 			sortedRoadmap = append(sortedRoadmap, f)
 		}
 	}
-	for i := 0; i < len(sortedRoadmap); i++ {
-		for j := i + 1; j < len(sortedRoadmap); j++ {
-			if sortedRoadmap[i].FinalScore < sortedRoadmap[j].FinalScore {
-				sortedRoadmap[i], sortedRoadmap[j] = sortedRoadmap[j], sortedRoadmap[i]
-			}
-		}
-	}
+	slices.SortFunc(sortedRoadmap, func(a, b model.Finding) int {
+		return cmp.Compare(b.FinalScore, a.FinalScore) // descending
+	})
 
 	summary := buildSummary(cat, findings)
 	posture := an.AssessPosture(findings)

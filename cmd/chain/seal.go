@@ -4,11 +4,13 @@
 package chain
 
 import (
+	"cmp"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
@@ -101,13 +103,9 @@ func runChainSeal(cmd *cobra.Command, args []string) error {
 	for k := range artifacts {
 		keys = append(keys, k)
 	}
-	for i := 0; i < len(keys); i++ {
-		for j := i + 1; j < len(keys); j++ {
-			if keys[i] > keys[j] {
-				keys[i], keys[j] = keys[j], keys[i]
-			}
-		}
-	}
+	slices.SortFunc(keys, func(a, b string) int {
+		return cmp.Compare(a, b) // ascending
+	})
 
 	var chainInput strings.Builder
 	for _, k := range keys {
