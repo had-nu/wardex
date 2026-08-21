@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.5.0] — 2026-08-20
+## [2.5.0] — 2026-08-21
 
 ### Added — Go 1.27 & Hardening
 
@@ -14,9 +14,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   field in `cmd/chain/seal.go`. A CI gate runs `go fix ./...` and fails on any
   diff.
 - **CI on Go 1.27.0**: build/test (with `-race` and coverage threshold), vet
-  (including `stdversion`), golangci-lint v2.13.1, govulncheck, and gosec jobs.
+  (including `stdversion`), golangci-lint v2.13.1, govulncheck v1.6.0, gosec
+  (temporarily disabled pending Go 1.27 compatibility).
 - **Audited `encoding/json` v2**: JSON error assertions use type checks/prefixes
   instead of exact strings.
+
+### Fixed — Critical Security Hardening
+
+- **PathGuard symlink parent escape** (CVE-class): Fixed `resolveWithSymlinkCheck`
+  to walk path components and validate each existing component for symlink
+  escapes in parent directories of non-existent output files. Added
+  `TestValidateOutputPath_SymlinkParentEscape`. (Addresses workspace escape via
+  symlink parent directory)
+
+- **Trust Store metadata manipulation**: Enhanced `VerifyRootSig` to verify each
+  `KeyEntry.AddedSig` against `AddedBy` signer, and each `Revocation.Sig`
+  against `RevokedBy` admin signer. Previously only `RootSig` was verified,
+  allowing role escalation via metadata modification.
+
+- **Risk Acceptance hash validation**: Added `ConfigHash` field to `model.Acceptance`;
+  `VerifyAll` now requires both `ReportHash` and `ConfigHash` to be present and
+  match current values. Missing hashes now cause validation failure (previously
+  silently accepted).
+
+- **NaN/Inf fail-open in risk engine**: Added `isValidScore` validation in
+  `CalculateRisk` for `CVSSBase`, `EPSSScore`, `Criticality`, `Effectiveness`,
+  and final `finalRisk`. Returns maximum risk (BLOCK) on NaN/Inf/out-of-range.
+
+- **Arbitrary file write**: Migrated 10 commands (art14, chain/seal,
+  convert/grype/kev/sbom, policy, simulate, provenance/seal) to use
+  `cli.SafeWriteFile`/`SafeOutputPath` with path validation.
+
+- **Atomic write symlink attack**: `atomicwrite.Write` now uses
+  `os.CreateTemp` with `O_EXCL`, sync, chmod, rename, sync parent directory.
+  Added `WriteWithContext` for cancellation support.
+
+- **Trust bootstrap circularity**: Added `RootAnchor` field (external root trust
+  anchor) to `TrustStore`. `InitStore` accepts optional anchor. `VerifyRootSig`
+  verifies against anchor when present, breaking circular trust bootstrap.
+
+- **RBAC temporal checks**: `VerifyRootSig` now checks signer had `OpTrustAdd`/
+  `OpTrustRevoke` authority at time of signing. Revocation status of signer
+  not checked for past signatures (revocation applies to future ops only).
+
+- **ReportHash/ConfigHash empty = invalid**: `VerifyAll` now requires both
+  hashes present and matching for new acceptances. Missing hashes cause
+  validation failure.
+
+- **Aggregate missing gate**: Fail-closed — returns `MissingGateData` (exit 13)
+  when gate data absent instead of treating as ALLOW.
+
+- **finalRisk defense-in-depth**: `CalculateRisk` validates `finalRisk` is
+  finite and in [0, 1.5] as final defense-in-depth layer.
 
 ### Hardening — Architecture (Eixo B)
 

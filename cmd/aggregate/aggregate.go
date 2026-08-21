@@ -40,7 +40,8 @@ Examples:
 
 Exit codes:
    0 — Combined decision: ALLOW
-  10 — Combined decision: BLOCK`,
+  10 — Combined decision: BLOCK
+  11 — Missing gate data in one or more input files (run with --gate)`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: runAggregate,
 }
@@ -80,9 +81,8 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("aggregate: parse %q: %w", path, err)
 		}
 		if gr.Gate == nil {
-			fmt.Fprintf(os.Stderr, "[WARN] %q has no gate data (was --gate used?). Treating as ALLOW.\n", path)
-			results = append(results, fileResult{file: path, decision: "allow"})
-			continue
+			fmt.Fprintf(os.Stderr, "[FAIL] %q has no gate data (was --gate used?)\n", path)
+			os.Exit(exitcodes.MissingGateData)
 		}
 		results = append(results, fileResult{
 			file:     path,

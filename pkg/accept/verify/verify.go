@@ -45,15 +45,31 @@ func VerifyAll(acceptances []model.Acceptance, key []byte, currentReportHash str
 			res.ExpiresIn = time.Until(a.ExpiresAt)
 		}
 
-		// Check ReportHash mismatch
-		if a.ReportHash != "" && currentReportHash != "" && a.ReportHash != currentReportHash {
+		// Check ReportHash - required for new acceptances
+		if a.ReportHash == "" {
+			res.ReportMismatch = true
+			res.Errors = append(res.Errors, "acceptance missing ReportHash — cannot verify binding to report")
+			allValid = false
+		} else if currentReportHash == "" {
+			res.ReportMismatch = true
+			res.Errors = append(res.Errors, "current report hash not provided — cannot verify ReportHash")
+			allValid = false
+		} else if a.ReportHash != currentReportHash {
 			res.ReportMismatch = true
 			res.Errors = append(res.Errors, "acceptance ReportHash does not match current report")
 			allValid = false
 		}
 
-		// Check ConfigHash mismatch (stale acceptance)
-		if a.ConfigHash != "" && currentConfigHash != "" && a.ConfigHash != currentConfigHash {
+		// Check ConfigHash - required for new acceptances
+		if a.ConfigHash == "" {
+			res.Stale = true
+			res.Errors = append(res.Errors, "acceptance missing ConfigHash — cannot verify binding to config")
+			allValid = false
+		} else if currentConfigHash == "" {
+			res.Stale = true
+			res.Errors = append(res.Errors, "current config hash not provided — cannot verify ConfigHash")
+			allValid = false
+		} else if a.ConfigHash != currentConfigHash {
 			res.Stale = true
 			res.Errors = append(res.Errors, "acceptance ConfigHash does not match current config")
 			allValid = false

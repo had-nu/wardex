@@ -19,9 +19,10 @@ var (
 	trustPath   string
 
 	// trust init flags
-	initActor string
-	initName  string
-	initOut   string
+	initActor   string
+	initName    string
+	initOut     string
+	initRootAnchor string
 
 	// trust add flags
 	addPubkey string
@@ -53,7 +54,12 @@ var initCmd = &cobra.Command{
 This can only be run once — subsequent calls fail if the file exists.
 
 After initialisation, configure branch protection on your repository
-to prevent unauthorised modifications to the trust store.`,
+to prevent unauthorised modifications to the trust store.
+
+Security: Use --root-anchor to provide an external root trust anchor
+(sha256:<base64> public key fingerprint). This breaks the circular
+trust bootstrap by providing an external trust anchor that cannot be
+modified by the trust store itself.`,
 	RunE: runTrustInit,
 }
 
@@ -90,6 +96,7 @@ func init() {
 	initCmd.Flags().StringVar(&initActor, "actor", "", "Email of the admin (required)")
 	initCmd.Flags().StringVar(&initName, "name", "", "Full name of the admin (required)")
 	initCmd.Flags().StringVar(&initOut, "out", "./wardex-trust.yaml", "Output path for the trust store")
+	initCmd.Flags().StringVar(&initRootAnchor, "root-anchor", "", "Optional external root trust anchor (sha256:<base64> public key fingerprint) to break circular bootstrap")
 	_ = initCmd.MarkFlagRequired("actor")
 	_ = initCmd.MarkFlagRequired("name")
 
@@ -117,7 +124,7 @@ func init() {
 }
 
 func runTrustInit(cmd *cobra.Command, args []string) error {
-	if err := trust.InitStore(keyringPath, initActor, initName, initOut); err != nil {
+	if err := trust.InitStore(keyringPath, initActor, initName, initOut, initRootAnchor); err != nil {
 		return err
 	}
 
@@ -132,6 +139,10 @@ func runTrustInit(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("File:", ui.Gray), initOut)
 	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Admin:", ui.Gray), initActor)
 	fmt.Fprintf(w, "  %s %s\n\n", ui.Colorize("Key ID:", ui.Gray), store.Keys[0].ID)
+	if initRootAnchor != "" {
+		fmt.Fprintf(w, "  %s %s\n\n", ui.Colorize("Root Anchor:", ui.Gray), initRootAnchor)
+		fmt.Fprintln(w, "External root anchor configured — circular bootstrap broken.")
+	}
 	fmt.Fprintf(w, "NEXT STEPS — do not skip:\n")
 	fmt.Fprintf(w, "  1. git add %s\n", initOut)
 	fmt.Fprintf(w, "  2. git commit -m \"chore: wardex trust bootstrap\"\n")

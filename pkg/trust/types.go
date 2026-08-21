@@ -101,11 +101,17 @@ type Revocation struct {
 // The file has a covering signature (RootSig) calculated over the SHA-256
 // hash of all KeyEntry.AddedSig and Revocation.Sig, in insertion order.
 // Any manual modification invalidates RootSig.
+//
+// RootAnchor is an optional external root trust anchor. When present, it
+// provides a fixed trust anchor that cannot be modified by the trust store
+// itself, breaking the circular trust bootstrap. It should be configured
+// out-of-band (e.g., in wardex-config.yaml or via environment variable).
 type TrustStore struct {
 	Version     string       `yaml:"version"`
 	CreatedAt   time.Time    `yaml:"created_at"`
 	CreatedBy   string       `yaml:"created_by"` // actor email
 	Keys        []KeyEntry   `yaml:"keys"`
 	Revocations []Revocation `yaml:"revocations"`
-	RootSig     string       `yaml:"root_sig"` // admin signature over the store state
+	RootSig     string       `yaml:"root_sig"`     // admin signature over the store state
+	RootAnchor  string       `yaml:"root_anchor"`  // optional: external root public key fingerprint (sha256:...)
 }

@@ -5,6 +5,7 @@
 ![Wardex Lockup](pkg/ui/wardex-lockup.svg)
 
 [![Go](https://img.shields.io/badge/Go-1.27-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
+[![Security](https://img.shields.io/badge/Security-Hardened-brightgreen?style=flat-square&logo=security&logoColor=white)](SECURITY.md)
 [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
 [![Coverage](https://img.shields.io/badge/coverage-40%25-yellow?style=flat-square)](#)
 [![Docker](https://img.shields.io/badge/Docker-ghcr.io/had--nu/wardex-2496ED?style=flat-square&logo=docker&logoColor=white)](https://github.com/had-nu/wardex/pkgs/container/wardex)
@@ -59,6 +60,40 @@ wardex audit verify-chain --audit-log wardex-gate-audit.log
 # Verificar ligação com configurações arquivadas
 wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./configs/
 ```
+
+---
+
+## What's New — v2.5.0 (Security Hardening Release)
+
+**v2.5.0** is a security hardening release addressing critical findings from a comprehensive runtime audit. All findings from the audit have been addressed.
+
+### Critical Security Fixes
+
+- **PathGuard symlink parent escape (CVE-class)**: Fixed workspace escape via symlink in parent directory of non-existent output files. Path validation now walks path components and validates each existing component for symlink escapes.
+- **Trust Store metadata manipulation**: `VerifyRootSig` now verifies each `KeyEntry.AddedSig` against `AddedBy` signer and each `Revocation.Sig` against `RevokedBy` admin signer. Prevents role escalation via metadata modification.
+- **Risk Acceptance hash validation**: `VerifyAll` now requires both `ReportHash` and `ConfigHash` to be present and match current values. Missing hashes cause validation failure.
+- **NaN/Inf fail-open in risk engine**: `CalculateRisk` validates all inputs and final `finalRisk` against NaN/Inf/out-of-range. Returns maximum risk (BLOCK) on invalid values.
+- **Arbitrary file write prevention**: 10 commands migrated to `cli.SafeWriteFile`/`SafeOutputPath` with centralized path validation.
+- **Atomic write symlink attack**: `atomicwrite.Write` uses `os.CreateTemp` with `O_EXCL`, sync, chmod, rename, sync parent directory.
+- **Trust bootstrap circularity**: Added `RootAnchor` (external root trust anchor) to break circular trust bootstrap.
+- **RBAC temporal checks**: `VerifyRootSig` verifies signer had `OpTrustAdd`/`OpTrustRevoke` authority at time of signing.
+- **ReportHash/ConfigHash required**: Missing hashes now cause validation failure for new acceptances.
+- **Aggregate missing gate**: Fail-closed — returns `MissingGateData` (exit 13) when gate data absent.
+- **finalRisk defense-in-depth**: Final risk score validated against NaN/Inf/out-of-range.
+
+### Architecture Hardening
+
+- **`pkg/orchestrator`**: Full evaluation pipeline ownership; thin CLI wrappers (28/26 lines).
+- **Centralized file I/O**: `pkg/cli/safefile.go` — 46 call sites migrated; zero `os.ReadFile` outside safefile.
+- **`log/slog` migration**: Structured logging; zero `fmt.Fprintf(os.Stderr, ...)` in `pkg/*`.
+- **`context.Context` propagation**: Through all network calls (`http.NewRequestWithContext`).
+- **`pkg/accept` decomposition**: Split into sub-packages; facade deprecated (removed v3.0).
+
+### Tests & Fuzzing
+
+- **`pkg/orchestrator` coverage ≥ 80%** (83.5%): evaluation pipeline, gate pipeline, Article 14, strict/dry-run/json/csv.
+- **Property-based fuzz tests**: Ingestion, PathGuard, Accept/Verify with invariants.
+- **`go test -race ./...`** passes; **golangci-lint v2.13.1** zero issues.
 
 ---
 

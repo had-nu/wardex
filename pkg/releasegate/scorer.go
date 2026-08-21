@@ -83,6 +83,13 @@ func CalculateRisk(vuln model.Vulnerability, ctx model.AssetContext, comps []mod
 
 	finalRisk := compensatedScore * criticality * exposure
 
+	// Defense in depth: validate final result is finite and in expected range
+	if !isValidScore(finalRisk, 0.0, 1.5) {
+		return model.RiskBreakdown{
+			FinalReleaseRisk: 1.5,
+		}
+	}
+
 	return model.RiskBreakdown{
 		CVSSBase:           vuln.CVSSBase,
 		EPSSFactor:         epss,
