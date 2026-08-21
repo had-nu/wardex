@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/had-nu/wardex/v2/pkg/accept/audit"
 	"github.com/had-nu/wardex/v2/pkg/accept/verify"
@@ -20,33 +21,55 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Mutex for protecting concurrent appends to the same file
+var (
+	appendMu      sync.Mutex
+	appendMuMap   = make(map[string]*sync.Mutex)
+)
+
+func getAppendMutex(path string) *sync.Mutex {
+	appendMu.Lock()
+	defer appendMu.Unlock()
+	mu, ok := appendMuMap[path]
+	if !ok {
+		mu = &sync.Mutex{}
+		appendMuMap[path] = mu
+	}
+	return mu
+}
+
 // ErrStoreInconsistent is returned when the acceptance store has fewer YAML
 // entries than audit log events, indicating possible tampering or data loss.
 var ErrStoreInconsistent = errors.New("store inconsistency: yaml entries < audit log events")
 
 // Load reads wardex-acceptances.yaml and sequentially executes verify logic.
-// Rejected acceptances (expired, tampered, revoked) are logged to logw when non-nil.
-func Load(path string, key []byte, auditPath string, currentReportHash string, currentConfigHash string, logw io.Writer) ([]model.Acceptance, error) {
-	data, err := cli.SafeReadFile(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, nil // First time
+	// Rejected acceptances (expired, tampered, revoked) are logged to logw when non-nil.
+	func Load(path string, key []byte, auditPath string, currentReportHash string, currentConfigHash string, logw io.Writer) ([]model.Acceptance, error) {
+		data, err := cli.SafeReadFile(path)
+		if err != nil {
+			if os.IsNotExist(err) {
+				return nil, nil // First time
+			}
+			return nil, err
 		}
-		return nil, err
-	}
 
-	var st model.AcceptanceStore
-	if err := yaml.Unmarshal(data, &st); err != nil {
-		return nil, fmt.Errorf("failed to parse acceptances: %w", err)
-	}
+		var st model.AcceptanceStore
+		if err := yaml.Unmarshal(data, &st); err != nil {
+			return nil, fmt.Errorf("failed to parse acceptances: %w", err)
+		}
 
-	countCreated, err := audit.AuditCountCreated(auditPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to count audit log events: %w", err)
-	}
+countCreated := 0
+	if auditPath != "" {
+		var err error
+		countCreated, err = audit.AuditCountCreated(auditPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to count audit log events: %w", err)
+		}
 
-	if len(st.Acceptances) < countCreated {
-		return nil, ErrStoreInconsistent
+		// Inconsistency: more acceptances than audit entries indicates missing audit entries
+		if len(st.Acceptances) > countCreated {
+			return nil, ErrStoreInconsistent
+		}
 	}
 
 	results, allValid := verify.VerifyAll(st.Acceptances, key, currentReportHash, currentConfigHash)
@@ -92,6 +115,10 @@ func Append(path string, a model.Acceptance) error {
 	if err := os.MkdirAll(dir, 0750); err != nil {
 		return err
 	}
+
+	mu := getAppendMutex(safePathStr)
+	mu.Lock()
+	defer mu.Unlock()
 
 	// Read existing
 	data, err := cli.SafeReadFile(path)
