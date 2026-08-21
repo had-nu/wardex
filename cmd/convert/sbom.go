@@ -109,7 +109,7 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 	if outputPath == "stdout" || outputPath == "-" {
 		fmt.Print(string(yamlData))
 	} else {
-		if err := os.WriteFile(outputPath, yamlData, 0600); err != nil {
+		if err := cli.SafeWriteFile(outputPath, yamlData); err != nil {
 			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
 			os.Exit(1)
 		}
@@ -158,7 +158,7 @@ func attestSBOM(inputFile, outputFile, keyPath string) error {
 	if err != nil {
 		return fmt.Errorf("marshal attestation: %w", err)
 	}
-	if err := os.WriteFile(attestPath, out, 0600); err != nil {
+	if err := cli.SafeWriteFile(attestPath, out); err != nil {
 		return fmt.Errorf("write attestation: %w", err)
 	}
 

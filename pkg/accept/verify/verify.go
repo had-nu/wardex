@@ -45,8 +45,22 @@ func VerifyAll(acceptances []model.Acceptance, key []byte, currentReportHash str
 			res.ExpiresIn = time.Until(a.ExpiresAt)
 		}
 
-		// Validation succeeds if its non tampered and non expired
-		if !res.Tampered && !res.Expired {
+		// Check ReportHash mismatch
+		if a.ReportHash != "" && currentReportHash != "" && a.ReportHash != currentReportHash {
+			res.ReportMismatch = true
+			res.Errors = append(res.Errors, "acceptance ReportHash does not match current report")
+			allValid = false
+		}
+
+		// Check ConfigHash mismatch (stale acceptance)
+		if a.ConfigHash != "" && currentConfigHash != "" && a.ConfigHash != currentConfigHash {
+			res.Stale = true
+			res.Errors = append(res.Errors, "acceptance ConfigHash does not match current config")
+			allValid = false
+		}
+
+		// Validation succeeds if its non tampered, non expired, and hashes match
+		if !res.Tampered && !res.Expired && !res.ReportMismatch && !res.Stale {
 			res.Valid = true
 		}
 		results = append(results, res)

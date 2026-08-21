@@ -271,7 +271,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	}
 
 	// 0o600: policy files contain compliance state — no need for group/other read.
-	if err := os.WriteFile(abs, out, 0o600); err != nil {
+	if err := cli.SafeWriteFile(abs, out); err != nil {
 		return fmt.Errorf("policy add: write: %w", err)
 	}
 

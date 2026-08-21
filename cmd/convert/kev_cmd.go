@@ -94,7 +94,7 @@ func runConvertKEV(cmd *cobra.Command, args []string) error {
 	if kevOutFile == "stdout" || kevOutFile == "-" {
 		fmt.Fprint(cmd.OutOrStdout(), string(yamlData))
 	} else {
-		if err := os.WriteFile(kevOutFile, yamlData, 0600); err != nil {
+		if err := cli.SafeWriteFile(kevOutFile, yamlData); err != nil {
 			return fmt.Errorf("writing output: %w", err)
 		}
 		fmt.Fprintf(cmd.OutOrStdout(), "Converted %d KEV entries to %s\n", len(out.Vulnerabilities), kevOutFile)
@@ -144,7 +144,7 @@ func attestKEV(inputFile, outputFile, keyPath string) error {
 	if err != nil {
 		return fmt.Errorf("marshal attestation: %w", err)
 	}
-	if err := os.WriteFile(attestPath, out, 0600); err != nil {
+	if err := cli.SafeWriteFile(attestPath, out); err != nil {
 		return fmt.Errorf("write attestation: %w", err)
 	}
 

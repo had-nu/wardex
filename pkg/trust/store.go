@@ -207,7 +207,67 @@ func LoadStoreFromBytes(data []byte) (*TrustStore, error) {
 
 // VerifyRootSig verifies the root signature of a trust store.
 // It finds the admin key that created the signature and validates it.
+// Also verifies each KeyEntry.AddedSig and Revocation.Sig.
 func VerifyRootSig(store *TrustStore) error {
+	// Verify each KeyEntry.AddedSig
+	for _, k := range store.Keys {
+		if k.AddedSig == "" {
+			return fmt.Errorf("trust store: key %q missing AddedSig", k.ID)
+		}
+		// Find the key that signed this entry (AddedBy)
+		var signerPub ed25519.PublicKey
+		var signerFound bool
+		for _, s := range store.Keys {
+			if s.Actor == k.AddedBy || (k.AddedBy == "bootstrap" && s.Role == RoleAdmin) {
+				pub, err := DecodePublicKey(s.PubKey)
+				if err != nil {
+					continue
+				}
+				signerPub = pub
+				signerFound = true
+				break
+			}
+		}
+		if !signerFound {
+			return fmt.Errorf("trust store: key %q AddedBy %q not found in store", k.ID, k.AddedBy)
+		}
+		// Verify the AddedSig
+		entryMsg := canonicalKeyEntryMessage(&k)
+		if err := Verify(signerPub, entryMsg, k.AddedSig); err != nil {
+			return fmt.Errorf("trust store: key %q AddedSig invalid: %w", k.ID, err)
+		}
+	}
+
+	// Verify each Revocation.Sig
+	for _, r := range store.Revocations {
+		if r.Sig == "" {
+			return fmt.Errorf("trust store: revocation for key %q missing Sig", r.KeyID)
+		}
+		// Find the key that signed this revocation (RevokedBy)
+		var signerPub ed25519.PublicKey
+		var signerFound bool
+		for _, s := range store.Keys {
+			if s.Actor == r.RevokedBy && s.Role == RoleAdmin {
+				pub, err := DecodePublicKey(s.PubKey)
+				if err != nil {
+					continue
+				}
+				signerPub = pub
+				signerFound = true
+				break
+			}
+		}
+		if !signerFound {
+			return fmt.Errorf("trust store: revocation for key %q RevokedBy %q not found or not admin", r.KeyID, r.RevokedBy)
+		}
+		// Verify the Revocation.Sig
+		revMsg := canonicalRevocationMessage(&r)
+		if err := Verify(signerPub, revMsg, r.Sig); err != nil {
+			return fmt.Errorf("trust store: revocation for key %q Sig invalid: %w", r.KeyID, err)
+		}
+	}
+
+	// Verify RootSig (covers all AddedSig and Revocation.Sig)
 	rootMsg := rootSigMessage(store)
 
 	// Try each admin key to find the one that signed

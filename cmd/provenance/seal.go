@@ -104,7 +104,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 	}
 
 	outData, _ := json.MarshalIndent(seal, "", "  ")
-	if err := os.WriteFile(sealOutput, outData, 0600); err != nil {
+	if err := cli.SafeWriteFile(sealOutput, outData); err != nil {
 		return fmt.Errorf("writing chain seal: %w", err)
 	}
 
