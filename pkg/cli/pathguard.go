@@ -180,9 +180,9 @@ func resolveWithSymlinkCheck(absBase, cleanPath string) (string, error) {
 		relPath = strings.TrimPrefix(cleanPath, string(os.PathSeparator))
 	}
 
-	components := strings.Split(relPath, string(os.PathSeparator))
+	components := strings.SplitSeq(relPath, string(os.PathSeparator))
 
-	for _, comp := range components {
+	for comp := range components {
 		if comp == "" {
 			continue
 		}

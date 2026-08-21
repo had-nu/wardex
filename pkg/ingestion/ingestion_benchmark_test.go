@@ -25,7 +25,7 @@ func benchFixture(b *testing.B, name, content string) string {
 func yamlBenchContent(controls int) string {
 	var s string
 	s += "controls:\n"
-	for i := 0; i < controls; i++ {
+	for i := range controls {
 		s += fmt.Sprintf("  - id: \"CTRL-%04d\"\n    name: \"Control %d\"\n    maturity: 3\n    layer: implemented\n    domains: [\"organizational\"]\n", i, i)
 	}
 	return s
@@ -33,7 +33,7 @@ func yamlBenchContent(controls int) string {
 
 func jsonBenchContent(controls int) string {
 	s := `{"controls": [`
-	for i := 0; i < controls; i++ {
+	for i := range controls {
 		if i > 0 {
 			s += ","
 		}
@@ -44,7 +44,7 @@ func jsonBenchContent(controls int) string {
 
 func csvBenchContent(controls int) string {
 	s := "id,name,description,maturity,domains,context_weight\n"
-	for i := 0; i < controls; i++ {
+	for i := range controls {
 		s += fmt.Sprintf("%d,Control %d,Desc,3,organizational,1.0\n", i, i)
 	}
 	return s

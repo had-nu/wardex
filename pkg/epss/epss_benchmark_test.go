@@ -15,7 +15,7 @@ func benchEnrichment(n int) model.EPSSEnrichmentFile {
 		GeneratedAt: "2026-08-20T00:00:00Z",
 		Provenance:  map[string]string{"tool": "wardex", "version": "2.5.0"},
 	}
-	for i := 0; i < n; i++ {
+	for i := range n {
 		f.Enrichments = append(f.Enrichments, model.EPSSEnrichment{
 			CVE:   fmt.Sprintf("CVE-2026-%05d", i),
 			Score: 0.0001 * float64(i),
