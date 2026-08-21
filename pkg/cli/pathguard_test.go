@@ -373,3 +373,32 @@ func TestValidateOutputPath_ReturnedPath(t *testing.T) {
 		t.Errorf("ValidateOutputPath(%q) resolved = %q; want %q", "reports/output.json", resolved, expected)
 	}
 }
+
+// TestValidateOutputPath_SymlinkParentEscape verifies that a symlink in a parent
+// directory is detected even when the final file doesn't exist.
+// This is the critical fix for the workspace escape vulnerability.
+func TestValidateOutputPath_SymlinkParentEscape(t *testing.T) {
+	if os.Getuid() == 0 {
+		t.Skip("running as root — symlink escape test skipped (root ignores DAC)")
+	}
+
+	base, cleanup := setupWorkspace(t)
+	defer cleanup()
+
+	// Create a subdirectory that is a symlink pointing outside the workspace.
+	escapeDir := filepath.Join(base, "escape")
+	if err := os.Symlink("/tmp", escapeDir); err != nil {
+		t.Fatalf("creating escape symlink: %v", err)
+	}
+
+	// The output file "escape/payload.txt" doesn't exist yet.
+	// The path "escape/payload.txt" is syntactically within the workspace.
+	// But the parent "escape" is a symlink to /tmp.
+	// The old code would fall back to the syntactic path and allow the write.
+	_, err := cli.ValidateOutputPath(base, "escape/payload.txt")
+
+	// Must reject because the resolved path would be outside the workspace.
+	if err == nil {
+		t.Error("ValidateOutputPath accepted path with symlink parent pointing outside workspace")
+	}
+}

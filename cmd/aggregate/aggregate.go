@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/ui"
@@ -70,7 +71,7 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 
 	var results []fileResult
 	for _, path := range args {
-		data, err := os.ReadFile(path) // #nosec G304
+		data, err := cli.SafeReadFile(path)
 		if err != nil {
 			return fmt.Errorf("aggregate: read %q: %w", path, err)
 		}

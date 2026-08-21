@@ -19,12 +19,12 @@ type goModule struct {
 }
 
 type sbomComponent struct {
-	Type       string `json:"type"`
-	Name       string `json:"name"`
-	Version    string `json:"version"`
-	PURL       string `json:"purl,omitempty"`
-	Scope      string `json:"scope,omitempty"`
-	Licenses   []sbomLicense `json:"licenses,omitempty"`
+	Type     string        `json:"type"`
+	Name     string        `json:"name"`
+	Version  string        `json:"version"`
+	PURL     string        `json:"purl,omitempty"`
+	Scope    string        `json:"scope,omitempty"`
+	Licenses []sbomLicense `json:"licenses,omitempty"`
 }
 
 type sbomLicense struct {
@@ -36,17 +36,17 @@ type sbomLicenseID struct {
 }
 
 type bom struct {
-	BOMFormat   string `json:"bomFormat"`
-	SpecVersion string `json:"specVersion"`
-	SerialNumber string `json:"serialNumber"`
-	Version     int    `json:"version"`
-	Metadata    bomMetadata `json:"metadata"`
-	Components  []sbomComponent `json:"components"`
+	BOMFormat    string          `json:"bomFormat"`
+	SpecVersion  string          `json:"specVersion"`
+	SerialNumber string          `json:"serialNumber"`
+	Version      int             `json:"version"`
+	Metadata     bomMetadata     `json:"metadata"`
+	Components   []sbomComponent `json:"components"`
 }
 
 type bomMetadata struct {
-	Timestamp string `json:"timestamp"`
-	Tools     []bomTool `json:"tools"`
+	Timestamp string        `json:"timestamp"`
+	Tools     []bomTool     `json:"tools"`
 	Component sbomComponent `json:"component"`
 	Licenses  []sbomLicense `json:"licenses"`
 }
@@ -89,10 +89,10 @@ func main() {
 	}
 
 	bom := bom{
-		BOMFormat:   "CycloneDX",
-		SpecVersion: "1.5",
+		BOMFormat:    "CycloneDX",
+		SpecVersion:  "1.5",
 		SerialNumber: fmt.Sprintf("urn:uuid:wardex-%d", time.Now().UnixMilli()),
-		Version:     1,
+		Version:      1,
 		Metadata: bomMetadata{
 			Timestamp: time.Now().UTC().Format(time.RFC3339),
 			Tools: []bomTool{

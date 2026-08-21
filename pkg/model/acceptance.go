@@ -22,6 +22,7 @@ type Acceptance struct {
 	SignatureVersion string `json:"signature_version,omitempty" yaml:"signature_version,omitempty"`
 	Signature        string `json:"signature" yaml:"signature"`
 	ReportHash       string `json:"report_hash" yaml:"report_hash"`
+	ConfigHash       string `json:"config_hash,omitempty" yaml:"config_hash,omitempty"`
 
 	// Contextual metadata
 	ContextRiskScore float64 `json:"context_risk_score,omitempty" yaml:"context_risk_score,omitempty"`
@@ -29,7 +30,7 @@ type Acceptance struct {
 	// Logical state
 	Revoked      bool              `json:"revoked,omitempty" yaml:"revoked,omitempty"`
 	RevokedBy    string            `json:"revoked_by,omitempty" yaml:"revoked_by,omitempty"`
-	RevokedAt    time.Time         `json:"revoked_at,omitempty" yaml:"revoked_at,omitempty"`
+	RevokedAt    time.Time         `json:"revoked_at" yaml:"revoked_at,omitempty"`
 	RevokeReason string            `json:"revoke_reason,omitempty" yaml:"revoke_reason,omitempty"`
 	Revocation   *RevocationRecord `json:"revocation,omitempty" yaml:"revocation,omitempty"`
 }
@@ -37,7 +38,7 @@ type Acceptance struct {
 // RevocationRecord represents the metadata regarding the revocation of an acceptance.
 type RevocationRecord struct {
 	RevokedBy string    `json:"revoked_by,omitempty" yaml:"revoked_by,omitempty"`
-	RevokedAt time.Time `json:"revoked_at,omitempty" yaml:"revoked_at,omitempty"`
+	RevokedAt time.Time `json:"revoked_at" yaml:"revoked_at,omitempty"`
 	Reason    string    `json:"reason,omitempty" yaml:"reason,omitempty"`
 }
 

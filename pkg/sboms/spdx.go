@@ -6,7 +6,6 @@ package sboms
 import (
 	"fmt"
 	"io/fs"
-	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -35,11 +34,7 @@ type SPDXDocument struct {
 // For the scope of Wardex ingestion today, we extract the structural shell
 // and throw a strategic NotImplementedError until VEX ingestion (G-17) is built.
 func ParseSPDX(filepath string) ([]model.Vulnerability, error) {
-	safePathStr, err := cli.SafePath(filepath)
-	if err != nil {
-		return nil, err
-	}
-	_, err = os.ReadFile(safePathStr) // #nosec G304
+	_, err := cli.SafeReadFile(filepath)
 	if err != nil {
 		if _, ok := err.(*fs.PathError); ok {
 			return nil, fmt.Errorf("file not found: %s", filepath)

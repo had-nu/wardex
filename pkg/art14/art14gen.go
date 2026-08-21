@@ -18,7 +18,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // newUUID generates a random UUID v4 using crypto/rand.
@@ -30,7 +32,6 @@ func newUUID() string {
 	return fmt.Sprintf("%08x-%04x-%04x-%04x-%012x",
 		b[0:4], b[4:6], b[6:8], b[8:10], b[10:16])
 }
-
 
 const (
 	// EarlyWarningWindow is the Art. 14(2)(a) deadline: 24 hours from awareness.
@@ -165,9 +166,9 @@ func WriteArtefact(a *model.Art14NotificationArtefact, dir string) (string, erro
 
 // ReadArtefact reads and deserialises an Art14 artefact from disk.
 func ReadArtefact(path string) (*model.Art14NotificationArtefact, error) {
-	data, err := os.ReadFile(path) // #nosec G304
+	data, err := cli.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("art14: read artefact: %w", err)
+		return nil, fmt.Errorf("reading artefact: %w", err)
 	}
 
 	var a model.Art14NotificationArtefact
@@ -203,7 +204,7 @@ func ListArtefacts(dir string) ([]*model.Art14NotificationArtefact, error) {
 		artefacts = append(artefacts, a)
 	}
 	if skipped > 0 {
-		fmt.Fprintf(os.Stderr, "[WARN] %d malformed Art14 artefact(s) skipped\n", skipped)
+		ui.Warnf("%d malformed Art14 artefact(s) skipped", skipped)
 	}
 
 	return artefacts, nil
@@ -244,9 +245,9 @@ func FindArtefactByID(dir string, id string) (string, *model.Art14NotificationAr
 // phase must be one of: "early-warning", "notification", "final-report".
 func MarkDispatched(path string, phase string, key []byte) error {
 	validPhases := map[string]bool{
-		"early-warning":  true,
-		"notification":   true,
-		"final-report":   true,
+		"early-warning": true,
+		"notification":  true,
+		"final-report":  true,
 	}
 	if !validPhases[phase] {
 		return fmt.Errorf("art14: invalid phase %q — must be early-warning, notification, or final-report", phase)

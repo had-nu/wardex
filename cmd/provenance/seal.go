@@ -68,7 +68,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 		}
 
 		// #nosec G122 G304 — path validated by cli.ValidateInputPath above
-		data, err := os.ReadFile(path)
+		data, err := cli.SafeReadFile(path)
 		if err != nil {
 			return nil
 		}
@@ -88,11 +88,11 @@ func runSeal(cmd *cobra.Command, args []string) error {
 	}
 	sort.Strings(keys)
 
-	chainInput := ""
+	var chainInput strings.Builder
 	for _, k := range keys {
-		chainInput += k + "|" + artifacts[k] + "\n"
+		chainInput.WriteString(k + "|" + artifacts[k] + "\n")
 	}
-	chainHash := sha256.Sum256([]byte(chainInput))
+	chainHash := sha256.Sum256([]byte(chainInput.String()))
 	chainHashHex := fmt.Sprintf("%x", chainHash)
 
 	seal := chainSeal{
@@ -104,7 +104,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 	}
 
 	outData, _ := json.MarshalIndent(seal, "", "  ")
-	if err := os.WriteFile(sealOutput, outData, 0600); err != nil {
+	if err := cli.SafeWriteFile(sealOutput, outData); err != nil {
 		return fmt.Errorf("writing chain seal: %w", err)
 	}
 

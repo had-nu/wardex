@@ -8,7 +8,7 @@ linters:
     - staticcheck
     - unused
     - gosec
-    - gomodguard
+    - gomodguard_v2
     - exhaustive
   settings:
     errcheck:
@@ -26,6 +26,12 @@ linters:
           - errcheck
           - gosec
           - unused
+      # pkg/accept is a deliberate v2.5 deprecation facade (removed in v3.0).
+      # Consumers intentionally keep importing it for backward compatibility.
+      - path: pkg/gate/pipeline\.go|pkg/enrich/cli/cli\.go|cmd/art14/art14\.go|pkg/accept/cli/cli_handlers\.go|pkg/orchestrator/gate\.go|cmd/evaluate/evaluate_active_exploit_test\.go|test/security/crypto_audit_test\.go
+        linters:
+          - staticcheck
+        text: "is deprecated"
       - path: research/
         linters:
           - errcheck

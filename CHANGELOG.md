@@ -4,6 +4,74 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] — 2026-08-20
+
+### Added — Go 1.27 & Hardening
+
+- **Go 1.27.0 migration**: `go.mod` now declares `go 1.27.0`. The toolchain uses
+  `GOTOOLCHAIN=auto`; Docker builds on `golang:1.27-alpine`.
+- **`go fix` modernizations**: applied `omitzero`; fixed a duplicated `Timestamp`
+  field in `cmd/chain/seal.go`. A CI gate runs `go fix ./...` and fails on any
+  diff.
+- **CI on Go 1.27.0**: build/test (with `-race` and coverage threshold), vet
+  (including `stdversion`), golangci-lint v2.13.1, govulncheck, and gosec jobs.
+- **Audited `encoding/json` v2**: JSON error assertions use type checks/prefixes
+  instead of exact strings.
+
+### Hardening — Architecture (Eixo B)
+
+- **`pkg/orchestrator`**: new package owning the full evaluation pipeline.
+  `EvaluationPipeline.Run` (gap analysis + optional release gate + snapshot +
+  report + exit decision) and `RunGate` (the `wardex evaluate` flow) never call
+  `os.Exit` and never write directly to `os.Stderr`; they log through an injected
+  `*slog.Logger` and return the exit code for the caller to apply.
+  `main.go::runWardex` (28 lines) and `cmd/evaluate::runEvaluate` (26 lines) are
+  now thin wrappers.
+- **`pkg/cli/safefile.go`**: centralized file I/O. `SafeReadFile`/`SafeWriteFile`
+  wrap path validation and concentrate all `#nosec G304` annotations; 46 call
+  sites migrated. Zero `os.ReadFile` remains outside `safefile.go`.
+- **`log/slog` migration**: new `pkg/ui/logger.go` (`NewLogger`, `NewLoggerTo`,
+  text/JSON handlers, `[PREFIX]` TTY style, syslog endpoint support). All
+  `pkg/*` `fmt.Fprintf(os.Stderr, ...)` sites replaced; legacy `Log*` helpers
+  delegate to the global logger.
+- **`context.Context` propagation**: `pkg/epss`, `pkg/trust` (fetch/seal),
+  `internal/notification`, `pkg/accept` forwarders/notifiers, `pkg/gate` and the
+  `cmd/evaluate` helpers now thread `context.Context` through to the final
+  network call (`http.NewRequestWithContext`). The Windows syslog stub implements
+  the ctx-based `Send` signature.
+- **`pkg/accept` decomposition**: split into `store/`, `verify/`, `audit/`,
+  `forward/`, and `rules/` sub-packages with no import cycles. `pkg/accept` is
+  now a **deprecated re-export facade** (removed in v3.0).
+- **`ConfigHash`** moved to `internal/cpl/hash.go`; **`ReadReport`** moved to
+  `pkg/report/reader.go` (re-exported by the facade).
+- **Idiomatic sorting**: three hand-rolled bubble sorts replaced with
+  `slices.SortFunc` (`main.go` roadmap, `pkg/sdk/assess.go`, `cmd/chain/seal.go`).
+- **`config.ApplyProfile`** now accepts `io.Writer` instead of `*os.File`.
+
+### Hardening — Tests & Fuzzing
+
+- **`pkg/orchestrator` test coverage ≥ 80%** (currently 83.5%): evaluation
+  pipeline, gate pipeline (including sealed `.wexstate` configs, state store +
+  trend, Article 14 active-exploitation, strict/dry-run/json/csv), and helper
+  unit tests.
+- **Property-based fuzz tests with invariants**:
+  - `pkg/ingestion`: parsed controls must have non-empty ID/Name, maturity in
+    `1..5`, a known layer, and positive context weight. This caught and fixed an
+    unvalidated layer coercion bug (`layer: 0` → `"0"`) in `validateControl`.
+  - `pkg/cli/pathguard`: resolved paths never escape the workspace; null-byte,
+    overlong, and `/proc`/`/sys`/`/dev` output paths are always rejected.
+  - `pkg/accept/verify`: sign/verify round-trip invariant, tamper and wrong-key
+    rejection, and corrupted batch signatures.
+- **`go test -race ./...`** passes; **golangci-lint v2.13.1** reports zero issues.
+
+### Breaking / Migration Notes
+
+- **Go ≥ 1.27** is now required to build Wardex.
+- `pkg/accept`, `accept.ConfigHash`, `accept.ReadReport` are deprecated; import
+  the sub-packages or `internal/cpl`/`pkg/report` directly (removed in v3.0).
+- The RBAC profile warning and gate hints are now emitted through `slog` and the
+  injected logger instead of direct `os.Stderr` writes.
+
 ## [2.4.1] — 2026-07-17
 
 ### Changed

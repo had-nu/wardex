@@ -6,13 +6,12 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/had-nu/wardex/v2/cmd/aggregate"
+	art14cmd "github.com/had-nu/wardex/v2/cmd/art14"
 	"github.com/had-nu/wardex/v2/cmd/assess"
 	"github.com/had-nu/wardex/v2/cmd/assets"
 	"github.com/had-nu/wardex/v2/cmd/audit"
-	provenancecmd "github.com/had-nu/wardex/v2/cmd/provenance"
 	authcmd "github.com/had-nu/wardex/v2/cmd/auth"
 	"github.com/had-nu/wardex/v2/cmd/chain"
 	"github.com/had-nu/wardex/v2/cmd/configseal"
@@ -22,32 +21,20 @@ import (
 	hmaccmd "github.com/had-nu/wardex/v2/cmd/hmac"
 	"github.com/had-nu/wardex/v2/cmd/keygen"
 	"github.com/had-nu/wardex/v2/cmd/policy"
+	provenancecmd "github.com/had-nu/wardex/v2/cmd/provenance"
 	"github.com/had-nu/wardex/v2/cmd/simulate"
 	"github.com/had-nu/wardex/v2/cmd/state"
 	trustcmd "github.com/had-nu/wardex/v2/cmd/trust"
-	art14cmd "github.com/had-nu/wardex/v2/cmd/art14"
-	"github.com/had-nu/wardex/v2/config"
-	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
-	"github.com/had-nu/wardex/v2/pkg/analyzer"
-	"github.com/had-nu/wardex/v2/pkg/catalog"
-	"github.com/had-nu/wardex/v2/pkg/correlator"
 	enrichCli "github.com/had-nu/wardex/v2/pkg/enrich/cli"
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
-	"github.com/had-nu/wardex/v2/pkg/gate"
-	"github.com/had-nu/wardex/v2/pkg/ingestion"
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/releasegate"
-	"github.com/had-nu/wardex/v2/pkg/report"
-	"github.com/had-nu/wardex/v2/pkg/snapshot"
+	"github.com/had-nu/wardex/v2/pkg/orchestrator"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"gopkg.in/yaml.v3"
 )
 
 var (
-	Version       = "2.4.1"
+	Version       = "2.5.0"
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -197,216 +184,30 @@ func main() {
 }
 
 func runWardex(cmd *cobra.Command, args []string) {
-
-	cfg, err := config.Load(configPath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: failed to load config from %s: %v\n", configPath, err)
-		cfg = &config.Config{}
+	opts := orchestrator.EvaluationOptions{
+		ConfigPath:    configPath,
+		ProfileName:   profileName,
+		Inputs:        args,
+		Framework:     frameworkName,
+		MinConfidence: minConfidence,
+		GateFile:      gateFile,
+		GateMode:      gateMode,
+		FailAbove:     failAbove,
+		NoSnapshot:    noSnapshot,
+		SnapshotFile:  snapshotFile,
+		OutputFormat:  outputFormat,
+		OutFile:       outFile,
+		RoadmapLimit:  roadmapLimit,
+		EPSSEnrich:    epssEnrich,
+		Logger:        ui.Default().Logger,
+		Stderr:        os.Stderr,
 	}
 
-	if msg := config.ApplyProfile(cfg, profileName, os.Stderr); msg != "" {
-		fmt.Fprintf(os.Stderr, "[INFO] %s\n", msg)
-	}
-
-	extControls, err := ingestion.LoadMany(args)
+	pipeline := orchestrator.NewEvaluationPipeline(opts)
+	result, err := pipeline.Run(cmd.Context(), opts)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to load controls: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
-
-	cat, err := catalog.Load(frameworkName)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Erro: %v\n[HINT] Use --framework para especificar um framework válido.\n", err)
-		os.Exit(1)
-	}
-	corr := correlator.New(cat)
-	mappings, err := corr.Correlate(extControls)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Correlation failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	var filtered []model.Mapping
-	droppedLowConf := 0
-	for _, m := range mappings {
-		if minConfidence == "high" && m.Confidence == "low" {
-			droppedLowConf++
-			continue
-		}
-		filtered = append(filtered, m)
-	}
-	if droppedLowConf > 0 {
-		fmt.Fprintf(os.Stderr, "[INFO] Filtered %d low-confidence mappings (--min-confidence high)\n", droppedLowConf)
-	}
-
-	an := analyzer.New(cat, filtered, extControls)
-	findings, err := an.Analyze()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Analysis failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	var sortedRoadmap []model.Finding
-	for _, f := range findings {
-		if f.Status != model.StatusCovered {
-			sortedRoadmap = append(sortedRoadmap, f)
-		}
-	}
-	for i := 0; i < len(sortedRoadmap); i++ {
-		for j := i + 1; j < len(sortedRoadmap); j++ {
-			if sortedRoadmap[i].FinalScore < sortedRoadmap[j].FinalScore {
-				sortedRoadmap[i], sortedRoadmap[j] = sortedRoadmap[j], sortedRoadmap[i]
-			}
-		}
-	}
-
-	rep := model.GapReport{
-		Summary: model.ExecutiveSummary{
-			GeneratedAt: time.Now(),
-		},
-		Findings: findings,
-		Roadmap:  sortedRoadmap,
-	}
-
-	domainMap := make(map[string]*model.DomainSummary)
-	for _, f := range findings {
-		dom := f.Control.Domain
-		if dom == "" {
-			dom = "general"
-		}
-		ds, ok := domainMap[dom]
-		if !ok {
-			ds = &model.DomainSummary{Domain: dom}
-			domainMap[dom] = ds
-		}
-		ds.TotalControls++
-		switch f.Status {
-		case model.StatusCovered:
-			ds.CoveredCount++
-		case model.StatusPartial:
-			ds.PartialCount++
-		default:
-			ds.GapCount++
-		}
-		ds.MaturityScore += f.FinalScore
-	}
-
-	for _, ds := range domainMap {
-		if ds.TotalControls > 0 {
-			ds.MaturityScore = ds.MaturityScore / float64(ds.TotalControls)
-		}
-		rep.Summary.DomainSummaries = append(rep.Summary.DomainSummaries, *ds)
-	}
-
-	rep.Summary.TotalControls = len(cat)
-	for _, f := range findings {
-		switch f.Status {
-		case model.StatusCovered:
-			rep.Summary.CoveredCount++
-		case model.StatusPartial:
-			rep.Summary.PartialCount++
-		default:
-			rep.Summary.GapCount++
-		}
-	}
-	rep.Summary.GlobalCoverage = float64(rep.Summary.CoveredCount) / float64(rep.Summary.TotalControls) * 100.0
-
-	gateFailed := false
-	if cfg.ReleaseGate.Enabled && gateFile != "" {
-		gateModeVal := gate.ResolveGateMode(cfg, gateMode)
-
-		rg := releasegate.Gate{
-			AssetContext:         cfg.ReleaseGate.AssetContext,
-			CompensatingControls: cfg.ReleaseGate.CompensatingControls,
-			RiskAppetite:         cfg.ReleaseGate.RiskAppetite,
-			WarnAbove:            cfg.ReleaseGate.WarnAbove,
-			AggregateLimit:       cfg.ReleaseGate.AggregateLimit,
-			Mode:                 gateModeVal,
-		}
-
-		safePathStr, err := pathguard.SafePath(gateFile)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(1)
-		}
-		vdata, err := os.ReadFile(safePathStr) // #nosec G304
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to read gate file: %v\n", err)
-			os.Exit(1)
-		}
-		var vulnsFormat struct {
-			Vulnerabilities []model.Vulnerability `yaml:"vulnerabilities"`
-		}
-		if err := yaml.Unmarshal(vdata, &vulnsFormat); err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to parse gate vulnerabilities: %v\n", err)
-			os.Exit(1)
-		}
-
-		vulnsFormat.Vulnerabilities = gate.FilterAccepted(vulnsFormat.Vulnerabilities, cfg, configPath, os.Stderr)
-		vulnsFormat.Vulnerabilities = gate.ApplyEPSSEnrichment(vulnsFormat.Vulnerabilities, cfg, epssEnrich, os.Stderr)
-
-		gateReport := rg.Evaluate(vulnsFormat.Vulnerabilities)
-		rep.Gate = &gateReport
-		switch gateReport.OverallDecision {
-		case model.DecisionBlock:
-			gateFailed = true
-			missingEpss := 0
-			for _, v := range vulnsFormat.Vulnerabilities {
-				if v.EPSSScore == 0.0 {
-					missingEpss++
-				}
-			}
-			if missingEpss > 0 {
-				fmt.Fprintf(os.Stderr, "\n[HINT] %d vulnerabilities lacked EPSS scores and defaulted to worst-case (1.0).\n", missingEpss)
-				fmt.Fprintf(os.Stderr, "       Run 'wardex enrich epss %s' to fetch real probabilities from FIRST.org and sign the enrichment.\n", gateFile)
-			}
-		case model.DecisionWarn:
-			fmt.Fprintf(os.Stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
-		case model.DecisionAllow:
-		}
-	}
-
-	if !noSnapshot {
-		prev, _ := snapshot.Load(snapshotFile)
-		if prev != nil {
-			delta := snapshot.Diff(rep, *prev)
-			rep.Delta = &delta
-		}
-		if err := snapshot.Save(snapshotFile, &rep); err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to save snapshot: %v\n", err)
-		}
-	}
-
-	finalFormat := outputFormat
-	if outputFormat == "markdown" && cfg.Reporting.Format != "" {
-		finalFormat = cfg.Reporting.Format
-	}
-	finalOutFile := outFile
-	if outFile == "stdout" && cfg.Reporting.Output != "" {
-		finalOutFile = cfg.Reporting.Output
-	}
-
-	if err := report.Generate(rep, finalFormat, finalOutFile, roadmapLimit); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to generate report: %v\n", err)
-		os.Exit(1)
-	}
-
-	if gateFailed {
-		os.Exit(exitcodes.GateBlocked)
-	}
-
-	compFail := false
-	if failAbove > 0 {
-		for _, gap := range sortedRoadmap {
-			if gap.FinalScore > failAbove {
-				compFail = true
-				break
-			}
-		}
-	}
-
-	if compFail {
-		os.Exit(exitcodes.ComplianceFail)
-	}
-	os.Exit(exitcodes.OK)
+	os.Exit(result.ExitCode)
 }

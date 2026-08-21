@@ -6,10 +6,10 @@ package sboms
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // OpenVEXDocument partial schema based on https://openvex.dev
@@ -28,11 +28,7 @@ type OpenVEXStatement struct {
 // It returns a slice of Wardex Vulnerabilities. When status is not_affected
 // or false_positive, it marks Reachable=false so the Release Gate suppresses them.
 func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
-	safePathStr, err := cli.SafePath(filePath)
-	if err != nil {
-		return nil, err
-	}
-	data, err := os.ReadFile(safePathStr) // #nosec G304
+	data, err := cli.SafeReadFile(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read openvex file: %w", err)
 	}
@@ -76,7 +72,7 @@ func ParseOpenVEX(filePath string) ([]model.Vulnerability, error) {
 	}
 
 	if skippedStates > 0 {
-		fmt.Fprintf(os.Stderr, "[WARN] %d OpenVEX statement(s) skipped — unrecognized state\n", skippedStates)
+		ui.Warnf("%d OpenVEX statement(s) skipped — unrecognized state", skippedStates)
 	}
 
 	return vulns, nil

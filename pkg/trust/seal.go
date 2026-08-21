@@ -4,9 +4,10 @@
 package trust
 
 import (
+	"context"
 	"crypto/ed25519"
 	"fmt"
-	"os"
+	"strings"
 	"time"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
@@ -15,10 +16,10 @@ import (
 // SealConfig reads a draft wardex-config.yaml, verifies there are no
 // PENDING_APPROVAL fields, and produces a signed wardex.wexstate file.
 // Only ciso or admin roles can seal.
-func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
+func SealConfig(ctx context.Context, keyPath, inputPath, outPath, trustRef string) error {
 	// 1. Resolve and load trust store
 	ref := ResolveTrustStoreRef(trustRef, "")
-	storeData, err := FetchTrustStore(ref)
+	storeData, err := FetchTrustStore(ctx, ref)
 	if err != nil {
 		return fmt.Errorf("config seal: %w", err)
 	}
@@ -48,14 +49,9 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 	}
 
 	// 3. Read and validate the draft config
-	safePath, err := cli.SafePath(inputPath)
+	draftData, err := cli.SafeReadFile(inputPath)
 	if err != nil {
-		return fmt.Errorf("config seal: unsafe path %q: %w", inputPath, err)
-	}
-	// safePath was validated by SafePath above — no traversal possible
-	draftData, err := os.ReadFile(safePath) // #nosec G304
-	if err != nil {
-		return fmt.Errorf("config seal: read draft %q: %w", safePath, err)
+		return fmt.Errorf("config seal: read draft %q: %w", inputPath, err)
 	}
 
 	pendingFields, err := DetectPendingApproval(draftData)
@@ -63,12 +59,13 @@ func SealConfig(keyPath, inputPath, outPath, trustRef string) error {
 		return fmt.Errorf("config seal: %w", err)
 	}
 	if len(pendingFields) > 0 {
-		msg := "config seal: draft contains unsettled fields:\n"
+		var msg strings.Builder
+		msg.WriteString("config seal: draft contains unsettled fields:\n")
 		for _, f := range pendingFields {
-			msg += fmt.Sprintf("  - %s: \"PENDING_APPROVAL\"\n", f)
+			fmt.Fprintf(&msg, "  - %s: \"PENDING_APPROVAL\"\n", f)
 		}
-		msg += "\nThese fields require a decision from the risk owner before sealing."
-		return fmt.Errorf("%s", msg)
+		msg.WriteString("\nThese fields require a decision from the risk owner before sealing.")
+		return fmt.Errorf("%s", msg.String())
 	}
 
 	// 4. Build WexState (version 2 — CBOR deterministic signing)

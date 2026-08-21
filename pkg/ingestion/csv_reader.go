@@ -73,8 +73,8 @@ func loadCSV(path string) ([]model.ExistingControl, error) {
 		evidenceStr := get("evidences")
 		var evidences []model.Evidence
 		if evidenceStr != "" {
-			parts := strings.Split(evidenceStr, "|")
-			for _, p := range parts {
+			parts := strings.SplitSeq(evidenceStr, "|")
+			for p := range parts {
 				kv := strings.SplitN(p, ":", 2)
 				if len(kv) == 2 {
 					evidences = append(evidences, model.Evidence{Type: kv[0], Ref: kv[1]})

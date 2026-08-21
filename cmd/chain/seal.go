@@ -4,11 +4,13 @@
 package chain
 
 import (
+	"cmp"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
@@ -16,9 +18,9 @@ import (
 )
 
 var (
-	chainOutput   string
-	chainExclude  []string
-	chainBaseDir  string
+	chainOutput  string
+	chainExclude []string
+	chainBaseDir string
 )
 
 // SealCmd creates a cryptographic seal of all artifacts in a directory.
@@ -40,11 +42,11 @@ func init() {
 }
 
 type chainSeal struct {
-	Version      string            `json:"version"`
-	Timestamp    string            `json:"timestamp"`
-	TotalFiles   int               `json:"total_files"`
-	ChainHash    string            `json:"chain_hash"`
-	Artifacts    map[string]string `json:"artifacts"`
+	Version    string            `json:"version"`
+	Timestamp  string            `json:"timestamp"`
+	TotalFiles int               `json:"total_files"`
+	ChainHash  string            `json:"chain_hash"`
+	Artifacts  map[string]string `json:"artifacts"`
 }
 
 func runChainSeal(cmd *cobra.Command, args []string) error {
@@ -53,7 +55,7 @@ func runChainSeal(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("validating base directory: %w", err)
 	}
 
-_exclude := make(map[string]bool)
+	_exclude := make(map[string]bool)
 	for _, e := range chainExclude {
 		_exclude[e] = true
 	}
@@ -82,7 +84,7 @@ _exclude := make(map[string]bool)
 			return nil // skip invalid paths
 		}
 
-		data, err := os.ReadFile(path) // #nosec G304 G122 — path validated above via ValidateInputPath
+		data, err := cli.SafeReadFile(path)
 		if err != nil {
 			return nil
 		}
@@ -101,34 +103,28 @@ _exclude := make(map[string]bool)
 	for k := range artifacts {
 		keys = append(keys, k)
 	}
-	for i := 0; i < len(keys); i++ {
-		for j := i + 1; j < len(keys); j++ {
-			if keys[i] > keys[j] {
-				keys[i], keys[j] = keys[j], keys[i]
-			}
-		}
-	}
+	slices.SortFunc(keys, func(a, b string) int {
+		return cmp.Compare(a, b) // ascending
+	})
 
-	chainInput := ""
+	var chainInput strings.Builder
 	for _, k := range keys {
-		chainInput += k + "|" + artifacts[k] + "\n"
+		chainInput.WriteString(k + "|" + artifacts[k] + "\n")
 	}
-	chainHash := sha256.Sum256([]byte(chainInput))
+	chainHash := sha256.Sum256([]byte(chainInput.String()))
 
 	seal := chainSeal{
-		Version:   "1.0",
-		Timestamp: fmt.Sprintf("%d", os.Getpid()), // placeholder — replaced below
+		Version:    "1.0",
+		Timestamp:  "",
 		TotalFiles: len(artifacts),
-		ChainHash: fmt.Sprintf("%x", chainHash),
-		Artifacts: artifacts,
+		ChainHash:  fmt.Sprintf("%x", chainHash),
+		Artifacts:  artifacts,
 	}
-
-	seal.Timestamp = ""
 	data, _ := json.MarshalIndent(seal, "", "  ")
 	_ = data
 
 	outData, _ := json.MarshalIndent(seal, "", "  ")
-	if err := os.WriteFile(chainOutput, outData, 0600); err != nil {
+	if err := cli.SafeWriteFile(chainOutput, outData); err != nil {
 		return fmt.Errorf("writing chain seal: %w", err)
 	}
 

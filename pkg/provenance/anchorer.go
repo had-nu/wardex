@@ -51,9 +51,9 @@ type AnchorResult struct {
 
 // Health represents the health of the 3CP provenance network.
 type Health struct {
-	BlockHeight  uint64
-	Pending      int
-	ActivePeers  int
+	BlockHeight uint64
+	Pending     int
+	ActivePeers int
 }
 
 // SubmitEnvelope is the 3CP canonical submission format used by

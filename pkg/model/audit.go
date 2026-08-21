@@ -30,9 +30,9 @@ type AuditEntry struct {
 	CliOverrides map[string]string `json:"cli_overrides,omitempty"`
 
 	// NEW in v2.0 — CRA Article 14 audit chain and deadline tracking
-	PreviousEntryHash         string    `json:"previous_entry_hash,omitempty"`
-	ActivelyExploited         []string  `json:"actively_exploited_cves,omitempty"`
-	Art14DeadlineEarlyWarning time.Time `json:"art14_deadline_early_warning,omitempty"`
-	Art14DeadlineNotification time.Time `json:"art14_deadline_notification,omitempty"`
-	Art14NotificationArtefactPath string `json:"art14_notification_artefact_path,omitempty"`
+	PreviousEntryHash             string    `json:"previous_entry_hash,omitempty"`
+	ActivelyExploited             []string  `json:"actively_exploited_cves,omitempty"`
+	Art14DeadlineEarlyWarning     time.Time `json:"art14_deadline_early_warning"`
+	Art14DeadlineNotification     time.Time `json:"art14_deadline_notification"`
+	Art14NotificationArtefactPath string    `json:"art14_notification_artefact_path,omitempty"`
 }

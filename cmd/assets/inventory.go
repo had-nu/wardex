@@ -6,7 +6,6 @@ package assets
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
@@ -42,8 +41,8 @@ type assetEntry struct {
 	Scope       []string `yaml:"scope" json:"scope,omitempty"`
 	Controls    []string `yaml:"controls" json:"controls,omitempty"`
 	Exposure    struct {
-		InternetFacing    bool   `yaml:"internet_facing" json:"internet_facing"`
-		NetworkZone       string `yaml:"network_zone" json:"network_zone"`
+		InternetFacing     bool   `yaml:"internet_facing" json:"internet_facing"`
+		NetworkZone        string `yaml:"network_zone" json:"network_zone"`
 		DataClassification string `yaml:"data_classification" json:"data_classification"`
 	} `yaml:"exposure" json:"exposure"`
 	Owner            string `yaml:"owner" json:"owner"`
@@ -52,12 +51,7 @@ type assetEntry struct {
 }
 
 func runAssetsInventory(cmd *cobra.Command, args []string) error {
-	safePath, err := cli.SafePath(assetsFile)
-	if err != nil {
-		return fmt.Errorf("validating assets path: %w", err)
-	}
-
-	data, err := os.ReadFile(safePath) // #nosec G304
+	data, err := cli.SafeReadFile(assetsFile)
 	if err != nil {
 		return fmt.Errorf("reading assets file: %w", err)
 	}

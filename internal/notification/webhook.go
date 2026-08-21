@@ -40,7 +40,7 @@ type WebhookConfig struct {
 	Headers        map[string]string
 }
 
-func Send(cfg WebhookConfig, payload DivergencePayload) error {
+func Send(ctx context.Context, cfg WebhookConfig, payload DivergencePayload) error {
 	if cfg.URL == "" {
 		return nil
 	}
@@ -55,7 +55,7 @@ func Send(cfg WebhookConfig, payload DivergencePayload) error {
 		timeout = 5 * time.Second
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, cfg.URL, bytes.NewReader(body))

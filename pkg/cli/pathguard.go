@@ -119,18 +119,103 @@ func validatePath(base, path string, isOutput bool) (string, error) {
 		clean = filepath.Clean(filepath.Join(base, path))
 	}
 
-	// Resolve symlinks before the prefix check to prevent symlink escapes.
-	// If the file does not yet exist (output path), accept the syntactic path.
-	resolved, err := filepath.EvalSymlinks(clean)
-	if err != nil {
-		if !errors.Is(err, fs.ErrNotExist) {
-			return "", fmt.Errorf("resolving symlinks: %w", err)
-		}
-		resolved = clean
+	// FIRST: Check for path traversal using the syntactic path
+	// This catches ../ traversal before any symlink resolution
+	if !isWithinWorkspace(clean, absBase) {
+		return "", fmt.Errorf("%w: %q resolves outside workspace", ErrPathTraversal, path)
 	}
 
-	if !strings.HasPrefix(resolved, absBase+string(os.PathSeparator)) && resolved != absBase {
+	// Resolve symlinks securely:
+	// For input paths (existing files), resolve the full path.
+	// For output paths (may not exist), resolve the longest existing ancestor,
+	// then check each remaining component for symlinks.
+	var resolved string
+	if !isOutput {
+		resolved, err = filepath.EvalSymlinks(clean)
+		if err != nil {
+			if !errors.Is(err, fs.ErrNotExist) {
+				return "", fmt.Errorf("resolving symlinks: %w", err)
+			}
+			// Input path that doesn't exist: resolve from longest existing ancestor
+			resolved, err = resolveWithSymlinkCheck(absBase, clean)
+		}
+		if err != nil {
+			return "", err
+		}
+	} else {
+		// Output path: resolve longest existing ancestor, then check remaining
+		resolved, err = resolveWithSymlinkCheck(absBase, clean)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	// Final check: resolved path must be within workspace
+	if !isWithinWorkspace(resolved, absBase) {
 		return "", fmt.Errorf("%w: %q resolves outside workspace", ErrPathTraversal, path)
 	}
 	return resolved, nil
+}
+
+// isWithinWorkspace checks if a path is within the workspace directory.
+func isWithinWorkspace(path, absBase string) bool {
+	return strings.HasPrefix(path, absBase+string(os.PathSeparator)) || path == absBase
+}
+
+// resolveWithSymlinkCheck resolves a path by finding the longest existing
+// ancestor, resolving its symlinks, then checking each remaining path component
+// for symlinks that escape the workspace. This prevents escapes via symlinks
+// in parent directories of non-existent files.
+func resolveWithSymlinkCheck(absBase, cleanPath string) (string, error) {
+	// For paths that may not exist, we need to check each existing component
+	// for symlinks that could escape the workspace.
+
+	// Start from the base and walk the path components
+	current := absBase
+
+	// Get relative path from base
+	relPath := strings.TrimPrefix(cleanPath, absBase+string(os.PathSeparator))
+	if relPath == cleanPath {
+		// Path is absolute or doesn't share base prefix - use full path from root
+		relPath = strings.TrimPrefix(cleanPath, string(os.PathSeparator))
+	}
+
+	components := strings.SplitSeq(relPath, string(os.PathSeparator))
+
+	for comp := range components {
+		if comp == "" {
+			continue
+		}
+		next := filepath.Join(current, comp)
+
+		// Check if this component exists
+		info, err := os.Lstat(next)
+		if err != nil {
+			if os.IsNotExist(err) {
+				// Component doesn't exist - for output paths this is fine
+				// For input paths, the caller will handle the error
+				current = next
+				continue
+			}
+			return "", fmt.Errorf("checking component %q: %w", next, err)
+		}
+
+		// Component exists - check if it's a symlink
+		if info.Mode()&os.ModeSymlink != 0 {
+			// Resolve the symlink target
+			target, err := filepath.EvalSymlinks(next)
+			if err != nil {
+				return "", fmt.Errorf("resolving symlink %q: %w", next, err)
+			}
+			// Verify the target is within workspace
+			if !isWithinWorkspace(target, absBase) {
+				return "", fmt.Errorf("%w: symlink %q escapes workspace", ErrPathTraversal, next)
+			}
+			current = target
+		} else {
+			current = next
+		}
+	}
+
+	return current, nil
 }

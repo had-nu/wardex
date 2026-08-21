@@ -3,9 +3,10 @@
 
 //go:build windows
 
-package accept
+package forward
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -27,4 +28,4 @@ type SyslogBackend struct {
 func (b *SyslogBackend) Name() string { return "syslog" }
 
 // Send always returns nil for the stub (never called in practice).
-func (b *SyslogBackend) Send(entry model.AuditEntry) error { return nil }
+func (b *SyslogBackend) Send(_ context.Context, entry model.AuditEntry) error { return nil }

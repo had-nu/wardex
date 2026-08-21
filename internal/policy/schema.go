@@ -46,9 +46,9 @@ type Control struct {
 // One file per domain section of a framework (e.g. Annex A.8).
 type DomainFile struct {
 	Framework    string    `yaml:"framework"`
-	Version      string    `yaml:"version"`      // framework version, not wardex version
-	Domain       string    `yaml:"domain"`       // machine-friendly slug
-	Annex        string    `yaml:"annex"`        // e.g. "A.8", "PR", "ID"
+	Version      string    `yaml:"version"` // framework version, not wardex version
+	Domain       string    `yaml:"domain"`  // machine-friendly slug
+	Annex        string    `yaml:"annex"`   // e.g. "A.8", "PR", "ID"
 	LastReviewed string    `yaml:"last_reviewed"`
 	ReviewedBy   string    `yaml:"reviewed_by"`
 	Controls     []Control `yaml:"controls"`

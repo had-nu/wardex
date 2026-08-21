@@ -66,13 +66,13 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 	switch listOutput {
 	case "json":
 		type keyInfo struct {
-			ID       string `json:"id"`
-			Actor    string `json:"actor"`
-			Name     string `json:"name"`
-			Role     string `json:"role"`
-			Status   string `json:"status"`
-			AddedAt  string `json:"added_at"`
-			AddedBy  string `json:"added_by"`
+			ID      string `json:"id"`
+			Actor   string `json:"actor"`
+			Name    string `json:"name"`
+			Role    string `json:"role"`
+			Status  string `json:"status"`
+			AddedAt string `json:"added_at"`
+			AddedBy string `json:"added_by"`
 		}
 		var keys []keyInfo
 		for _, k := range store.Keys {

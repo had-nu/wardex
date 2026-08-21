@@ -5,15 +5,16 @@
 package gate
 
 import (
+	"context"
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/had-nu/wardex/v2/config"
-	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/accept"
+	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"gopkg.in/yaml.v3"
 )
 
@@ -74,13 +75,7 @@ func ApplyEPSSEnrichment(vulns []model.Vulnerability, cfg *config.Config, epssPa
 		return vulns
 	}
 
-	safeEnrichPath, err := pathguard.SafePath(epssPath)
-	if err != nil {
-		fmt.Fprintf(logw, "WARNING: EPSS enrichment path validation failed: %v\n", err)
-		return vulns
-	}
-
-	edata, err := os.ReadFile(safeEnrichPath) // #nosec G304
+	edata, err := pathguard.SafeReadFile(epssPath)
 	if err != nil {
 		return vulns
 	}
@@ -127,10 +122,10 @@ func BuildForwarders(cfg *config.Config) []accept.Forwarder {
 			if cfg.Reporting.ENISAQueue.Path != "" {
 				queuePath = cfg.Reporting.ENISAQueue.Path
 			}
-			fmt.Fprintf(os.Stderr, "[INFO] ENISABackend is a stub. No data will be transmitted.\n"+
+			ui.Infof("ENISABackend is a stub. No data will be transmitted.\n"+
 				"       Queue path: %s\n"+
 				"       When the ENISA single reporting platform API is published,\n"+
-				"       update Wardex and configure ENISABackend.endpoint.\n", queuePath)
+				"       update Wardex and configure ENISABackend.endpoint.", queuePath)
 			backends = append(backends, accept.NewENISABackend(queuePath))
 		}
 	}
@@ -150,13 +145,13 @@ func ResolveLogPath(cfg *config.Config, flagPath string) string {
 }
 
 // ForwardAuditEntry dispatches an audit entry to configured forwarding backends.
-func ForwardAuditEntry(cfg *config.Config, entry model.AuditEntry, logw io.Writer) {
+func ForwardAuditEntry(ctx context.Context, cfg *config.Config, entry model.AuditEntry, logw io.Writer) {
 	backends := BuildForwarders(cfg)
 	if len(backends) == 0 {
 		return
 	}
 	mux := accept.NewForwardMultiplexer(backends, cfg.Reporting.GateLog.OnFail)
-	if err := mux.Dispatch(entry); err != nil {
+	if err := mux.Dispatch(ctx, entry); err != nil {
 		fmt.Fprintf(logw, "Error: gate log forwarding failed: %v\n", err)
 	}
 }

@@ -11,15 +11,15 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/fxamacker/cbor/v2"
+	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 // FileHash computes the SHA-256 hash of a file.
 func FileHash(path string) ([]byte, error) {
-	data, err := os.ReadFile(path) // #nosec G304 -- caller validates path
+	data, err := cli.ReadFile(path) // caller validates path
 	if err != nil {
 		return nil, fmt.Errorf("read file: %w", err)
 	}
@@ -30,7 +30,7 @@ func FileHash(path string) ([]byte, error) {
 // SignWithEd25519 signs a message using an Ed25519 private key loaded from disk.
 // Returns the raw signature bytes and the hex-encoded public key ID ("ed25519:<hex>").
 func SignWithEd25519(keyPath string, msg []byte) (sig []byte, keyID string, err error) {
-	data, err := os.ReadFile(keyPath) // #nosec G304 -- caller validates path
+	data, err := cli.ReadFile(keyPath) // caller validates path
 	if err != nil {
 		return nil, "", fmt.Errorf("read key: %w", err)
 	}
@@ -102,8 +102,8 @@ type ToolAttestation struct {
 }
 
 type SignedAttestation struct {
-	Attestation ToolAttestation          `cbor:"0,keyasint"`
-	Signatures  map[string][]byte        `cbor:"1,keyasint"`
+	Attestation ToolAttestation   `cbor:"0,keyasint"`
+	Signatures  map[string][]byte `cbor:"1,keyasint"`
 }
 
 func New(tool, version string) *ToolAttestation {

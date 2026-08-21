@@ -3,9 +3,10 @@
 
 //go:build !windows
 
-package accept
+package forward
 
 import (
+	"context"
 	"encoding/json"
 	"log/syslog"
 	"strings"
@@ -90,7 +91,7 @@ func (b *SyslogBackend) Name() string {
 }
 
 // Send marshals the audit entry to JSON and forwards it via syslog.
-func (b *SyslogBackend) Send(entry model.AuditEntry) error {
+func (b *SyslogBackend) Send(_ context.Context, entry model.AuditEntry) error {
 	payload, err := json.Marshal(entry)
 	if err != nil {
 		return err
