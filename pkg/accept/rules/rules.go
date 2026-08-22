@@ -64,5 +64,10 @@ func ValidateBusinessRules(a model.Acceptance, cfg config.AcceptanceConfig) erro
 		return fmt.Errorf("%w: maximum allowed is %d days", ErrExpiryTooLong, maxDays)
 	}
 
+	// 5. Expiry must not be in the past
+	if time.Until(a.ExpiresAt) < 0 {
+		return fmt.Errorf("%w: expiration date is in the past", ErrExpiryTooLong)
+	}
+
 	return nil
 }

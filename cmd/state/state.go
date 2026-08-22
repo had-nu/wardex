@@ -5,7 +5,6 @@ package state
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/statestore"
 	"github.com/spf13/cobra"
@@ -240,12 +239,12 @@ func init() {
 }
 
 func joinStrings(strs []string, sep string) string {
-	var result strings.Builder
+	result := ""
 	for i, s := range strs {
 		if i > 0 {
-			result.WriteString(sep)
+			result += sep
 		}
-		result.WriteString(s)
+		result += s
 	}
-	return result.String()
+	return result
 }

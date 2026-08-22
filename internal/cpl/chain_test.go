@@ -21,7 +21,7 @@ func generateValidChain(t *testing.T, n int) []byte {
 	t.Helper()
 	var log []byte
 	prevHash := "genesis"
-	for range n {
+	for i := 0; i < n; i++ {
 		line := entryLine(prevHash)
 		log = append(log, line...)
 		content := line[:len(line)-1] // strip trailing \n to match bytes.Split behaviour

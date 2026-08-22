@@ -13,7 +13,6 @@ import (
 	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -40,19 +39,24 @@ var epssCmd = &cobra.Command{
 
 		cfg, err := config.Load(*configPathPtr)
 		if err != nil {
-			ui.Errorf("Error loading config from %s: %v", *configPathPtr, err)
+			fmt.Fprintf(os.Stderr, "Error loading config from %s: %v\n", *configPathPtr, err)
 			exitFunc(1)
 		}
 
 		key, err := accept.ResolveSecret(*cfg)
 		if err != nil {
-			ui.Errorf("Missing or invalid WARDEX_SECRET. Enrichment non-repudiation requires a valid signature key.\n%v", err)
+			fmt.Fprintf(os.Stderr, "\n[FAIL] Missing or invalid WARDEX_SECRET. Enrichment non-repudiation requires a valid signature key.\n%v\n", err)
 			exitFunc(1)
 		}
 
-		vdata, err := pathguard.SafeReadFile(inFile)
+		safePathStr, err := pathguard.SafePath(inFile)
 		if err != nil {
-			ui.Errorf("Failed to read vulnerability file: %v", err)
+			fmt.Fprintf(os.Stderr, "Invalid input file path: %v\n", err)
+			exitFunc(1)
+		}
+		vdata, err := os.ReadFile(safePathStr) // #nosec G304
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to read vulnerability file: %v\n", err)
 			exitFunc(1)
 		}
 
@@ -60,7 +64,7 @@ var epssCmd = &cobra.Command{
 			Vulnerabilities []model.Vulnerability `yaml:"vulnerabilities"`
 		}
 		if err := yaml.Unmarshal(vdata, &vulnsFormat); err != nil {
-			ui.Errorf("Failed to parse vulnerabilities: %v", err)
+			fmt.Fprintf(os.Stderr, "Failed to parse vulnerabilities: %v\n", err)
 			exitFunc(1)
 		}
 
@@ -78,9 +82,9 @@ var epssCmd = &cobra.Command{
 
 		fmt.Printf("[INFO] Fetching EPSS scores for %d vulnerabilities from api.first.org...\n", len(cvesToFetch))
 
-		scores, provenance, err := epss.FetchScores(cmd.Context(), cvesToFetch)
+		scores, provenance, err := epss.FetchScores(cvesToFetch, os.Stderr)
 		if err != nil {
-			ui.Errorf("First.org API query failed: %v", err)
+			fmt.Fprintf(os.Stderr, "[FAIL] First.org API query failed: %v\n", err)
 			exitFunc(1)
 		}
 
@@ -102,19 +106,19 @@ var epssCmd = &cobra.Command{
 
 		sig, err := epss.Sign(outFormat, key)
 		if err != nil {
-			ui.Errorf("Failed to sign EPSS payload: %v", err)
+			fmt.Fprintf(os.Stderr, "Failed to sign EPSS payload: %v\n", err)
 			exitFunc(1)
 		}
 		outFormat.Signature = sig
 
 		outData, err := yaml.Marshal(&outFormat)
 		if err != nil {
-			ui.Errorf("Failed to generate yaml: %v", err)
+			fmt.Fprintf(os.Stderr, "Failed to generate yaml: %v\n", err)
 			exitFunc(1)
 		}
 
 		if err := os.WriteFile(outputFile, outData, 0600); err != nil {
-			ui.Errorf("Failed to write %s: %v", outputFile, err)
+			fmt.Fprintf(os.Stderr, "Failed to write %s: %v\n", outputFile, err)
 			exitFunc(1)
 		}
 

@@ -151,7 +151,7 @@ func TestHistory(t *testing.T) {
 	}
 
 	// Record some decisions
-	for range 5 {
+	for i := 0; i < 5; i++ {
 		if err := store.RecordDecision(model.DecisionAllow, 0.1, 10, 0, nil); err != nil {
 			t.Fatalf("RecordDecision() error = %v", err)
 		}
@@ -238,7 +238,7 @@ func TestVerifyChain(t *testing.T) {
 	}
 
 	// Record some decisions to build chain
-	for range 3 {
+	for i := 0; i < 3; i++ {
 		if err := store.RecordDecision(model.DecisionAllow, 0.1, 10, 0, nil); err != nil {
 			t.Fatalf("RecordDecision() error = %v", err)
 		}

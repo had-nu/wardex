@@ -5,9 +5,9 @@ package analyzer
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // EvaluateCoverage determines if the set of mapped controls fully covers the AnnexA control.
@@ -31,7 +31,7 @@ func EvaluateCoverage(maps []model.Mapping, controls []model.ExistingControl) (m
 		}
 
 		if ec == nil {
-			ui.Warnf("Mapping references nonexistent control %s — skipped", m.ExistingControlID)
+			fmt.Fprintf(os.Stderr, "[WARN] Mapping references nonexistent control %s — skipped\n", m.ExistingControlID)
 			continue
 		}
 

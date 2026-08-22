@@ -121,7 +121,6 @@ func runPolicyList(cmd *cobra.Command, args []string) error {
 	t.Render(cmd.OutOrStdout())
 	return nil
 }
-
 // ── check-expiry ─────────────────────────────────────────────────────────────
 
 var policyCheckExpiryCmd = &cobra.Command{
@@ -230,7 +229,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	var d policy.DomainFile
 
 	// Load existing file if it exists; silently init a new struct otherwise.
-	data, err := cli.SafeReadFile(file)
+	data, err := os.ReadFile(abs) // #nosec G304
 	switch {
 	case err == nil:
 		if err := yaml.Unmarshal(data, &d); err != nil {
@@ -271,7 +270,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	}
 
 	// 0o600: policy files contain compliance state — no need for group/other read.
-	if err := cli.SafeWriteFile(abs, out); err != nil {
+	if err := os.WriteFile(abs, out, 0o600); err != nil {
 		return fmt.Errorf("policy add: write: %w", err)
 	}
 

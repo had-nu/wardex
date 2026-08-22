@@ -2,6 +2,7 @@ package policy
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"gopkg.in/yaml.v3"
@@ -13,9 +14,14 @@ import (
 // Returns a validated *DomainFile or a descriptive error — never both.
 func LoadDomain(path string) (*DomainFile, error) {
 	// Security: prevent path traversal (gosec G304)
-	data, err := cli.SafeReadFile(path)
+	safe, err := cli.ValidateInputPath(".", path)
 	if err != nil {
-		return nil, fmt.Errorf("policy: read %q: %w", path, err)
+		return nil, err
+	}
+
+	data, err := os.ReadFile(safe) // #nosec G304
+	if err != nil {
+		return nil, fmt.Errorf("policy: read %q: %w", safe, err)
 	}
 
 	var d DomainFile

@@ -7,11 +7,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
+	"os"
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // CycloneDXReport represents the minimal structure of a CycloneDX 1.5 SBOM
@@ -40,7 +40,11 @@ type CycloneDXVulnerability struct {
 // ParseCycloneDX reads a CycloneDX 1.5 JSON formatted SBOM and extracts
 // the embedded vulnerabilities into the Wardex model.
 func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
-	data, err := cli.SafeReadFile(filepath)
+	safePathStr, err := cli.SafePath(filepath)
+	if err != nil {
+		return nil, err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		if _, ok := err.(*fs.PathError); ok {
 			return nil, fmt.Errorf("file not found: %s", filepath)
@@ -67,7 +71,7 @@ func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
 		if v.Analysis != nil {
 			state := strings.ToLower(v.Analysis.State)
 			if state == "not_affected" || state == "false_positive" {
-				ui.Infof("Ignoring %s due to VEX analysis state: %s", v.ID, state)
+				fmt.Fprintf(os.Stderr, "[INFO] Ignoring %s due to VEX analysis state: %s\n", v.ID, state)
 				continue
 			}
 		}
@@ -127,10 +131,10 @@ func ParseCycloneDX(filepath string) ([]model.Vulnerability, error) {
 	}
 
 	if skippedEmptyID > 0 {
-		ui.Warnf("%d CycloneDX CVEs skipped — empty ID", skippedEmptyID)
+		fmt.Fprintf(os.Stderr, "[WARN] %d CycloneDX CVEs skipped — empty ID\n", skippedEmptyID)
 	}
 	if skippedNoScore > 0 {
-		ui.Warnf("%d CycloneDX CVEs skipped — no CVSS score available", skippedNoScore)
+		fmt.Fprintf(os.Stderr, "[WARN] %d CycloneDX CVEs skipped — no CVSS score available\n", skippedNoScore)
 	}
 
 	return vulns, nil

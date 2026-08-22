@@ -8,16 +8,16 @@ import "time"
 // Asset represents an organisational asset with its risk context, including
 // criticality, exposure, compensating controls, and threat profile.
 type Asset struct {
-	ID           string                     `yaml:"id" json:"id"`
-	Name         string                     `yaml:"name" json:"name"`
-	Type         string                     `yaml:"type" json:"type"`               // application, database, network...
-	Criticality  float64                    `yaml:"criticality" json:"criticality"` // C(α)
-	Exposure     AssetExposureContext       `yaml:"exposure" json:"exposure"`
-	Scope        []string                   `yaml:"scope,omitempty" json:"scope,omitempty"` // frameworks (iso27001, nis2...)
-	Controls     []string                   `yaml:"controls" json:"controls"`               // IDs of ExistingControls applied to this asset
+	ID           string                      `yaml:"id" json:"id"`
+	Name         string                      `yaml:"name" json:"name"`
+	Type         string                      `yaml:"type" json:"type"` // application, database, network...
+	Criticality  float64                     `yaml:"criticality" json:"criticality"` // C(α)
+	Exposure     AssetExposureContext        `yaml:"exposure" json:"exposure"`
+	Scope        []string                    `yaml:"scope,omitempty" json:"scope,omitempty"` // frameworks (iso27001, nis2...)
+	Controls     []string                    `yaml:"controls" json:"controls"`       // IDs of ExistingControls applied to this asset
 	CompControls []AssetCompensatingControl `yaml:"compensating_controls,omitempty" json:"compensating_controls,omitempty"`
-	Owner        string                     `yaml:"owner,omitempty" json:"owner,omitempty"`
-	Threats      []AssetThreat              `yaml:"threats,omitempty" json:"threats,omitempty"`
+	Owner        string                      `yaml:"owner,omitempty" json:"owner,omitempty"`
+	Threats      []AssetThreat               `yaml:"threats,omitempty" json:"threats,omitempty"`
 }
 
 // AssetExposureContext describes the network and data exposure of an asset,

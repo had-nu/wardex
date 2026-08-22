@@ -14,7 +14,6 @@ import (
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/accept"
 	"github.com/had-nu/wardex/v2/pkg/art14"
-	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/ui"
@@ -418,7 +417,8 @@ func runFinalize(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if err := cli.SafeWriteFile(path, data); err != nil {
+	err = os.WriteFile(path, data, 0600)
+	if err != nil {
 		return err
 	}
 

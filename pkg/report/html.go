@@ -18,20 +18,20 @@ import (
 var reportTemplate string
 
 type templateData struct {
-	Title       string
-	GeneratedAt string
-	Version     string
-	Summary     templateSummary
-	Domains     []templateDomain
-	LayerDelta  *templateLayerDelta
-	Gate        *templateGate
-	Assets      []templateAsset
-	Roadmap     []templateRoadmapItem
-	HasDelta    bool
-	HasLayer    bool
-	HasGate     bool
-	HasAssets   bool
-	HasRoadmap  bool
+	Title        string
+	GeneratedAt  string
+	Version      string
+	Summary      templateSummary
+	Domains      []templateDomain
+	LayerDelta   *templateLayerDelta
+	Gate         *templateGate
+	Assets       []templateAsset
+	Roadmap      []templateRoadmapItem
+	HasDelta     bool
+	HasLayer     bool
+	HasGate      bool
+	HasAssets    bool
+	HasRoadmap   bool
 }
 
 type templateSummary struct {
@@ -53,40 +53,40 @@ type templateDomain struct {
 }
 
 type templateLayerDelta struct {
-	Documented   int
-	Implemented  int
-	Active       int
-	ActivePct    string
-	PolicyGap    int
-	PolicyGapPct string
-	ShadowSec    int
-	ShadowSecPct string
+	Documented    int
+	Implemented   int
+	Active        int
+	ActivePct     string
+	PolicyGap     int
+	PolicyGapPct  string
+	ShadowSec     int
+	ShadowSecPct  string
 }
 
 type templateGate struct {
-	Decision      string
+	Decision  string
 	DecisionClass string
-	Maturity      string
-	Decisions     []templateGateDecision
-	HasDecisions  bool
+	Maturity  string
+	Decisions []templateGateDecision
+	HasDecisions bool
 }
 
 type templateGateDecision struct {
-	CVE      string
-	CVSS     string
-	EPSS     string
-	Risk     string
+	CVE     string
+	CVSS    string
+	EPSS    string
+	Risk    string
 	Decision string
-	Class    string
+	Class   string
 }
 
 type templateAsset struct {
-	Name        string
-	Score       string
-	Status      string
-	StatusIcon  string
+	Name       string
+	Score      string
+	Status     string
+	StatusIcon string
 	StatusClass string
-	Missing     string
+	Missing    string
 }
 
 type templateRoadmapItem struct {

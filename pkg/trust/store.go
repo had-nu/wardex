@@ -13,17 +13,12 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 	"gopkg.in/yaml.v3"
 )
 
 // InitStore creates a new wardex-trust.yaml with the bootstrap admin key.
 // Fails if the output file already exists.
-// rootAnchor is an optional external root trust anchor (sha256:... public key fingerprint).
-// When provided, it becomes the RootAnchor in the trust store, breaking the
-// circular trust bootstrap by providing an external trust anchor.
-func InitStore(keyPath, actor, name, outPath, rootAnchor string) error {
+func InitStore(keyPath, actor, name, outPath string) error {
 	// Fail if trust store already exists
 	if _, err := os.Stat(outPath); err == nil {
 		return fmt.Errorf("trust init: %q already exists — cannot re-initialise.\n"+
@@ -52,11 +47,10 @@ func InitStore(keyPath, actor, name, outPath, rootAnchor string) error {
 	entry.AddedSig = Sign(priv, entryMsg)
 
 	store := &TrustStore{
-		Version:    "1",
-		CreatedAt:  time.Now().UTC(),
-		CreatedBy:  actor,
-		Keys:       []KeyEntry{entry},
-		RootAnchor: rootAnchor,
+		Version:   "1",
+		CreatedAt: time.Now().UTC(),
+		CreatedBy: actor,
+		Keys:      []KeyEntry{entry},
 	}
 
 	store.RootSig = computeRootSig(store, priv)
@@ -183,7 +177,7 @@ func RevokeKey(storePath, keyPath, keyID, reason string) error {
 // LoadStore reads and parses a wardex-trust.yaml file.
 // Returns the parsed store and the raw bytes (needed for TrustStoreSig verification).
 func LoadStore(path string) (*TrustStore, []byte, error) {
-	data, err := cli.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304
 	if err != nil {
 		return nil, nil, fmt.Errorf("trust store: read %q: %w", path, err)
 	}
@@ -211,114 +205,8 @@ func LoadStoreFromBytes(data []byte) (*TrustStore, error) {
 
 // VerifyRootSig verifies the root signature of a trust store.
 // It finds the admin key that created the signature and validates it.
-// Also verifies each KeyEntry.AddedSig and Revocation.Sig.
-// If RootAnchor is set, verifies RootSig against the external anchor instead.
 func VerifyRootSig(store *TrustStore) error {
-// Verify each KeyEntry.AddedSig
-	for _, k := range store.Keys {
-		if k.AddedSig == "" {
-			return fmt.Errorf("trust store: key %q missing AddedSig", k.ID)
-		}
-		// Find the key that signed this entry (AddedBy)
-		var signerPub ed25519.PublicKey
-		var signerFound bool
-		for _, s := range store.Keys {
-			if s.Actor == k.AddedBy || (k.AddedBy == "bootstrap" && s.Role == RoleAdmin) {
-				pub, err := DecodePublicKey(s.PubKey)
-				if err != nil {
-					continue
-				}
-				signerPub = pub
-				signerFound = true
-				break
-			}
-		}
-		if !signerFound {
-			return fmt.Errorf("trust store: key %q AddedBy %q not found in store", k.ID, k.AddedBy)
-		}
-		// RBAC temporal check: signer must have had OpTrustAdd authority at time of signing
-		// Since keys are immutable after creation (only revoked, not role-changed),
-		// the current role reflects the historical role at signing time.
-		// We do NOT check revocation status here because revocation applies to
-		// future operations, not retroactively invalidating past signatures.
-		if k.AddedBy != "bootstrap" {
-			var signerEntry *KeyEntry
-			for i := range store.Keys {
-				if store.Keys[i].Actor == k.AddedBy {
-					signerEntry = &store.Keys[i]
-					break
-				}
-			}
-			if signerEntry != nil && !CanPerform(signerEntry.Role, OpTrustAdd) {
-				return fmt.Errorf("trust store: key %q signer %q (role %q) lacked OpTrustAdd authority at time of signing", k.ID, signerEntry.Actor, signerEntry.Role)
-			}
-		}
-		// Verify the AddedSig
-		entryMsg := canonicalKeyEntryMessage(&k)
-		if err := Verify(signerPub, entryMsg, k.AddedSig); err != nil {
-			return fmt.Errorf("trust store: key %q AddedSig invalid: %w", k.ID, err)
-		}
-	}
-
-// Verify each Revocation.Sig
-	for _, r := range store.Revocations {
-		if r.Sig == "" {
-			return fmt.Errorf("trust store: revocation for key %q missing Sig", r.KeyID)
-		}
-		// Find the key that signed this revocation (RevokedBy)
-		var signerPub ed25519.PublicKey
-		var signerFound bool
-		for _, s := range store.Keys {
-			if s.Actor == r.RevokedBy && s.Role == RoleAdmin {
-				pub, err := DecodePublicKey(s.PubKey)
-				if err != nil {
-					continue
-				}
-				signerPub = pub
-				signerFound = true
-				break
-			}
-		}
-		if !signerFound {
-			return fmt.Errorf("trust store: revocation for key %q RevokedBy %q not found or not admin", r.KeyID, r.RevokedBy)
-		}
-		// RBAC temporal check: signer must have had OpTrustRevoke authority at time of signing
-		var signerEntry *KeyEntry
-		for i := range store.Keys {
-			if store.Keys[i].Actor == r.RevokedBy {
-				signerEntry = &store.Keys[i]
-				break
-			}
-		}
-		if signerEntry != nil && !CanPerform(signerEntry.Role, OpTrustRevoke) {
-			return fmt.Errorf("trust store: revocation for key %q signer %q (role %q) lacked OpTrustRevoke authority at time of signing", r.KeyID, signerEntry.Actor, signerEntry.Role)
-		}
-		// Revocation status of the signer is not checked here because revocation
-		// applies to future operations, not retroactively invalidating past signatures.
-		// Verify the Revocation.Sig
-		revMsg := canonicalRevocationMessage(&r)
-		if err := Verify(signerPub, revMsg, r.Sig); err != nil {
-			return fmt.Errorf("trust store: revocation for key %q Sig invalid: %w", r.KeyID, err)
-		}
-	}
-
-	// Verify RootSig (covers all AddedSig and Revocation.Sig)
 	rootMsg := rootSigMessage(store)
-
-	// If RootAnchor is set, verify against the external trust anchor
-	if store.RootAnchor != "" {
-		anchorPub, err := DecodePublicKey(store.RootAnchor)
-		if err != nil {
-			return fmt.Errorf("trust store: invalid RootAnchor format: %w", err)
-		}
-		if err := Verify(anchorPub, rootMsg, store.RootSig); err != nil {
-			return fmt.Errorf("trust store: root signature invalid against RootAnchor — file may have been tampered with: %w", err)
-		}
-		return nil
-	}
-
-	// Fallback: verify against admin keys in the store (legacy mode, no external anchor)
-	rootMsg = rootSigMessage(store)
 
 	// Try each admin key to find the one that signed
 	for _, k := range store.Keys {
@@ -327,7 +215,7 @@ func VerifyRootSig(store *TrustStore) error {
 		}
 		pub, err := DecodePublicKey(k.PubKey)
 		if err != nil {
-			ui.Warnf("Admin key %s failed to decode — skipped in root verification", k.ID)
+			fmt.Fprintf(os.Stderr, "[WARN] Admin key %s failed to decode — skipped in root verification\n", k.ID)
 			continue
 		}
 		if err := Verify(pub, rootMsg, store.RootSig); err == nil {
@@ -467,8 +355,8 @@ func generateKeyID(fullName string, role string, existing []KeyEntry) string {
 
 	maxSeq := 0
 	for _, k := range existing {
-		if after, ok := strings.CutPrefix(k.ID, prefix); ok {
-			suffix := after
+		if strings.HasPrefix(k.ID, prefix) {
+			suffix := strings.TrimPrefix(k.ID, prefix)
 			var seq int
 			if _, err := fmt.Sscanf(suffix, "%d", &seq); err == nil {
 				if seq > maxSeq {

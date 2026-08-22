@@ -3,11 +3,7 @@
 
 package releasegate
 
-import (
-	"math"
-
-	"github.com/had-nu/wardex/v2/pkg/model"
-)
+import "github.com/had-nu/wardex/v2/pkg/model"
 
 // scoreNorm normaliza o output para a escala [0, 1.5] do paper v4 (§IV.A — Proposição 2).
 // R_normalizado = R_absoluto / scoreNorm, com CVSS_max/10 = 1.
@@ -17,30 +13,6 @@ const scoreNorm = 10.0
 
 // CalculateRisk generates a risk breakdown for a single vulnerability in context.
 func CalculateRisk(vuln model.Vulnerability, ctx model.AssetContext, comps []model.CompensatingControl) model.RiskBreakdown {
-	// Validate inputs to prevent NaN/Inf fail-open
-	if !isValidScore(vuln.CVSSBase, 0.0, 10.0) {
-		return model.RiskBreakdown{
-			FinalReleaseRisk: 1.5, // Maximum risk = BLOCK
-		}
-	}
-	if !isValidScore(vuln.EPSSScore, 0.0, 1.0) {
-		return model.RiskBreakdown{
-			FinalReleaseRisk: 1.5,
-		}
-	}
-	if !isValidScore(ctx.Criticality, 0.0, 1.0) {
-		return model.RiskBreakdown{
-			FinalReleaseRisk: 1.5,
-		}
-	}
-	for _, c := range comps {
-		if !isValidScore(c.Effectiveness, 0.0, 0.8) {
-			return model.RiskBreakdown{
-				FinalReleaseRisk: 1.5,
-			}
-		}
-	}
-
 	epss := vuln.EPSSScore
 	if epss == 0.0 {
 		epss = 1.0
@@ -83,13 +55,6 @@ func CalculateRisk(vuln model.Vulnerability, ctx model.AssetContext, comps []mod
 
 	finalRisk := compensatedScore * criticality * exposure
 
-	// Defense in depth: validate final result is finite and in expected range
-	if !isValidScore(finalRisk, 0.0, 1.5) {
-		return model.RiskBreakdown{
-			FinalReleaseRisk: 1.5,
-		}
-	}
-
 	return model.RiskBreakdown{
 		CVSSBase:           vuln.CVSSBase,
 		EPSSFactor:         epss,
@@ -99,16 +64,4 @@ func CalculateRisk(vuln model.Vulnerability, ctx model.AssetContext, comps []mod
 		CompensatingEffect: compEffect,
 		FinalReleaseRisk:   finalRisk,
 	}
-}
-
-// isValidScore checks if a float64 value is finite and within [min, max].
-// Returns false for NaN, ±Inf, or out-of-range values.
-func isValidScore(v float64, min, max float64) bool {
-	if math.IsNaN(v) || math.IsInf(v, 0) {
-		return false
-	}
-	if v < min || v > max {
-		return false
-	}
-	return true
 }

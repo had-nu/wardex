@@ -42,7 +42,7 @@ func runContractVerify(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("validating contract path: %w", err)
 	}
 
-	data, err := cli.SafeReadFile(contractFile)
+	data, err := os.ReadFile(safePath) // #nosec G304
 	if err != nil {
 		return fmt.Errorf("reading contract file: %w", err)
 	}

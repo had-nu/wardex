@@ -60,8 +60,5 @@ func validateControl(c model.ExistingControl, i int) error {
 	if c.Maturity < 1 || c.Maturity > 5 {
 		return fmt.Errorf("control '%s' has invalid maturity %d (must be 1-5)", c.ID, c.Maturity)
 	}
-	if c.Layer != model.LayerDocumented && c.Layer != model.LayerImplemented {
-		return fmt.Errorf("control '%s' has invalid layer %q (must be documented or implemented)", c.ID, c.Layer)
-	}
 	return nil
 }

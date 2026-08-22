@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	submitLabel string
+	submitLabel  string
 )
 
 var submitCmd = &cobra.Command{

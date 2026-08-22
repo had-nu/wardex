@@ -377,7 +377,7 @@ func TestRunGateSealedConfig(t *testing.T) {
 	if _, err := trust.GenerateKeypair(keyPath, false); err != nil {
 		t.Fatalf("keygen: %v", err)
 	}
-	if err := trust.InitStore(keyPath, "admin@test.com", "Admin", storePath, ""); err != nil {
+	if err := trust.InitStore(keyPath, "admin@test.com", "Admin", storePath); err != nil {
 		t.Fatalf("init store: %v", err)
 	}
 	writeGateFixture(t, dir, "draft.yaml", "release_gate:\n  enabled: true\n  risk_appetite: 1.0\n")

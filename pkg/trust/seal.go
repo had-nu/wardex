@@ -7,7 +7,7 @@ import (
 	"context"
 	"crypto/ed25519"
 	"fmt"
-	"strings"
+	"os"
 	"time"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
@@ -49,9 +49,14 @@ func SealConfig(ctx context.Context, keyPath, inputPath, outPath, trustRef strin
 	}
 
 	// 3. Read and validate the draft config
-	draftData, err := cli.SafeReadFile(inputPath)
+	safePath, err := cli.SafePath(inputPath)
 	if err != nil {
-		return fmt.Errorf("config seal: read draft %q: %w", inputPath, err)
+		return fmt.Errorf("config seal: unsafe path %q: %w", inputPath, err)
+	}
+	// safePath was validated by SafePath above — no traversal possible
+	draftData, err := os.ReadFile(safePath) // #nosec G304
+	if err != nil {
+		return fmt.Errorf("config seal: read draft %q: %w", safePath, err)
 	}
 
 	pendingFields, err := DetectPendingApproval(draftData)
@@ -59,13 +64,12 @@ func SealConfig(ctx context.Context, keyPath, inputPath, outPath, trustRef strin
 		return fmt.Errorf("config seal: %w", err)
 	}
 	if len(pendingFields) > 0 {
-		var msg strings.Builder
-		msg.WriteString("config seal: draft contains unsettled fields:\n")
+		msg := "config seal: draft contains unsettled fields:\n"
 		for _, f := range pendingFields {
-			fmt.Fprintf(&msg, "  - %s: \"PENDING_APPROVAL\"\n", f)
+			msg += fmt.Sprintf("  - %s: \"PENDING_APPROVAL\"\n", f)
 		}
-		msg.WriteString("\nThese fields require a decision from the risk owner before sealing.")
-		return fmt.Errorf("%s", msg.String())
+		msg += "\nThese fields require a decision from the risk owner before sealing."
+		return fmt.Errorf("%s", msg)
 	}
 
 	// 4. Build WexState (version 2 — CBOR deterministic signing)

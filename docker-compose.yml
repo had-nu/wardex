@@ -2,7 +2,7 @@ name: wardex-dev
 
 services:
   dev:
-    image: golang:1.27-alpine
+    image: golang:1.26-alpine
     working_dir: /wardex
     entrypoint: ["go"]
     volumes:
@@ -15,7 +15,7 @@ services:
     command: ["run", "./cmd/wardex", "--help"]
 
   test:
-    image: golang:1.27-alpine
+    image: golang:1.26-alpine
     working_dir: /wardex
     entrypoint: ["go", "test"]
     volumes:

@@ -30,7 +30,7 @@ type Acceptance struct {
 	// Logical state
 	Revoked      bool              `json:"revoked,omitempty" yaml:"revoked,omitempty"`
 	RevokedBy    string            `json:"revoked_by,omitempty" yaml:"revoked_by,omitempty"`
-	RevokedAt    time.Time         `json:"revoked_at" yaml:"revoked_at,omitempty"`
+	RevokedAt    time.Time         `json:"revoked_at,omitempty" yaml:"revoked_at,omitempty"`
 	RevokeReason string            `json:"revoke_reason,omitempty" yaml:"revoke_reason,omitempty"`
 	Revocation   *RevocationRecord `json:"revocation,omitempty" yaml:"revocation,omitempty"`
 }
@@ -38,7 +38,7 @@ type Acceptance struct {
 // RevocationRecord represents the metadata regarding the revocation of an acceptance.
 type RevocationRecord struct {
 	RevokedBy string    `json:"revoked_by,omitempty" yaml:"revoked_by,omitempty"`
-	RevokedAt time.Time `json:"revoked_at" yaml:"revoked_at,omitempty"`
+	RevokedAt time.Time `json:"revoked_at,omitempty" yaml:"revoked_at,omitempty"`
 	Reason    string    `json:"reason,omitempty" yaml:"reason,omitempty"`
 }
 

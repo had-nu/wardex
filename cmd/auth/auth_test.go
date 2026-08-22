@@ -41,3 +41,4 @@ func TestStatusCmdHasFlags(t *testing.T) {
 		t.Error("expected --trust flag to exist on parent command")
 	}
 }
+

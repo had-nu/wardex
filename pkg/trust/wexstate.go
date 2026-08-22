@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
 	"gopkg.in/yaml.v3"
 )
 
@@ -22,15 +21,15 @@ type WexState struct {
 	SealedAt      time.Time `yaml:"sealed_at"`
 	SealedBy      string    `yaml:"sealed_by"`        // actor email
 	SealedByKeyID string    `yaml:"sealed_by_key_id"` // KeyEntry.ID of the signer
-	TrustStoreRef string    `yaml:"trust_store_ref"`  // URL or relative path to wardex-trust.yaml
-	TrustStoreSig string    `yaml:"trust_store_sig"`  // SHA-256 of wardex-trust.yaml at seal time
-	Payload       string    `yaml:"payload"`          // wardex-config.yaml content
-	Sig           string    `yaml:"sig"`              // ed25519 signature
+	TrustStoreRef string    `yaml:"trust_store_ref"`   // URL or relative path to wardex-trust.yaml
+	TrustStoreSig string    `yaml:"trust_store_sig"`   // SHA-256 of wardex-trust.yaml at seal time
+	Payload       string    `yaml:"payload"`           // wardex-config.yaml content
+	Sig           string    `yaml:"sig"`               // ed25519 signature
 }
 
 // LoadWexState reads and parses a .wexstate file.
 func LoadWexState(path string) (*WexState, error) {
-	data, err := cli.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304
 	if err != nil {
 		return nil, fmt.Errorf("wexstate: read %q: %w", path, err)
 	}
@@ -101,7 +100,7 @@ const pendingApprovalSentinel = "PENDING_APPROVAL"
 // DetectPendingApproval scans YAML content for any value equal to "PENDING_APPROVAL".
 // Returns a list of dotted field paths where PENDING_APPROVAL was found.
 func DetectPendingApproval(yamlContent []byte) ([]string, error) {
-	var raw map[string]any
+	var raw map[string]interface{}
 	if err := yaml.Unmarshal(yamlContent, &raw); err != nil {
 		return nil, fmt.Errorf("detect pending: parse yaml: %w", err)
 	}
@@ -111,9 +110,9 @@ func DetectPendingApproval(yamlContent []byte) ([]string, error) {
 }
 
 // walkYAML recursively walks a YAML tree looking for PENDING_APPROVAL values.
-func walkYAML(prefix string, node any, pending *[]string) {
+func walkYAML(prefix string, node interface{}, pending *[]string) {
 	switch v := node.(type) {
-	case map[string]any:
+	case map[string]interface{}:
 		for key, val := range v {
 			path := key
 			if prefix != "" {
@@ -125,7 +124,7 @@ func walkYAML(prefix string, node any, pending *[]string) {
 		if strings.TrimSpace(v) == pendingApprovalSentinel {
 			*pending = append(*pending, prefix)
 		}
-	case []any:
+	case []interface{}:
 		for i, item := range v {
 			path := fmt.Sprintf("%s[%d]", prefix, i)
 			walkYAML(path, item, pending)

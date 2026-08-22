@@ -14,7 +14,7 @@ import "time"
 // to make required-but-unknown fields visible before submission.
 type Art14NotificationArtefact struct {
 	// Metadata
-	ArtefactID  string    `json:"artefact_id"` // UUID v4
+	ArtefactID  string    `json:"artefact_id"`  // UUID v4
 	GeneratedAt time.Time `json:"generated_at"`
 	GeneratedBy string    `json:"generated_by"` // e.g. "wardex/v2.0.0"
 	WardexActor string    `json:"wardex_actor"` // WARDEX_ACTOR env var
@@ -29,7 +29,7 @@ type Art14NotificationArtefact struct {
 
 	// Article 14(2)(c) — Final Report (must be submitted ≤ 14 days after corrective measure)
 	// This block is populated later via `wardex art14 finalize`.
-	FinalReport Art14FinalReport `json:"final_report"`
+	FinalReport Art14FinalReport `json:"final_report,omitempty"`
 
 	// HMAC-SHA256 over canonical JSON of all fields above (excluding this field itself).
 	// Computed and verified by the art14 package. Tampering is detectable.
@@ -72,8 +72,8 @@ type Art14Notification struct {
 // This block is populated via `wardex art14 finalize` once a corrective measure
 // is available and must be submitted no later than 14 days after that date.
 type Art14FinalReport struct {
-	Deadline                 time.Time `json:"deadline"` // PatchAvailableAt + 14 days
-	PatchAvailableAt         time.Time `json:"patch_available_at"`
+	Deadline                 time.Time `json:"deadline,omitempty"`  // PatchAvailableAt + 14 days
+	PatchAvailableAt         time.Time `json:"patch_available_at,omitempty"`
 	VulnerabilityDescription string    `json:"vulnerability_description,omitempty"`
 	Severity                 string    `json:"severity,omitempty"`
 	Impact                   string    `json:"impact,omitempty"`

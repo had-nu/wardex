@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -17,7 +18,11 @@ import (
 
 // LoadAssets loads asset definitions from a YAML or JSON file.
 func LoadAssets(path string) ([]model.Asset, error) {
-	data, err := cli.SafeReadFile(path)
+	safePathStr, err := cli.SafePath(path)
+	if err != nil {
+		return nil, err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		return nil, fmt.Errorf("reading asset file: %w", err)
 	}

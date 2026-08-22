@@ -1,17 +1,14 @@
 package epss
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 func httpTestClient(t *testing.T, srv *httptest.Server) {
@@ -20,16 +17,8 @@ func httpTestClient(t *testing.T, srv *httptest.Server) {
 	httpClient = &http.Client{Transport: srv.Client().Transport, Timeout: 10 * time.Second}
 }
 
-// captureLogger points the package-level structured logger at buf for the test duration.
-func captureLogger(t *testing.T, buf *strings.Builder) {
-	t.Helper()
-	prev := ui.Default()
-	ui.SetLogger(ui.NewLoggerTo(buf, slog.LevelInfo))
-	t.Cleanup(func() { ui.SetLogger(prev) })
-}
-
 func TestFetchScores_EmptyInput(t *testing.T) {
-	scores, provenance, err := FetchScores(context.Background(), nil)
+	scores, provenance, err := FetchScores(nil, nil)
 	if err != nil {
 		t.Fatalf("expected nil error for empty input, got: %v", err)
 	}
@@ -42,7 +31,7 @@ func TestFetchScores_EmptyInput(t *testing.T) {
 }
 
 func TestFetchScores_EmptySlice(t *testing.T) {
-	scores, provenance, err := FetchScores(context.Background(), []string{})
+	scores, provenance, err := FetchScores([]string{}, nil)
 	if err != nil {
 		t.Fatalf("expected nil error for empty slice, got: %v", err)
 	}
@@ -78,7 +67,7 @@ func TestFetchScores_Success(t *testing.T) {
 	defer server.Close()
 	httpTestClient(t, server)
 
-	scores, provenance, err := FetchScores(context.Background(), []string{"CVE-2024-0001", "CVE-2024-0002"})
+	scores, provenance, err := FetchScores([]string{"CVE-2024-0001", "CVE-2024-0002"}, os.Stderr)
 	if err != nil {
 		t.Fatalf("FetchScores failed: %v", err)
 	}
@@ -103,7 +92,7 @@ func TestFetchScores_Non200Status(t *testing.T) {
 	defer server.Close()
 	httpTestClient(t, server)
 
-	_, _, err := FetchScores(context.Background(), []string{"CVE-2024-0001"})
+	_, _, err := FetchScores([]string{"CVE-2024-0001"}, os.Stderr)
 	if err == nil {
 		t.Fatal("expected error for non-200 status")
 	}
@@ -120,7 +109,7 @@ func TestFetchScores_ServerError(t *testing.T) {
 	defer server.Close()
 	httpTestClient(t, server)
 
-	_, _, err := FetchScores(context.Background(), []string{"CVE-2024-0001"})
+	_, _, err := FetchScores([]string{"CVE-2024-0001"}, os.Stderr)
 	if err == nil {
 		t.Fatal("expected error for malformed response")
 	}
@@ -133,7 +122,7 @@ func TestFetchScores_UnknownFieldsRejected(t *testing.T) {
 	defer server.Close()
 	httpTestClient(t, server)
 
-	_, _, err := FetchScores(context.Background(), []string{"CVE-2024-0001"})
+	_, _, err := FetchScores([]string{"CVE-2024-0001"}, os.Stderr)
 	if err == nil {
 		t.Fatal("expected error for unknown JSON fields")
 	}
@@ -141,7 +130,6 @@ func TestFetchScores_UnknownFieldsRejected(t *testing.T) {
 
 func TestFetchScores_MalformedScore(t *testing.T) {
 	var buf strings.Builder
-	captureLogger(t, &buf)
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		resp := FirstAPIResponse{
 			Status:     "OK",
@@ -155,7 +143,7 @@ func TestFetchScores_MalformedScore(t *testing.T) {
 	defer server.Close()
 	httpTestClient(t, server)
 
-	scores, _, err := FetchScores(context.Background(), []string{"CVE-2024-0001"})
+	scores, _, err := FetchScores([]string{"CVE-2024-0001"}, &buf)
 	if err != nil {
 		t.Fatalf("FetchScores should not fail on malformed score: %v", err)
 	}
@@ -169,7 +157,6 @@ func TestFetchScores_MalformedScore(t *testing.T) {
 
 func TestFetchScores_OutOfRangeScore(t *testing.T) {
 	var buf strings.Builder
-	captureLogger(t, &buf)
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		resp := FirstAPIResponse{
 			Status:     "OK",
@@ -183,7 +170,7 @@ func TestFetchScores_OutOfRangeScore(t *testing.T) {
 	defer server.Close()
 	httpTestClient(t, server)
 
-	scores, _, err := FetchScores(context.Background(), []string{"CVE-2024-0001"})
+	scores, _, err := FetchScores([]string{"CVE-2024-0001"}, &buf)
 	if err != nil {
 		t.Fatalf("FetchScores should not fail on out-of-range score: %v", err)
 	}
@@ -214,7 +201,7 @@ func TestFetchScores_Chunking(t *testing.T) {
 		cves = append(cves, fmt.Sprintf("CVE-2024-%04d", i))
 	}
 
-	_, _, err := FetchScores(context.Background(), cves)
+	_, _, err := FetchScores(cves, os.Stderr)
 	if err != nil {
 		t.Fatalf("FetchScores failed: %v", err)
 	}

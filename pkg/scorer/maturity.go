@@ -4,8 +4,10 @@
 package scorer
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // MaturityByDomain calculates maturity scores aggregated by the 4 Annex A domains.
@@ -25,11 +27,12 @@ func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 		}
 	}
 
+
 	for _, f := range findings {
 		d := f.Control.Domain
 		s, ok := summaries[d]
 		if !ok {
-			ui.Warnf("Domain %s not found in summaries — excluded from maturity", d)
+			fmt.Fprintf(os.Stderr, "[WARN] Domain %s not found in summaries — excluded from maturity\n", d)
 			continue
 		}
 

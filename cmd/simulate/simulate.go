@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/test"
 	"github.com/spf13/cobra"
 )
@@ -42,7 +41,7 @@ var SimulateCmd = &cobra.Command{
 </html>`
 
 		filename := "wardex-simulator.html"
-		err := cli.SafeWriteFile(filename, []byte(html))
+		err := os.WriteFile(filename, []byte(html), 0600)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error creating simulator file: %v\n", err)
 			os.Exit(1)

@@ -10,14 +10,12 @@ import (
 	"path/filepath"
 	"sort"
 	"time"
-
-	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 // HistoryRecord is a single historical state snapshot.
 type HistoryRecord struct {
-	State     *State    `json:"state"`
-	FilePath  string    `json:"-"`
+	State     *State   `json:"state"`
+	FilePath  string   `json:"-"`
 	Timestamp time.Time `json:"timestamp"`
 }
 
@@ -40,9 +38,9 @@ func (s *Store) ListHistory() ([]HistoryRecord, error) {
 		}
 
 		path := filepath.Join(historyDir, entry.Name())
-		data, err := cli.ReadFile(path)
+		data, err := os.ReadFile(path) // #nosec G304
 		if err != nil {
-			return nil, fmt.Errorf("history: read %q: %w", path, err)
+			continue
 		}
 
 		var state State

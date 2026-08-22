@@ -1,7 +1,6 @@
 package audit
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -9,7 +8,6 @@ import (
 
 	"github.com/had-nu/wardex/v2/internal/cpl"
 	"github.com/had-nu/wardex/v2/internal/notification"
-	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -47,7 +45,7 @@ func init() {
 }
 
 func runVerifyLink(cmd *cobra.Command, args []string) error {
-	logData, err := cli.SafeReadFile(auditLogPath)
+	logData, err := os.ReadFile(auditLogPath) // #nosec G304 — user-provided path via --audit-log flag
 	if err != nil {
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: reading audit log: %v\n", err)
 		os.Exit(2)
@@ -67,10 +65,10 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	}
 
 	summary := struct {
-		Total    int `json:"total"`
-		OK       int `json:"ok"`
+		Total   int `json:"total"`
+		OK      int `json:"ok"`
 		Mismatch int `json:"mismatch"`
-		Missing  int `json:"missing"`
+		Missing int `json:"missing"`
 	}{Total: len(results)}
 
 	for _, r := range results {
@@ -87,13 +85,13 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	enc := json.NewEncoder(cmd.OutOrStdout())
 	enc.SetIndent("", "  ")
 	_ = enc.Encode(struct {
-		Summary any              `json:"summary"`
+		Summary interface{}    `json:"summary"`
 		Results []cpl.LinkResult `json:"results"`
 	}{Summary: summary, Results: results})
 
 	if summary.Mismatch > 0 || summary.Missing > 0 {
 		if webhookURL != "" {
-			dispatchNotification(cmd.Context(), auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, results)
+			dispatchNotification(auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, results)
 		}
 		os.Exit(1)
 	}
@@ -101,7 +99,7 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func dispatchNotification(ctx context.Context, auditLog string, total, ok, mismatch, missing int, results []cpl.LinkResult) {
+func dispatchNotification(auditLog string, total, ok, mismatch, missing int, results []cpl.LinkResult) {
 	payload := notification.DivergencePayload{
 		Source:    "wardex",
 		EventType: "cpl.verify_link.mismatch",
@@ -140,7 +138,7 @@ func dispatchNotification(ctx context.Context, auditLog string, total, ok, misma
 		},
 	}
 
-	if err := notification.Send(ctx, cfg, payload); err != nil {
+	if err := notification.Send(cfg, payload); err != nil {
 		fmt.Fprintf(os.Stderr, "[wardex] notification: webhook failed: %v\n", err)
 	}
 }

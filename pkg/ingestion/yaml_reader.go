@@ -6,6 +6,7 @@ package ingestion
 import (
 	"bytes"
 	"fmt"
+	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -33,7 +34,11 @@ type yamlFormat struct {
 }
 
 func loadYAML(path string) ([]model.ExistingControl, error) {
-	data, err := cli.SafeReadFile(path)
+	safePathStr, err := cli.SafePath(path)
+	if err != nil {
+		return nil, err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		return nil, fmt.Errorf("reading file: %w", err)
 	}

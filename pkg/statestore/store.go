@@ -11,15 +11,13 @@ import (
 	"time"
 
 	"github.com/had-nu/wardex/v2/pkg/atomicwrite"
-	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // Store manages the persistent state directory.
 type Store struct {
-	root  string // .wardex/ directory
-	chain *ChainFile
+	root   string // .wardex/ directory
+	chain  *ChainFile
 }
 
 // New creates or opens a state store at the given root directory.
@@ -42,7 +40,7 @@ func New(root string) (*Store, error) {
 // LoadState returns the current consolidated state.
 func (s *Store) LoadState() (*State, error) {
 	path := filepath.Join(s.root, "state.json")
-	data, err := cli.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304
 	if err != nil {
 		if os.IsNotExist(err) {
 			return EmptyState(), nil
@@ -162,10 +160,10 @@ func (s *Store) TrendAnalysis() (*TrendAnalysis, error) {
 	}
 
 	analysis := &TrendAnalysis{
-		TotalRuns: len(history),
-		OldestRun: history[0].Date,
-		NewestRun: history[len(history)-1].Date,
-		MinRisk:   1.0,
+		TotalRuns:  len(history),
+		OldestRun:  history[0].Date,
+		NewestRun:  history[len(history)-1].Date,
+		MinRisk:    1.0,
 	}
 
 	var totalRisk float64
@@ -233,7 +231,7 @@ func (s *Store) Cleanup(retentionDays int) error {
 	}
 
 	if removed > 0 {
-		ui.Infof("Cleaned up %d old history snapshots", removed)
+		fmt.Fprintf(os.Stderr, "[INFO] Cleaned up %d old history snapshots\n", removed)
 	}
 	return nil
 }
@@ -259,11 +257,11 @@ func atomicWrite(path string, data []byte) error {
 }
 
 // marshalJSON marshals to indented JSON.
-func marshalJSON(v any) ([]byte, error) {
+func marshalJSON(v interface{}) ([]byte, error) {
 	return json.MarshalIndent(v, "", "  ")
 }
 
 // unmarshalJSON unmarshals JSON data.
-func unmarshalJSON(data []byte, v any) error {
+func unmarshalJSON(data []byte, v interface{}) error {
 	return json.Unmarshal(data, v)
 }

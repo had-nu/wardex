@@ -3,10 +3,7 @@ package cpl
 import (
 	"crypto/sha256"
 	"fmt"
-	"os"
 	"strings"
-
-	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 type Algorithm int
@@ -68,19 +65,4 @@ func ComputeConfigHash(raw []byte, algo Algorithm) (string, error) {
 	default:
 		return "", fmt.Errorf("cpl: unsupported algorithm %v", algo)
 	}
-}
-
-// ConfigHash loads a configuration file from disk and computes its canonical
-// SHA-256 hash. A missing file yields an empty hash with a nil error
-// (unsealed/absent configuration). Any other read failure is returned wrapped.
-func ConfigHash(configPath string) (string, error) {
-	data, err := cli.SafeReadFile(configPath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return "", nil // Sem config file, hash vazio
-		}
-		return "", fmt.Errorf("reading config file for audit: %w", err)
-	}
-
-	return ComputeConfigHash(data, AlgoSHA256)
 }

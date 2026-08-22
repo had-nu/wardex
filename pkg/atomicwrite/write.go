@@ -7,21 +7,16 @@
 package atomicwrite
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 )
 
 // Write atomically writes data to the file at path by writing to a temporary
-// file first (using O_EXCL to prevent races), then renaming.
-// The temp file is created in the same directory as the target to ensure
-// rename is atomic (same filesystem). The parent directory is fsynced
-// after rename for durability.
+// file first, then renaming. The temp file is cleaned up on rename failure.
 func Write(path string, data []byte) error {
-	dir := filepath.Dir(path)
-
-	// Create temp file in same directory with O_EXCL to prevent symlink/pre-existing attacks
-	f, err := os.CreateTemp(dir, ".wardex-atomic-*")
+	f, err := os.CreateTemp(filepath.Dir(path), ".wardex-atomic-*")
 	if err != nil {
 		return fmt.Errorf("atomic write: create temp: %w", err)
 	}
@@ -56,8 +51,8 @@ func Write(path string, data []byte) error {
 		return fmt.Errorf("atomic write: rename: %w", err)
 	}
 
-	// Sync parent directory for durability (rename is not guaranteed durable on all fs)
-	dirF, err := os.Open(dir) // #nosec G304 - dir is the parent directory of target path, validated by caller
+	// Sync parent directory for durability
+	dirF, err := os.Open(filepath.Dir(path))
 	if err != nil {
 		return fmt.Errorf("atomic write: open dir for sync: %w", err)
 	}
@@ -71,10 +66,7 @@ func Write(path string, data []byte) error {
 }
 
 // WriteWithContext is like Write but respects context cancellation.
-func WriteWithContext(ctx interface {
-	Done() <-chan struct{}
-	Err() error
-}, path string, data []byte) error {
+func WriteWithContext(ctx context.Context, path string, data []byte) error {
 	dir := filepath.Dir(path)
 
 	f, err := os.CreateTemp(dir, ".wardex-atomic-*")
@@ -107,7 +99,7 @@ func WriteWithContext(ctx interface {
 			done <- fmt.Errorf("atomic write: rename: %w", err)
 			return
 		}
-		dirF, err := os.Open(filepath.Dir(path)) // #nosec G304 - dir is parent of target path, validated by caller
+		dirF, err := os.Open(filepath.Dir(path))
 		if err != nil {
 			done <- fmt.Errorf("atomic write: open dir for sync: %w", err)
 			return

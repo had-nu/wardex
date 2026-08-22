@@ -75,7 +75,12 @@ func runAttest(cmd *cobra.Command, args []string) error {
 		inputPath = attFlags.inputFile
 	}
 
-	data, err := cli.SafeReadFile(inputPath)
+	safePath, err := cli.SafePath(inputPath)
+	if err != nil {
+		return fmt.Errorf("input path: %w", err)
+	}
+
+	data, err := os.ReadFile(safePath) // #nosec G304 -- safePath validated by cli.SafePath above
 	if err != nil {
 		return fmt.Errorf("read input: %w", err)
 	}

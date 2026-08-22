@@ -192,6 +192,7 @@ func TestLoadControls_InvalidPath(t *testing.T) {
 	}
 }
 
+
 func TestLoadControls_EmptyPaths(t *testing.T) {
 	_, err := sdk.LoadControls()
 	if err == nil {

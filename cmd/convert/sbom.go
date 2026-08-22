@@ -36,7 +36,11 @@ func init() {
 // peekSbomFormat attempts a naive peek into the JSON structure to determine
 // if it's CycloneDX or SPDX before invoking the dedicated parsers.
 func peekSbomFormat(filepath string) (string, error) {
-	data, err := cli.SafeReadFile(filepath)
+	safePathStr, err := cli.SafePath(filepath)
+	if err != nil {
+		return "", err
+	}
+	data, err := os.ReadFile(safePathStr) // #nosec G304
 	if err != nil {
 		return "", err
 	}
@@ -109,7 +113,7 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 	if outputPath == "stdout" || outputPath == "-" {
 		fmt.Print(string(yamlData))
 	} else {
-		if err := cli.SafeWriteFile(outputPath, yamlData); err != nil {
+		if err := os.WriteFile(outputPath, yamlData, 0600); err != nil {
 			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
 			os.Exit(1)
 		}
@@ -158,7 +162,7 @@ func attestSBOM(inputFile, outputFile, keyPath string) error {
 	if err != nil {
 		return fmt.Errorf("marshal attestation: %w", err)
 	}
-	if err := cli.SafeWriteFile(attestPath, out); err != nil {
+	if err := os.WriteFile(attestPath, out, 0600); err != nil {
 		return fmt.Errorf("write attestation: %w", err)
 	}
 

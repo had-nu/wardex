@@ -12,7 +12,6 @@
 package trust
 
 import (
-	"slices"
 	"time"
 )
 
@@ -32,7 +31,12 @@ func ValidRoles() []Role {
 
 // IsValid checks whether the role is a recognised Wardex role.
 func (r Role) IsValid() bool {
-	return slices.Contains(ValidRoles(), r)
+	for _, valid := range ValidRoles() {
+		if r == valid {
+			return true
+		}
+	}
+	return false
 }
 
 // Operation represents a discrete action that can be gated by role.
@@ -69,18 +73,23 @@ func CanPerform(role Role, op Operation) bool {
 	if !ok {
 		return false
 	}
-	return slices.Contains(perms, op)
+	for _, p := range perms {
+		if p == op {
+			return true
+		}
+	}
+	return false
 }
 
 // KeyEntry represents a key in the trust store.
 // Each entry is immutable after creation — revocation adds a Revocation entry,
 // it does not modify KeyEntry directly.
 type KeyEntry struct {
-	ID       string    `yaml:"id"`     // format: <initials>-<role>-<seq>, e.g. "km-admin-01"
-	PubKey   string    `yaml:"pubkey"` // "ed25519:<base64>"
-	Role     Role      `yaml:"role"`   // admin | ciso | analyst
-	Actor    string    `yaml:"actor"`  // email
-	Name     string    `yaml:"name"`   // full name for audit log
+	ID       string    `yaml:"id"`        // format: <initials>-<role>-<seq>, e.g. "km-admin-01"
+	PubKey   string    `yaml:"pubkey"`    // "ed25519:<base64>"
+	Role     Role      `yaml:"role"`      // admin | ciso | analyst
+	Actor    string    `yaml:"actor"`     // email
+	Name     string    `yaml:"name"`      // full name for audit log
 	AddedAt  time.Time `yaml:"added_at"`
 	AddedBy  string    `yaml:"added_by"`  // actor email or "bootstrap"
 	AddedSig string    `yaml:"added_sig"` // ed25519 signature of the entry by AddedBy
@@ -101,17 +110,11 @@ type Revocation struct {
 // The file has a covering signature (RootSig) calculated over the SHA-256
 // hash of all KeyEntry.AddedSig and Revocation.Sig, in insertion order.
 // Any manual modification invalidates RootSig.
-//
-// RootAnchor is an optional external root trust anchor. When present, it
-// provides a fixed trust anchor that cannot be modified by the trust store
-// itself, breaking the circular trust bootstrap. It should be configured
-// out-of-band (e.g., in wardex-config.yaml or via environment variable).
 type TrustStore struct {
 	Version     string       `yaml:"version"`
 	CreatedAt   time.Time    `yaml:"created_at"`
 	CreatedBy   string       `yaml:"created_by"` // actor email
 	Keys        []KeyEntry   `yaml:"keys"`
 	Revocations []Revocation `yaml:"revocations"`
-	RootSig     string       `yaml:"root_sig"`     // admin signature over the store state
-	RootAnchor  string       `yaml:"root_anchor"`  // optional: external root public key fingerprint (sha256:...)
+	RootSig     string       `yaml:"root_sig"` // admin signature over the store state
 }

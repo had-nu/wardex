@@ -4,8 +4,10 @@
 package snapshot
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
 // Diff computes the variation between the current report and the previous snapshot.
@@ -23,7 +25,7 @@ func Diff(current, previous model.GapReport) model.Delta {
 	for _, curr := range current.Findings {
 		ps, exists := prevStatus[curr.Control.ID]
 		if !exists {
-			ui.Warnf("Control %s not in previous snapshot — skipped in delta", curr.Control.ID)
+			fmt.Fprintf(os.Stderr, "[WARN] Control %s not in previous snapshot — skipped in delta\n", curr.Control.ID)
 			continue
 		}
 

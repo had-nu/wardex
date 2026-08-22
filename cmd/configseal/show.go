@@ -5,10 +5,10 @@ package configseal
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/internal/cpl"
-	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +34,7 @@ func runConfigShow(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("loading config: %w", err)
 	}
 
-	data, err := cli.SafeReadFile(showConfigPath)
+	data, err := os.ReadFile(showConfigPath) // #nosec G304
 	if err != nil {
 		return fmt.Errorf("reading config: %w", err)
 	}

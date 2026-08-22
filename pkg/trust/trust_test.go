@@ -87,7 +87,7 @@ func TestStoreLifecycle(t *testing.T) {
 	}
 
 	// 2. Init store
-	err = trust.InitStore(adminKeyPath, "admin@test.com", "Admin User", storePath, "")
+	err = trust.InitStore(adminKeyPath, "admin@test.com", "Admin User", storePath)
 	if err != nil {
 		t.Fatalf("InitStore failed: %v", err)
 	}
@@ -162,7 +162,7 @@ func TestConfigSeal(t *testing.T) {
 
 	// Setup trust store
 	trust.GenerateKeypair(adminKeyPath, false)
-	trust.InitStore(adminKeyPath, "admin@test.com", "Admin", storePath, "")
+	trust.InitStore(adminKeyPath, "admin@test.com", "Admin", storePath)
 
 	// Valid draft
 	draftYAML := `organization:
@@ -183,7 +183,7 @@ release_gate:
 		t.Fatalf("LoadWexState failed: %v", err)
 	}
 	store, storeRaw, _ := trust.LoadStore(storePath)
-
+	
 	if err := trust.VerifySeal(state, store, storeRaw); err != nil {
 		t.Errorf("VerifySeal failed: %v", err)
 	}

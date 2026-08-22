@@ -26,7 +26,6 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/statestore"
 	"github.com/had-nu/wardex/v2/pkg/trust"
 	"github.com/had-nu/wardex/v2/pkg/ui"
-	"github.com/had-nu/wardex/v2/pkg/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -267,7 +266,7 @@ func loadEvidence(opts GateOptions) ([]model.Vulnerability, string, error) {
 		return nil, "", fmt.Errorf("read evidence file: %w", err)
 	}
 
-	evidenceHash := "sha256:" + utils.HashBytes(vdata)
+	evidenceHash := "sha256:" + statestore.HashBytes(vdata)
 
 	var vulnsEnvelope model.VulnerabilityEnvelope
 	if err := yaml.Unmarshal(vdata, &vulnsEnvelope); err != nil {
@@ -405,7 +404,7 @@ func handleActiveExploitation(ctx context.Context, opts GateOptions, cfg *config
 		fmt.Fprintf(opts.Stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
 	}
 
-	gate.ForwardAuditEntry(ctx, cfg, auditEntry, opts.Stderr)
+	gate.ForwardAuditEntry(cfg, auditEntry, opts.Stderr)
 
 	fmt.Fprintf(opts.Stderr, "\n[BLOCK] Active exploitation detected for CVE(s): %s\n", strings.Join(cves, ", "))
 	fmt.Fprintf(opts.Stderr, "        Awareness Timestamp: %s\n", awarenessAt.Format(time.RFC3339))
@@ -537,7 +536,7 @@ func writeGateAuditLog(ctx context.Context, opts GateOptions, logPath string, cf
 		fmt.Fprintf(opts.Stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
 	}
 
-	gate.ForwardAuditEntry(ctx, cfg, entry, opts.Stderr)
+	gate.ForwardAuditEntry(cfg, entry, opts.Stderr)
 }
 
 // recordStateStore records the decision to the persistent state store and optionally shows trend.

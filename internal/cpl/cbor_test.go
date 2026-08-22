@@ -122,8 +122,8 @@ func TestUnmarshalTimeErrors(t *testing.T) {
 	}{
 		{"empty", []byte{}},
 		{"invalid CBOR", []byte{0xff, 0xff}},
-		{"array type", []byte{0x80}}, // empty array, not a time
-		{"map type", []byte{0xa0}},   // empty map, not a time
+		{"array type", []byte{0x80}},          // empty array, not a time
+		{"map type", []byte{0xa0}},             // empty map, not a time
 	}
 
 	for _, tt := range tests {

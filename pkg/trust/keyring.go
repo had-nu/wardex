@@ -11,8 +11,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/had-nu/wardex/v2/pkg/cli"
 )
 
 const (
@@ -57,11 +55,11 @@ func GenerateKeypair(outPath string, force bool) (ed25519.PublicKey, error) {
 // LoadPrivateKey reads and validates a private key from disk.
 // Rejects files with permissions more open than 0600 (same behaviour as openssh).
 func LoadPrivateKey(path string) (ed25519.PrivateKey, error) {
-	if err := enforceKeyringPermissions(path); err != nil {
+	if err := EnforceKeyringPermissions(path); err != nil {
 		return nil, err
 	}
 
-	data, err := cli.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304
 	if err != nil {
 		return nil, fmt.Errorf("keyring: read %q: %w", path, err)
 	}
@@ -80,7 +78,7 @@ func LoadPrivateKey(path string) (ed25519.PrivateKey, error) {
 
 // LoadPublicKeyFile reads a public key from a .pub file.
 func LoadPublicKeyFile(path string) (ed25519.PublicKey, error) {
-	data, err := cli.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304
 	if err != nil {
 		return nil, fmt.Errorf("keyring: read public key %q: %w", path, err)
 	}
@@ -130,9 +128,9 @@ func Verify(pub ed25519.PublicKey, message []byte, sigEncoded string) error {
 	return nil
 }
 
-// enforceKeyringPermissions rejects keys with permissions more open than 0600.
+// EnforceKeyringPermissions rejects keys with permissions more open than 0600.
 // Same behaviour as openssh.
-func enforceKeyringPermissions(path string) error {
+func EnforceKeyringPermissions(path string) error {
 	info, err := os.Stat(path)
 	if err != nil {
 		return fmt.Errorf("keyring: stat %q: %w", path, err)
