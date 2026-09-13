@@ -3,9 +3,9 @@
 > **REC** = Registro Encadeado Criptografado (Chained Audit Log)
 > **Provenance** = 3CP (Cryptographic Chain of Custody Protocol) via Gleipnir reference implementation
 >
-> **Status**: Este documento foi o plano original para v2.2.3. As secções marcadas com ✓ foram
-> implementadas na v2.3.0 com a migração CBOR determinística e pacote `pkg/attest/`. As secções
-> marcadas com △ permanecem como planeamento para versões futuras.
+> **Status**: Este documento foi o plano original para v2.2.3. As secções implementadas foram
+> concluídas na v2.3.0 com a migração CBOR determinística e pacote `pkg/attest/`. As secções restantes
+> permanecem como planeamento para versões futuras.
 
 ---
 
@@ -97,14 +97,14 @@ blockchain.
 **Aplicado ao REC**: O root hash do segmento é registrado na Ethereum/Polygon
 como prova pública e replicada. Qualquer auditor verifica independentemente.
 
-### 2.4 Assinatura Ed25519 ✓
+### 2.4 Assinatura Ed25519
 
 **No provenance (v2.3.0)**: `pkg/attest/attestation.go` gera CBOR determinístico
 do `ToolAttestation` → `SignWithEd25519()`, provando autoria e integridade.
 Usa `cbor.CanonicalEncOptions()` + `cbor.TimeRFC3339` para garantir
 byte-identicidade entre plataformas.
 
-**Aplicado ao REC (△)**: Cada segment seal pode ser assinado com o mesmo
+**Aplicado ao REC (planeamento)**: Cada segment seal pode ser assinado com o mesmo
 mecanismo. O `signed_by` e `sig` no `SealEntry` seguem o formato do
 `SignedAttestation`.
 
@@ -334,11 +334,11 @@ type Config struct {
 
 | Item | Esforço | Impacto | Complexidade | Ordem |
 |------|---------|---------|-------------|-------|
-| 3.2 Flock | Médio | 🔴 Crítico | Média (portabilidade) | 1º |
-| 3.3 Unificação formato | Pequeno | 🟡 Médio | Baixa | 2º |
-| 3.6 Testes concorrência | Médio | 🔴 Crítico | Média | 3º |
-| 3.5 CLI verify-chain | Pequeno | 🟡 Médio | Baixa | 4º |
-| 3.4 Segment seal + rotation | Alto | 🟢 Alto | Média-alta | 5º |
+| 3.2 Flock | Médio | Crítico | Média (portabilidade) | 1º |
+| 3.3 Unificação formato | Pequeno | Médio | Baixa | 2º |
+| 3.6 Testes concorrência | Médio | Crítico | Média | 3º |
+| 3.5 CLI verify-chain | Pequeno | Médio | Baixa | 4º |
+| 3.4 Segment seal + rotation | Alto | Alto | Média-alta | 5º |
 
 **Ordem de implementação**: 3.2 → 3.3 → 3.6 → 3.5 → 3.4
 
@@ -358,14 +358,14 @@ O que foi realizado como parte da migração CBOR + 3CP:
 - [x] **3CP abstraction** — interface `Anchorer` + backends embedded/gRPC/noop
       (`pkg/provenance/`)
 
-## 6. Próximos Passos (△)
+## 6. Próximos Passos (planeamento)
 
 Itens do plano original que permanecem como planeamento:
 
-- [ ] △ Integrar `pkg/segment` com OTS: enviar segment root hash para
+- [ ] Integrar `pkg/segment` com OTS: enviar segment root hash para
       OpenTimestamps
-- [ ] △ Integrar `pkg/segment` com Ethereum anchor: registrar segment root hash
+- [ ] Integrar `pkg/segment` com Ethereum anchor: registrar segment root hash
       no `ProvenanceAnchor.sol`
-- [ ] △ CLI `wardex provenance seal --audit-log` para selar manualmente
-- [ ] △ CLI `wardex provenance verify --audit-log` para verificar âncora blockchain
-- [ ] △ Documentação: playbook de disaster recovery com segmentos + blockchain
+- [ ] CLI `wardex provenance seal --audit-log` para selar manualmente
+- [ ] CLI `wardex provenance verify --audit-log` para verificar âncora blockchain
+- [ ] Documentação: playbook de disaster recovery com segmentos + blockchain
