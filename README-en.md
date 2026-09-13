@@ -1,6 +1,7 @@
-<h1 align="center">Wardex — The CRA-Ready Release Gate for NIS2 &amp; DORA</h1>
+<h1 align="center">WARDEX</h1>
 
 <div align="center">
+<p><em>Risk-based Release Gate for Threat-Informed Intelligence strategies</em></p>
 
 ![Wardex Lockup](pkg/ui/wardex-lockup.svg)
 

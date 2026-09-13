@@ -738,9 +738,9 @@ graph LR
         E2 -->|"gera snapshot"| S2[".wardex_snapshot.json"]
         E3 -->|"gera snapshot"| S3[".wardex_snapshot.json"]
 
-        L1 -.->|"sem query"| X1["❌ Sem histórico"]
-        L2 -.->|"sem aggregate"| X2["❌ Sem trend"]
-        S1 -.->|"sem versionamento"| X3["❌ Sem rollback"]
+        L1 -.->|"sem query"| X1["Sem histórico"]
+        L2 -.->|"sem aggregate"| X2["Sem trend"]
+        S1 -.->|"sem versionamento"| X3["Sem rollback"]
     end
 
     subgraph PROPOSED["Estado Proposto — Com State Store"]
