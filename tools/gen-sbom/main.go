@@ -121,7 +121,7 @@ func main() {
 		outPath = os.Args[1]
 	}
 	outPath = filepath.Clean(outPath)
-	if err := os.WriteFile(outPath, out, 0600); err != nil {
+	if err := os.WriteFile(outPath, out, 0600); err != nil { // #nosec G703 -- caller controls output path
 		fmt.Fprintf(os.Stderr, "error: failed to write SBOM: %v\n", err)
 		os.Exit(1)
 	}
