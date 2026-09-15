@@ -48,4 +48,11 @@ const (
 	// a risk acceptance. CI pipelines must treat exit code 12 explicitly.
 	// NEW in v2.0 — CRA Article 14 compliance.
 	ActivelyExploited = 12
+
+	// DuplicateRelease indicates that the release version passed to
+	// `wardex gate check-version` has already been sealed in the audit chain.
+	// CI pipelines must treat exit code 13 explicitly as an idempotency guard:
+	// a version must be sealed exactly once.
+	// NEW in v2.6 — L4 anti-regression version guard.
+	DuplicateRelease = 13
 )

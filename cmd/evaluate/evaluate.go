@@ -26,6 +26,8 @@ var (
 	gateLogPath    string
 	art14OutputDir string
 	showTrend      bool
+	releaseVersion string
+	policyRef      string
 
 	exitFunc = os.Exit
 	stderr   = os.Stderr
@@ -53,7 +55,8 @@ Exit codes:
        Also returned if --strict is used with an unsealed config.
   10 — Gate blocked (BLOCK)
   11 — Compliance gap exceeded --fail-above threshold
-  12 — Active exploitation detected (hard stop)`,
+  12 — Active exploitation detected (hard stop)
+  13 — Release version already sealed (release-seal duplicate)`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: runEvaluate,
 }
@@ -72,30 +75,40 @@ func init() {
 	EvaluateCmd.Flags().StringVar(&gateLogPath, "gate-log", "", "Path to gate decision audit log (overrides config)")
 	EvaluateCmd.Flags().StringVar(&art14OutputDir, "art14-output-dir", "", "Directory where Article 14 notification artefacts are written (overrides config)")
 	EvaluateCmd.Flags().BoolVar(&showTrend, "trend", false, "Show risk trend analysis from state store (requires state_store.enabled)")
+	EvaluateCmd.Flags().StringVar(&releaseVersion, "release-version", "", "Release version to seal (release-seal mode; requires --policy-ref)")
+	EvaluateCmd.Flags().StringVar(&policyRef, "policy-ref", "", "Policy reference authorising the release (required with --release-version)")
 	_ = EvaluateCmd.MarkFlagRequired("evidence")
 
 	cli.AddCommands(EvaluateCmd, &configPath)
 }
 
 func runEvaluate(cmd *cobra.Command, args []string) error {
+	if releaseVersion == "" {
+		releaseVersion = os.Getenv("WARDEX_RELEASE_VERSION")
+	}
+	if policyRef == "" {
+		policyRef = os.Getenv("WARDEX_POLICY_REF")
+	}
 	code, err := orchestrator.RunGate(cmd.Context(), orchestrator.GateOptions{
-		ConfigPath:   configPath,
-		GateFile:     gateFile,
-		GateMode:     gateMode,
-		EPSSEnrich:   epssEnrich,
-		OutputFormat: outputFormat,
-		OutFile:      outFile,
-		ProfileName:  profileName,
-		FailAbove:    failAbove,
-		Strict:       strict,
-		DryRun:       dryRun,
-		GateLogPath:  gateLogPath,
-		Art14OutDir:  art14OutputDir,
-		ShowTrend:    showTrend,
-		Controls:     args,
-		Logger:       ui.Default().Logger,
-		Stderr:       stderr,
-		Stdout:       cmd.OutOrStdout(),
+		ConfigPath:     configPath,
+		GateFile:       gateFile,
+		GateMode:       gateMode,
+		EPSSEnrich:     epssEnrich,
+		OutputFormat:   outputFormat,
+		OutFile:        outFile,
+		ProfileName:    profileName,
+		FailAbove:      failAbove,
+		Strict:         strict,
+		DryRun:         dryRun,
+		GateLogPath:    gateLogPath,
+		Art14OutDir:    art14OutputDir,
+		ShowTrend:      showTrend,
+		Controls:       args,
+		ReleaseVersion: releaseVersion,
+		PolicyRef:      policyRef,
+		Logger:         ui.Default().Logger,
+		Stderr:         stderr,
+		Stdout:         cmd.OutOrStdout(),
 	})
 	if err != nil {
 		return err

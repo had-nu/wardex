@@ -27,6 +27,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/trust"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/had-nu/wardex/v2/pkg/utils"
+	"github.com/had-nu/wardex/v2/pkg/versionregistry"
 	"gopkg.in/yaml.v3"
 )
 
@@ -50,6 +51,10 @@ type GateOptions struct {
 	Logger       *slog.Logger
 	Stderr       io.Writer
 	Stdout       io.Writer
+	// ReleaseSeal (L4): when ReleaseVersion is set, the gate runs in
+	// release-seal mode and PolicyRef is required.
+	ReleaseVersion string
+	PolicyRef      string
 }
 
 // RunGate executes the release-gate evaluation flow previously owned by
@@ -81,6 +86,16 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 			fmt.Fprintf(opts.Stderr, "[STRICT ENFORCEMENT] config hash computation failed: %v\n", err)
 			return exitcodes.IntegrityFailure, nil
 		}
+	}
+
+	releaseSeal := opts.ReleaseVersion != ""
+	if releaseSeal && opts.PolicyRef == "" {
+		fmt.Fprintf(opts.Stderr, "Error: --policy-ref is required in release-seal mode (with --release-version)\n")
+		return exitcodes.GenericError, nil
+	}
+	if !releaseSeal && opts.PolicyRef != "" {
+		fmt.Fprintf(opts.Stderr, "Error: --release-version is required when --policy-ref is set\n")
+		return exitcodes.GenericError, nil
 	}
 
 	if _, err := ingestion.LoadMany(opts.Controls); err != nil {
@@ -398,6 +413,8 @@ func handleActiveExploitation(ctx context.Context, opts GateOptions, cfg *config
 		Art14DeadlineEarlyWarning:     earlyWarningDeadline,
 		Art14DeadlineNotification:     notificationDeadline,
 		Art14NotificationArtefactPath: artefactPath,
+		ReleaseVersion:                opts.ReleaseVersion,
+		PolicyRef:                     opts.PolicyRef,
 	}
 
 	if err := accept.ChainedAuditLog(logPath, auditEntry); err != nil {
@@ -531,15 +548,46 @@ func writeGateAuditLog(ctx context.Context, opts GateOptions, logPath string, cf
 		Risk:             report.HighestRisk,
 		Status:           string(report.OverallDecision),
 		Detail:           fmt.Sprintf("%d vulnerabilities evaluated; %d blocked, %d warned", len(vulns), report.BlockedCount, report.WarnCount),
+		ReleaseVersion:   opts.ReleaseVersion,
+		PolicyRef:        opts.PolicyRef,
 	}
 
 	if err := accept.ChainedAuditLog(logPath, entry); err != nil {
 		fmt.Fprintf(opts.Stderr, "Warning: failed to write gate audit log: %v\n", err)
 	} else {
 		fmt.Fprintf(opts.Stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
+		recordReleaseSeal(opts, logPath, entry)
 	}
 
 	gate.ForwardAuditEntry(ctx, cfg, entry, opts.Stderr)
+}
+
+// recordReleaseSeal maintains the derived release-version registry when the
+// gate runs in release-seal mode. The index is best-effort: a stale or missing
+// index never blocks the seal — check-version rebuilds it from the chain.
+func recordReleaseSeal(opts GateOptions, logPath string, entry model.AuditEntry) {
+	if entry.ReleaseVersion == "" {
+		return
+	}
+	reg, err := versionregistry.Load(logPath)
+	if err != nil {
+		fmt.Fprintf(opts.Stderr, "Warning: version registry unreadable (%v); will rebuild from chain on check-version\n", err)
+		reg = versionregistry.New()
+	}
+	lastHash, err := accept.LastEntryHash(logPath)
+	if err != nil {
+		fmt.Fprintf(opts.Stderr, "Warning: cannot record release seal in registry: %v\n", err)
+		return
+	}
+	reg.Add(versionregistry.ReleaseInfo{
+		Version:   entry.ReleaseVersion,
+		PolicyRef: entry.PolicyRef,
+		SealedAt:  entry.Timestamp,
+		EntryHash: lastHash,
+	}, lastHash)
+	if err := reg.Save(logPath); err != nil {
+		fmt.Fprintf(opts.Stderr, "Warning: cannot save version registry: %v\n", err)
+	}
 }
 
 // recordStateStore records the decision to the persistent state store and optionally shows trend.
