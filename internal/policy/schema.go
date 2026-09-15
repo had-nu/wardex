@@ -45,11 +45,12 @@ type Control struct {
 // DomainFile is the top-level structure of a domain YAML file.
 // One file per domain section of a framework (e.g. Annex A.8).
 type DomainFile struct {
-	Framework    string    `yaml:"framework"`
-	Version      string    `yaml:"version"` // framework version, not wardex version
-	Domain       string    `yaml:"domain"`  // machine-friendly slug
-	Annex        string    `yaml:"annex"`   // e.g. "A.8", "PR", "ID"
-	LastReviewed string    `yaml:"last_reviewed"`
-	ReviewedBy   string    `yaml:"reviewed_by"`
-	Controls     []Control `yaml:"controls"`
+	FormatVersion int       `yaml:"format_version"` // policy file format version; 0/absent = legacy v1
+	Framework     string    `yaml:"framework"`
+	Version       string    `yaml:"version"` // framework version, not wardex version
+	Domain        string    `yaml:"domain"`  // machine-friendly slug
+	Annex         string    `yaml:"annex"`   // e.g. "A.8", "PR", "ID"
+	LastReviewed  string    `yaml:"last_reviewed"`
+	ReviewedBy    string    `yaml:"reviewed_by"`
+	Controls      []Control `yaml:"controls"`
 }

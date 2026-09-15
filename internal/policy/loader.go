@@ -1,6 +1,7 @@
 package policy
 
 import (
+	"bytes"
 	"fmt"
 	"path/filepath"
 
@@ -18,15 +19,61 @@ func LoadDomain(path string) (*DomainFile, error) {
 		return nil, fmt.Errorf("policy: read %q: %w", path, err)
 	}
 
-	var d DomainFile
-	if err := yaml.Unmarshal(data, &d); err != nil {
+	d, err := parseDomain(data)
+	if err != nil {
 		return nil, fmt.Errorf("policy: parse %q: %w", path, err)
 	}
 
-	if err := validateDomain(&d); err != nil {
+	if err := validateDomain(d); err != nil {
 		return nil, fmt.Errorf("policy: validate %q: %w", path, err)
 	}
 
+	return d, nil
+}
+
+// parseDomain loads a domain document in memory without touching the source
+// file. It sniffs the declared format_version first:
+//
+//   - absent or 1: legacy path — lenient decode (unknown fields ignored), then
+//     migrating the in-memory copy to CurrentFormatVersion;
+//   - 2..current: strict decode with KnownFields(true), so typos in current
+//     configs fail instead of being silently ignored (P7);
+//   - above current: explicit unsupported-future error.
+func parseDomain(data []byte) (*DomainFile, error) {
+	var peek struct {
+		FormatVersion int `yaml:"format_version"`
+	}
+	if err := yaml.Unmarshal(data, &peek); err != nil {
+		return nil, err
+	}
+
+	switch {
+	case peek.FormatVersion <= 1:
+		var d DomainFile
+		if err := yaml.Unmarshal(data, &d); err != nil {
+			return nil, err
+		}
+		d.FormatVersion = 1
+		if err := Migrate(&d, CurrentFormatVersion); err != nil {
+			return nil, err
+		}
+		return &d, nil
+
+	case peek.FormatVersion > CurrentFormatVersion:
+		return nil, fmt.Errorf("format v%d is newer than supported v%d (upgrade wardex)", peek.FormatVersion, CurrentFormatVersion)
+	}
+
+	var d DomainFile
+	dec := yaml.NewDecoder(bytes.NewReader(data))
+	dec.KnownFields(true)
+	if err := dec.Decode(&d); err != nil {
+		return nil, err
+	}
+	if d.FormatVersion < CurrentFormatVersion {
+		if err := Migrate(&d, CurrentFormatVersion); err != nil {
+			return nil, err
+		}
+	}
 	return &d, nil
 }
 

@@ -387,6 +387,7 @@ func handleActiveExploitation(ctx context.Context, opts GateOptions, cfg *config
 	auditEntry := model.AuditEntry{
 		Timestamp:                     time.Now().UTC(),
 		Event:                         "active-exploit.detected",
+		CplSchemaVersion:              config.CurrentConfigSchemaVersion,
 		ConfigHash:                    configHash,
 		CliOverrides:                  collectCLIOverrides(opts),
 		EvidenceHash:                  evidenceHash,
@@ -520,15 +521,16 @@ func dryRunGate(opts GateOptions, report model.GateReport, logPath string) int {
 func writeGateAuditLog(ctx context.Context, opts GateOptions, logPath string, cfg *config.Config, report model.GateReport, evidenceHash string, vulns []model.Vulnerability) {
 	configHash, _ := accept.ConfigHash(opts.ConfigPath)
 	entry := model.AuditEntry{
-		Timestamp:       time.Now().UTC(),
-		Event:           "gate.evaluated",
-		ConfigHash:      configHash,
-		CliOverrides:    collectCLIOverrides(opts),
-		EvidenceHash:    evidenceHash,
-		OverallDecision: report.OverallDecision,
-		Risk:            report.HighestRisk,
-		Status:          string(report.OverallDecision),
-		Detail:          fmt.Sprintf("%d vulnerabilities evaluated; %d blocked, %d warned", len(vulns), report.BlockedCount, report.WarnCount),
+		Timestamp:        time.Now().UTC(),
+		Event:            "gate.evaluated",
+		CplSchemaVersion: config.CurrentConfigSchemaVersion,
+		ConfigHash:       configHash,
+		CliOverrides:     collectCLIOverrides(opts),
+		EvidenceHash:     evidenceHash,
+		OverallDecision:  report.OverallDecision,
+		Risk:             report.HighestRisk,
+		Status:           string(report.OverallDecision),
+		Detail:           fmt.Sprintf("%d vulnerabilities evaluated; %d blocked, %d warned", len(vulns), report.BlockedCount, report.WarnCount),
 	}
 
 	if err := accept.ChainedAuditLog(logPath, entry); err != nil {

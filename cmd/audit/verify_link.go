@@ -14,11 +14,12 @@ import (
 )
 
 var (
-	auditLogPath    string
-	configArchive   string
-	singleConfig    string
-	webhookURL      string
-	webhookTokenEnv string
+	auditLogPath          string
+	configArchive         string
+	singleConfig          string
+	webhookURL            string
+	webhookTokenEnv       string
+	expectedSchemaVersion int
 )
 
 var VerifyLinkCmd = &cobra.Command{
@@ -27,12 +28,17 @@ var VerifyLinkCmd = &cobra.Command{
 	Long: `Verify that the config_hash entries in a wardex audit log match the
 corresponding archived configuration files.
 
-Returns exit code 0 if all entries match, 1 if any MISMATCH or MISSING
-entries are found, and 2 on operational errors.
+When --expected-schema-version is set, entries whose recorded
+cpl_schema_version (or legacy schema v1) differs are reported as
+SCHEMA_VERSION divergences, proving the sealed decisions were made against
+the intended configuration generation.
+
+Returns exit code 0 if all entries match, 1 if any MISMATCH, MISSING or
+SCHEMA_VERSION entries are found, and 2 on operational errors.
 
 Examples:
   wardex audit verify-link --audit-log wardex-audit.log --config-archive ./configs/
-  wardex audit verify-link --audit-log wardex-audit.log --config config.yaml`,
+  wardex audit verify-link --audit-log wardex-audit.log --config config.yaml --expected-schema-version 2`,
 	RunE: runVerifyLink,
 }
 
@@ -40,6 +46,7 @@ func init() {
 	VerifyLinkCmd.Flags().StringVar(&auditLogPath, "audit-log", "", "Path to the wardex audit log JSONL file (required)")
 	VerifyLinkCmd.Flags().StringVar(&configArchive, "config-archive", "", "Directory of archived configuration files")
 	VerifyLinkCmd.Flags().StringVar(&singleConfig, "config", "", "Single configuration file to verify against all entries")
+	VerifyLinkCmd.Flags().IntVar(&expectedSchemaVersion, "expected-schema-version", 0, "Expected CPL config schema version (legacy entries count as v1)")
 	VerifyLinkCmd.Flags().StringVar(&webhookURL, "webhook-url", "", "URL for divergence notification webhook (fire-and-forget)")
 	VerifyLinkCmd.Flags().StringVar(&webhookTokenEnv, "webhook-token-env", "", "Environment variable name containing the webhook Bearer token")
 	_ = VerifyLinkCmd.MarkFlagRequired("audit-log")
@@ -56,9 +63,9 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 
 	var results []cpl.LinkResult
 	if singleConfig != "" {
-		results, err = cpl.VerifyLinkSingle(logData, singleConfig)
+		results, err = cpl.VerifyLinkSingleWithSchemaVersion(logData, singleConfig, expectedSchemaVersion)
 	} else {
-		results, err = cpl.VerifyLink(logData, configArchive)
+		results, err = cpl.VerifyLinkWithSchemaVersion(logData, configArchive, expectedSchemaVersion)
 	}
 	if err != nil {
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: verify-link failed: %v\n", err)
@@ -71,6 +78,7 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 		OK       int `json:"ok"`
 		Mismatch int `json:"mismatch"`
 		Missing  int `json:"missing"`
+		Schema   int `json:"schema_version"`
 	}{Total: len(results)}
 
 	for _, r := range results {
@@ -81,6 +89,8 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 			summary.Mismatch++
 		case cpl.StatusMissing:
 			summary.Missing++
+		case cpl.StatusSchemaVersion:
+			summary.Schema++
 		}
 	}
 
@@ -91,9 +101,9 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 		Results []cpl.LinkResult `json:"results"`
 	}{Summary: summary, Results: results})
 
-	if summary.Mismatch > 0 || summary.Missing > 0 {
+	if summary.Mismatch > 0 || summary.Missing > 0 || summary.Schema > 0 {
 		if webhookURL != "" {
-			dispatchNotification(cmd.Context(), auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, results)
+			dispatchNotification(cmd.Context(), auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, summary.Schema, results)
 		}
 		os.Exit(1)
 	}
@@ -101,7 +111,7 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func dispatchNotification(ctx context.Context, auditLog string, total, ok, mismatch, missing int, results []cpl.LinkResult) {
+func dispatchNotification(ctx context.Context, auditLog string, total, ok, mismatch, missing, schema int, results []cpl.LinkResult) {
 	payload := notification.DivergencePayload{
 		Source:    "wardex",
 		EventType: "cpl.verify_link.mismatch",
