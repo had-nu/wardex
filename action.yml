@@ -46,6 +46,13 @@ inputs:
     description: 'Policy reference authorising the release (required with release-version).'
     default: ''
     required: false
+  gate-class:
+    description: >
+      Risk class for the gate exams: pr | deploy | nightly.
+      deploy is the default (current behaviour). pr/nightly treat freshness
+      gaps as an advisory (exit 6) and do not hard-stop on active exploitation.
+    default: 'deploy'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -64,3 +71,5 @@ runs:
     - ${{ inputs.output-format }}
     - --out-file
     - ${{ inputs.output-file }}
+    - --gate-class
+    - ${{ inputs.gate-class }}

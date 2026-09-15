@@ -28,6 +28,7 @@ var (
 	showTrend      bool
 	releaseVersion string
 	policyRef      string
+	gateClass      string
 
 	exitFunc = os.Exit
 	stderr   = os.Stderr
@@ -53,6 +54,8 @@ Exit codes:
    0 — Gate passed (ALLOW)
    3 — Seal integrity failure (revoked key, trust store drift, invalid sig)
        Also returned if --strict is used with an unsealed config.
+   6 — Freshness advisory (pr/nightly classes; missing EPSS score with
+       advisory freshness exam — the pipeline is NOT blocked)
   10 — Gate blocked (BLOCK)
   11 — Compliance gap exceeded --fail-above threshold
   12 — Active exploitation detected (hard stop)
@@ -77,6 +80,7 @@ func init() {
 	EvaluateCmd.Flags().BoolVar(&showTrend, "trend", false, "Show risk trend analysis from state store (requires state_store.enabled)")
 	EvaluateCmd.Flags().StringVar(&releaseVersion, "release-version", "", "Release version to seal (release-seal mode; requires --policy-ref)")
 	EvaluateCmd.Flags().StringVar(&policyRef, "policy-ref", "", "Policy reference authorising the release (required with --release-version)")
+	EvaluateCmd.Flags().StringVar(&gateClass, "gate-class", "deploy", "Risk class: pr|deploy|nightly (deploy is the default, current behaviour)")
 	_ = EvaluateCmd.MarkFlagRequired("evidence")
 
 	cli.AddCommands(EvaluateCmd, &configPath)
@@ -106,6 +110,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		Controls:       args,
 		ReleaseVersion: releaseVersion,
 		PolicyRef:      policyRef,
+		GateClass:      gateClass,
 		Logger:         ui.Default().Logger,
 		Stderr:         stderr,
 		Stdout:         cmd.OutOrStdout(),

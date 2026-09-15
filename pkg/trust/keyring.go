@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v2/pkg/keys"
 )
 
 const (
@@ -54,9 +55,53 @@ func GenerateKeypair(outPath string, force bool) (ed25519.PublicKey, error) {
 	return pub, nil
 }
 
+// GenerateKeypairEncrypted creates an ed25519 keypair and stores the private
+// key as an opt-in encrypted envelope (L6) using the store-cipher pattern:
+// Argon2id derivation plus AES-256-GCM, with a dedicated verification tag so a
+// wrong passphrase is rejected without an oracle. The file carries the magic
+// header and mode 0400.
+func GenerateKeypairEncrypted(outPath string, force bool, passphrase string) (ed25519.PublicKey, error) {
+	dir := filepath.Dir(outPath)
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		return nil, fmt.Errorf("keygen: create directory %q: %w", dir, err)
+	}
+
+	if _, err := os.Stat(outPath); err == nil && !force {
+		return nil, fmt.Errorf("keygen: %q already exists — use --force to overwrite", outPath)
+	}
+
+	pub, priv, err := ed25519.GenerateKey(rand.Reader)
+	if err != nil {
+		return nil, fmt.Errorf("keygen: generate key: %w", err)
+	}
+
+	if err := keys.WriteEncryptedFile(outPath, priv, passphrase); err != nil {
+		return nil, fmt.Errorf("keygen: write encrypted private key: %w", err)
+	}
+	keys.Zeroize(priv)
+
+	pubPath := outPath + ".pub"
+	pubEncoded := PubKeyPrefix + base64.StdEncoding.EncodeToString(pub)
+	if err := os.WriteFile(pubPath, []byte(pubEncoded), 0644); err != nil { // #nosec G306 -- public key, world-readable by design
+		return nil, fmt.Errorf("keygen: write public key: %w", err)
+	}
+
+	return pub, nil
+}
+
 // LoadPrivateKey reads and validates a private key from disk.
 // Rejects files with permissions more open than 0600 (same behaviour as openssh).
+//
+// Encrypted envelopes (L6) are detected via the magic header and decrypted in
+// memory using the passphrase from the WARDEX_KEY_PASSPHRASE environment
+// variable. Legacy plaintext base64 keys keep working unchanged (P2).
 func LoadPrivateKey(path string) (ed25519.PrivateKey, error) {
+	return LoadPrivateKeyWithPassphrase(path, os.Getenv("WARDEX_KEY_PASSPHRASE"))
+}
+
+// LoadPrivateKeyWithPassphrase is LoadPrivateKey with an explicit passphrase
+// for encrypted envelopes. A plaintext legacy key is unaffected by it.
+func LoadPrivateKeyWithPassphrase(path string, passphrase string) (ed25519.PrivateKey, error) {
 	if err := enforceKeyringPermissions(path); err != nil {
 		return nil, err
 	}
@@ -64,6 +109,17 @@ func LoadPrivateKey(path string) (ed25519.PrivateKey, error) {
 	data, err := cli.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("keyring: read %q: %w", path, err)
+	}
+
+	if keys.IsEnvelope(data) {
+		if passphrase == "" {
+			return nil, fmt.Errorf("keyring: %q is an encrypted envelope — set WARDEX_KEY_PASSPHRASE or pass --passphrase to decrypt", path)
+		}
+		priv, err := keys.Decrypt(data, keys.NormalizePassphrase(passphrase))
+		if err != nil {
+			return nil, fmt.Errorf("keyring: decrypt %q: %w", path, err)
+		}
+		return priv, nil
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(strings.TrimSpace(string(data)))
