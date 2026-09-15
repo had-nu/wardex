@@ -63,6 +63,39 @@ wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./co
 
 ---
 
+## What's New — v2.6.0
+
+**Encrypted Key Envelopes (L6):**
+- `wardex keygen --encrypt` emits `WARDEX-KEY-V1` envelopes protected with
+  Argon2id + AES-256-GCM; `wardex trust --keyring` loads them via
+  `WARDEX_KEY_PASSPHRASE`. Legacy (plaintext) keyrings keep working.
+
+**Risk-Class Gate Exams (L3):**
+- `--gate-class pr|deploy|nightly|canary` profiles with
+  `block|advisory|off` severities per gap type, plus a `gate-class` input on the
+  GitHub Action (`run-gate`).
+
+**Article 14 artefact versioning (L2):**
+- New `format_version` (1) and `capabilities` (bitmap: HMAC-SHA256 + canonical
+  JSON) fields on notification artefacts; verification rejects future versions
+  with a controlled error — never a silent downgrade. CDDL schema in
+  `spec/cddl/art14-notification.cddl`.
+
+**Forced Upgrade Tripwire (L7):**
+- `release_gate.forced_upgrade.{enabled,deadline,tripwire_failures}`: the gate
+  arms itself when vulnerability attestation is not fresh and blocks
+  (exit 10); N consecutive failures disarm it (fallback to the class policy)
+  and fresh evidence re-arms it. State in `.wardex/forced_upgrade.json`.
+- Also activatable with `--forced-upgrade`; `--forced-upgrade-state` selects
+  the counter. CDDL schema in `spec/cddl/tripwire-state.cddl`.
+
+**Unified CPL chain (P0) + release-seal ancestry (L4) + SIEM export (L5):**
+- Single chain format with streaming verify (`wardex audit verify-chain`) and
+  schema migrations; `check-version` validates ancestry on sealed configs;
+  SIEM export with cursor pagination.
+
+---
+
 ## What's New — v2.4.0
 
 **EU AI Act Framework (31 controls):**
