@@ -58,6 +58,12 @@ type GateOptions struct {
 	// GateClass (L3): risk class pr|deploy|nightly. Empty selects deploy
 	// (current behaviour); each class adjusts exam severities.
 	GateClass string
+	// ForcedUpgrade (L7) arms the regulatory-deadline gate via flag even when
+	// the (sealed) config does not enable it.
+	ForcedUpgrade bool
+	// ForcedUpgradeState overrides the tripwire counter file path (default:
+	// <state-store-dir>/forced_upgrade.json).
+	ForcedUpgradeState string
 }
 
 // RunGate executes the release-gate evaluation flow previously owned by
@@ -118,6 +124,8 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 		return exitcodes.GenericError, nil
 	}
 
+	fu := newForcedUpgrade(ctx, opts, cfg)
+
 	if _, err := ingestion.LoadMany(opts.Controls); err != nil {
 		return exitcodes.OK, fmt.Errorf("evaluate: load controls: %w", err)
 	}
@@ -145,6 +153,19 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 
 	freshnessAdvisory := false
 	if missing := findMissingEPSS(vulns); len(missing) > 0 {
+		if fu != nil {
+			// L7: under forced_upgrade, missing EPSS means the release cannot be
+			// attested — a hard block while armed. The tripwire disarms after N
+			// consecutive refresh failures (P11): evidence absence never freezes
+			// the pipeline forever, so we fall through to the class exam.
+			if stillArmed := fu.failure(); stillArmed {
+				fmt.Fprintf(opts.Stderr, "\n[BLOCK] forced_upgrade: %d vulnerabilities lack EPSS probability scores — the release cannot be attested.\n", len(missing))
+				fmt.Fprintf(opts.Stderr, "        Run 'wardex enrich epss %s' and retry with --epss-enrichment.\n", opts.GateFile)
+				fmt.Fprintf(opts.Stderr, "        Tripwire %d of %d: disarms after %d consecutive failures.\n\n",
+					fu.consecutive, fu.tripwireN, fu.tripwireN)
+				return exitcodes.GateBlocked, nil
+			}
+		}
 		switch class.freshness {
 		case severityBlock:
 			fmt.Fprintf(opts.Stderr, "\n[BLOCK] %d vulnerabilities lack real EPSS probability scores.\n", len(missing))
@@ -161,6 +182,8 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 		default:
 			fmt.Fprintf(opts.Stderr, "[%s] freshness exam off; %d vulnerabilities lack EPSS scores (reported).\n", class.name, len(missing))
 		}
+	} else if fu != nil {
+		fu.success()
 	}
 
 	gateReport := rg.Evaluate(vulns)
@@ -308,6 +331,9 @@ func collectCLIOverrides(opts GateOptions) map[string]string {
 	}
 	if opts.ProfileName != "" {
 		overrides["profile"] = opts.ProfileName
+	}
+	if opts.ForcedUpgrade {
+		overrides["forced-upgrade"] = "true"
 	}
 	if opts.Strict {
 		overrides["strict"] = "true"

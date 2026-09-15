@@ -5,6 +5,26 @@ package model
 
 import "time"
 
+// Art. 14 artefact format versioning (L2). Reads are tolerant of future
+// versions; verification rejects them with a controlled error — an artefact
+// produced by a newer tool may rely on integrity mechanisms this build cannot
+// attest. There is never a silent downgrade.
+const (
+	// Art14FormatVersion is the numeric format version written by this build.
+	Art14FormatVersion uint8 = 1
+
+	// Capability bits advertise the mechanisms used to integrity-protect the
+	// artefact. Bits are additive; a reader that does not know a set bit must
+	// still parse and (for unset known bits) verify the artefact.
+	CapabilityHMACSHA256    uint32 = 1 << 0 // HMAC-SHA256 integrity seal (signature scheme)
+	CapabilityCanonicalJSON uint32 = 1 << 1 // canonical JSON encoding of payload
+	CapabilityCBORV1        uint32 = 1 << 2 // reserved: future CBOR wire format
+
+	// CurrentArtifactCapabilities is the capability bitmap written to new
+	// artefacts. CBOR_V1 is declared but not yet produced by any build.
+	CurrentArtifactCapabilities uint32 = CapabilityHMACSHA256 | CapabilityCanonicalJSON
+)
+
 // Art14NotificationArtefact is produced by Wardex when an actively exploited
 // vulnerability is detected. It structures the three Article 14(2) reporting
 // obligations of the CRA (EU 2024/2847) and is written to disk for operator
@@ -13,6 +33,14 @@ import "time"
 // Fields left empty by Wardex are populated with "[OPERATOR: complete before dispatch]"
 // to make required-but-unknown fields visible before submission.
 type Art14NotificationArtefact struct {
+	// FormatVersion is the numeric artefact format version (L2). Zero/absent
+	// means a legacy (pre-2.6) artefact. Verification rejects versions newer
+	// than Art14FormatVersion with a controlled error.
+	FormatVersion uint8 `json:"format_version,omitempty"`
+	// Capabilities advertises the integrity mechanisms used (L2). Absent in
+	// legacy artefacts.
+	Capabilities uint32 `json:"capabilities,omitempty"`
+
 	// Metadata
 	ArtefactID  string    `json:"artefact_id"` // UUID v4
 	GeneratedAt time.Time `json:"generated_at"`
