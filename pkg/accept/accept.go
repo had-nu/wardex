@@ -74,12 +74,13 @@ func ConfigCheck(configPath string, auditPath string, notifyFunc func(event stri
 		return false, err
 	}
 
-	// Simple simulation of finding the 'prevHash'.
-	changed := false
-	prevHash := ""
+	prevHash, err := audit.LastEntryHash(auditPath)
+	if err != nil {
+		return false, err
+	}
 
 	event := "config.loaded"
-	if changed {
+	if prevHash != "" {
 		event = "config.changed"
 		if notifyFunc != nil {
 			notifyFunc(event, prevHash, currentHash)
@@ -87,13 +88,13 @@ func ConfigCheck(configPath string, auditPath string, notifyFunc func(event stri
 	}
 
 	err = audit.AuditLog(auditPath, model.AuditEntry{
-		Timestamp:  time.Now(),
-		Event:      event,
-		ConfigHash: currentHash,
-		PrevHash:   prevHash,
+		Timestamp:         time.Now(),
+		Event:             event,
+		ConfigHash:        currentHash,
+		PreviousEntryHash: prevHash,
 	})
 
-	return changed, err
+	return prevHash != "", err
 }
 
 // Result is re-exported from pkg/accept/verify.

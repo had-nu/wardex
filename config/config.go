@@ -163,14 +163,15 @@ type ProvenanceConfig struct {
 }
 
 type Config struct {
-	ReleaseGate      ReleaseGate        `yaml:"release_gate"`
-	AcceptanceConfig AcceptanceConfig   `yaml:"acceptance"`
-	Reporting        ReportingConfig    `yaml:"reporting"`
-	Profiles         map[string]Profile `yaml:"profiles"`
-	CRA              CRAConfig          `yaml:"cra"`           // NEW in v2.0
-	Notifications    NotificationConfig `yaml:"notifications"` // NEW in v2.2 — CPL
-	StateStore       StateStoreConfig   `yaml:"state_store"`   // NEW in v2.3 — persistent state
-	Provenance       ProvenanceConfig   `yaml:"provenance"`    // NEW in v2.3 — provenance anchor
+	ConfigSchemaVersion int                `yaml:"config_schema_version"` // NEW in v2.6
+	ReleaseGate         ReleaseGate        `yaml:"release_gate"`
+	AcceptanceConfig    AcceptanceConfig   `yaml:"acceptance"`
+	Reporting           ReportingConfig    `yaml:"reporting"`
+	Profiles            map[string]Profile `yaml:"profiles"`
+	CRA                 CRAConfig          `yaml:"cra"`           // NEW in v2.0
+	Notifications       NotificationConfig `yaml:"notifications"` // NEW in v2.2 — CPL
+	StateStore          StateStoreConfig   `yaml:"state_store"`   // NEW in v2.3 — persistent state
+	Provenance          ProvenanceConfig   `yaml:"provenance"`    // NEW in v2.3 — provenance anchor
 }
 
 // Load reads and parses the configuration file. Returns an empty default if not found.
@@ -193,8 +194,8 @@ func Load(path string) (*Config, error) {
 		return nil, fmt.Errorf("parsing config: %w", err)
 	}
 
-	if cfg.ReleaseGate.Mode == "" {
-		cfg.ReleaseGate.Mode = "any"
+	if err := MigrateConfig(&cfg); err != nil {
+		return nil, err
 	}
 
 	return &cfg, nil

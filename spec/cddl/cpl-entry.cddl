@@ -5,7 +5,13 @@ cpl-entry = {
   ts: tdate,                   ; RFC3339 UTC timestamp
   event: text,                 ; e.g. "gate.evaluated"
   ? config_hash: text,         ; "sha256:<hex>" or "blake3:<hex>"
-  ? prev_hash: text,           ; "genesis" or hash of previous entry
+  ? previous_entry_hash: text, ; canonical chain link: SHA-256 hex of the
+                               ; preceding raw JSONL line; absent on genesis
+  ? prev_hash: text,           ; DEPRECATED legacy chain link; "genesis" or
+                               ; hash of previous entry. Kept for reading old
+                               ; logs; canonical is previous_entry_hash.
+  ? cpl_schema_version: uint,  ; schema version of the config this entry seals
+                               ; (absent = v1)
   ? cli_overrides: {* text => any },  ; new in v2.2
   ? evaluated_at: tdate,       ; new in v2.0
 }

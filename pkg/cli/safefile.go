@@ -21,6 +21,17 @@ func SafeReadFile(path string) ([]byte, error) {
 	return os.ReadFile(safePath) // #nosec G304 -- validated by SafePath
 }
 
+// SafeOpenFile opens a file for reading after validating its path with SafePath.
+// It mirrors SafeReadFile but returns a handle suitable for streaming, avoiding
+// unbounded whole-file reads on large audit logs.
+func SafeOpenFile(path string) (*os.File, error) {
+	safePath, err := SafePath(path)
+	if err != nil {
+		return nil, fmt.Errorf("safe open: %w", err)
+	}
+	return os.Open(safePath) // #nosec G304 -- validated by SafePath
+}
+
 // SafeWriteFile atomically writes data to a file after validating its path with
 // SafeOutputPath. The write itself is performed via atomicwrite to prevent
 // partial writes on crash or power loss.
