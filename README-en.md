@@ -247,12 +247,18 @@ release_gate:
 
 ### The same CVE, four contexts
 
+Risk heatmap: each cell shows the **risk score** (context exposure × EPSS) and the **gate decision** for the same CVEs in four contexts. The hotter the colour, the higher the score.
+
 | CVE | CVSS | EPSS | [BANK] | [SAAS] | [INFRA] | [HOSP] |
 |---|---|---|---|---|---|---|
-| Log4Shell | 10.0 | 0.94 | **1.41** `BLOCK` | **0.75** `BLOCK` | **1.41** `BLOCK` | **1.13** `BLOCK` |
-| xz backdoor | 10.0 | 0.86 | **1.29** `BLOCK` | **0.69** `BLOCK` | **1.29** `BLOCK` | **1.03** `BLOCK` |
-| curl SOCKS5 | 9.8 | 0.26 | **0.38** `BLOCK` | **0.20** `WARN` | **0.38** `BLOCK` | **0.31** `BLOCK` |
-| minimist | 9.8 | 0.01 | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` | **0.01** `ALLOW` |
+| Log4Shell | 10.0 | 0.94 | 🟥 **1.41 BLOCK** | 🟧 **0.75 BLOCK** | 🟥 **1.41 BLOCK** | 🟥 **1.13 BLOCK** |
+| xz backdoor | 10.0 | 0.86 | 🟥 **1.29 BLOCK** | 🟧 **0.69 BLOCK** | 🟥 **1.29 BLOCK** | 🟥 **1.03 BLOCK** |
+| curl SOCKS5 | 9.8 | 0.26 | 🟨 **0.38 BLOCK** | 🟨 **0.20 WARN** | 🟨 **0.38 BLOCK** | 🟨 **0.31 BLOCK** |
+| minimist | 9.8 | 0.01 | 🟩 **0.01 ALLOW** | 🟩 **0.01 ALLOW** | 🟩 **0.01 ALLOW** | 🟩 **0.01 ALLOW** |
+
+**Legend (score intensity):** 🟩 < 0.20 · 🟨 0.20–0.49 · 🟧 0.50–0.99 · 🟥 ≥ 1.00
+
+> There is no one-size-fits-all release decision: Log4Shell and the xz backdoor block in **every** context (high score under any exposure); curl SOCKS5 (EPSS 0.26) is **WARN at the risk-appetite edge on SaaS** (0.20) but **BLOCK** in banking/infra contexts; minimist is residual and passes everywhere. The heatmap shows how the same CVE aggregates different risk depending on exposure — which is why the gate is evaluated **per context**, not as "one decision for all".
 
 ### EPSS enrichment
 
