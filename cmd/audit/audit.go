@@ -17,4 +17,5 @@ Use 'wardex audit verify-chain' to validate the audit log hash chain.`,
 func init() {
 	AuditCmd.AddCommand(VerifyLinkCmd)
 	AuditCmd.AddCommand(VerifyChainCmd)
+	AuditCmd.AddCommand(ExportCmd)
 }

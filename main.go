@@ -18,6 +18,7 @@ import (
 	"github.com/had-nu/wardex/v2/cmd/contract"
 	"github.com/had-nu/wardex/v2/cmd/convert"
 	"github.com/had-nu/wardex/v2/cmd/evaluate"
+	gatecmd "github.com/had-nu/wardex/v2/cmd/gate"
 	hmaccmd "github.com/had-nu/wardex/v2/cmd/hmac"
 	"github.com/had-nu/wardex/v2/cmd/keygen"
 	"github.com/had-nu/wardex/v2/cmd/policy"
@@ -166,6 +167,7 @@ func init() {
 	enrichCli.AddCommands(rootCmd, &configPath)
 	rootCmd.AddCommand(art14cmd.Art14Cmd)
 	rootCmd.AddCommand(audit.AuditCmd)
+	rootCmd.AddCommand(gatecmd.GateCmd)
 	rootCmd.AddCommand(state.StateCmd)
 	rootCmd.AddCommand(authcmd.AuthCmd)
 	rootCmd.AddCommand(contract.ContractCmd)

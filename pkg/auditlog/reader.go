@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"os"
 )
 
 // DefaultMaxLineBytes bounds a single audit log line. A line larger than this
@@ -25,6 +26,18 @@ var ErrLineTooLong = errors.New("auditlog: line exceeds maximum size")
 // trailing newline). The line slice is only valid for the duration of the call;
 // handlers must copy it if they retain the data.
 type Handler func(line []byte) error
+
+// ScanFile opens the file at path and streams its lines through Scan. The file
+// is closed after the scan completes. A missing file is reported via the
+// returned error (callers may treat it as an empty stream if desired).
+func ScanFile(path string, handler Handler) error {
+	f, err := os.Open(path) // #nosec G304 -- caller-managed path; CLI layer validates via cli.SafeOpenFile
+	if err != nil {
+		return err
+	}
+	defer func() { _ = f.Close() }()
+	return Scan(f, DefaultMaxLineBytes, handler)
+}
 
 // Scan streams an io.Reader line by line, invoking handler for each non-empty
 // line. Lines are trimmed of leading/trailing whitespace. The scanner buffer

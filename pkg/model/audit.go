@@ -36,6 +36,14 @@ type AuditEntry struct {
 	// Absent means the legacy schema v1.
 	CplSchemaVersion int `json:"cpl_schema_version,omitempty"`
 
+	// NEW in v2.6 — L4 release-seal: version of the artefact being released.
+	// Recorded when the gate runs in release-seal mode (--release-version).
+	ReleaseVersion string `json:"release_version,omitempty"`
+
+	// NEW in v2.6 — L4 release-seal: reference to the policy that authorised
+	// the release (required together with ReleaseVersion).
+	PolicyRef string `json:"policy_ref,omitempty"`
+
 	// NEW in v2.0 — CRA Article 14 audit chain and deadline tracking
 	PreviousEntryHash             string    `json:"previous_entry_hash,omitempty"`
 	ActivelyExploited             []string  `json:"actively_exploited_cves,omitempty"`

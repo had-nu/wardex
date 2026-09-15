@@ -34,9 +34,24 @@ inputs:
     description: 'Path for the generated report (relative to GITHUB_WORKSPACE).'
     default: 'wardex-report.md'
     required: false
+  release-version:
+    description: >
+      Release version to seal in the gate audit chain (release-seal mode).
+      When set, policy-ref is required and the version is recorded in the
+      audit entry; use `wardex gate check-version` to guard against
+      duplicate releases.
+    default: ''
+    required: false
+  policy-ref:
+    description: 'Policy reference authorising the release (required with release-version).'
+    default: ''
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  env:
+    WARDEX_RELEASE_VERSION: ${{ inputs.release-version }}
+    WARDEX_POLICY_REF: ${{ inputs.policy-ref }}
   args:
     - evaluate
     - --evidence
