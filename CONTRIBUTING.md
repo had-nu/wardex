@@ -16,6 +16,15 @@ Wardex operates under a dual-licensing model (AGPL-3.0 and Commercial). To prote
 
 When you open your first Pull Request, the `@cla-assistant` bot will comment with a link to sign the [CLA](doc/governance/CLA.md). You only need to sign this once. PRs cannot be merged until the author has signed the CLA.
 
+### Third-Party-Based Contributions
+
+Per the CLA (`doc/governance/CLA.md §4(b)`), any contribution that **includes or is based on work created by a third party** must:
+
+1. Disclose this in the Pull Request body, identifying the third party and the applicable licence; and
+2. Add (or update) the corresponding entry in [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md), including the upstream reference and licence.
+
+Design patterns, algorithms, and protocols do not require permission to re-implement, but honest provenance is mandatory — this is part of the Guardian Audit Trail culture.
+
 ### Reporting Bugs
 
 - Search existing issues before opening a new one.

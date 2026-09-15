@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.6.0] — 2026-09-15
 
+> **Attribution:** the hardening design patterns in this release draw on the Nym
+> ecosystem (Apache-2.0), used as a design reference with no copied code. See
+> [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md).
+
 ### Added — Gate Trust Chain, Key Envelopes, Classes & Kill-Switch
 
 **Phase 0 — Foundations**
