@@ -130,6 +130,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The RBAC profile warning and gate hints are now emitted through `slog` and the
   injected logger instead of direct `os.Stderr` writes.
 
+## [2.4.0] — 2026-07-16
+
+### Added
+
+- **EU AI Act framework controls**: New `frameworks/eu_ai_act/ai_controls.yml` catalog
+  and `pkg/catalog/eu_ai_act.yaml` (31 controls covering key articles: prohibited
+  practices, high-risk classification, risk management, data governance,
+  transparency, human oversight, GPAI, post-market monitoring). `wardex evaluate
+  --framework eu_ai_act` enables EU AI Act compliance evaluation.
+- **Gleipnir-anchored chain seal**: Release artifacts (wardex binary, config, README)
+  are now sealed at block ~0 via Gleipnir-embedded anchoring. `chain-seal-v2.4.0.json`
+  contains the chain hash and per-artifact SHA-256 digests.
+- **gRPC provenance driver** (isolated): New `pkg/provenance/grpc.go` behind build tag
+  (`grpc`) to prevent protobuf init panic in non-gRPC builds.
+
+### Changed
+
+- `wardex-config.yaml`: `provenance.node_id` updated to `wardex-release-v2.4.0`.
+
+---
+
 ## [2.4.1] — 2026-07-17
 
 ### Changed
@@ -381,6 +402,39 @@ including verifying test fixtures and updating CI pipelines.
 
 ---
 
+## [2.1.1] — 2026-06-20
+
+### Fixed
+
+- **Module path `/v2`**: Added missing `v2` module path suffix (`github.com/had-nu/wardex/v2`) for Go proxy compatibility (`c99b5d61`).
+- **Cosign sign-blob flags**: Added `--output-signature` and `--output-certificate` to cosign sign-blob step.
+- **Docker workflow SHA pins**: Replaced placeholder test mocks with real cosign/goreleaser SHAs.
+- **GoReleaser failures**: Fixed CI release workflow to handle `/v2` module path.
+- **gosec G703**: Fixed `wrapcheck` lint issue in `pkg/accept`.
+- **Windows build**: Guarded `log/syslog` import behind `!windows` build tag.
+- **CI badges**: Removed always-failing CI badge; added NIST CSF listing badge.
+- **Doc audit**: Version bumps, dead link fixes, `dev` → `main` branch references updated.
+
+---
+
+## [2.1.0] — 2026-06-19
+
+### Added
+
+- **Docker CI workflow + hardened image**: Reproducible multi-stage Dockerfile with distroless nonroot base. CI workflow builds, tests, and signs images with cosign keyless (`docker.yml`).
+- **GitHub Action (`wardex/wardex-action`)**: Reusable composite action for CI/CD gate checks (`action.yml`). Inputs: `config-path`, `gate-log`, `kev`, `strict`, `dry-run`, `out-file`.
+- **HTML Report**: `wardex evaluate --out-file report.html` produces a self-contained HTML report with inline SVG charts (`pkg/report/html.go`).
+- **Native SBOM generator**: `cmd/gen-sbom/main.go` produces CycloneDX-compatible SBOMs from wardex vulns without external tooling. Cosign keyless signing for release artifacts.
+- **Catalog expansion**: NIS2, DORA, and NIST CSF 2.0 control catalogs (`pkg/catalog/`).
+- **GitHub Pages site**: `docs/index.html` with CRA quickstart, SEO meta, OG image.
+
+### Changed
+
+- **Playbook rewrite** (`WARDEX_PLAYBOOK.md` v2.0): structured sections, current commands, CRA/KEV/trust coverage.
+- **Docs reorganization**: v2 specs moved to `doc/specs/internal/`.
+
+---
+
 ## [2.0.1] — 2026-06-10
 
 ### Security
@@ -411,6 +465,16 @@ including verifying test fixtures and updating CI pipelines.
 - **`wardex accept active-exploit`**: Records operator awareness of active exploitation in the chained audit log for compliance trail evidence.
 - **ENISABackend (stub)**: New `enisa` forward backend writes to a local JSONL queue file. No network transmission — awaiting the ENISA Article 16 API publication.
 - **Configuration**: New `cra.art14` and `reporting.enisa_queue` blocks in `wardex-config.yaml`.
+- **Gate Decision Log (G1)**: `wardex evaluate` now records every gate decision in
+  `wardex-gate-audit.log` (configurable via `--gate-log`). Entries include config
+  hash, evidence hash, overall decision, and risk score.
+- **Evidence Provenance (G2)**: New `converted_by` field in evidence envelopes.
+  `wardex evaluate` now warns if evidence was not canonicalised via `wardex convert`.
+- **Strict Provenance Mode**: `--strict` flag now also enforces canonicalised evidence.
+- **Log Forwarding (G3)**: Integrated gate decisions with the `Forwarder` interface.
+  Supports real-time dispatch to Syslog via `reporting.gate_log.forward` config.
+- **Data Model Extensions**: `model.AuditEntry` extended with `evidence_hash` and
+  `overall_decision`; new `model.VulnerabilityEnvelope` for provenance tracking.
 
 ### Changed
 
@@ -423,25 +487,6 @@ including verifying test fixtures and updating CI pipelines.
 ### Fixed
 
 - `cmd/art14/art14.go:runVerify` now uses mockable `exitFunc` instead of `os.Exit`, enabling proper tampered-verification testing.
-
----
-
-
-### Added
-
-- **Gate Decision Log (G1)**: `wardex evaluate` now records every gate decision in
-  `wardex-gate-audit.log` (configurable via `--gate-log`). Entries include config
-  hash, evidence hash, overall decision, and risk score.
-- **Evidence Provenance (G2)**: New `converted_by` field in evidence envelopes.
-  `wardex evaluate` now warns if evidence was not canonicalised via `wardex convert`.
-- **Strict Provenance Mode**: `--strict` flag now also enforces canonicalised evidence.
-- **Log Forwarding (G3)**: Integrated gate decisions with the `Forwarder` interface.
-  Supports real-time dispatch to Syslog via `reporting.gate_log.forward` config.
-- **Data Model Extensions**: `model.AuditEntry` extended with `evidence_hash` and
-  `overall_decision`; new `model.VulnerabilityEnvelope` for provenance tracking.
-
-### Fixed
-
 - **Schema Gap**: Updated `doc/examples/wardex-config.yaml` to include the new
   `gate_log` block, ensuring compliance with `KnownFields(true)` validation tests.
 
