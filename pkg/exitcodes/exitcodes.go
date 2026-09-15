@@ -35,6 +35,13 @@ const (
 	// approaching their expiration date within the warn-before window.
 	ExpiringSoon = 5
 
+	// FreshnessAdvisory indicates the gate class treats freshness gaps
+	// (e.g. missing EPSS/KEV scores) as an advisory instead of a hard stop.
+	// The pipeline is NOT blocked — consumers are told to refresh evidence.
+	// README warns: do not treat 6 as "release blocked"; it is a nudge.
+	// NEW in v2.6 — L3 gate classes (pr/nightly).
+	FreshnessAdvisory = 6
+
 	// GateBlocked indicates the release gate evaluated to "block".
 	// The deployment should not proceed.
 	GateBlocked = 10

@@ -65,7 +65,44 @@ type ReleaseGate struct {
 	AggregateLimit       float64                     `yaml:"aggregate_limit"`
 	AssetContext         model.AssetContext          `yaml:"asset_context"`
 	CompensatingControls []model.CompensatingControl `yaml:"compensating_controls"`
+
+	// Classes carries per-risk-class overrides (L3). The class↔severity table
+	// defines four exams ("integrity", "policy", "freshness", "active_exploit")
+	// with severities "block" | "advisory" | "off". Example:
+	//
+	//	gate:
+	//	  classes:
+	//	    pr:
+	//	      freshness: block
+	//
+	// PR-class freshness therefore hard-blocks instead of exiting 6.
+	// Unknown class/exam/severity keys are rejected at gate runtime.
+	Classes map[string]map[string]string `yaml:"classes"`
 }
+
+// Gate class and exam identifiers (L3). Keep in sync with
+// pkg/orchestrator.resolveClassProfile.
+const (
+	// ClassPR is the pull-request CI class: no release path.
+	ClassPR = "pr"
+	// ClassDeploy is the release/deploy class (default, current behaviour).
+	ClassDeploy = "deploy"
+	// ClassNightly is the scheduled/nightly audit class: reporting focus.
+	ClassNightly = "nightly"
+
+	// Exam identifiers.
+	ExamIntegrity     = "integrity"
+	ExamPolicy        = "policy"
+	ExamFreshness     = "freshness"
+	ExamActiveExploit = "active_exploit"
+)
+
+// Severity values for the class exams.
+const (
+	SevBlock    = "block"    // hard stop with the exam's exit code
+	SevAdvisory = "advisory" // warn; exit 6 for freshness, otherwise continue
+	SevOff      = "off"      // report only; never blocks
+)
 
 type Limits struct {
 	MaxAcceptanceDays     int `yaml:"max_acceptance_days"`

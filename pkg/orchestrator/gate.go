@@ -55,6 +55,9 @@ type GateOptions struct {
 	// release-seal mode and PolicyRef is required.
 	ReleaseVersion string
 	PolicyRef      string
+	// GateClass (L3): risk class pr|deploy|nightly. Empty selects deploy
+	// (current behaviour); each class adjusts exam severities.
+	GateClass string
 }
 
 // RunGate executes the release-gate evaluation flow previously owned by
@@ -77,14 +80,31 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 		return exitcodes.IntegrityFailure, nil
 	}
 
+	class, err := resolveClassProfile(opts.GateClass, cfg)
+	if err != nil {
+		fmt.Fprintf(opts.Stderr, "Error: %v\n", err)
+		return exitcodes.GenericError, nil
+	}
+	if opts.GateClass != "" {
+		fmt.Fprintf(opts.Stderr, "[INFO] Gate class: %s\n", opts.GateClass)
+	}
+
 	if !cfg.ReleaseGate.Enabled {
 		fmt.Fprintf(opts.Stderr, "Warning: release_gate.enabled is false in config — gate will always ALLOW.\n")
 	}
 
 	if opts.Strict {
 		if _, err := accept.ConfigHash(opts.ConfigPath); err != nil {
-			fmt.Fprintf(opts.Stderr, "[STRICT ENFORCEMENT] config hash computation failed: %v\n", err)
-			return exitcodes.IntegrityFailure, nil
+			msg := fmt.Sprintf("[STRICT ENFORCEMENT] config hash computation failed: %v\n", err)
+			switch class.integrity {
+			case severityBlock:
+				fmt.Fprintf(opts.Stderr, "%s", msg)
+				return exitcodes.IntegrityFailure, nil
+			case severityAdvisory:
+				fmt.Fprintf(opts.Stderr, "%s[ADVISORY] class %q tolerates integrity gaps; continuing.\n", msg, class.name)
+			default:
+				fmt.Fprintf(opts.Stderr, "[%s] integrity exam off; strict config hash gap reported.\n", class.name)
+			}
 		}
 	}
 
@@ -116,20 +136,31 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 		return exitcodes.OK, fmt.Errorf("evaluate: %w", err)
 	}
 
-	if code := handleActiveExploitation(ctx, opts, cfg, vulns, evidenceHash); code >= 0 {
+	if code := handleActiveExploitation(ctx, opts, cfg, vulns, evidenceHash, class); code >= 0 {
 		return code, nil
 	}
 
 	vulns = gate.FilterAccepted(vulns, cfg, opts.ConfigPath, opts.Stderr)
 	vulns = gate.ApplyEPSSEnrichment(vulns, cfg, opts.EPSSEnrich, opts.Stderr)
 
+	freshnessAdvisory := false
 	if missing := findMissingEPSS(vulns); len(missing) > 0 {
-		fmt.Fprintf(opts.Stderr, "\n[BLOCK] %d vulnerabilities lack real EPSS probability scores.\n", len(missing))
-		fmt.Fprintf(opts.Stderr, "        CVEs: %s\n", strings.Join(missing, ", "))
-		fmt.Fprintf(opts.Stderr, "        CRA Article 14 requires accurate vulnerability assessment.\n")
-		fmt.Fprintf(opts.Stderr, "        Run 'wardex enrich epss <evidence-file>' to fetch and sign scores,\n")
-		fmt.Fprintf(opts.Stderr, "        then pass the enrichment file with --epss-enrichment.\n\n")
-		return exitcodes.ComplianceFail, nil
+		switch class.freshness {
+		case severityBlock:
+			fmt.Fprintf(opts.Stderr, "\n[BLOCK] %d vulnerabilities lack real EPSS probability scores.\n", len(missing))
+			fmt.Fprintf(opts.Stderr, "        CVEs: %s\n", strings.Join(missing, ", "))
+			fmt.Fprintf(opts.Stderr, "        CRA Article 14 requires accurate vulnerability assessment.\n")
+			fmt.Fprintf(opts.Stderr, "        Run 'wardex enrich epss <evidence-file>' to fetch and sign scores,\n")
+			fmt.Fprintf(opts.Stderr, "        then pass the enrichment file with --epss-enrichment.\n\n")
+			return exitcodes.ComplianceFail, nil
+		case severityAdvisory:
+			freshnessAdvisory = true
+			fmt.Fprintf(opts.Stderr, "\n[ADVISORY] %d vulnerabilities lack real EPSS probability scores (exit 6).\n", len(missing))
+			fmt.Fprintf(opts.Stderr, "           CVEs: %s\n", strings.Join(missing, ", "))
+			fmt.Fprintf(opts.Stderr, "           Class %q treats freshness as advisory; refresh evidence via 'wardex enrich epss'.\n\n", class.name)
+		default:
+			fmt.Fprintf(opts.Stderr, "[%s] freshness exam off; %d vulnerabilities lack EPSS scores (reported).\n", class.name, len(missing))
+		}
 	}
 
 	gateReport := rg.Evaluate(vulns)
@@ -159,8 +190,20 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 	}
 
 	if gateReport.OverallDecision == model.DecisionBlock {
+		if class.policy == severityOff {
+			fmt.Fprintf(opts.Stderr, "\n[%s] policy exam off — gate decision was BLOCK but class %q only reports.\n",
+				strings.ToUpper(class.name), class.name)
+			if freshnessAdvisory {
+				return exitcodes.FreshnessAdvisory, nil
+			}
+			return exitcodes.OK, nil
+		}
 		hintMissingEPSS(opts, vulns)
 		return exitcodes.GateBlocked, nil
+	}
+
+	if freshnessAdvisory {
+		return exitcodes.FreshnessAdvisory, nil
 	}
 
 	return exitcodes.OK, nil
@@ -302,7 +345,7 @@ func loadEvidence(opts GateOptions) ([]model.Vulnerability, string, error) {
 // handleActiveExploitation checks for actively exploited CVEs and handles
 // Article 14 notification. Returns the exit code to use (>= 0) or -1 if no
 // active exploitation was found and evaluation should continue.
-func handleActiveExploitation(ctx context.Context, opts GateOptions, cfg *config.Config, vulns []model.Vulnerability, evidenceHash string) int {
+func handleActiveExploitation(ctx context.Context, opts GateOptions, cfg *config.Config, vulns []model.Vulnerability, evidenceHash string, class classProfile) int {
 	var activelyExploited []model.Vulnerability
 	for _, v := range vulns {
 		if v.ActivelyExploited {
@@ -311,6 +354,19 @@ func handleActiveExploitation(ctx context.Context, opts GateOptions, cfg *config
 	}
 
 	if len(activelyExploited) == 0 {
+		return -1
+	}
+
+	cves := make([]string, 0, len(activelyExploited))
+	for _, v := range activelyExploited {
+		cves = append(cves, v.CVEID)
+	}
+
+	// Non-blocking classes (pr, nightly) report active exploitation but do not
+	// treat it as a release-stopping event: no mandatory artefact, no exit 12.
+	if class.activeExploit != severityBlock {
+		fmt.Fprintf(opts.Stderr, "[%s] active exploitation reported for CVE(s): %s (no hard stop for class %q; Article 14 expects dedicated monitoring)\n",
+			strings.ToUpper(class.name), strings.Join(cves, ", "), class.name)
 		return -1
 	}
 
@@ -335,11 +391,6 @@ func handleActiveExploitation(ctx context.Context, opts GateOptions, cfg *config
 				}
 			}
 		}
-	}
-
-	cves := make([]string, 0, len(activelyExploited))
-	for _, v := range activelyExploited {
-		cves = append(cves, v.CVEID)
 	}
 
 	if opts.DryRun {
