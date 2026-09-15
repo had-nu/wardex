@@ -78,6 +78,41 @@ type ReleaseGate struct {
 	// PR-class freshness therefore hard-blocks instead of exiting 6.
 	// Unknown class/exam/severity keys are rejected at gate runtime.
 	Classes map[string]map[string]string `yaml:"classes"`
+
+	// ForcedUpgrade arms the regulatory-deadline gate (L7). When armed, a
+	// release can only be attested with Wardex's own evidence — valid seal,
+	// intact chain, fresh EPSS/KEV. A tripwire disarms the gate after
+	// DefaultForcedUpgradeTripwireFailures consecutive evidence-refresh
+	// failures so evidence absence never freezes the pipeline forever.
+	// Absent or disabled → current behaviour is unchanged (L3/L4 additivity).
+	ForcedUpgrade *ForcedUpgradeConfig `yaml:"forced_upgrade"`
+}
+
+// DefaultForcedUpgradeTripwireFailures is the default tripwire threshold N
+// (P11): consecutive evidence-refresh failures after which the forced_upgrade
+// gate auto-disarms and falls back to policy evaluation.
+const DefaultForcedUpgradeTripwireFailures = 5
+
+// ForcedUpgradeConfig configures the forced_upgrade regulatory gate (L7).
+type ForcedUpgradeConfig struct {
+	Enabled bool `yaml:"enabled"`
+
+	// Deadline is the regulatory milestone this gate targets (audit-only), e.g.
+	// "2026-09-14" for the CRA Art. 14 staged obligations. The gate blocks on
+	// attestation evidence, not on wall-clock time.
+	Deadline string `yaml:"deadline"`
+
+	// TripwireFailures is the disarm threshold N. Zero/negative selects
+	// DefaultForcedUpgradeTripwireFailures.
+	TripwireFailures int `yaml:"tripwire_failures"`
+}
+
+// Tripwire returns the effective disarm threshold N.
+func (f *ForcedUpgradeConfig) Tripwire() int {
+	if f == nil || f.TripwireFailures < 1 {
+		return DefaultForcedUpgradeTripwireFailures
+	}
+	return f.TripwireFailures
 }
 
 // Gate class and exam identifiers (L3). Keep in sync with

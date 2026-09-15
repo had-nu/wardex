@@ -12,6 +12,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -71,11 +72,13 @@ func GenerateArtefact(cves []string, awarenessAt time.Time, cfg Config) (*model.
 	}
 
 	a := &model.Art14NotificationArtefact{
-		ArtefactID:  newUUID(),
-		GeneratedAt: time.Now().UTC(),
-		GeneratedBy: cfg.GeneratedBy,
-		WardexActor: cfg.WardexActor,
-		Status:      "draft",
+		ArtefactID:    newUUID(),
+		FormatVersion: model.Art14FormatVersion,
+		Capabilities:  model.CurrentArtifactCapabilities,
+		GeneratedAt:   time.Now().UTC(),
+		GeneratedBy:   cfg.GeneratedBy,
+		WardexActor:   cfg.WardexActor,
+		Status:        "draft",
 
 		EarlyWarning: model.Art14EarlyWarning{
 			AwarenessTimestamp: awarenessAt.UTC(),
@@ -123,9 +126,34 @@ func SignArtefact(a *model.Art14NotificationArtefact, key []byte) error {
 	return nil
 }
 
+// ErrUnsupportedFormat is returned when verification encounters an artefact
+// whose format version is newer than this build understands (L2). Reading stays
+// tolerant, but verification fails closed: a future format may rely on
+// integrity mechanisms we cannot attest.
+var ErrUnsupportedFormat = errors.New("art14: unsupported format version — upgrade needed")
+
+// CheckVersionSupported validates that the artefact's format version is one we
+// can verify (L2). Version 0 (legacy, pre-2.6 artefacts) is accepted because
+// the HMAC-SHA256 scheme is unchanged. Future versions return
+// ErrUnsupportedFormat. Never a silent clamp.
+func CheckVersionSupported(a *model.Art14NotificationArtefact) error {
+	if a.FormatVersion == 0 {
+		return nil
+	}
+	if a.FormatVersion > model.Art14FormatVersion {
+		return fmt.Errorf("%w (artefact format_version=%d, this build supports up to %d)",
+			ErrUnsupportedFormat, a.FormatVersion, model.Art14FormatVersion)
+	}
+	return nil
+}
+
 // VerifyArtefact recomputes the HMAC and compares it to the stored value.
-// Returns an error if the HMAC does not match (tampering detected).
+// Returns an error if the format is unsupported (L2) or the HMAC does not match
+// (tampering detected).
 func VerifyArtefact(a *model.Art14NotificationArtefact, key []byte) error {
+	if err := CheckVersionSupported(a); err != nil {
+		return err
+	}
 	data, err := canonicalJSON(a)
 	if err != nil {
 		return err

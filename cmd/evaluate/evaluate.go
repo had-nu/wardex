@@ -13,22 +13,24 @@ import (
 )
 
 var (
-	configPath     string
-	gateFile       string
-	gateMode       string
-	epssEnrich     string
-	outputFormat   string
-	outFile        string
-	profileName    string
-	failAbove      float64
-	strict         bool
-	dryRun         bool
-	gateLogPath    string
-	art14OutputDir string
-	showTrend      bool
-	releaseVersion string
-	policyRef      string
-	gateClass      string
+	configPath         string
+	gateFile           string
+	gateMode           string
+	epssEnrich         string
+	outputFormat       string
+	outFile            string
+	profileName        string
+	failAbove          float64
+	strict             bool
+	dryRun             bool
+	gateLogPath        string
+	art14OutputDir     string
+	showTrend          bool
+	releaseVersion     string
+	policyRef          string
+	gateClass          string
+	forcedUpgrade      bool
+	forcedUpgradeState string
 
 	exitFunc = os.Exit
 	stderr   = os.Stderr
@@ -59,7 +61,11 @@ Exit codes:
   10 — Gate blocked (BLOCK)
   11 — Compliance gap exceeded --fail-above threshold
   12 — Active exploitation detected (hard stop)
-  13 — Release version already sealed (release-seal duplicate)`,
+  13 — Release version already sealed (release-seal duplicate)
+
+forced_upgrade (L7): when armed by flag or sealed config, exit 10 also
+covers an unattestable release (evidence not fresh enough). A tripwire
+disarms after N consecutive refresh failures — see gate.forced_upgrade.`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: runEvaluate,
 }
@@ -81,6 +87,8 @@ func init() {
 	EvaluateCmd.Flags().StringVar(&releaseVersion, "release-version", "", "Release version to seal (release-seal mode; requires --policy-ref)")
 	EvaluateCmd.Flags().StringVar(&policyRef, "policy-ref", "", "Policy reference authorising the release (required with --release-version)")
 	EvaluateCmd.Flags().StringVar(&gateClass, "gate-class", "deploy", "Risk class: pr|deploy|nightly (deploy is the default, current behaviour)")
+	EvaluateCmd.Flags().BoolVar(&forcedUpgrade, "forced-upgrade", false, "Arm the forced_upgrade regulatory-deadline gate (L7) even if not enabled in config")
+	EvaluateCmd.Flags().StringVar(&forcedUpgradeState, "forced-upgrade-state", "", "Tripwire counter file path (default: <state_store.dir>/forced_upgrade.json)")
 	_ = EvaluateCmd.MarkFlagRequired("evidence")
 
 	cli.AddCommands(EvaluateCmd, &configPath)
@@ -94,26 +102,28 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		policyRef = os.Getenv("WARDEX_POLICY_REF")
 	}
 	code, err := orchestrator.RunGate(cmd.Context(), orchestrator.GateOptions{
-		ConfigPath:     configPath,
-		GateFile:       gateFile,
-		GateMode:       gateMode,
-		EPSSEnrich:     epssEnrich,
-		OutputFormat:   outputFormat,
-		OutFile:        outFile,
-		ProfileName:    profileName,
-		FailAbove:      failAbove,
-		Strict:         strict,
-		DryRun:         dryRun,
-		GateLogPath:    gateLogPath,
-		Art14OutDir:    art14OutputDir,
-		ShowTrend:      showTrend,
-		Controls:       args,
-		ReleaseVersion: releaseVersion,
-		PolicyRef:      policyRef,
-		GateClass:      gateClass,
-		Logger:         ui.Default().Logger,
-		Stderr:         stderr,
-		Stdout:         cmd.OutOrStdout(),
+		ConfigPath:         configPath,
+		GateFile:           gateFile,
+		GateMode:           gateMode,
+		EPSSEnrich:         epssEnrich,
+		OutputFormat:       outputFormat,
+		OutFile:            outFile,
+		ProfileName:        profileName,
+		FailAbove:          failAbove,
+		Strict:             strict,
+		DryRun:             dryRun,
+		GateLogPath:        gateLogPath,
+		Art14OutDir:        art14OutputDir,
+		ShowTrend:          showTrend,
+		Controls:           args,
+		ReleaseVersion:     releaseVersion,
+		PolicyRef:          policyRef,
+		GateClass:          gateClass,
+		ForcedUpgrade:      forcedUpgrade,
+		ForcedUpgradeState: forcedUpgradeState,
+		Logger:             ui.Default().Logger,
+		Stderr:             stderr,
+		Stdout:             cmd.OutOrStdout(),
 	})
 	if err != nil {
 		return err
