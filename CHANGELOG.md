@@ -4,6 +4,60 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] — 2026-09-15
+
+### Added — Gate Trust Chain, Key Envelopes, Classes & Kill-Switch
+
+**Phase 0 — Foundations**
+- **Unified CPL chain format**: single audit-entry format across all chain
+  operations, replacing the previous format split (`pkg/accept/store`).
+- **Streaming chain verify**: `wardex audit verify-chain` verifies bounded
+  pages of entries (`--start-after`, `--limit`) so large chains can be checked
+  without loading everything into memory (`pkg/accept/verify`).
+- **Schema migrations**: chain formats can evolve with explicit codified
+  migrations instead of silent format switches.
+
+**Phase 1 — Release Gate**
+- **Release-seal ancestry (L4)**: `wardex gate check-version` validates that a
+  sealed (`.wexstate`) config chains to an approved ancestor; release-seal
+  mode is refused unless the ancestry check passes.
+- **Cursor-paginated SIEM export (L5)**: `wardex audit export --limit N
+  --cursor <hash>` streams audit entries in bounded pages for SIEM ingestion;
+  the returned `x-wardex-next-cursor` resumes exactly after the chained entry
+  (`cmd/audit/export.go`).
+
+**Phase 2 — Key Envelopes & Gate Classes**
+- **Encrypted key envelopes (L6)**: `wardex keygen --encrypt` emits
+  `WARDEX-KEY-V1` envelopes (Argon2id + AES-256-GCM, HMAC-verified before
+  decrypt) with `--passphrase` / `WARDEX_KEY_PASSPHRASE`;
+  `wardex trust --keyring` loads them transparently. Legacy plaintext
+  keyrings remain supported.
+- **Risk-class gate exams (L3)**: `--gate-class pr|deploy|nightly|canary`
+  profiles with per-gap severities `block|advisory|off`; class gaps are
+  reported in the gate decision and audit entries. The GitHub Action
+  `run-gate` gains a `gate-class` input.
+
+**Phase 3 — Artefact Versioning & Forced-Upgrade Kill-Switch**
+- **Article 14 artefact versioning (L2)**: notification artefacts now carry
+  `format_version` (1) and `capabilities` (bitmap: HMAC-SHA256 | canonical
+  JSON; CBOR v1 declared but not produced). Verification rejects unknown or
+  future versions with a controlled error — no silent downgrade
+  (`ErrUnsupportedFormat`). Legacy pre-2.6 artefacts still verify.
+- **Forced-upgrade tripwire (L7)**: `release_gate.forced_upgrade` config
+  (`enabled`, `deadline`, `tripwire_failures`, default N=5). When armed, a
+  missing EPSS attestation blocks the gate (`exit 10`); N consecutive failures
+  disarm the tripwire and fall back to the class policy; fresh evidence
+  re-arms it. State persists atomically (0600) in
+  `.wardex/forced_upgrade.json`; audit entries `forced_upgrade.armed` /
+  `forced_upgrade.disarmed`. Local activation via `--forced-upgrade` and
+  `--forced-upgrade-state`.
+
+**Docs & Schemas**
+- **CDDL (RFC 8610)**: new schemas `spec/cddl/art14-notification.cddl` and
+  `spec/cddl/tripwire-state.cddl` formalize the Article 14 artefact and the
+  forced-upgrade tripwire state.
+- README/README-en updated with the v2.6.0 feature set.
+
 ## [2.5.0] — 2026-08-20
 
 ### Added — Go 1.27 & Hardening

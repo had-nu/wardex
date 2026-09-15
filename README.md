@@ -63,6 +63,39 @@ wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./co
 
 ---
 
+## What's New — v2.6.0
+
+**Encrypted Key Envelopes (L6):**
+- `wardex keygen --encrypt` emite envelopes `WARDEX-KEY-V1` protegidos com
+  Argon2id + AES-256-GCM; `wardex trust --keyring` carrega via
+  `WARDEX_KEY_PASSPHRASE`. Legado (plaintext) continua a funcionar.
+
+**Gate por Classes de Risco (L3):**
+- Perfis `--gate-class pr|deploy|nightly|canary` com severidades
+  `block|advisory|off` por tipo de lacuna e chamada `run-gate` com input
+  `gate-class` na Action.
+
+**Artefacto Article 14 com versionamento (L2):**
+- Novos campos `format_version` (1) e `capabilities` (bitmap: HMAC-SHA256 +
+  canonical JSON) nos artefactos de notificação; verificação rejeita versões
+  futuras com erro controlado — nunca há downgrade silencioso. Schemas CDDL em
+  `spec/cddl/art14-notification.cddl`.
+
+**Forced Upgrade Tripwire (L7):**
+- `release_gate.forced_upgrade.{enabled,deadline,tripwire_failures}`: o gate
+  arma-se quando a atestação de vulnerabilidades não é fresca e bloqueia
+  (exit 10); N falhas consecutivas desarmam (fallback à política de classes) e
+  evidência fresca re-arma. Estado em `.wardex/forced_upgrade.json`.
+- Activável também com `--forced-upgrade`; `--forced-upgrade-state` escolhe o
+  contador. Schema CDDL em `spec/cddl/tripwire-state.cddl`.
+
+**Cadeia CPL unificada (P0) + ancestry release-seal (L4) + SIEM export (L5):**
+- Formato de cadeia único com streaming verify (`wardex audit verify-chain`) e
+  migrações de schema; `check-version` valida ancestry em configs seladas;
+  export SIEM com paginação por cursor.
+
+---
+
 ## What's New — v2.3.0 / v2.4.0
 
 **CBOR Deterministic Canonicalization (v2.3.0):**

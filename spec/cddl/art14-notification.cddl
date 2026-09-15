@@ -1,0 +1,52 @@
+;; Wardex Article 14 Notification Artefact — CDDL Schema (RFC 8610)
+;; Format version 1 (v2.6.0+). Legacy (pre-2.6) artefacts omit format_version
+;; and capabilities; a verifier that does not know a set capability bit must
+;; still parse the artefact, and must reject unknown/future format_version.
+
+art14-notification = {
+  ? format_version: uint,              ; 1 (absent in legacy pre-2.6 artefacts)
+  ? capabilities: uint,                ; additive bitmap (HMAC-SHA256=1<<0,
+                                       ; canonical JSON=1<<1, CBOR v1=1<<2)
+
+  artefact_id: tstr,                   ; UUID v4
+  generated_at: tdate,                 ; RFC3339 UTC
+  generated_by: tstr,                  ; e.g. "wardex/v2.0.0"
+  wardex_actor: tstr,                  ; WARDEX_ACTOR env var (may be empty)
+  status: "draft" / "dispatched",
+
+  early_warning: {
+    awareness_timestamp: tdate,
+    deadline: tdate,                   ; +24h
+    ? affected_states: [* tstr],       ; EU member states, operator-completed
+  },
+
+  notification: {
+    deadline: tdate,                   ; +72h
+    product_name: tstr,
+    product_version: tstr,
+    cve_ids: [+ tstr],
+    exploitation_nature: tstr,
+    vulnerability_nature: tstr,
+    ? corrective_measures: tstr,
+    ? user_mitigations: tstr,
+    sensitivity_flag: bool,
+  },
+
+  final_report: {
+    deadline: tdate,                   ; patch_available_at + 14 days
+    patch_available_at: tdate,
+    ? vulnerability_description: tstr,
+    ? severity: tstr,
+    ? impact: tstr,
+    ? threat_actor_info: tstr,
+    ? security_update_details: tstr,
+  },
+
+  hmac: tstr, ; "hex:" HMAC-SHA256 over canonical JSON of all fields above
+}
+
+;; Capability bitmap (additive). A reader must NOT fail on unknown set bits;
+;; it must verify what it knows and flag the rest.
+capability-hmac-sha256    = 1  ; 1 << 0
+capability-canonical-json = 2  ; 1 << 1
+capability-cbor-v1        = 4  ; 1 << 2 (reserved, not yet produced)

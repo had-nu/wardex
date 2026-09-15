@@ -1,0 +1,11 @@
+;; Wardex forced_upgrade tripwire state — CDDL Schema (RFC 8610)
+;; Persisted as JSON (0600) at <state_store>/forced_upgrade.json.
+;; A missing file is a zero-state (disarmed, consecutive=0) and is NOT an error:
+;; the loader must treat "file absent" as the disarmed zero-state so a pristine
+;; environment never silently arms — arming is an explicit first-activation
+;; transition by the orchestrator.
+
+tripwire-state = {
+  consecutive: uint,                   ; consecutive evidence-refresh failures
+  armed: bool,                         ; false → gate fell back to policy eval
+}
