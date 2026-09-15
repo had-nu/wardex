@@ -87,6 +87,7 @@ git push origin --delete v2.1.0
 - [ ] Helm chart `Chart.yaml` `appVersion` matches the tag
 - [ ] `make build` compiles without errors
 - [ ] Changelog / release notes are written
+- [ ] `ACKNOWLEDGMENTS.md` updated when the release includes third-party-derived work (per `CLA.md §4(b)`)
 
 ---
 

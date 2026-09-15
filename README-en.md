@@ -94,6 +94,9 @@ wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./co
   schema migrations; `check-version` validates ancestry on sealed configs;
   SIEM export with cursor pagination.
 
+> Design patterns in this release are inspired by the Nym ecosystem (Apache-2.0) —
+> used as a reference, with no code copied. See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md).
+
 ---
 
 ## What's New — v2.4.0
@@ -532,3 +535,5 @@ Dual-licensed:
 **AGPL-3.0 (free):** use in internal CI/CD pipelines or in open-source projects that make their source available.
 
 **Commercial licence (paid):** embedding in proprietary products, SaaS platforms, or distribution without opening source. See the [Commercial Terms](doc/governance/COMMERCIAL_LICENSE.md) or contact **andre_ataide@proton.me**.
+
+**Attributions / Provenance:** some features follow design patterns from the Nym ecosystem (Apache-2.0), as a reference and with no code copied. See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md).
