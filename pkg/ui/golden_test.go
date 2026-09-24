@@ -34,10 +34,7 @@ func assertGolden(t *testing.T, name string, got []byte) {
 		return
 	}
 
-	firstDifference := len(want)
-	if len(got) < firstDifference {
-		firstDifference = len(got)
-	}
+	firstDifference := min(len(got), len(want))
 	for firstDifference < len(want) && firstDifference < len(got) && want[firstDifference] == got[firstDifference] {
 		firstDifference++
 	}
@@ -50,14 +47,8 @@ func canonicalGolden(value []byte) []byte {
 
 func excerpt(value []byte, at int) string {
 	const radius = 80
-	start := at - radius
-	if start < 0 {
-		start = 0
-	}
-	end := at + radius
-	if end > len(value) {
-		end = len(value)
-	}
+	start := max(at-radius, 0)
+	end := min(at+radius, len(value))
 	return string(value[start:end])
 }
 

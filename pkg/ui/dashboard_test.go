@@ -70,7 +70,7 @@ func TestRendererDashboardPlainLayout(t *testing.T) {
 	if strings.Contains(got, "│") || strings.Contains(got, "┌") {
 		t.Fatalf("ASCII dashboard contains unicode box drawing:\n%s", got)
 	}
-	for _, line := range strings.Split(got, "\n") {
+	for line := range strings.SplitSeq(got, "\n") {
 		if VisibleLen(line) > 80 {
 			t.Fatalf("line exceeds test width (%d): %q", VisibleLen(line), line)
 		}

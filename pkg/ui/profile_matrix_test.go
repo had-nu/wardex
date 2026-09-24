@@ -58,7 +58,7 @@ func TestRendererTerminalProfileMatrix(t *testing.T) {
 			if strings.Contains(got, "─") != tc.wantUnicode {
 				t.Fatalf("Unicode rule presence = %v, want %v", strings.Contains(got, "─"), tc.wantUnicode)
 			}
-			for _, line := range strings.Split(got, "\n") {
+			for line := range strings.SplitSeq(got, "\n") {
 				if VisibleLen(line) > renderer.ContentWidth() {
 					t.Fatalf("line exceeds profile width (%d > %d): %q", VisibleLen(line), renderer.ContentWidth(), line)
 				}

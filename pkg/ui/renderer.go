@@ -43,13 +43,7 @@ func (r *Renderer) Profile() Profile {
 
 // ContentWidth returns the usable width for a single visual line.
 func (r *Renderer) ContentWidth() int {
-	width := r.profile.Width - 1
-	if width > maxContentWidth {
-		width = maxContentWidth
-	}
-	if width < MinWidth-1 {
-		width = MinWidth - 1
-	}
+	width := max(min(r.profile.Width-1, maxContentWidth), MinWidth-1)
 	return width
 }
 

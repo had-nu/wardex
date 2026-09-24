@@ -19,7 +19,7 @@ func TestRendererDashboardFitsNarrowTerminal(t *testing.T) {
 	})
 	r.Dashboard(testDashboard())
 
-	for _, line := range strings.Split(out.String(), "\n") {
+	for line := range strings.SplitSeq(out.String(), "\n") {
 		if VisibleLen(line) > r.ContentWidth() {
 			t.Fatalf("line exceeds narrow content width (%d > %d): %q", VisibleLen(line), r.ContentWidth(), line)
 		}

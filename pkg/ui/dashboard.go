@@ -139,10 +139,7 @@ func (r *Renderer) writePhaseLine(phase PhaseView, includeDetail bool) {
 	marker := phaseMarker(status, r.profile.Unicode)
 	name := truncate(phase.Name, max(1, r.ContentWidth()-8))
 	leftPlain := fmt.Sprintf("%02d %s %s", number, marker, name)
-	gap := r.ContentWidth() - VisibleLen(leftPlain) - VisibleLen(status)
-	if gap < 1 {
-		gap = 1
-	}
+	gap := max(r.ContentWidth()-VisibleLen(leftPlain)-VisibleLen(status), 1)
 
 	left := r.theme.Muted(fmt.Sprintf("%02d", number)) + " " +
 		r.theme.Structure(marker) + " " + r.theme.Heading(name)
@@ -206,20 +203,14 @@ func (r *Renderer) card(title, right string, kind StatusKind, lines []string) {
 	corner := rightCornerFor(vertical)
 	prefix := left + horizontal + " "
 	right = truncate(right, max(0, width/3))
-	maxTitle := width - VisibleLen(prefix) - VisibleLen(right) - 1 - 1
-	if maxTitle < 1 {
-		maxTitle = 1
-	}
+	maxTitle := max(width-VisibleLen(prefix)-VisibleLen(right)-1-1, 1)
 	title = truncate(title, maxTitle)
 	suffix := right
 	if suffix != "" {
 		suffix += " "
 	}
 	suffix += corner
-	fill := width - VisibleLen(prefix) - VisibleLen(title) - VisibleLen(suffix)
-	if fill < 0 {
-		fill = 0
-	}
+	fill := max(width-VisibleLen(prefix)-VisibleLen(title)-VisibleLen(suffix), 0)
 
 	top := r.theme.Structure(prefix) + r.theme.Heading(title) +
 		r.theme.Structure(strings.Repeat(horizontal, fill))
@@ -232,10 +223,7 @@ func (r *Renderer) card(title, right string, kind StatusKind, lines []string) {
 	inner := width - 4
 	for _, line := range lines {
 		line = truncateANSI(line, inner)
-		padding := inner - VisibleLen(line)
-		if padding < 0 {
-			padding = 0
-		}
+		padding := max(inner-VisibleLen(line), 0)
 		fmt.Fprint(r.w, r.theme.Structure(vertical+" "))
 		fmt.Fprint(r.w, line)
 		fmt.Fprint(r.w, strings.Repeat(" ", padding))
