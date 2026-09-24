@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wardex — Risk-Based Release Gate for CRA, NIS2 & DORA</title>
-    <meta name="description" content="Wardex is a risk-driven release gate and compliance gap analyser for CRA Article 14, NIS2, DORA, and ISO 27001. KEV correlation, HMAC-signed audit trails, and asset-context-aware gating.">
+    <meta name="theme-color" content="#6f42c1">
+    <title>Wardex — Auditable Security and Compliance Decisions</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <meta name="description" content="Wardex turns security and compliance decisions into auditable evidence, with risk-based release governance for NIS2, DORA, CRA, and the EU AI Act.">
     <meta name="author" content="André Ataíde">
-    <meta property="og:title" content="Wardex — Risk-Based Release Gate">
-    <meta property="og:description" content="CRA-ready release gating with KEV correlation, SBOM analysis, and cryptographically chained audit evidence.">
+    <meta property="og:title" content="Wardex — Auditable Security and Compliance Decisions">
+    <meta property="og:description" content="Risk-based release governance with cryptographically chained audit evidence, provenance, and compliance workflows.">
     <meta property="og:url" content="https://had-nu.github.io/wardex/">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://had-nu.github.io/wardex/assets/og-image.png">
+    <meta property="og:image:alt" content="Wardex — auditable security and compliance decisions">
     <meta name="google-site-verification" content="cSHqbbo1yWuAj1-mi3I89e_GjhvPUDfbwB1fqi6XP1s" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #ffffff;
-            --text: #1a1a1a;
-            --muted: #888888;
-            --border: #e5e5e5;
+            --text: #111827;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --brand: #6f42c1;
             --max-width: 720px;
             --pad: 2rem;
         }
@@ -32,7 +36,7 @@
             line-height: 1.65;
             -webkit-font-smoothing: antialiased;
         }
-        a { color: inherit; }
+        a { color: var(--brand); }
         main {
             max-width: var(--max-width);
             margin: 0 auto;
@@ -46,6 +50,12 @@
             align-items: center;
         }
         .badge-row img { height: 20px; }
+        .brand-mark {
+            display: block;
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 1rem;
+        }
         h1 {
             font-size: 2.25rem;
             font-weight: 500;
@@ -137,14 +147,15 @@
         .cta {
             display: inline-block;
             padding: 0.6rem 1.2rem;
-            border: 1px solid var(--text);
+            border: 1px solid var(--brand);
+            color: var(--brand);
             font-size: 0.875rem;
             text-decoration: none;
             border-radius: 2px;
             margin-right: 0.75rem;
             margin-bottom: 0.5rem;
         }
-        .cta:hover { background: var(--text); color: var(--bg); }
+        .cta:hover { background: var(--brand); color: #ffffff; }
         hr {
             border: none;
             border-top: 1px solid var(--border);
@@ -170,14 +181,15 @@
 <main>
 
 <div class="badge-row">
-    <img src="https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go">
+    <img src="https://img.shields.io/badge/Go-1.27-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go">
     <img src="https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square" alt="Go Report Card">
     <img src="https://github.com/had-nu/wardex/actions/workflows/ci.yml/badge.svg" alt="CI">
     <img src="https://img.shields.io/badge/License-AGPL_v3_|_Commercial-8A2BE2.svg?style=flat-square" alt="License">
 </div>
 
+<img class="brand-mark" src="assets/wardex-shield.png" alt="" width="96" height="96">
 <h1>Wardex</h1>
-<p class="subtitle">Risk-driven release gate and compliance gap analyser. Turns vulnerability scanners into CRA-compliant audit evidence.</p>
+<p class="subtitle">Auditable security and compliance decisions. Risk-based release governance for NIS2 · DORA · CRA · EU AI Act.</p>
 
 <div class="links">
     <a href="https://github.com/had-nu/wardex">GitHub</a>
@@ -195,7 +207,7 @@
     <li>Generates signed CRA Article 14 notification artifacts with HMAC-SHA256 audit chain</li>
     <li>Evaluates release risk per asset context — the same CVE can ALLOW, WARN, or BLOCK depending on criticality, exposure, and compensating controls</li>
     <li>Cross-references documented vs implemented controls against ISO 27001, NIS2, DORA, and CRA Article 14 catalogues</li>
-    <li>Returns distinct exit codes for each outcome: gate block (10), compliance gap (11), active exploitation (12)</li>
+    <li>Returns distinct exit codes for each outcome: freshness advisory (6), gate block (10), compliance gap (11), active exploitation (12), and duplicate release (13)</li>
     <li>Configuration Provenance Link (CPL) — cryptographically binds gate decisions to the exact config in force, with hash-chain audit verification</li>
 </ul>
 
@@ -233,13 +245,13 @@ wardex evaluate \
   --evidence vulns.yaml \
   --config doc/examples/wardex-config.yaml</pre>
 
-<p>Exit codes: <code>0</code> ALLOW · <code>3</code> Tampered · <code>4</code> Store inconsistent · <code>10</code> BLOCK · <code>11</code> Compliance Gap · <code>12</code> Active Exploitation · CPL: <code>0</code> OK · <code>1</code> MISMATCH/MISSING · <code>2</code> Error</p>
+<p>Exit codes: <code>0</code> OK · <code>1</code> generic error · <code>3</code> integrity · <code>4</code> store inconsistent · <code>5</code> expiring soon · <code>6</code> freshness advisory · <code>10</code> BLOCK · <code>11</code> compliance failure · <code>12</code> active exploitation · <code>13</code> duplicate release</p>
 
 <h2 id="install">Install</h2>
 
-<p>Requires Go ≥ 1.26.</p>
+<p>Requires Go ≥ 1.27. Current release: <code>v2.6.0</code>.</p>
 
-<pre>go install github.com/had-nu/wardex/v2@latest</pre>
+<pre>go install github.com/had-nu/wardex/v2@v2.6.0</pre>
 
 <p>Or build from source:</p>
 

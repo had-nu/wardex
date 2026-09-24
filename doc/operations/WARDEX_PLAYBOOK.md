@@ -652,7 +652,7 @@ jobs:
 
 ```yaml
 wardex-gate:
-  image: golang:1.26
+  image: golang:1.27
   script:
     - go install github.com/had-nu/wardex/v2@latest
     - wardex evaluate --config .wardex/config.yaml --evidence vulns.yaml controls.yaml
@@ -698,5 +698,5 @@ Os exit codes 3-12 devem ser tratados explicitamente na pipeline. O código 12 r
 
 ---
 
-*Wardex v2.2.0 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
+*Wardex v2.6.0 · [github.com/had-nu/wardex](https://github.com/had-nu/wardex)*
 

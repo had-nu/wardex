@@ -40,14 +40,14 @@
 
 | Camada | Tecnologia | Justificação |
 |---|---|---|
-| **Linguagem** | Go 1.26 | stdlib-focused, CGO desactivado, binário estático único |
+| **Linguagem** | Go 1.27 | stdlib-focused, CGO desactivado, binário estático único |
 | **CLI Framework** | Cobra + pflag | Padrão Go para CLIs com subcomandos |
 | **Serialização** | yaml.v3 | Formato nativo para configs e evidência GRC |
 | **Hashing** | BLAKE3 (lukechampine.com/blake3) | 10-15x mais rápido que SHA-256, 256-bit security |
 | **Criptografia** | Ed25519 (stdlib crypto/ed25519) | Trust store, keypairs Admin/CISO/Analyst |
 | **Assinatura** | HMAC-SHA256 (stdlib crypto/hmac) | Acceptances, Art14 artefacts, EPSS enrichment |
 | **Embebimento** | Go embed | Catálogos de frameworks YAML compilados no binário |
-| **Container** | Docker multi-stage | golang:1.26-alpine → distroless/static:nonroot |
+| **Container** | Docker multi-stage | golang:1.27-alpine → distroless/static:nonroot |
 | **Orquestração** | Helm v0.1.0 | Kubernetes Job, CronJob, PVC, ConfigMap |
 | **CI/CD** | GitHub Actions | ci.yml (test+lint+security), release.yml (GoReleaser) |
 | **Release** | GoReleaser | linux/darwin/windows × amd64/arm64, Cosign, CycloneDX SBOM |
@@ -479,7 +479,7 @@ notifications:
 
 ```dockerfile
 # Builder
-FROM golang:1.26-alpine AS builder
+FROM golang:1.27-alpine AS builder
 # CGO disabled, static binary
 
 # Runtime
@@ -707,4 +707,4 @@ state_store:
 
 ---
 
-*Blueprint gerado automaticamente a partir da análise do codebase Wardex v2.2.1.*
+*Blueprint actualizado para a linha actual Wardex v2.6.0.*

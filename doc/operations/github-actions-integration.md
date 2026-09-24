@@ -4,10 +4,10 @@ Wardex é um **release gate**, não um scanner. Não encontra vulnerabilidades �
 
 Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo GitHub Actions.
 
-> **Versão de referência:** v2.2.2  
-> **Instalação:** `go install github.com/had-nu/wardex/v2@latest`
+> **Versão de referência:** v2.6.0<br>
+> **Instalação:** `go install github.com/had-nu/wardex/v2@v2.6.0`
 
-> **Hardening (v2.2.2):** O Wardex implementa validação de paths via
+> **Hardening (linha actual):** O Wardex implementa validação de paths via
 > `pkg/cli/pathguard.go`. Se usas a Marketplace Action, os inputs `--evidence`,
 > `--config`, `--out-file` são validados contra path traversal com resolução de
 > symlinks. Para workflows manuais, garante que os paths são relativos ao
@@ -15,7 +15,7 @@ Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo
 
 ---
 
-## Mapa de Comandos (v2.2.0)
+## Mapa de Comandos (v2.6.0)
 
 | Comando | Propósito |
 |---------|-----------|
@@ -75,7 +75,7 @@ jobs:
 
       # Passo 2: Instalar Wardex (SHA-pinned)
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex/v2@latest
+        run: go install github.com/had-nu/wardex/v2@v2.6.0
 
       # Passo 3: Validar que os policy files estão bem formados
       - name: Validate policy files
@@ -260,7 +260,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex/v2@latest
+        run: go install github.com/had-nu/wardex/v2@v2.6.0
 
       - name: Validate all framework policy files
         run: |
@@ -320,16 +320,19 @@ A estrutura de directórios espelha a hierarquia de secções do framework. Quan
 
 ---
 
-## Exit Codes (v2.2.0)
+## Exit Codes (v2.6.0)
 
 | Código | Constante | Quando ocorre |
 |--------|-----------|---------------|
 | `0` | `ALLOW` | Gate passou / validação limpa |
 | `3` | `IntegrityFailure` / `Tampered` | Configuração adulterada — selo `.wexstate` não corresponde |
 | `4` | `StoreInconsistent` | Armazém de aceitações inconsistente |
+| `5` | `ExpiringSoon` | Uma aceitação está a expirar |
+| `6` | `FreshnessAdvisory` | Gate class reportou freshness como advisory |
 | `10` | `GateBlocked` | Gate bloqueou — risco excede `risk_appetite` |
 | `11` | `ComplianceFail` | Gap excede `--fail-above` ou `policy check-expiry` encontrou exceção expirada |
 | `12` | `ActivelyExploited` | CRA Article 14 — CVE no catálogo CISA KEV |
+| `13` | `DuplicateRelease` | A versão já foi selada no audit log |
 
 ```bash
 wardex evaluate --evidence vulns.yaml --config wardex-config.yaml
@@ -339,16 +342,19 @@ case $exit_code in
   0) echo "Gate passed — deploy authorized" ;;
   3) echo "Integrity failure / Tampered — sealed config mismatch or acceptance tampered" ;;
   4) echo "Store inconsistent — acceptance store mismatch, run wardex accept verify" ;;
+  5) echo "Acceptance expiring soon" ;;
+  6) echo "Freshness advisory — continue according to gate class" ;;
   10) echo "Gate BLOCKED — review risk report and consider wardex accept" ;;
   11) echo "Compliance gap exceeds threshold — update controls" ;;
   12) echo "ACTIVE EXPLOITATION — CRA Article 14 notification required" ;;
+  13) echo "DUPLICATE RELEASE — version was already sealed" ;;
   *) echo "Unexpected error (exit $exit_code) — check stderr" ;;
 esac
 ```
 
 ---
 
-### CPL — Config Provenance Link (v2.2+)
+### CPL — Config Provenance Link (schema v2)
 
 ```yaml
 # .github/workflows/cpl-audit.yml

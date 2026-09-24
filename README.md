@@ -1,13 +1,15 @@
-<h1 align="center">WARDEX</h1>
-
 <div align="center">
-<p><em>Risk-based Release Gate for Threat-Informed Intelligence strategies</em></p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="pkg/ui/wardex-shield-dark.png">
+  <img src="pkg/ui/wardex-shield.png" alt="Símbolo Wardex" width="256">
+</picture>
 
-![Wardex Lockup](pkg/ui/wardex-lockup.svg)
+<h1>WARDEX</h1>
+<p><strong>Decisões de segurança e conformidade auditáveis</strong></p>
+<p><em>Risk-based release governance para NIS2 · DORA · CRA · EU AI Act</em></p>
 
 [![Go](https://img.shields.io/badge/Go-1.27-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
-[![Coverage](https://img.shields.io/badge/coverage-50%25-yellow?style=flat-square)](#)
 [![Docker](https://img.shields.io/badge/Docker-ghcr.io/had--nu/wardex-2496ED?style=flat-square&logo=docker&logoColor=white)](https://github.com/had-nu/wardex/pkgs/container/wardex)
 [![Helm](https://img.shields.io/badge/Helm-v0.1.0-0F1689?style=flat-square&logo=helm&logoColor=white)](deploy/helm/wardex/)
 [![GitHub Action](https://img.shields.io/badge/GitHub_Action-Wardex_Release_Gate-4A154B?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/wardex-release-gate)
@@ -19,16 +21,20 @@
 
 </div>
 
+> **Release actual:** `v2.6.0` · Go `1.27` · configuração schema `2`
+
 > [!IMPORTANT]
-> **CRA Article 14 (v2.0):** As obrigações de notificação por exploração activa do Cyber Resilience Act entram em vigor em setembro de 2026. O Wardex v2.0 implementa o caminho completo: correlação com o catálogo CISA KEV, exit code distinto (`12`), artefacto de notificação assinado com HMAC-SHA256, e registo de auditoria encadeado com os três prazos regulatórios. Este caminho não pode ser substituído por aceitações de risco.
+> **CRA Article 14 (disponível desde v2.0; mantido em v2.6.0):** As obrigações de notificação por exploração activa do Cyber Resilience Act entram em vigor em setembro de 2026. O caminho actual correlaciona o catálogo CISA KEV, usa o exit code `12`, assina o artefacto com HMAC-SHA256 e regista os três prazos regulatórios. Este caminho não pode ser substituído por aceitações de risco.
 >
-> **EU AI Act (v2.4.0):** O Regulamento da Inteligência Artificial (UE 2024/1689) já está disponível como framework de controlos. 31 controlos catalogados cobrindo todos os artigos-chave: práticas proibidas, gestão de riscos, governação de dados, transparência, supervisão humana, exatidão/solidez/cibersegurança, obrigações de prestadores e implantadores, GPAI, acompanhamento pós-comercialização e comunicação de incidentes. Usa `--framework eu_ai_act` para avaliar a conformidade.
+> **EU AI Act (disponível desde v2.4.0; incluído em v2.6.0):** O Regulamento da Inteligência Artificial (UE 2024/1689) está disponível como framework de controlos. Os 31 controlos catalogados cobrem práticas proibidas, gestão de riscos, governação de dados, transparência, supervisão humana, exatidão/solidez/cibersegurança, obrigações de prestadores e implantadores, GPAI, acompanhamento pós-comercialização e comunicação de incidentes. Usa `--framework eu_ai_act` para avaliar a conformidade.
 
 ---
 
 Wardex é uma CLI e biblioteca Go que transforma decisões de segurança e conformidade em evidência auditável. Opera em dois modos independentes — nenhum exige o outro.
 
 **Posicionamento europeu:** O Wardex é construído de raiz para os regulamentos europeus — NIS2, DORA, CRA, **EU AI Act** — e para o padrão de compliance que está a emergir na UE. Cada decisão do release gate, cada aceitação de risco, cada artefacto Art14 é selado criptograficamente e registado num audit log encadeado que sobrevive a auditorias externas.
+
+**Identidade visual:** a promessa, os tokens e as variantes de marca estão documentados em [BRANDING.md](doc/architecture/BRANDING.md).
 
 ---
 
@@ -44,7 +50,7 @@ O audit log encadeado é o coração do Wardex. Cada entrada é ligada criptogra
        │                             │                             │
        ▼                             ▼                             ▼
   Config hash                 Config hash                   Config hash
-  (CPL v2.2)                  (CPL v2.2)                   (CPL v2.2)
+  (CPL schema v2)                  (CPL schema v2)                   (CPL schema v2)
 ```
 
 **O que torna inviolável:**
@@ -59,47 +65,55 @@ wardex audit verify-chain --audit-log wardex-gate-audit.log
 
 # Verificar ligação com configurações arquivadas
 wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./configs/
+
+# Export paginado para SIEM
+wardex audit export --audit-log wardex-gate-audit.log --format jsonl --limit 500
 ```
 
 ---
 
-## What's New — v2.6.0
+## What's New — v2.6.0 (2026-09-15)
 
-**Encrypted Key Envelopes (L6):**
-- `wardex keygen --encrypt` emite envelopes `WARDEX-KEY-V1` protegidos com
-  Argon2id + AES-256-GCM; `wardex trust --keyring` carrega via
-  `WARDEX_KEY_PASSPHRASE`. Legado (plaintext) continua a funcionar.
+A linha actual é a **v2.6.0** e mantém compatibilidade com os formatos legados.
 
-**Gate por Classes de Risco (L3):**
-- Perfis `--gate-class pr|deploy|nightly|canary` com severidades
-  `block|advisory|off` por tipo de lacuna e chamada `run-gate` com input
-  `gate-class` na Action.
+**Cadeia CPL e provenance (P0/L1/L4/L5):**
+- `config_schema_version: 2` e `cpl_schema_version` explícitos; a cadeia usa
+  `previous_entry_hash` canónico e `wardex audit verify-chain` faz streaming.
+- `wardex audit export --limit N [--cursor <sha256>] [--tail]` exporta JSONL/CSV
+  para SIEM com paginação e metadados de cursor.
+- `wardex gate check-version --audit-log ... --version 2.6.0` impede selar a
+  mesma versão duas vezes (`13 = DuplicateRelease`). Em release-seal,
+  `--release-version` exige `--policy-ref`.
 
-**Artefacto Article 14 com versionamento (L2):**
-- Novos campos `format_version` (1) e `capabilities` (bitmap: HMAC-SHA256 +
-  canonical JSON) nos artefactos de notificação; verificação rejeita versões
-  futuras com erro controlado — nunca há downgrade silencioso. Schemas CDDL em
-  `spec/cddl/art14-notification.cddl`.
+**Gate e evidência (L3/L7):**
+- `--gate-class pr|deploy|nightly` com severidades `block|advisory|off`;
+  freshness apenas advisory devolve `6 = FreshnessAdvisory`.
+- `release_gate.forced_upgrade.{enabled,deadline,tripwire_failures}` e as flags
+  `--forced-upgrade` / `--forced-upgrade-state` activam o tripwire de
+  evidência. O estado fica em `.wardex/forced_upgrade.json`.
 
-**Forced Upgrade Tripwire (L7):**
-- `release_gate.forced_upgrade.{enabled,deadline,tripwire_failures}`: o gate
-  arma-se quando a atestação de vulnerabilidades não é fresca e bloqueia
-  (exit 10); N falhas consecutivas desarmam (fallback à política de classes) e
-  evidência fresca re-arma. Estado em `.wardex/forced_upgrade.json`.
-- Activável também com `--forced-upgrade`; `--forced-upgrade-state` escolhe o
-  contador. Schema CDDL em `spec/cddl/tripwire-state.cddl`.
+**Chaves e Article 14 (L2/L6):**
+- `wardex keygen --encrypt` cria envelopes `WARDEX-KEY-V1` (Argon2id +
+  AES-256-GCM); a passphrase pode vir de `--passphrase` ou
+  `WARDEX_KEY_PASSPHRASE`. Keyrings plaintext legados continuam válidos.
+- Artefactos Art14 levam `format_version` e `capabilities`; versões futuras são
+  rejeitadas sem downgrade silencioso. Schemas: `spec/cddl/`.
 
-**Cadeia CPL unificada (P0) + ancestry release-seal (L4) + SIEM export (L5):**
-- Formato de cadeia único com streaming verify (`wardex audit verify-chain`) e
-  migrações de schema; `check-version` valida ancestry em configs seladas;
-  export SIEM com paginação por cursor.
+**Interface terminal (main actual):**
+- Dashboards TTY para os comandos de avaliação, governança e verificação;
+  JSON/CSV/pipes/CI permanecem machine-oriented e sem decoração.
+- `NO_COLOR`, `TERM=dumb`, `COLUMNS`, `CI`, `GITHUB_ACTIONS` e `GITLAB_CI`
+  controlam o fallback. A especificação está em
+  [`doc/architecture/TERMINAL_UI.md`](doc/architecture/TERMINAL_UI.md).
+
+**Novos exit codes:** `6 = FreshnessAdvisory` e `13 = DuplicateRelease`.
 
 > Padrões de desenho deste release inspirados no ecossistema Nym (Apache-2.0) —
 > usados como referência, sem cópia de código. Ver [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md).
 
 ---
 
-## What's New — v2.3.0 / v2.4.0
+## Historical foundations — v2.3.0 / v2.4.0
 
 **CBOR Deterministic Canonicalization (v2.3.0):**
 - Toda a canonicalização para assinatura migrou de formatos ad-hoc para CBOR
@@ -133,15 +147,17 @@ wardex audit verify-link --audit-log wardex-gate-audit.log --config-archive ./co
 
 ---
 
-## Frameworks suportados
+## Frameworks e workflows
 
-ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · CRA Article 14 · NIST CSF 2.0 · **EU AI Act**
+**Frameworks seleccionáveis:** ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · NIST CSF 2.0 · **EU AI Act**
+
+**Workflows regulamentares:** CRA Article 14, aceitações de risco, provenance, audit log encadeado e release governance.
 
 ```bash
 wardex assess controls.yaml --framework iso27001     # predefinição
 wardex assess controls.yaml --framework nis2
 wardex assess controls.yaml --framework dora
-wardex assess controls.yaml --framework eu_ai_act    # novo v2.4.0
+wardex assess controls.yaml --framework eu_ai_act
 ```
 
 ---
@@ -149,6 +165,10 @@ wardex assess controls.yaml --framework eu_ai_act    # novo v2.4.0
 ## Instalação
 
 ```bash
+# Versão actual
+go install github.com/had-nu/wardex/v2@v2.6.0
+
+# Último tag publicado
 go install github.com/had-nu/wardex/v2@latest
 ```
 
@@ -164,7 +184,7 @@ cd wardex && make build
 ### Docker
 
 ```bash
-docker pull ghcr.io/had-nu/wardex:2.2.2
+docker pull ghcr.io/had-nu/wardex:2.6.0
 ```
 
 ### Helm (Kubernetes)
@@ -174,7 +194,7 @@ helm upgrade --install wardex deploy/helm/wardex/ \
   --set acceptSecret.value=$(openssl rand -hex 32)
 ```
 
-Consulta [deploy/helm/wardex/](deploy/helm/wardex/) para a referência completa do chart.
+Consulta [deploy/helm/wardex/](deploy/helm/wardex/) para a referência completa do chart. O chart `0.1.0` usa a aplicação `v2.6.0`.
 
 ---
 
@@ -189,10 +209,12 @@ wardex convert grype test/usability/grype-results.json > vulns.yaml
 # Avaliar com contexto do activo
 wardex evaluate \
   --evidence vulns.yaml \
-  --config doc/examples/wardex-config.yaml
+  --config doc/examples/wardex-config.yaml \
+  test/testdata/documented-controls.yaml
 
 # Dry-run — pré-visualizar sem escrever artefactos
-wardex evaluate --evidence vulns.yaml --config doc/examples/wardex-config.yaml --dry-run
+wardex evaluate --evidence vulns.yaml --config doc/examples/wardex-config.yaml \
+  test/testdata/documented-controls.yaml --dry-run
 ```
 
 ### 2. Gerar e gerir chaves
@@ -201,6 +223,9 @@ wardex evaluate --evidence vulns.yaml --config doc/examples/wardex-config.yaml -
 # Gerar chave Ed25519 para o sistema de confiança
 wardex keygen
 
+# Opcional: usar em vez de `keygen` para criar um envelope encriptado
+WARDEX_KEY_PASSPHRASE="$(openssl rand -base64 32)" wardex keygen --encrypt
+
 # A chave é criada em ~/.crypto/trust/root.key
 # A pública é ~/.crypto/trust/root.key.pub (enviar ao admin)
 ```
@@ -208,17 +233,17 @@ wardex keygen
 ### 3. Selar e verificar provenance
 
 ```bash
-# Selar diretório de artefactos com Gleipnir (v2.4.0+)
+# Selar diretório de artefactos com Gleipnir (v2.6.0; compatível com v2.4.0+)
 wardex provenance seal \
   --dir ./dist \
   --output chain-seal.json \
-  --label "release-v2.4.0"
+  --label "release-v2.6.0"
 
 # Verificar integridade
 wardex provenance verify <chain-hash>
 ```
 
-**Exit codes:** `0` ALLOW · `3` Adulterado · `4` Armazém inconsistente · `10` BLOCK · `11` Gap · `12` Explorado activamente
+**Exit codes:** `0` OK · `1` erro genérico · `3` integridade · `4` store inconsistente · `5` expiração próxima · `6` freshness advisory · `10` BLOCK · `11` compliance fail · `12` exploração activa · `13` release duplicada
 
 ---
 
@@ -252,30 +277,37 @@ A especificação completa do layout está em [`doc/architecture/TERMINAL_UI.md`
 
 ---
 
-## Comandos Principais
+## Comandos principais
+
+O comando raiz `wardex <inputs>` executa a análise de gaps; os subcomandos
+abaixo aprofundam as operações de gate, governança, evidência e verificação.
 
 | Comando | Descrição |
 |---------|-----------|
-| `wardex evaluate` | Avalia vulnerabilidades contra o release gate |
-| `wardex assess` | Análise de lacunas de conformidade |
-| `wardex aggregate` | Combina decisões de release gate de vários frameworks |
-| `wardex convert grype/sbom` | Converte output de scanners para formato Wardex |
-| `wardex enrich epss` | Enriquece vulnerabilidades com dados EPSS |
-| `wardex accept request/verify/list` | Gestão de aceitações de risco |
-| `wardex auth status/verify` | Integridade e estado das chaves do trust store |
-| `wardex contract verify` | Verificação de integridade SHA-256 de contratos |
-| `wardex policy validate/list/add/check-expiry` | Gestão e validação de políticas |
-| `wardex state status/history/trend/dashboard/verify/cleanup` | Estado persistente e integridade da cadeia |
-| `wardex gate check-version` | Proteção contra releases duplicados |
-| `wardex art14 list/show/verify` | Ciclo de vida do artefacto CRA Article 14 |
-| `wardex provenance seal/submit/attest/verify/status` | Proveniência criptográfica 3CP com Gleipnir |
-| `wardex config hash/seal` | CPL e sealed config (CBOR determinístico v2.3.0+) |
-| `wardex audit verify-chain/verify-link` | Verificação do audit log encadeado |
-| `wardex trust init/add` | Gestão do trust store |
-| `wardex keygen` | Geração de chaves Ed25519 |
-| `wardex pki init/issue` | Modo PKI com CA Ed25519 |
-| `wardex policy show` | Mostra política de risco configurada |
-| `wardex simulate` | Simula decisões do gate com dados históricos |
+| `wardex` | Análise de gaps contra um framework e, opcionalmente, release gate |
+| `wardex assess` | Avaliação de conformidade com inventário de activos e layer delta |
+| `wardex evaluate` | Gate de release sobre um ficheiro de vulnerabilidades |
+| `wardex aggregate` | Combina resultados de gate numa decisão única |
+| `wardex convert grype/sbom/kev` | Converte outputs de terceiros para o formato Wardex |
+| `wardex enrich epss` | Busca e assina scores EPSS em falta |
+| `wardex accept` | Pedidos, revogação, expiração, verificação e aceitação de exploração activa |
+| `wardex auth status/verify` | Estado do trust store e permissões do actor |
+| `wardex contract verify` | Integridade SHA-256 de contratos |
+| `wardex policy` | `validate`, `list`, `add` e `check-expiry` de políticas |
+| `wardex state` | Estado persistente: `status`, `history`, `trend`, `dashboard`, `verify`, `cleanup` |
+| `wardex gate check-version` | Guard anti-re-release; devolve `13` para duplicados |
+| `wardex art14` | `list`, `show`, `mark-dispatched`, `finalize` e `verify` |
+| `wardex provenance` | `seal`, `submit`, `attest`, `verify` e `status` via 3CP |
+| `wardex config` | `hash`, `seal` e `show` de configuração |
+| `wardex audit` | `verify-chain`, `verify-link` e `export` SIEM com cursor |
+| `wardex trust` | `init`, `add`, `revoke`, `list`, `show` e `verify` |
+| `wardex keygen` | Geração de chaves Ed25519, com `--encrypt` opcional |
+| `wardex chain seal` | Selo SHA-256 para artefactos |
+| `wardex hmac sign` | Assinatura HMAC-SHA256 de ficheiros |
+| `wardex assets inventory` | Inventário ICT |
+| `wardex simulate` | Simulador interactivo de decisões |
+
+O shell também disponibiliza `wardex completion` para completar comandos.
 
 ---
 
@@ -285,11 +317,23 @@ A especificação completa do layout está em [`doc/architecture/TERMINAL_UI.md`
 
 ```yaml
 # wardex-config.yaml
+config_schema_version: 2
 release_gate:
   enabled: true
   risk_appetite: 0.20
   warn_above: 0.12
-  mode: any               # "any" bloqueia se qualquer vuln exceder; "aggregate" usa soma
+  mode: any               # "any" bloqueia por vulnerabilidade; "aggregate" usa soma
+  classes:
+    pr:
+      freshness: advisory
+    deploy:
+      freshness: block
+    nightly:
+      freshness: advisory
+  forced_upgrade:
+    enabled: false
+    deadline: "2026-09-24"
+    tripwire_failures: 5
   asset_context:
     criticality: 0.8
     internet_facing: true
@@ -331,12 +375,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex/v2@latest
+        run: go install github.com/had-nu/wardex/v2@v2.6.0
+      - name: Guard duplicate release
+        run: wardex gate check-version --audit-log wardex-gate-audit.log --version "${GITHUB_REF_NAME#v}"
       - name: Evaluate risk gate
         run: |
           wardex evaluate \
             --config .wardex/config.yaml \
             --evidence vulns.yaml \
+            --gate-class deploy \
             controls.yaml
 ```
 
@@ -390,7 +437,7 @@ Consulta o [Playbook de Governação](doc/operations/WARDEX_TRUST_PLAYBOOK.md) p
 
 ## EU AI Act (Regulamento da Inteligência Artificial)
 
-O Regulamento (UE) 2024/1689 — EU AI Act — está disponível como framework de controlos no Wardex v2.4.0. São 31 controlos catalogados que cobrem todas as obrigações aplicáveis a sistemas de IA de risco elevado, modelos de IA de finalidade geral (GPAI) e práticas proibidas.
+O Regulamento (UE) 2024/1689 — EU AI Act — está disponível como framework de controlos no Wardex desde v2.4.0 e integra a CLI actual v2.6.0. São 31 controlos catalogados que cobrem as obrigações aplicáveis a sistemas de IA de risco elevado, modelos de IA de finalidade geral (GPAI) e práticas proibidas.
 
 ### Controlos por domínio
 
@@ -431,10 +478,10 @@ mas qualquer motor 3CP compatível funciona.
 wardex provenance seal \
   --dir ./dist \
   --output chain-seal.json \
-  --label "wardex-v2.4.0-eu-ai-act"
+  --label "wardex-v2.6.0"
 
 # Ancorar commit de tag
-wardex provenance submit $(git rev-parse v2.4.0) --label "git-tag-v2.4.0"
+wardex provenance submit $(git rev-parse v2.6.0) --label "git-tag-v2.6.0"
 
 # Atestar provenance de ferramenta (v2.3.0+)
 wardex provenance attest input.txt --tool my-scanner --version 1.0 --sign-key key.wex
@@ -467,7 +514,7 @@ Todas as chaves Ed25519 são armazenadas em `~/.crypto/` com subdiretórios por 
 
 ### Verificação de Provenance
 
-Para releases recentes (v2.3.0+), usar o Gleipnir embedded com CBOR deterministic attestation:
+Na linha actual v2.6.0, usar o Gleipnir embedded com CBOR deterministic attestation:
 
 ```bash
 # Verificar chain seal de release
@@ -480,7 +527,7 @@ wardex provenance status
 # (o .attest é CBOR determinístico, verificável com qualquer implementação 3CP)
 ```
 
-Para releases anteriores (v2.2.2), a chave pública abaixo permite verificar o manifesto de proveniência:
+Para releases legados (v2.2.2 e anteriores), a chave pública abaixo permite verificar o manifesto de proveniência:
 
 > **Chave pública de assinatura (v2.2.2):**
 > ```
@@ -508,29 +555,18 @@ wardex config seal --keyring ~/.crypto/trust/root.key --input config.yaml --out 
 wardex evaluate --config config.wexstate --evidence vulns.yaml --strict
 ```
 
-### Modo PKI
-
-Para ambientes que exigem identidade baseada em certificados:
-
-```bash
-wardex pki init --org "A Tua Empresa" --validity 3650d
-wardex pki issue --name ci-agent --out ci-agent.wex
-wardex config seal --keyring ci-agent.wex --input config.yaml --out config.wexstate
-```
-
 ---
 
-## Environment & Syslog
+## Environment
 
 | Variável | Predefinição | Descrição |
 |---|---|---|
-| `WARDEX_ACCEPT_SECRET` | — | Chave HMAC-SHA256 para assinar aceitações e artefactos Art14 (mín 32 car.) |
-| `WARDEX_ACTOR` | `cli` | Identidade registada nas entradas de auditoria |
-| `WARDEX_SYSLOG_ENDPOINT` | — | `tcp://syslog.example.com:514` — encaminhar eventos para syslog central |
-| `WARDEX_SYSLOG_PROTO` | `tcp` | Transporte syslog: `tcp`, `udp`, ou `tls` |
-| `WARDEX_SYSLOG_CERT` | — | Caminho para cert TLS cliente para `tls` |
-| `WARDEX_SYSLOG_KEY` | — | Caminho para key TLS cliente para `tls` |
-| `WARDEX_SYSLOG_CA` | — | Caminho para CA personalizada para `tls` |
+| `WARDEX_ACCEPT_SECRET` | — | Segredo HMAC-SHA256 para assinaturas de aceitação e Art14 (mínimo 32 caracteres) |
+| `WARDEX_ACTOR` | `USER` | Identidade registada na auditoria; `GITHUB_ACTOR` tem precedência quando definido |
+| `WARDEX_KEY_PASSPHRASE` | — | Passphrase para envelopes `WARDEX-KEY-V1` |
+| `WARDEX_TRUST_STORE` | `./wardex-trust.yaml` | Referência da trust store |
+| `WARDEX_RELEASE_VERSION` | — | Versão para o modo release-seal; também pode ser fornecida com `--release-version` |
+| `WARDEX_POLICY_REF` | — | Referência de política exigida com `WARDEX_RELEASE_VERSION` |
 
 ---
 
@@ -563,6 +599,7 @@ gate := releasegate.Gate{
         {Type: "waf", Effectiveness: 0.35},
     },
     RiskAppetite: 0.20,
+    Mode:         "any",
 }
 
 report := gate.Evaluate([]model.Vulnerability{
@@ -576,6 +613,8 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 
 ## Documentação
 
+- [Identidade visual e branding](doc/architecture/BRANDING.md)
+- [Terminal UI](doc/architecture/TERMINAL_UI.md)
 - [Arquitectura e funcionamento interno](doc/architecture/TECHNICAL_VIEW.md)
 - [Contexto de negócio e o problema do gate binário](doc/architecture/BUSINESS_VIEW.md)
 - [Arquitectura Criptográfica (CBOR, CDDL, 3CP)](doc/architecture/CRYPTO_ARCHITECTURE.md)
@@ -589,6 +628,7 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 - [Esquemas CDDL](spec/cddl/)
 - [Ambiente de desenvolvimento (docker-compose)](docker-compose.yml)
 - [CHANGELOG](CHANGELOG.md)
+- [Release notes v2.6.0](doc/releases/v2.6.0-notes.md)
 - [Contribuir](CONTRIBUTING.md)
 
 ---

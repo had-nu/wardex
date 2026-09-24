@@ -77,7 +77,7 @@
 <nav>
   <div class="logo">
     <h1>WARDEX</h1>
-    <span>Diagramas Arquitectonais v2.2.0</span>
+    <span>Diagramas Arquitectonais v2.6.0</span>
   </div>
   <div class="section-label">Diagramas</div>
   <ul>
@@ -692,7 +692,7 @@ graph TB
     end
 
     subgraph DOCKER_RUNTIME["Docker Runtime"]
-        BUILDER["golang:1.26-alpine<br/>(builder)"]
+        BUILDER["golang:1.27-alpine<br/>(builder)"]
         RUNTIME["distroless/static:nonroot<br/>(runtime)"]
         BUILDER --> RUNTIME
     end

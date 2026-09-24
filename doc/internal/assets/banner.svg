@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="840" height="228" viewBox="0 0 840 228" role="img" aria-labelledby="title desc">
+  <title id="title">Wardex — auditable security and compliance decisions</title>
+  <desc id="desc">Wardex shield symbol and wordmark on a light banner.</desc>
+  <rect width="840" height="228" fill="#F7F7FB"/>
+  <path d="M0 194H840" stroke="#6F42C1" stroke-width="2" opacity="0.28"/>
+  <image href="wardex-shield.png" xlink:href="wardex-shield.png" x="30" y="34" width="150" height="150"/>
+  <text x="220" y="91" fill="#111827" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" letter-spacing="5">WARDEX</text>
+  <text x="223" y="126" fill="#374151" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="600" letter-spacing="1.2">AUDITABLE SECURITY &amp; COMPLIANCE DECISIONS</text>
+  <text x="223" y="157" fill="#6F42C1" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" letter-spacing="2.2">RISK-BASED RELEASE GOVERNANCE</text>
+  <text x="223" y="183" fill="#6B7280" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="0.8">github.com/had-nu/wardex</text>
+</svg>

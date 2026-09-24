@@ -47,7 +47,7 @@ make build
 gh release upload v2.1.2 ./bin/wardex
 
 # Upload the banner
-gh release upload v2.1.2 doc/banner.png
+gh release upload v2.1.2 doc/internal/assets/banner.png
 ```
 
 ---
@@ -61,7 +61,7 @@ gh release edit v2.1.1 \
   --notes "Updated release notes"
 
 # Upload additional assets
-gh release upload v2.1.1 doc/banner.png
+gh release upload v2.1.1 doc/internal/assets/banner.png
 ```
 
 ---

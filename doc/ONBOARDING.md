@@ -1,6 +1,7 @@
 # Manual de Onboarding — Wardex
 
-> **WARDEX — Risk-based Release Gate for Threat-Informed Intelligence strategies**
+> **WARDEX — Decisões de segurança e conformidade auditáveis**<br>
+> *Risk-based release governance para NIS2 · DORA · CRA · EU AI Act*
 > CLI e biblioteca Go que transforma decisões de segurança e conformidade em **evidência auditável e criptograficamente selada**.
 
 Este manual é o ponto de partida para quem está a chegar ao projeto — seja para um primeiro contacto, onboarding de um júnior, ou para consulta rápida durante o desenvolvimento. O conteúdo foi derivado do grafo de conhecimento do projeto (`.ua/knowledge-graph.json`) e do código-fonte real.
@@ -27,7 +28,7 @@ Este manual é o ponto de partida para quem está a chegar ao projeto — seja p
 
 ## 1. O que é o Wardex
 
-O **Wardex** é uma **CLI e biblioteca Go** (`github.com/had-nu/wardex/v2`) que transforma decisões de segurança e conformidade em **evidência auditável**. Opera em dois modos independentes:
+O **Wardex** é uma **CLI e biblioteca Go** (`github.com/had-nu/wardex/v2`) que transforma decisões de segurança e conformidade em **evidência auditável**. A baseline actual é **v2.6.0**, com Go **1.27** e `config_schema_version: 2`. Opera em dois modos independentes:
 
 1. **Gap Analysis** — avalia o estado de conformidade de uma organização contra catálogos de controlos de regulamentos/frameworks (NIS2, DORA, CRA, EU AI Act, ISO 27001, SOC 2).
 2. **Release Gate** — avalia uma lista de vulnerabilidades e produz uma decisão de risco (**ALLOW / WARN / BLOCK**) com base num *risk appetite* configurável.
@@ -40,7 +41,7 @@ Cada decisão, cada aceitação de risco e cada artefacto regulamentar é **sela
 
 - **Autor:** André Gustavo Leão de Melo Ataíde (`had-nu`)
 - **Licença:** dupla — **AGPL-3.0** (uso livre/open-source/CI) + **Comercial** (proprietário/SaaS). Ver `LICENSE` e `LicenseRef-Wardex-Commercial.txt`.
-- **Taxa de cobertura:** ~50% (e a crescer — o projeto está ativamente a adicionar testes).
+- **Cobertura:** ver o relatório gerado pela CI; não há um valor fixo no README.
 
 ---
 
@@ -67,12 +68,12 @@ O Wardex é construído **de raiz para a regulamentação europeia**, e para o p
 
 ```
 wardex/
-├── main.go                 # Raiz da CLI Cobra (regista os 18 subcomandos)
-├── cmd/                    # Implementação dos 18 subcomandos CLI
+├── main.go                 # Raiz da CLI Cobra (regista os 21 comandos operacionais)
+├── cmd/                    # Implementação dos 21 comandos operacionais CLI
 │   ├── aggregate/  assess/  assets/  art14/  audit/  auth/
 │   ├── chain/  configseal/  contract/  convert/  evaluate/
 │   ├── hmac/  keygen/  policy/  provenance/  simulate/  state/  trust/
-├── pkg/                    # Biblioteca pública (27 packages)
+├── pkg/                    # Biblioteca pública (37 packages)
 │   ├── accept/  analyzer/  art14/  atomicwrite/  attest/
 │   ├── catalog/  cli/  correlator/  duration/  enrich/  epss/
 │   ├── exitcodes/  gate/  ingestion/  model/  orchestrator/
@@ -84,7 +85,8 @@ wardex/
 │   ├── policy/             # Carregamento de políticas
 │   └── doc/                # Documentação interna / guias de migração
 ├── config/                 # Carregamento e validação de configuração
-├── frameworks/             # Catálogos de controlos (dora, eu_ai_act, iso27001, nis2, soc2)
+├── frameworks/             # Catálogos YAML (dora, eu_ai_act, iso27001, nis2, soc2)
+│                           # NIST CSF 2.0 está em pkg/catalog/nist_csf.yaml
 ├── spec/cddl/              # Esquemas CDDL (RFC 8610) para serialização
 ├── data/                   # Datasets (calibração, dados históricos)
 ├── deploy/                 # Helm chart Kubernetes
@@ -106,10 +108,10 @@ O grafo de conhecimento identifica 10 camadas. As principais:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  CAMADA DE ENTRADA CLI (cmd/ + main.go) — 18 subcomandos    │
+│  CAMADA DE ENTRADA CLI (cmd/ + main.go) — 21 comandos operacionais    │
 │  Cobra, flags core vs advanced, exit codes semânticos       │
 ├─────────────────────────────────────────────────────────────┤
-│  BIBLIOTECA PÚBLICA (pkg/) — 27 packages                    │
+│  BIBLIOTECA PÚBLICA (pkg/) — 37 packages                    │
 │  analyze, catalog, gate, releasegate, art14, trust, ...     │
 ├─────────────────────────────────────────────────────────────┤
 │  PACOTES INTERNOS (internal/) — cpl, policy, notification   │
@@ -126,7 +128,7 @@ O grafo de conhecimento identifica 10 camadas. As principais:
 
 ### Papel de cada camada
 
-1. **CLI Entry (`main.go` + `cmd/`)** — Reúne tudo via Cobra. `main.go:149-189` é o `init()` que regista os 18 subcomandos. É aqui que o programador vê o "mapa" do CLI inteiro.
+1. **CLI Entry (`main.go` + `cmd/`)** — Reúne tudo via Cobra. `main.go` é o `init()` que regista os 21 comandos operacionais. É aqui que o programador vê o "mapa" do CLI inteiro.
 2. **Biblioteca Pública (`pkg/`)** — O coração lógico. Cada subcomando `cmd/X` delega para o package `pkg/X`.
 3. **Internos (`internal/`)** — `internal/cpl` é crítico: o **Config Provenance Link** que faz hash canónico da configuração. `internal/policy` carrega políticas.
 4. **Config & Estado** — `config/` carrega `wardex-config.yaml`; `pkg/statestore` gere o estado persistente com hash-chaining BLAKE3; `pkg/trust` gere a trust store e config selada (WexState).
@@ -139,7 +141,7 @@ O grafo de conhecimento identifica 10 camadas. As principais:
 
 ### Pré-requisitos
 
-- **Go 1.26+** (o projeto está a modernizar para 1.27)
+- **Go 1.27+** (a versão actual do `go.mod` é `1.27.0`)
 - `golangci-lint` (para lint)
 - `govulncheck` e `gosec` (para segurança)
 
@@ -171,10 +173,10 @@ go build -tags grpc -o bin/wardex .
 ```bash
 # Help
 ./bin/wardex --help
-./bin/wardex verify-chain --help
+./bin/wardex audit verify-chain --help
 
 # Gap analysis simples contra ISO 27001
-./bin/wardex --framework iso27001 testdata/controls.yaml
+./bin/wardex --framework iso27001 test/testdata/documented-controls.yaml
 
 # Release gate
 ./bin/wardex --gate testdata/*.yml --framework nis2
@@ -242,11 +244,11 @@ O `pkg/art14` implementa o ciclo de vida completo do artefacto de notificação:
 
 - **`pkg/attest`** — atestação **Ed25519 + CBOR determinístico** para provenance de ferramentas (grype, sbom, kev).
 - **`pkg/provenance`** — interface `Anchorer` que abstrai o backend **3CP** (Gleipnir embedded, gRPC, ou noop). `wardex provenance seal/attest`.
-- **`pkg/trust`** — trust store: `keygen`, `trust init/add/revoke`, modos Ed25519 e **PKI**, config selada (WexState).
+- **`pkg/trust`** — trust store: `keygen`, `trust init/add/revoke`, modos Ed25519 e config selada (WexState).
 
 ### 6.7 WexState — Configuração selada
 
-A configuração selada (`pkg/statestore`, `cmd/configseal`) garante que a política não muda sem ser detetada. O estado persistente usa **hash-chaining BLAKE3**.
+A configuração selada (`cmd/configseal`, `pkg/trust`) garante que a política não muda sem ser detetada. O estado persistente (`pkg/statestore`) usa **hash-chaining BLAKE3**.
 
 ### 6.8 Exit Codes
 
@@ -259,15 +261,17 @@ A configuração selada (`pkg/statestore`, `cmd/configseal`) garante que a polí
 | 3 | Falha de integridade |
 | 4 | Store inconsistente |
 | 5 | Expiração próxima |
+| 6 | Freshness advisory (gate class) |
 | 10 | Release gate bloqueado |
 | 11 | Falha de conformidade |
 | 12 | **Exploração ativa (CRA Art. 14)** |
+| 13 | Release duplicada (`gate check-version`) |
 
 ---
 
 ## 7. Comandos CLI
 
-O CLI tem **18 subcomandos** registados em `main.go:168-188`. Cada um delega num package `pkg/` correspondente.
+O CLI tem **21 comandos operacionais** registados em `main.go`. Cada um delega num package `pkg/` correspondente.
 
 ### Subcomandos principais
 
@@ -275,17 +279,19 @@ O CLI tem **18 subcomandos** registados em `main.go:168-188`. Cada um delega num
 |---|---|---|
 | `wardex assess` | Gap analysis completo: config → ingestão → catálogo → correlação → análise → relatório | `pkg/analyzer`, `pkg/catalog`, `pkg/correlator` |
 | `wardex evaluate` | Avalia o **release gate** contra um ficheiro de vulnerabilidades | `pkg/releasegate`, `pkg/analyzer` |
+| `wardex gate check-version` | Guard anti-release duplicada (exit `13`) | `pkg/versionregistry` |
+| `wardex accept` | Pedidos, revogação, expiração, verificação e aceitação de exploração activa | `pkg/accept/cli` |
 | `wardex aggregate` | Agrega decisões ALLOW/BLOCK multi-framework a partir de múltiplos relatórios | `pkg/gate` |
-| `wardex art14` | Ciclo de vida dos artefactos CRA Article 14 (assinados HMAC) | `pkg/art14` |
-| `wardex audit` | Audita a cadeia (`verify-chain`, `verify-link`) e proveniência da config | `pkg/audit` |
+| `wardex art14` | `list`, `show`, `mark-dispatched`, `finalize` e `verify` | `pkg/art14` |
+| `wardex audit` | `verify-chain`, `verify-link` e `export` SIEM com cursor | `pkg/auditlog`, `internal/cpl` |
 | `wardex convert` | Converte outputs de terceiros (grype, sbom, kev) para o formato Wardex | `pkg/convert`, `pkg/sboms` |
 | `wardex chain` | Gestão de **chain seals** | `pkg/chain` |
-| `wardex trust` | Gestão da trust store (init/add/revoke/list/show/verify) | `pkg/trust` |
+| `wardex trust` | `init`, `add`, `revoke`, `list`, `show` e `verify` | `pkg/trust` |
 | `wardex keygen` | Gera keypair **Ed25519** | `pkg/trust` |
-| `wardex configseal` | Sela criptograficamente uma config draft (verifica/`show` hash) | `internal/cpl` |
+| `wardex config` | Hash, selagem e metadados de configuração | `internal/cpl`, `pkg/trust` |
 | `wardex policy` | Gestão de políticas (validate/list/add/check-expiry) | `internal/policy` |
 | `wardex provenance` | Proveniência (submit/verify/status/seal/attest) via 3CP | `pkg/provenance`, `pkg/attest` |
-| `wardex state` | Gestão do estado persistente (status/history/trend/verify) | `pkg/statestore` |
+| `wardex state` | `status`, `history`, `trend`, `dashboard`, `verify` e `cleanup` | `pkg/statestore` |
 | `wardex auth` | Verificação de integridade do trust store + permissões RBAC | `pkg/trust` |
 | `wardex hmac` | Assinaturas HMAC-SHA256 | `pkg/trust` |
 | `wardex contract` | Integridade de ficheiros de contrato (SHA-256) | `cmd/contract` |
@@ -301,7 +307,7 @@ O CLI tem **18 subcomandos** registados em `main.go:168-188`. Cada um delega num
 --gate FILE         Ficheiro de vulnerabilidades para o release gate
 --gate-mode         any|aggregate
 --output FORMAT     markdown|json|csv
---fail-above F      Exit code 1 se gap com final_score > F
+--fail-above F      Exit code 11 se gap com final_score > F
 --min-confidence     high|low
 --profile NAME      Override de thresholds RBAC
 --verbose
@@ -330,7 +336,7 @@ model.GapReport + Roadmap (ordenado por FinalScore)
 report.Generate(rep, format, out) ──► markdown/json/csv
 ```
 
-Este pipeline completo está em `main.go:199-412` (`runWardex`).
+Este pipeline completo está em `main.go` (`runWardex`).
 
 ### 8.2 Release Gate (`wardex evaluate` / `--gate`)
 
@@ -344,7 +350,7 @@ releasegate.Gate.Evaluate(vulns) ──► GateReport { ALLOW | WARN | BLOCK }
 Audit log encadeado + decisão reportada + exit code (10/11/12)
 ```
 
-O release gate **só corre se** `cfg.ReleaseGate.Enabled && gateFile != ""` (`main.go:315`).
+O release gate **só corre se** `cfg.ReleaseGate.Enabled && gateFile != ""` (ver `runWardex` e `cmd/evaluate`).
 
 ### 8.3 Nota sobre o fluxo de aceitação de risco
 
@@ -354,7 +360,7 @@ O `pkg/accept/cli` gere aceitações de risco residual, mas **o caminho CRA Art.
 
 ## 9. Testes
 
-O projeto tem cobertura em crescimento (~50%) com uma estratégia diversificada:
+O projeto tem uma estratégia de testes diversificada; a cobertura é medida pela CI e evolve com cada PR:
 
 ```bash
 make test        # roda tudo com -race e gera coverage.out
@@ -399,8 +405,8 @@ Leia, nesta ordem:
 ### Passo 2 — Perceber a entrada (main.go)
 
 Comece por `main.go`:
-- O `init()` (linhas 149-189) regista os 18 subcomandos — este é o "mapa" de todo o CLI.
-- `runWardex` (199-412) mostra o **pipeline completo de gap analysis**. Segue-o com o debugger.
+- O `init()` em `main.go` regista os 21 comandos operacionais — este é o "mapa" de todo o CLI.
+- `runWardex` mostra o **pipeline completo de gap analysis**. Segue-o com o debugger.
 
 ### Passo 3 — Conhecer os modelos de dados (`pkg/model`)
 
@@ -408,7 +414,7 @@ Antes de mexer em lógica, conheça os tipos centrais: `Control`, `Mapping`, `Fi
 
 ### Passo 4 — O heart: audit log encadeado
 
-Entenda `internal/cpl` (hash canónico) e `pkg/audit` (cadeia). É a feature mais distintiva. Corra `wardex audit verify-chain` num fixture para ver em ação.
+Entenda `internal/cpl` (hash canónico) e `pkg/auditlog` (cadeia). É a feature mais distintiva. Corra `wardex audit verify-chain` num fixture para ver em ação.
 
 ### Passo 5 — Mexer num subcomando simples
 
@@ -422,7 +428,7 @@ Comece com um comando pequeno (ex.: `keygen`). Veja como `cmd/keygen` delega par
 |---|---|
 | Mudar o release gate | `pkg/releasegate/`, `pkg/gate/`, `pkg/scorer/` |
 | Adicionar um framework | `frameworks/` + `pkg/catalog/` (ver secção 11) |
-| Alterar a verificação de integridade | `internal/cpl/`, `pkg/audit/` |
+| Alterar a verificação de integridade | `internal/cpl/`, `pkg/auditlog/`, `cmd/audit/` |
 | Mexer em proveniência | `pkg/provenance/`, `pkg/attest/`, `pkg/trust/` |
 | Alterar report | `pkg/report/` (markdown/json/csv/html) + `pkg/ui/` |
 | Adicionar um comando CLI | criar `cmd/X`, delegar para `pkg/X`, registar em `main.go` |
@@ -474,7 +480,7 @@ O passo 2 é o mais importante: sem registar no `catalog.Load`, o `--framework` 
 
 ## 13. Convenções de Código
 
-- **Linguagem:** Go 1.26+ (modernização para 1.27 com `strings.SplitSeq`, `range over int`).
+- **Linguagem:** Go 1.27+ (inclui as modernizações `go fix` aplicadas pela CI).
 - **CLI:** Cobra + pflag.
 - **Canonicalização/hash:** CBOR determinístico via `fxamacker/cbor/v2`; hashing via SHA-256/BLAKE3.
 - **Serialização cross-platform:** CDDL (RFC 8610) em `spec/cddl/`.
@@ -487,7 +493,7 @@ O passo 2 é o mais importante: sem registar no `catalog.Load`, o `--framework` 
 
 ### Recursos adicionais
 
-- **Grafo de conhecimento:** `.ua/knowledge-graph.json` (918 nós, 1586 arestas, 10 camadas, 12-passos tour) — explorável via dashboard do understand-anything.
+- **Grafo de conhecimento:** `.ua/knowledge-graph.json` é uma cache local gerada pelo understand-anything; pode estar desatualizado e não é a fonte de verdade do CLI.
 - **Especificações internas:** `internal/SPEC_*.md`, `SPEC-WARDEX-HARDEN-CORDYCPS-BASED-v2.2.2.md`.
 - **Playbooks:** `doc/operations/WARDEX_PLAYBOOK.md`, `WARDEX_TRUST_PLAYBOOK.md`, `EXIT_CODES.md`.
 - **Arquitetura:** `doc/architecture/` (BUSINESS_VIEW, CRYPTO_ARCHITECTURE, ENGINEERING_BLUEPRINT, TECHNICAL_VIEW).
