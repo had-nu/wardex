@@ -51,6 +51,8 @@ type GateOptions struct {
 	Logger       *slog.Logger
 	Stderr       io.Writer
 	Stdout       io.Writer
+	Progress     ui.ProgressReporter
+	OnResult     func(model.GateReport)
 	// ReleaseSeal (L4): when ReleaseVersion is set, the gate runs in
 	// release-seal mode and PolicyRef is required.
 	ReleaseVersion string
@@ -79,18 +81,35 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 	if opts.Stdout == nil {
 		opts.Stdout = io.Discard
 	}
+	if opts.Progress == nil {
+		opts.Progress = ui.NoopProgressReporter{}
+	}
+	reportProgress := func(number int, name, status, detail string) {
+		opts.Progress.Report(ui.PhaseEvent{
+			Number: number,
+			Name:   name,
+			Status: status,
+			Detail: detail,
+		})
+	}
 
+	reportProgress(1, "Loading gate configuration", "RUNNING", "")
 	cfg, err := loadGateConfig(ctx, opts)
 	if err != nil {
+		reportProgress(1, "Loading gate configuration", "FAILED", err.Error())
 		fmt.Fprintf(opts.Stderr, "Error: %v\n", err)
 		return exitcodes.IntegrityFailure, nil
 	}
+	reportProgress(1, "Loading gate configuration", "DONE", "configuration loaded")
 
+	reportProgress(2, "Resolving gate policy", "RUNNING", "")
 	class, err := resolveClassProfile(opts.GateClass, cfg)
 	if err != nil {
+		reportProgress(2, "Resolving gate policy", "FAILED", err.Error())
 		fmt.Fprintf(opts.Stderr, "Error: %v\n", err)
 		return exitcodes.GenericError, nil
 	}
+	reportProgress(2, "Resolving gate policy", "DONE", class.name)
 	if opts.GateClass != "" {
 		fmt.Fprintf(opts.Stderr, "[INFO] Gate class: %s\n", opts.GateClass)
 	}
@@ -126,7 +145,9 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 
 	fu := newForcedUpgrade(ctx, opts, cfg)
 
+	reportProgress(3, "Loading evidence", "RUNNING", "")
 	if _, err := ingestion.LoadMany(opts.Controls); err != nil {
+		reportProgress(3, "Loading evidence", "FAILED", err.Error())
 		return exitcodes.OK, fmt.Errorf("evaluate: load controls: %w", err)
 	}
 
@@ -141,15 +162,20 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 
 	vulns, evidenceHash, err := loadEvidence(opts)
 	if err != nil {
+		reportProgress(3, "Loading evidence", "FAILED", err.Error())
 		return exitcodes.OK, fmt.Errorf("evaluate: %w", err)
 	}
+	reportProgress(3, "Loading evidence", "DONE", fmt.Sprintf("%d vulnerability record(s)", len(vulns)))
 
 	if code := handleActiveExploitation(ctx, opts, cfg, vulns, evidenceHash, class); code >= 0 {
+		reportProgress(3, "Loading evidence", "DONE", "active exploitation policy applied")
 		return code, nil
 	}
 
+	reportProgress(4, "Applying risk policy", "RUNNING", "")
 	vulns = gate.FilterAccepted(vulns, cfg, opts.ConfigPath, opts.Stderr)
 	vulns = gate.ApplyEPSSEnrichment(vulns, cfg, opts.EPSSEnrich, opts.Stderr)
+	reportProgress(4, "Applying risk policy", "DONE", fmt.Sprintf("%d vulnerability record(s)", len(vulns)))
 
 	freshnessAdvisory := false
 	if missing := findMissingEPSS(vulns); len(missing) > 0 {
@@ -186,14 +212,19 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 		fu.success()
 	}
 
+	reportProgress(5, "Evaluating release decisions", "RUNNING", "")
 	gateReport := rg.Evaluate(vulns)
-	suppressTable := opts.OutputFormat != "markdown" && opts.OutFile == "stdout"
+	reportProgress(5, "Evaluating release decisions", "DONE", strings.ToUpper(string(gateReport.OverallDecision)))
+	suppressTable := opts.OnResult != nil || (opts.OutputFormat != "markdown" && opts.OutFile == "stdout")
 	if !suppressTable {
 		renderGateTable(opts.Stdout, gateReport, cfg.ReleaseGate.RiskAppetite, cfg.ReleaseGate.WarnAbove)
 	}
 
 	if gateReport.OverallDecision == model.DecisionWarn && !suppressTable {
 		fmt.Fprintf(opts.Stderr, "WARNING: Risk threshold exceeded WarnAbove for %d vulnerability(ies).\n", gateReport.WarnCount)
+	}
+	if opts.OnResult != nil {
+		opts.OnResult(gateReport)
 	}
 
 	logPath := gate.ResolveLogPath(cfg, opts.GateLogPath)
@@ -562,10 +593,11 @@ func renderGateTable(w io.Writer, report model.GateReport, riskApp, warnAbove fl
 		)
 	}
 	t.Render(w)
-	fmt.Fprintf(w, "\n%s  Gate Maturity: Level %d\n\n",
-		ui.Colorize("Overall Decision: "+strings.ToUpper(string(report.OverallDecision)), ui.Bold),
-		report.GateMaturityLevel,
-	)
+	decision := "Overall Decision: " + strings.ToUpper(string(report.OverallDecision))
+	if ui.IsTerminal(w) {
+		decision = ui.Colorize(decision, ui.Bold)
+	}
+	fmt.Fprintf(w, "\n%s  Gate Maturity: Level %d\n\n", decision, report.GateMaturityLevel)
 }
 
 // gateLabel returns the ANSI color and label for a gate decision.

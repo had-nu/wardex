@@ -40,20 +40,26 @@ func init() {
 
 func runConvertKEV(cmd *cobra.Command, args []string) error {
 	inFile := args[0]
-
+	u := beginConvertUI(cmd, "kev", inFile, kevOutFile)
+	u.report(1, "Resolving KEV catalogue", "RUNNING", inFile)
 	safePath, err := cli.SafePath(inFile)
 	if err != nil {
+		u.report(1, "Resolving KEV catalogue", "FAILED", err.Error())
 		return fmt.Errorf("validating input path: %w", err)
 	}
+	u.report(1, "Resolving KEV catalogue", "DONE", safePath)
 
 	if warn := CheckKEVAge(safePath, KEVMaxAgeDays); warn != "" {
 		fmt.Fprintln(os.Stderr, warn)
 	}
 
+	u.report(2, "Loading KEV catalogue", "RUNNING", safePath)
 	catalogue, err := LoadKEVCatalogue(safePath)
 	if err != nil {
+		u.report(2, "Loading KEV catalogue", "FAILED", err.Error())
 		return fmt.Errorf("loading KEV catalogue: %w", err)
 	}
+	u.report(2, "Loading KEV catalogue", "DONE", fmt.Sprintf("%d entries", catalogue.Count))
 
 	type kevYAML struct {
 		ConvertedBy     string                `yaml:"converted_by"`
@@ -86,26 +92,40 @@ func runConvertKEV(cmd *cobra.Command, args []string) error {
 		out.Vulnerabilities = append(out.Vulnerabilities, v)
 	}
 
+	u.report(3, "Writing converted output", "RUNNING", kevOutFile)
 	yamlData, err := yaml.Marshal(&out)
 	if err != nil {
+		u.report(3, "Writing converted output", "FAILED", err.Error())
 		return fmt.Errorf("encoding YAML: %w", err)
 	}
 
 	if kevOutFile == "stdout" || kevOutFile == "-" {
-		fmt.Fprint(cmd.OutOrStdout(), string(yamlData))
+		fmt.Fprint(commandOutput(cmd), string(yamlData))
 	} else {
 		if err := cli.SafeWriteFile(kevOutFile, yamlData); err != nil {
+			u.report(3, "Writing converted output", "FAILED", err.Error())
 			return fmt.Errorf("writing output: %w", err)
 		}
-		fmt.Fprintf(cmd.OutOrStdout(), "Converted %d KEV entries to %s\n", len(out.Vulnerabilities), kevOutFile)
-	}
-
-	if kevAttestKey != "" && kevOutFile != "stdout" && kevOutFile != "-" {
-		if err := attestKEV(inFile, kevOutFile, kevAttestKey); err != nil {
-			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+		if !u.progress.Enabled() {
+			fmt.Fprintf(commandOutput(cmd), "Converted %d KEV entries to %s\n", len(out.Vulnerabilities), kevOutFile)
 		}
 	}
+	u.report(3, "Writing converted output", "DONE", kevOutFile)
 
+	if kevAttestKey != "" && kevOutFile != "stdout" && kevOutFile != "-" {
+		u.report(4, "Writing tool attestation", "RUNNING", kevAttestKey)
+		if err := attestKEV(inFile, kevOutFile, kevAttestKey); err != nil {
+			u.report(4, "Writing tool attestation", "FAILED", err.Error())
+			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+		} else {
+			u.report(4, "Writing tool attestation", "DONE", kevOutFile+".attest")
+		}
+	} else {
+		u.report(4, "Writing tool attestation", "SKIPPED", "not requested")
+	}
+	if u.progress.Enabled() {
+		u.render("kev", kevOutFile, len(out.Vulnerabilities), 0, len(out.Vulnerabilities), kevAttestKey != "")
+	}
 	return nil
 }
 

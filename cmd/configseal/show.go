@@ -9,6 +9,7 @@ import (
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/internal/cpl"
 	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -29,21 +30,40 @@ func init() {
 }
 
 func runConfigShow(cmd *cobra.Command, args []string) error {
-	cfg, err := config.Load(showConfigPath)
-	if err != nil {
-		return fmt.Errorf("loading config: %w", err)
+	stderr := cmd.ErrOrStderr()
+	progress := ui.NewTerminalProgress(stderr)
+	progress.Begin(buildConfigShowSession(showConfigPath))
+	reportProgress := func(number int, name, status, detail string) {
+		progress.Report(ui.PhaseEvent{Number: number, Name: name, Status: status, Detail: detail})
 	}
 
+	reportProgress(1, "Loading configuration", "RUNNING", showConfigPath)
+	cfg, err := config.Load(showConfigPath)
+	if err != nil {
+		reportProgress(1, "Loading configuration", "FAILED", err.Error())
+		return fmt.Errorf("loading config: %w", err)
+	}
+	reportProgress(1, "Loading configuration", "DONE", "configuration loaded")
+	reportProgress(2, "Computing configuration hash", "RUNNING", "sha256")
 	data, err := cli.SafeReadFile(showConfigPath)
 	if err != nil {
+		reportProgress(2, "Computing configuration hash", "FAILED", err.Error())
 		return fmt.Errorf("reading config: %w", err)
 	}
 	hash, err := cpl.ComputeConfigHash(data, cpl.AlgoSHA256)
 	if err != nil {
+		reportProgress(2, "Computing configuration hash", "FAILED", err.Error())
 		return fmt.Errorf("computing hash: %w", err)
 	}
+	reportProgress(2, "Computing configuration hash", "DONE", hash)
+	reportProgress(3, "Preparing configuration details", "RUNNING", "")
+	reportProgress(3, "Preparing configuration details", "DONE", "details ready")
+	if configResultEnabled(cmd, progress) {
+		_ = ui.RenderResults(stderr, buildConfigShowDashboard(showConfigPath, hash, cfg))
+		return nil
+	}
 
-	w := cmd.OutOrStdout()
+	w := configCommandOutput(cmd)
 	fmt.Fprintf(w, "Configuration: %s\n", showConfigPath)
 	fmt.Fprintf(w, "  Hash (SHA-256):    %s\n", hash)
 	fmt.Fprintf(w, "  Risk appetite:     %.2f\n", cfg.ReleaseGate.RiskAppetite)
@@ -57,6 +77,5 @@ func runConfigShow(cmd *cobra.Command, args []string) error {
 	}
 	fmt.Fprintf(w, "  State store:       %t\n", cfg.StateStore.Enabled)
 	fmt.Fprintf(w, "  Reporting format:  %s\n", cfg.Reporting.Format)
-
 	return nil
 }

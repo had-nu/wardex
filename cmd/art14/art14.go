@@ -151,10 +151,20 @@ func runList(cmd *cobra.Command, args []string) error {
 		cfg = &config.Config{}
 	}
 	dir := getOutputDir(cfg)
-
+	u := beginArt14UI(cmd, "list", dir)
+	u.report(1, "Loading artefact directory", "RUNNING", "")
 	artefacts, err := art14.ListArtefacts(dir)
 	if err != nil {
+		u.report(1, "Loading artefact directory", "FAILED", err.Error())
 		return fmt.Errorf("list: %w", err)
+	}
+	u.report(1, "Loading artefact directory", "DONE", fmt.Sprintf("%d artefact(s)", len(artefacts)))
+
+	u.report(2, "Preparing inventory", "RUNNING", "")
+	u.report(2, "Preparing inventory", "DONE", "inventory ready")
+	if u.progress.Enabled() {
+		u.render(buildArt14ListDashboard(artefacts, dir))
+		return nil
 	}
 
 	if len(artefacts) == 0 {
@@ -163,9 +173,11 @@ func runList(cmd *cobra.Command, args []string) error {
 	}
 
 	w := cmd.OutOrStdout()
-
-	hdr := func(s string, w int) string {
-		return ui.PadANSI(ui.Colorize(s, ui.Cyan+ui.Bold), w)
+	hdr := func(s string, width int) string {
+		if ui.IsTerminal(w) {
+			return ui.PadANSI(ui.Colorize(s, ui.Cyan+ui.Bold), width)
+		}
+		return ui.PadANSI(s, width)
 	}
 
 	const (
@@ -178,22 +190,32 @@ func runList(cmd *cobra.Command, args []string) error {
 		wHMAC  = 10
 	)
 
-	fill := func(r rune, n int) string {
-		return strings.Repeat(string(r), n)
+	lineChar := '─'
+	if !ui.IsTerminal(w) {
+		lineChar = '-'
+	}
+	fill := func(n int) string {
+		return strings.Repeat(string(lineChar), n)
 	}
 
 	fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
 		hdr("ID", wID), hdr("CVE", wCVE), hdr("Detected", wDet),
 		hdr("Early Warning", wEW), hdr("Notification", wNotif),
 		hdr("Status", wStat), hdr("HMAC", wHMAC))
+	rule := func(value string) string {
+		if ui.IsTerminal(w) {
+			return ui.Colorize(value, ui.Gray)
+		}
+		return value
+	}
 	fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
-		ui.Colorize(fill('─', wID), ui.Gray),
-		ui.Colorize(fill('─', wCVE), ui.Gray),
-		ui.Colorize(fill('─', wDet), ui.Gray),
-		ui.Colorize(fill('─', wEW), ui.Gray),
-		ui.Colorize(fill('─', wNotif), ui.Gray),
-		ui.Colorize(fill('─', wStat), ui.Gray),
-		ui.Colorize(fill('─', wHMAC), ui.Gray))
+		rule(fill(wID)),
+		rule(fill(wCVE)),
+		rule(fill(wDet)),
+		rule(fill(wEW)),
+		rule(fill(wNotif)),
+		rule(fill(wStat)),
+		rule(fill(wHMAC)))
 
 	for _, a := range artefacts {
 		id := shortID(a.ArtefactID)
@@ -220,21 +242,29 @@ func runList(cmd *cobra.Command, args []string) error {
 
 		hmacShort := shortHMAC(a.HMAC)
 
-		if deadlineOverdue(a.EarlyWarning.Deadline, a.Status) {
-			ewDeadline = ui.Colorize(ewDeadline, ui.Red)
-		}
-		if deadlineOverdue(a.Notification.Deadline, a.Status) {
-			notifDeadline = ui.Colorize(notifDeadline, ui.Red)
+		if ui.IsTerminal(w) {
+			if deadlineOverdue(a.EarlyWarning.Deadline, a.Status) {
+				ewDeadline = ui.Colorize(ewDeadline, ui.Red)
+			}
+			if deadlineOverdue(a.Notification.Deadline, a.Status) {
+				notifDeadline = ui.Colorize(notifDeadline, ui.Red)
+			}
 		}
 
+		statusValue := statusStr
+		hmacValue := hmacShort
+		if ui.IsTerminal(w) {
+			statusValue = ui.Colorize(statusStr, sc)
+			hmacValue = ui.Colorize(hmacShort, ui.Gray)
+		}
 		fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s  %s\n",
 			ui.PadANSI(id, wID),
 			ui.PadANSI(cves, wCVE),
 			ui.PadANSI(detected, wDet),
 			ui.PadANSI(ewDeadline, wEW),
 			ui.PadANSI(notifDeadline, wNotif),
-			ui.PadANSI(ui.Colorize(statusStr, sc), wStat),
-			ui.PadANSI(ui.Colorize(hmacShort, ui.Gray), wHMAC))
+			ui.PadANSI(statusValue, wStat),
+			ui.PadANSI(hmacValue, wHMAC))
 	}
 
 	return nil
@@ -246,17 +276,26 @@ func runShow(cmd *cobra.Command, args []string) error {
 		cfg = &config.Config{}
 	}
 	dir := getOutputDir(cfg)
+	u := beginArt14UI(cmd, "show", dir)
+	u.report(1, "Loading artefact", "RUNNING", args[0])
+	_, artefact, err := art14.FindArtefactByID(dir, args[0])
+	if err != nil {
+		u.report(1, "Loading artefact", "FAILED", err.Error())
+		return err
+	}
+	u.report(1, "Loading artefact", "DONE", shortID(artefact.ArtefactID))
+	u.report(2, "Preparing artefact details", "RUNNING", "")
+	u.report(2, "Preparing artefact details", "DONE", "details ready")
 
-	_, art, err := art14.FindArtefactByID(dir, args[0])
+	if u.progress.Enabled() {
+		u.render(buildArt14DetailDashboard(artefact, ""))
+		return nil
+	}
+
+	data, err := json.MarshalIndent(artefact, "", "  ")
 	if err != nil {
 		return err
 	}
-
-	data, err := json.MarshalIndent(art, "", "  ")
-	if err != nil {
-		return err
-	}
-
 	fmt.Fprintln(cmd.OutOrStdout(), string(data))
 	return nil
 }
@@ -267,21 +306,29 @@ func runMarkDispatched(cmd *cobra.Command, args []string) error {
 		cfg = &config.Config{}
 	}
 	dir := getOutputDir(cfg)
-
-	path, art, err := art14.FindArtefactByID(dir, args[0])
+	u := beginArt14UI(cmd, "mark-dispatched", dir)
+	u.report(1, "Loading artefact", "RUNNING", args[0])
+	path, artefact, err := art14.FindArtefactByID(dir, args[0])
 	if err != nil {
+		u.report(1, "Loading artefact", "FAILED", err.Error())
 		return err
 	}
+	u.report(1, "Loading artefact", "DONE", shortID(artefact.ArtefactID))
 
+	u.report(2, "Resolving signing secret", "RUNNING", "")
 	key, err := accept.ResolveSecret(*cfg)
 	if err != nil {
+		u.report(2, "Resolving signing secret", "FAILED", err.Error())
 		return fmt.Errorf("mark-dispatched: WARDEX_ACCEPT_SECRET is required to sign dispatched status: %w", err)
 	}
+	u.report(2, "Resolving signing secret", "DONE", "secret available")
 
-	err = art14.MarkDispatched(path, phase, key)
-	if err != nil {
+	u.report(3, "Updating dispatch status", "RUNNING", phase)
+	if err := art14.MarkDispatched(path, phase, key); err != nil {
+		u.report(3, "Updating dispatch status", "FAILED", err.Error())
 		return err
 	}
+	u.report(3, "Updating dispatch status", "DONE", phase)
 
 	logPath := "wardex-gate-audit.log"
 	if cfg.Reporting.GateLog.Path != "" {
@@ -295,15 +342,22 @@ func runMarkDispatched(cmd *cobra.Command, args []string) error {
 		ConfigHash:                    configHash,
 		OverallDecision:               model.DecisionBlock,
 		Status:                        "block",
-		Detail:                        fmt.Sprintf("Article 14 notification marked as dispatched (phase: %s) for CVE(s): %s", phase, strings.Join(art.Notification.CVEIDs, ", ")),
-		ActivelyExploited:             art.Notification.CVEIDs,
+		Detail:                        fmt.Sprintf("Article 14 notification marked as dispatched (phase: %s) for CVE(s): %s", phase, strings.Join(artefact.Notification.CVEIDs, ", ")),
+		ActivelyExploited:             artefact.Notification.CVEIDs,
 		Art14NotificationArtefactPath: path,
 	}
 
 	if err := accept.ChainedAuditLog(logPath, entry); err != nil {
-		fmt.Fprintf(os.Stderr, "[WARN] Failed to write dispatch event to gate audit log: %v\n", err)
+		fmt.Fprintf(u.stderr, "[WARN] Failed to write dispatch event to gate audit log: %v\n", err)
 	}
 
+	if u.progress.Enabled() {
+		updated, readErr := art14.ReadArtefact(path)
+		if readErr == nil {
+			u.render(buildArt14DetailDashboard(updated, "marked "+phase))
+		}
+		return nil
+	}
 	fmt.Fprintf(cmd.OutOrStdout(), "Successfully marked artefact %s as dispatched (phase: %s) and re-signed.\n", args[0], phase)
 	return nil
 }
@@ -314,17 +368,24 @@ func runFinalize(cmd *cobra.Command, args []string) error {
 		cfg = &config.Config{}
 	}
 	dir := getOutputDir(cfg)
-
+	u := beginArt14UI(cmd, "finalize", dir)
+	u.report(1, "Loading artefact", "RUNNING", args[0])
 	path, art, err := art14.FindArtefactByID(dir, args[0])
 	if err != nil {
+		u.report(1, "Loading artefact", "FAILED", err.Error())
 		return err
 	}
+	u.report(1, "Loading artefact", "DONE", shortID(art.ArtefactID))
 
+	u.report(2, "Resolving signing secret", "RUNNING", "")
 	key, err := accept.ResolveSecret(*cfg)
 	if err != nil {
+		u.report(2, "Resolving signing secret", "FAILED", err.Error())
 		return fmt.Errorf("finalize: WARDEX_ACCEPT_SECRET is required to sign finalized report: %w", err)
 	}
+	u.report(2, "Resolving signing secret", "DONE", "secret available")
 
+	u.report(3, "Collecting final report", "RUNNING", "")
 	if nonInteractive {
 		// Use flags
 		var pTime time.Time
@@ -332,6 +393,7 @@ func runFinalize(cmd *cobra.Command, args []string) error {
 			var err error
 			pTime, err = time.Parse(time.RFC3339, patchDate)
 			if err != nil {
+				u.report(3, "Collecting final report", "FAILED", err.Error())
 				return fmt.Errorf("invalid patch-date: %w", err)
 			}
 		} else {
@@ -366,6 +428,7 @@ func runFinalize(cmd *cobra.Command, args []string) error {
 			var err error
 			pTime, err = time.Parse(time.RFC3339, pStr)
 			if err != nil {
+				u.report(3, "Collecting final report", "FAILED", err.Error())
 				return fmt.Errorf("invalid date format: %w", err)
 			}
 		}
@@ -408,20 +471,33 @@ func runFinalize(cmd *cobra.Command, args []string) error {
 			art.FinalReport.SecurityUpdateDetails = sud
 		}
 	}
+	u.report(3, "Collecting final report", "DONE", "final report fields ready")
 
+	u.report(4, "Signing and writing artefact", "RUNNING", "")
 	if err := art14.SignArtefact(art, key); err != nil {
+		u.report(4, "Signing and writing artefact", "FAILED", err.Error())
 		return err
 	}
 
 	data, err := json.MarshalIndent(art, "", "  ")
 	if err != nil {
+		u.report(4, "Signing and writing artefact", "FAILED", err.Error())
 		return err
 	}
 
 	if err := cli.SafeWriteFile(path, data); err != nil {
+		u.report(4, "Signing and writing artefact", "FAILED", err.Error())
 		return err
 	}
+	u.report(4, "Signing and writing artefact", "DONE", "artefact re-signed")
 
+	if u.progress.Enabled() {
+		updated, readErr := art14.ReadArtefact(path)
+		if readErr == nil {
+			u.render(buildArt14DetailDashboard(updated, "finalized"))
+		}
+		return nil
+	}
 	fmt.Fprintf(cmd.OutOrStdout(), "Successfully finalized artefact %s and re-signed.\n", args[0])
 	return nil
 }
@@ -432,24 +508,40 @@ func runVerify(cmd *cobra.Command, args []string) error {
 		cfg = &config.Config{}
 	}
 	dir := getOutputDir(cfg)
-
-	_, art, err := art14.FindArtefactByID(dir, args[0])
+	u := beginArt14UI(cmd, "verify", dir)
+	u.report(1, "Loading artefact", "RUNNING", args[0])
+	_, artefact, err := art14.FindArtefactByID(dir, args[0])
 	if err != nil {
+		u.report(1, "Loading artefact", "FAILED", err.Error())
 		return err
 	}
+	u.report(1, "Loading artefact", "DONE", shortID(artefact.ArtefactID))
 
+	u.report(2, "Resolving verification secret", "RUNNING", "")
 	key, err := accept.ResolveSecret(*cfg)
 	if err != nil {
+		u.report(2, "Resolving verification secret", "FAILED", err.Error())
 		return fmt.Errorf("verify: WARDEX_ACCEPT_SECRET is required for Art. 14 HMAC verification.\n\nHINT: Generate a key with:\n  openssl rand -base64 32\n\nThen export:\n  export WARDEX_ACCEPT_SECRET=\"$(openssl rand -base64 32)\"\n\nOriginal error: %w", err)
 	}
+	u.report(2, "Resolving verification secret", "DONE", "secret available")
 
-	err = art14.VerifyArtefact(art, key)
+	u.report(3, "Verifying HMAC integrity", "RUNNING", "")
+	err = art14.VerifyArtefact(artefact, key)
 	if err != nil {
-		fmt.Fprintf(cmd.OutOrStdout(), "[TAMPERED] HMAC verification failed for %s: %v\n", args[0], err)
+		u.report(3, "Verifying HMAC integrity", "FAILED", err.Error())
+		if u.progress.Enabled() {
+			u.render(buildArt14DetailDashboard(artefact, "verification failed"))
+		} else {
+			fmt.Fprintf(cmd.OutOrStdout(), "[TAMPERED] HMAC verification failed for %s: %v\n", args[0], err)
+		}
 		exitFunc(exitcodes.IntegrityFailure)
 		return nil
 	}
-
+	u.report(3, "Verifying HMAC integrity", "DONE", "integrity valid")
+	if u.progress.Enabled() {
+		u.render(buildArt14DetailDashboard(artefact, "verified"))
+		return nil
+	}
 	fmt.Fprintf(cmd.OutOrStdout(), "[PASS] HMAC integrity verification passed for %s\n", args[0])
 	return nil
 }

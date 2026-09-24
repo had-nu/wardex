@@ -204,15 +204,44 @@ wardex provenance verify <chain-hash>
 
 ---
 
+## Terminal UI
+
+When the destination is an interactive terminal, the evaluation commands, `art14`, `simulate`, `keygen`, `config`, `provenance`, `chain`, `hmac`, `audit`, `enrich`, `convert`, `assets`, `auth`, `contract`, `policy`, `state`, `gate`, `accept`, and `trust` render a text dashboard with:
+
+- product header and version;
+- effective session parameters;
+- real pipeline phases (`RUNNING`, `DONE`, `SKIPPED`, `FAILED`);
+- focused compliance-gap or release-gate decision cards;
+- coverage, severity, and release-gate summary.
+
+JSON, CSV, pipes, files, and CI output remain clean and undecorated. Sensitive fields are displayed as `[REDACTED]`. `audit export` remains machine-oriented and streaming to preserve JSONL/CSV and pagination metadata.
+
+Environment controls:
+
+- `NO_COLOR` — disable colours;
+- `TERM=dumb` — use the ASCII fallback;
+- `COLUMNS` — provide an alternative terminal width;
+- `CI`, `GITHUB_ACTIONS`, and `GITLAB_CI` — disable decorative output.
+
+See [`doc/architecture/TERMINAL_UI.md`](doc/architecture/TERMINAL_UI.md) for the complete layout specification.
+
+---
+
 ## Command Reference
 
 | Command | Description |
 |---------|-------------|
 | `wardex evaluate` | Evaluate vulnerabilities against the release gate |
 | `wardex assess` | Compliance gap analysis |
+| `wardex aggregate` | Combine release-gate decisions from multiple frameworks |
 | `wardex convert grype/sbom` | Convert scanner output to Wardex format |
 | `wardex enrich epss` | Enrich vulnerabilities with EPSS data |
 | `wardex accept request/verify/list` | Risk acceptance management |
+| `wardex auth status/verify` | Trust-store integrity and key status |
+| `wardex contract verify` | SHA-256 contract integrity verification |
+| `wardex policy validate/list/add/check-expiry` | Policy management and validation |
+| `wardex state status/history/trend/dashboard/verify/cleanup` | Persistent state and chain integrity |
+| `wardex gate check-version` | Duplicate-release protection |
 | `wardex art14 list/show/verify` | CRA Article 14 artefact lifecycle |
 | `wardex provenance seal/submit/verify/status` | Cryptographic provenance anchoring with Gleipnir |
 | `wardex config hash/seal` | CPL and sealed config |

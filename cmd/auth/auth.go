@@ -45,25 +45,39 @@ func init() {
 }
 
 func runAuthStatus(cmd *cobra.Command, args []string) error {
+	u := beginAuthUI(cmd, "status", authTrustPath)
+	u.report(1, "Loading trust store", "RUNNING", authTrustPath)
 	store, _, err := trust.LoadStore(authTrustPath)
 	if err != nil {
+		u.report(1, "Loading trust store", "FAILED", err.Error())
 		return fmt.Errorf("auth status: %w", err)
 	}
 
 	activeCount, revokedCount, adminID := trust.KeyStats(store)
-
+	u.report(1, "Loading trust store", "DONE", fmt.Sprintf("%d key(s)", len(store.Keys)))
+	u.report(2, "Verifying root signature", "RUNNING", "trust root")
 	err = trust.VerifyRootSig(store)
+	if err != nil {
+		u.report(2, "Verifying root signature", "FAILED", err.Error())
+	} else {
+		u.report(2, "Verifying root signature", "DONE", "signature valid")
+	}
 
-	w := cmd.OutOrStdout()
+	if u.dashboardEnabled() {
+		u.render(buildAuthStatusDashboard(authTrustPath, activeCount, revokedCount, adminID, err))
+		return nil
+	}
+
+	w := u.output
 	fmt.Fprintf(w, "Trust store: %s\n", authTrustPath)
 
 	if err != nil {
-		fmt.Fprintf(w, "Status:      %s\n", ui.Colorize("INVALID", ui.Red))
+		fmt.Fprintf(w, "Status:      %s\n", authColor(w, "INVALID", ui.Red))
 		fmt.Fprintf(w, "Error:       %v\n", err)
 		return nil
 	}
 
-	fmt.Fprintf(w, "Status:      %s\n", ui.Colorize("VALID", ui.Green))
+	fmt.Fprintf(w, "Status:      %s\n", authColor(w, "VALID", ui.Green))
 	fmt.Fprintf(w, "Admin key:   %s\n", adminID)
 	fmt.Fprintf(w, "Active keys: %d\n", activeCount)
 	fmt.Fprintf(w, "Revoked:     %d\n", revokedCount)
@@ -72,10 +86,14 @@ func runAuthStatus(cmd *cobra.Command, args []string) error {
 }
 
 func runAuthVerify(cmd *cobra.Command, args []string) error {
+	u := beginAuthUI(cmd, "verify", authTrustPath)
+	u.report(1, "Loading trust store", "RUNNING", authTrustPath)
 	store, _, err := trust.LoadStore(authTrustPath)
 	if err != nil {
+		u.report(1, "Loading trust store", "FAILED", err.Error())
 		return fmt.Errorf("auth verify: %w", err)
 	}
+	u.report(1, "Loading trust store", "DONE", fmt.Sprintf("%d key(s)", len(store.Keys)))
 
 	var found *trust.KeyEntry
 	for i, k := range store.Keys {
@@ -86,22 +104,30 @@ func runAuthVerify(cmd *cobra.Command, args []string) error {
 	}
 
 	if found == nil {
+		u.report(2, "Locating actor key", "FAILED", "actor not found")
 		return fmt.Errorf("auth verify: actor %q not found in trust store", authActor)
 	}
+	u.report(2, "Locating actor key", "DONE", found.ID)
 
 	revokedSet := trust.RevokedKeySet(store)
 	revoked := revokedSet[found.ID]
+	u.report(3, "Resolving permissions", "DONE", fmt.Sprintf("%d permission(s)", len(trust.RolePermissions[found.Role])))
 
-	w := cmd.OutOrStdout()
+	if u.dashboardEnabled() {
+		u.render(buildAuthVerifyDashboard(authTrustPath, *found, revoked))
+		return nil
+	}
+
+	w := u.output
 	fmt.Fprintf(w, "Actor:   %s\n", found.Actor)
 	fmt.Fprintf(w, "Key:     %s\n", found.ID)
 	fmt.Fprintf(w, "Name:    %s\n", found.Name)
 	fmt.Fprintf(w, "Role:    %s\n", found.Role)
 
 	if revoked {
-		fmt.Fprintf(w, "Status:  %s\n", ui.Colorize("REVOKED", ui.Red))
+		fmt.Fprintf(w, "Status:  %s\n", authColor(w, "REVOKED", ui.Red))
 	} else {
-		fmt.Fprintf(w, "Status:  %s\n", ui.Colorize("ACTIVE", ui.Green))
+		fmt.Fprintf(w, "Status:  %s\n", authColor(w, "ACTIVE", ui.Green))
 	}
 
 	perms := trust.RolePermissions[found.Role]

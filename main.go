@@ -178,7 +178,8 @@ func init() {
 }
 
 func main() {
-	ui.PrintBanner(Version)
+	// Keep the human-facing header on stderr so JSON/CSV stdout remains valid.
+	_ = ui.PrintBannerTo(os.Stderr, Version)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -186,6 +187,7 @@ func main() {
 }
 
 func runWardex(cmd *cobra.Command, args []string) {
+	stderr := cmd.ErrOrStderr()
 	opts := orchestrator.EvaluationOptions{
 		ConfigPath:    configPath,
 		ProfileName:   profileName,
@@ -202,14 +204,23 @@ func runWardex(cmd *cobra.Command, args []string) {
 		RoadmapLimit:  roadmapLimit,
 		EPSSEnrich:    epssEnrich,
 		Logger:        ui.Default().Logger,
-		Stderr:        os.Stderr,
+		Stderr:        stderr,
 	}
+	progress := ui.NewTerminalProgress(stderr)
+	progress.Begin(buildEvaluationSession(opts))
+	opts.Progress = progress
 
 	pipeline := orchestrator.NewEvaluationPipeline(opts)
 	result, err := pipeline.Run(cmd.Context(), opts)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		fmt.Fprintf(stderr, "Error: %v\n", err)
 		os.Exit(1)
+	}
+	dashboard := buildEvaluationDashboard(opts, result)
+	if progress.Enabled() {
+		_ = ui.RenderResults(stderr, dashboard)
+	} else {
+		_ = ui.RenderDashboard(stderr, dashboard)
 	}
 	os.Exit(result.ExitCode)
 }

@@ -14,6 +14,7 @@ import (
 	"io"
 	"log/slog"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/had-nu/wardex/v2/config"
@@ -28,6 +29,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/releasegate"
 	"github.com/had-nu/wardex/v2/pkg/report"
 	"github.com/had-nu/wardex/v2/pkg/snapshot"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"gopkg.in/yaml.v3"
 )
 
@@ -58,6 +60,7 @@ type EvaluationOptions struct {
 	EPSSEnrich    string
 	Logger        *slog.Logger
 	Stderr        io.Writer
+	Progress      ui.ProgressReporter
 }
 
 // EvaluationResult is the pipeline's outcome. ExitCode is decided by the
@@ -74,10 +77,11 @@ type EvaluationResult struct {
 // generation. It returns an error only for hard pipeline failures; gate and
 // compliance decisions are expressed through EvaluationResult.ExitCode.
 type EvaluationPipeline struct {
-	Config *config.Config
-	Logger *slog.Logger
-	Stderr io.Writer
-	opts   EvaluationOptions
+	Config   *config.Config
+	Logger   *slog.Logger
+	Stderr   io.Writer
+	Progress ui.ProgressReporter
+	opts     EvaluationOptions
 }
 
 // NewEvaluationPipeline builds the pipeline from the given options.
@@ -88,7 +92,10 @@ func NewEvaluationPipeline(opts EvaluationOptions) *EvaluationPipeline {
 	if opts.Stderr == nil {
 		opts.Stderr = io.Discard
 	}
-	return &EvaluationPipeline{Logger: opts.Logger, Stderr: opts.Stderr, opts: opts}
+	if opts.Progress == nil {
+		opts.Progress = ui.NoopProgressReporter{}
+	}
+	return &EvaluationPipeline{Logger: opts.Logger, Stderr: opts.Stderr, Progress: opts.Progress, opts: opts}
 }
 
 // Run executes the evaluation pipeline and returns the outcome.
@@ -100,38 +107,54 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 	if opts.Stderr != nil {
 		p.Stderr = opts.Stderr
 	}
+	p.Progress = opts.Progress
+	if p.Progress == nil {
+		p.Progress = ui.NoopProgressReporter{}
+	}
 
 	// 1. Load config (lenient: warn and continue on failure).
+	p.report(1, "Loading configuration", "RUNNING", "")
+	configDetail := "configuration loaded"
 	cfg, err := config.Load(opts.ConfigPath)
 	if err != nil {
+		configDetail = "using defaults after load error"
 		p.Logger.Warn("failed to load config; continuing with defaults", "path", opts.ConfigPath, "error", err)
 		cfg = &config.Config{}
 	}
 	p.Config = cfg
+	p.report(1, "Loading configuration", "DONE", configDetail)
 
 	if msg := config.ApplyProfile(cfg, opts.ProfileName, p.Stderr); msg != "" {
 		p.Logger.Info(msg)
 	}
 
 	// 2. Load external controls.
+	p.report(2, "Loading controls", "RUNNING", "")
 	extControls, err := ingestion.LoadMany(opts.Inputs)
 	if err != nil {
+		p.report(2, "Loading controls", "FAILED", err.Error())
 		return nil, fmt.Errorf("load controls: %w", err)
 	}
+	p.report(2, "Loading controls", "DONE", fmt.Sprintf("%d input file(s)", len(opts.Inputs)))
 
 	// 3. Load catalog + correlate.
+	p.report(3, "Matching framework controls", "RUNNING", "")
 	cat, err := catalog.Load(opts.Framework)
 	if err != nil {
+		p.report(3, "Matching framework controls", "FAILED", err.Error())
 		p.Logger.Info("use --framework to select a supported compliance framework")
 		return nil, fmt.Errorf("load framework catalog %q: %w", opts.Framework, err)
 	}
 	corr := correlator.New(cat)
 	mappings, err := corr.Correlate(extControls)
 	if err != nil {
+		p.report(3, "Matching framework controls", "FAILED", err.Error())
 		return nil, fmt.Errorf("correlation failed: %w", err)
 	}
+	p.report(3, "Matching framework controls", "DONE", fmt.Sprintf("%d mapping(s)", len(mappings)))
 
-	// 4. Filter mappings by minimum confidence.
+	// 4. Filter mappings and analyse control coverage.
+	p.report(4, "Computing gaps and coverage", "RUNNING", "")
 	var filtered []model.Mapping
 	droppedLowConf := 0
 	for _, m := range mappings {
@@ -149,10 +172,13 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 	an := analyzer.New(cat, filtered, extControls)
 	findings, err := an.Analyze()
 	if err != nil {
+		p.report(4, "Computing gaps and coverage", "FAILED", err.Error())
 		return nil, fmt.Errorf("analysis failed: %w", err)
 	}
+	p.report(4, "Computing gaps and coverage", "DONE", fmt.Sprintf("%d finding(s)", len(findings)))
 
 	// 6. Roadmap: uncovered findings sorted by FinalScore descending.
+	p.report(5, "Building roadmap and summary", "RUNNING", "")
 	sortedRoadmap := make([]model.Finding, 0, len(findings))
 	for _, f := range findings {
 		if f.Status != model.StatusCovered {
@@ -170,18 +196,25 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 		Roadmap:  sortedRoadmap,
 	}
 	p.buildDomainSummaries(&rep, findings, cat)
+	p.report(5, "Building roadmap and summary", "DONE", fmt.Sprintf("%d roadmap item(s)", len(sortedRoadmap)))
 
 	// 8. Release gate (optional).
 	var gateReport *model.GateReport
+	p.report(6, "Evaluating release gate", "RUNNING", "")
 	if cfg.ReleaseGate.Enabled && opts.GateFile != "" {
 		gr, err := p.runGate(ctx, cfg, &rep, opts.GateFile, opts.GateMode, opts.EPSSEnrich)
 		if err != nil {
+			p.report(6, "Evaluating release gate", "FAILED", err.Error())
 			return nil, err
 		}
 		gateReport = gr
+		p.report(6, "Evaluating release gate", "DONE", strings.ToUpper(string(gr.OverallDecision)))
+	} else {
+		p.report(6, "Evaluating release gate", "SKIPPED", "not requested")
 	}
 
 	// 9. Snapshot load/diff/save.
+	p.report(7, "Processing snapshot", "RUNNING", "")
 	if !opts.NoSnapshot {
 		if prev, _ := snapshot.Load(opts.SnapshotFile); prev != nil {
 			delta := snapshot.Diff(rep, *prev)
@@ -190,9 +223,13 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 		if err := snapshot.Save(opts.SnapshotFile, &rep); err != nil {
 			p.Logger.Warn("failed to save snapshot", "path", opts.SnapshotFile, "error", err)
 		}
+		p.report(7, "Processing snapshot", "DONE", "snapshot saved")
+	} else {
+		p.report(7, "Processing snapshot", "SKIPPED", "disabled")
 	}
 
 	// 10. Report generation.
+	p.report(8, "Generating report", "RUNNING", "")
 	finalFormat := opts.OutputFormat
 	if finalFormat == "markdown" && cfg.Reporting.Format != "" {
 		finalFormat = cfg.Reporting.Format
@@ -202,17 +239,18 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 		finalOutFile = cfg.Reporting.Output
 	}
 	if err := report.Generate(rep, finalFormat, finalOutFile, opts.RoadmapLimit); err != nil {
+		p.report(8, "Generating report", "FAILED", err.Error())
 		return nil, fmt.Errorf("generate report: %w", err)
 	}
+	p.report(8, "Generating report", "DONE", finalFormat)
 
 	// 11. Exit decision.
+	p.report(9, "Determining release decision", "RUNNING", "")
 	result := &EvaluationResult{Report: rep, GateReport: gateReport, ExitCode: exitcodes.OK, ExitReason: ExitOK}
 	if gateReport != nil && gateReport.OverallDecision == model.DecisionBlock {
 		result.ExitCode = exitcodes.GateBlocked
 		result.ExitReason = ExitGateBlocked
-		return result, nil
-	}
-	if opts.FailAbove > 0 {
+	} else if opts.FailAbove > 0 {
 		for _, gap := range sortedRoadmap {
 			if gap.FinalScore > opts.FailAbove {
 				result.ExitCode = exitcodes.ComplianceFail
@@ -221,7 +259,26 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 			}
 		}
 	}
+	decision := "PASS"
+	if gateReport != nil {
+		decision = strings.ToUpper(string(gateReport.OverallDecision))
+	} else if result.ExitReason != ExitOK {
+		decision = "FAIL"
+	}
+	p.report(9, "Determining release decision", "DONE", decision)
 	return result, nil
+}
+
+func (p *EvaluationPipeline) report(number int, name, status, detail string) {
+	if p.Progress == nil {
+		return
+	}
+	p.Progress.Report(ui.PhaseEvent{
+		Number: number,
+		Name:   name,
+		Status: status,
+		Detail: detail,
+	})
 }
 
 // runGate loads gate evidence, applies acceptance/EPSS enrichment, and evaluates.

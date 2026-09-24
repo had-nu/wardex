@@ -54,13 +54,18 @@ func init() {
 }
 
 func runVerifyLink(cmd *cobra.Command, args []string) error {
+	u := beginAuditUI(cmd, "verify-link", auditLogPath)
+	u.report(1, "Reading audit log", "RUNNING", auditLogPath)
 	logData, err := cli.SafeReadFile(auditLogPath)
 	if err != nil {
+		u.report(1, "Reading audit log", "FAILED", err.Error())
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: reading audit log: %v\n", err)
 		os.Exit(2)
 		return nil
 	}
+	u.report(1, "Reading audit log", "DONE", fmt.Sprintf("%d bytes", len(logData)))
 
+	u.report(2, "Verifying config links", "RUNNING", "")
 	var results []cpl.LinkResult
 	if singleConfig != "" {
 		results, err = cpl.VerifyLinkSingleWithSchemaVersion(logData, singleConfig, expectedSchemaVersion)
@@ -68,10 +73,12 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 		results, err = cpl.VerifyLinkWithSchemaVersion(logData, configArchive, expectedSchemaVersion)
 	}
 	if err != nil {
+		u.report(2, "Verifying config links", "FAILED", err.Error())
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: verify-link failed: %v\n", err)
 		os.Exit(2)
 		return nil
 	}
+	u.report(2, "Verifying config links", "DONE", fmt.Sprintf("%d result(s)", len(results)))
 
 	summary := struct {
 		Total    int `json:"total"`
@@ -80,7 +87,6 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 		Missing  int `json:"missing"`
 		Schema   int `json:"schema_version"`
 	}{Total: len(results)}
-
 	for _, r := range results {
 		switch r.Status {
 		case cpl.StatusOK:
@@ -94,12 +100,17 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 		}
 	}
 
+	u.report(3, "Preparing link report", "RUNNING", "")
 	enc := json.NewEncoder(cmd.OutOrStdout())
 	enc.SetIndent("", "  ")
 	_ = enc.Encode(struct {
 		Summary any              `json:"summary"`
 		Results []cpl.LinkResult `json:"results"`
 	}{Summary: summary, Results: results})
+	u.report(3, "Preparing link report", "DONE", "report emitted")
+	if u.progress.Enabled() {
+		u.render(buildLinkVerifyDashboard(auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, summary.Schema, results))
+	}
 
 	if summary.Mismatch > 0 || summary.Missing > 0 || summary.Schema > 0 {
 		if webhookURL != "" {
@@ -107,7 +118,6 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 		}
 		os.Exit(1)
 	}
-
 	return nil
 }
 

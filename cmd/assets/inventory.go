@@ -51,32 +51,44 @@ type assetEntry struct {
 }
 
 func runAssetsInventory(cmd *cobra.Command, args []string) error {
+	u := beginAssetsUI(cmd, assetsFile, assetsFormat)
+	u.report(1, "Reading asset inventory", "RUNNING", assetsFile)
 	data, err := cli.SafeReadFile(assetsFile)
 	if err != nil {
+		u.report(1, "Reading asset inventory", "FAILED", err.Error())
 		return fmt.Errorf("reading assets file: %w", err)
 	}
 
 	var assets []assetEntry
 	if err := yaml.Unmarshal(data, &assets); err != nil {
+		u.report(1, "Reading asset inventory", "FAILED", err.Error())
 		return fmt.Errorf("parsing assets file: %w", err)
 	}
+	u.report(1, "Reading asset inventory", "DONE", fmt.Sprintf("%d asset(s)", len(assets)))
+	u.report(2, "Preparing inventory output", "RUNNING", assetsFormat)
+	if assetsFormat == "table" && u.dashboardEnabled() {
+		u.report(2, "Preparing inventory output", "DONE", "dashboard ready")
+		u.render(assetsFile, assets)
+		return nil
+	}
+	u.report(2, "Preparing inventory output", "DONE", assetsFormat)
 
 	switch assetsFormat {
 	case "json":
 		out, _ := json.MarshalIndent(assets, "", "  ")
-		fmt.Fprintln(cmd.OutOrStdout(), string(out))
+		fmt.Fprintln(u.output, string(out))
 
 	case "csv":
-		fmt.Fprintln(cmd.OutOrStdout(), "id,name,type,criticality,internet_facing,zone,owner,controls")
+		fmt.Fprintln(u.output, "id,name,type,criticality,internet_facing,zone,owner,controls")
 		for _, a := range assets {
-			fmt.Fprintf(cmd.OutOrStdout(), "%s,%s,%s,%.2f,%t,%s,%s,\"%s\"\n",
+			fmt.Fprintf(u.output, "%s,%s,%s,%.2f,%t,%s,%s,\"%s\"\n",
 				a.ID, a.Name, a.Type, a.Criticality,
 				a.Exposure.InternetFacing, a.Exposure.NetworkZone,
 				a.Owner, strings.Join(a.Controls, ";"))
 		}
 
 	default: // table
-		w := cmd.OutOrStdout()
+		w := u.output
 		fmt.Fprintf(w, "%-18s %-35s %-14s %-12s %-8s %-10s %-18s\n",
 			"Asset ID", "Name", "Type", "Criticality", "Internet", "Zone", "Owner")
 		fmt.Fprintf(w, "%-18s %-35s %-14s %-12s %-8s %-10s %-18s\n",

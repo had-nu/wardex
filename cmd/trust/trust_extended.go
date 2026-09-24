@@ -56,12 +56,23 @@ func init() {
 }
 
 func runTrustList(cmd *cobra.Command, args []string) error {
+	u := beginTrustUI(cmd, "list", trustPath)
+	u.report(1, "Loading trust store", "RUNNING", trustPath)
 	store, _, err := trust.LoadStore(trustPath)
 	if err != nil {
+		u.report(1, "Loading trust store", "FAILED", err.Error())
 		return fmt.Errorf("trust list: %w", err)
 	}
+	u.report(1, "Loading trust store", "DONE", fmt.Sprintf("%d key(s)", len(store.Keys)))
 
 	revoked := trust.RevokedKeySet(store)
+	u.report(2, "Preparing trust store output", "RUNNING", "")
+	if listOutput != "json" && listOutput != "csv" && u.dashboardEnabled() {
+		u.report(2, "Preparing trust store output", "DONE", "table ready")
+		u.render(buildTrustListDashboard(store, trustPath))
+		return nil
+	}
+	u.report(2, "Preparing trust store output", "DONE", listOutput)
 
 	switch listOutput {
 	case "json":
@@ -87,24 +98,27 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 			})
 		}
 		data, _ := json.MarshalIndent(keys, "", "  ")
-		fmt.Fprintln(cmd.OutOrStdout(), string(data))
+		fmt.Fprintln(u.output, string(data))
 
 	case "csv":
-		fmt.Fprintln(cmd.OutOrStdout(), "id,actor,name,role,status,added_at,added_by")
+		fmt.Fprintln(u.output, "id,actor,name,role,status,added_at,added_by")
 		for _, k := range store.Keys {
 			status := "active"
 			if revoked[k.ID] {
 				status = "revoked"
 			}
-			fmt.Fprintf(cmd.OutOrStdout(), "%s,%s,%s,%s,%s,%s,%s\n",
+			fmt.Fprintf(u.output, "%s,%s,%s,%s,%s,%s,%s\n",
 				k.ID, k.Actor, k.Name, k.Role, status,
 				k.AddedAt.Format("2006-01-02T15:04:05Z"), k.AddedBy)
 		}
 
 	default: // table
-		w := cmd.OutOrStdout()
+		w := u.output
 		hdr := func(s string, w2 int) string {
-			return ui.PadANSI(ui.Colorize(s, ui.Cyan+ui.Bold), w2)
+			if ui.IsTerminal(w) {
+				return ui.PadANSI(ui.Colorize(s, ui.Cyan+ui.Bold), w2)
+			}
+			return ui.PadANSI(s, w2)
 		}
 		const (
 			wID     = 16
@@ -114,19 +128,29 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 			wStatus = 10
 			wDate   = 22
 		)
-		fill := func(r rune, n int) string {
-			return strings.Repeat(string(r), n)
+		lineChar := '─'
+		if !ui.IsTerminal(w) {
+			lineChar = '-'
+		}
+		fill := func(n int) string {
+			return strings.Repeat(string(lineChar), n)
+		}
+		rule := func(value string) string {
+			if ui.IsTerminal(w) {
+				return ui.Colorize(value, ui.Gray)
+			}
+			return value
 		}
 		fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s\n",
 			hdr("Key ID", wID), hdr("Actor", wActor), hdr("Name", wName),
 			hdr("Role", wRole), hdr("Status", wStatus), hdr("Added At", wDate))
 		fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s\n",
-			ui.Colorize(fill('─', wID), ui.Gray),
-			ui.Colorize(fill('─', wActor), ui.Gray),
-			ui.Colorize(fill('─', wName), ui.Gray),
-			ui.Colorize(fill('─', wRole), ui.Gray),
-			ui.Colorize(fill('─', wStatus), ui.Gray),
-			ui.Colorize(fill('─', wDate), ui.Gray))
+			rule(fill(wID)),
+			rule(fill(wActor)),
+			rule(fill(wName)),
+			rule(fill(wRole)),
+			rule(fill(wStatus)),
+			rule(fill(wDate)))
 
 		for _, k := range store.Keys {
 			status := "active"
@@ -143,12 +167,16 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 			if len(actor) > 26 {
 				actor = actor[:23] + "..."
 			}
+			statusValue := status
+			if ui.IsTerminal(w) {
+				statusValue = ui.Colorize(status, sc)
+			}
 			fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s\n",
 				ui.PadANSI(k.ID, wID),
 				ui.PadANSI(actor, wActor),
 				ui.PadANSI(name, wName),
 				ui.PadANSI(string(k.Role), wRole),
-				ui.PadANSI(ui.Colorize(status, sc), wStatus),
+				ui.PadANSI(statusValue, wStatus),
 				ui.PadANSI(k.AddedAt.Format("2006-01-02 15:04 UTC"), wDate))
 		}
 	}
@@ -157,10 +185,15 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 }
 
 func runTrustShow(cmd *cobra.Command, args []string) error {
+	u := beginTrustUI(cmd, "show", trustPath)
+	u.report(1, "Loading trust store", "RUNNING", trustPath)
 	store, _, err := trust.LoadStore(trustPath)
 	if err != nil {
+		u.report(1, "Loading trust store", "FAILED", err.Error())
 		return fmt.Errorf("trust show: %w", err)
 	}
+	u.report(1, "Loading trust store", "DONE", fmt.Sprintf("%d key(s)", len(store.Keys)))
+	u.report(2, "Locating key entry", "RUNNING", args[0])
 
 	// Build revoked map
 	revokedAt := make(map[string]string)
@@ -173,7 +206,14 @@ func runTrustShow(cmd *cobra.Command, args []string) error {
 			status := "active"
 			if t, ok := revokedAt[k.ID]; ok {
 				status = "revoked"
-				fmt.Fprintf(cmd.ErrOrStderr(), "[REVOKED at %s]\n", t)
+				fmt.Fprintf(u.stderr, "[REVOKED at %s]\n", t)
+			}
+			u.report(2, "Locating key entry", "DONE", k.ID)
+			u.report(3, "Preparing key details", "RUNNING", "")
+			u.report(3, "Preparing key details", "DONE", "details ready")
+			if showOutput == "table" && u.dashboardEnabled() {
+				u.render(buildTrustDetailDashboard(k, status, trustPath))
+				return nil
 			}
 
 			switch showOutput {
@@ -197,10 +237,10 @@ func runTrustShow(cmd *cobra.Command, args []string) error {
 					d.AddedSig = k.AddedSig
 				}
 				data, _ := json.MarshalIndent(d, "", "  ")
-				fmt.Fprintln(cmd.OutOrStdout(), string(data))
+				fmt.Fprintln(u.output, string(data))
 
 			default: // table
-				w := cmd.OutOrStdout()
+				w := u.output
 				fmt.Fprintf(w, "Key ID:    %s\n", k.ID)
 				fmt.Fprintf(w, "Actor:     %s\n", k.Actor)
 				fmt.Fprintf(w, "Name:      %s\n", k.Name)
@@ -213,30 +253,55 @@ func runTrustShow(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	return fmt.Errorf("trust show: key %q not found", args[0])
+	err = fmt.Errorf("trust show: key %q not found", args[0])
+	u.report(2, "Locating key entry", "FAILED", err.Error())
+	return err
 }
 
 func runTrustVerify(cmd *cobra.Command, args []string) error {
+	u := beginTrustUI(cmd, "verify", trustPath)
+	u.report(1, "Loading trust store", "RUNNING", trustPath)
 	store, _, err := trust.LoadStore(trustPath)
 	if err != nil {
+		u.report(1, "Loading trust store", "FAILED", err.Error())
 		return fmt.Errorf("trust verify: %w", err)
 	}
-
 	activeCount, revokedCount, adminID := trust.KeyStats(store)
+	u.report(1, "Loading trust store", "DONE", fmt.Sprintf("%d key(s)", len(store.Keys)))
 
-	// Verify root signature
+	u.report(2, "Verifying root signature", "RUNNING", "")
 	err = trust.VerifyRootSig(store)
-
-	w := cmd.OutOrStdout()
-	fmt.Fprintf(w, "Trust store: %s\n", trustPath)
-
 	if err != nil {
-		fmt.Fprintf(w, "Root signature: %s\n", ui.Colorize("INVALID", ui.Red))
-		fmt.Fprintf(w, "Error: %v\n", err)
+		u.report(2, "Verifying root signature", "FAILED", err.Error())
+		if u.dashboardEnabled() {
+			u.render(buildTrustVerifyDashboard(trustPath, adminID, len(store.Keys), activeCount, revokedCount, false))
+		} else {
+			w := u.output
+			status := "INVALID"
+			if ui.IsTerminal(w) {
+				status = ui.Colorize(status, ui.Red)
+			}
+			fmt.Fprintf(w, "Trust store: %s\n", trustPath)
+			fmt.Fprintf(w, "Root signature: %s\n", status)
+			fmt.Fprintf(w, "Error: %v\n", err)
+		}
 		return fmt.Errorf("trust verify: root signature invalid: %w", err)
 	}
+	u.report(2, "Verifying root signature", "DONE", "root signature valid")
+	u.report(3, "Finalizing trust verification", "RUNNING", "")
+	u.report(3, "Finalizing trust verification", "DONE", "verification complete")
+	if u.dashboardEnabled() {
+		u.render(buildTrustVerifyDashboard(trustPath, adminID, len(store.Keys), activeCount, revokedCount, true))
+		return nil
+	}
 
-	fmt.Fprintf(w, "Root signature: %s\n", ui.Colorize("VALID", ui.Green))
+	w := u.output
+	fmt.Fprintf(w, "Trust store: %s\n", trustPath)
+	rootStatus := "VALID"
+	if ui.IsTerminal(w) {
+		rootStatus = ui.Colorize(rootStatus, ui.Green)
+	}
+	fmt.Fprintf(w, "Root signature: %s\n", rootStatus)
 	fmt.Fprintf(w, "Admin key:      %s\n", adminID)
 	fmt.Fprintf(w, "Total entries:  %d (%d active, %d revoked)\n", len(store.Keys), activeCount, revokedCount)
 

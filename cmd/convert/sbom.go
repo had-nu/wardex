@@ -68,13 +68,17 @@ func peekSbomFormat(filepath string) (string, error) {
 
 func runConvertSbom(cmd *cobra.Command, args []string) {
 	inFile := args[0]
-
+	u := beginConvertUI(cmd, "sbom", inFile, sbomOutFile)
+	u.report(1, "Detecting SBOM format", "RUNNING", inFile)
 	format, err := peekSbomFormat(inFile)
 	if err != nil {
+		u.report(1, "Detecting SBOM format", "FAILED", err.Error())
 		fmt.Fprintf(os.Stderr, "Error analyzing SBOM file: %v\n", err)
 		os.Exit(1)
 	}
+	u.report(1, "Detecting SBOM format", "DONE", format)
 
+	u.report(2, "Parsing SBOM", "RUNNING", format)
 	var vulns []model.Vulnerability
 
 	switch format {
@@ -85,41 +89,59 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 	case "openvex":
 		vulns, err = sboms.ParseOpenVEX(inFile)
 	default:
+		u.report(2, "Parsing SBOM", "FAILED", "unsupported format")
 		fmt.Fprintf(os.Stderr, "Error: Unknown or unsupported format in %s. Supported formats: CycloneDX 1.5 JSON, SPDX, OpenVEX.\n", inFile)
 		os.Exit(1)
 	}
 
 	if err != nil {
+		u.report(2, "Parsing SBOM", "FAILED", err.Error())
 		fmt.Fprintf(os.Stderr, "Error parsing SBOM: %v\n", err)
 		os.Exit(1)
 	}
+	u.report(2, "Parsing SBOM", "DONE", fmt.Sprintf("%d vulnerabilities", len(vulns)))
 
 	out := model.VulnerabilityEnvelope{
 		ConvertedBy:     "wardex-convert/" + format,
 		Vulnerabilities: vulns,
 	}
 
+	u.report(3, "Writing converted output", "RUNNING", sbomOutFile)
 	yamlData, err := yaml.Marshal(&out)
 	if err != nil {
+		u.report(3, "Writing converted output", "FAILED", err.Error())
 		fmt.Fprintf(os.Stderr, "Error encoding YAML: %v\n", err)
 		os.Exit(1)
 	}
 
 	outputPath := sbomOutFile
 	if outputPath == "stdout" || outputPath == "-" {
-		fmt.Print(string(yamlData))
+		fmt.Fprint(commandOutput(cmd), string(yamlData))
 	} else {
 		if err := cli.SafeWriteFile(outputPath, yamlData); err != nil {
+			u.report(3, "Writing converted output", "FAILED", err.Error())
 			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), outputPath)
+		if !u.progress.Enabled() {
+			fmt.Fprintf(commandOutput(cmd), "Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), outputPath)
+		}
 	}
+	u.report(3, "Writing converted output", "DONE", outputPath)
 
 	if sbomAttestKey != "" && outputPath != "stdout" && outputPath != "-" {
+		u.report(4, "Writing tool attestation", "RUNNING", sbomAttestKey)
 		if err := attestSBOM(inFile, outputPath, sbomAttestKey); err != nil {
+			u.report(4, "Writing tool attestation", "FAILED", err.Error())
 			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+		} else {
+			u.report(4, "Writing tool attestation", "DONE", outputPath+".attest")
 		}
+	} else {
+		u.report(4, "Writing tool attestation", "SKIPPED", "not requested")
+	}
+	if u.progress.Enabled() {
+		u.render("sbom/"+format, outputPath, len(out.Vulnerabilities), 0, 0, sbomAttestKey != "")
 	}
 }
 

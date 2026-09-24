@@ -10,9 +10,9 @@ O Wardex segue uma convenção estrita de Exit Codes para permitir fácil integr
 | **`1`** | **Erro Execução** | Erro genérico de execução: má formatação de ficheiros YAML/JSON, falta de permissões de leitura, sintaxe de CLI incorreta, ou path não encontrado. | Corrigir a sintaxe, sintaxe de YAML, ou paths. |
 | **`3`** | **Integridade** | **Tampered**: Configuração ou aceitação de risco falhou a validação de assinatura HMAC-SHA256 (adulteração maliciosa, selo `.wexstate` não corresponde, ou config hash drift). | Reverter as alterações. Correr `wardex config seal` novamente ou `wardex accept verify`. |
 | **`4`** | **Integridade** | **Store Inconsistent**: Discrepância detetada entre o número de aceitações no ficheiro e o log de auditoria append-only (`wardex-accept-audit.log`). | Investigar deleções manuais arbitrárias no log. |
-| **`5`** | **Operacional** | **Expiring Soon**: O comando `policy check-expiry` detetou aceitações que vão expirar dentro da janela de aviso. | Renovar as aceitações ou corrigir vulnerabilidades. |
+| **`5`** | **Operacional** | **Expiring Soon**: O comando `accept check-expiry` detetou aceitações que vão expirar dentro da janela de aviso. | Renovar as aceitações ou corrigir vulnerabilidades. |
 | **`10`** | **Políticas** | **Gate Blocked**: Pelo menos uma vulnerabilidade excede o risco tolerável face aos controlos + apetite ao risco. | Analisar e corrigir ou invocar `wardex accept request`. |
-| **`11`** | **Políticas** | **Compliance Fail**: Rácio de cobertura/maturidade abaixo do exigido pelo `--fail-above`. | Rever controlos implementados e documentados. |
+| **`11`** | **Políticas** | **Compliance Fail**: Rácio de cobertura/maturidade abaixo do exigido pelo `--fail-above`, ou `policy check-expiry` encontrou uma exceção de política expirada. | Rever controlos, exceções e respetiva documentação. |
 | **`12`** | **CRA** | **Active Exploitation**: Vulnerabilidade no catálogo CISA KEV. Requer notificação Article 14. | Executar `wardex art14 show` para inspeccionar o artefacto gerado. Não pode ser substituído por aceitação de risco. |
 
 ### Uso em Pipelines CI/CD

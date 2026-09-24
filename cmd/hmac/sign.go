@@ -40,43 +40,61 @@ func init() {
 }
 
 func runHMACSign(cmd *cobra.Command, args []string) error {
+	u := beginHMACUI(cmd, hmacFile)
+	u.report(1, "Reading payload", "RUNNING", hmacFile)
 	data, err := cli.SafeReadFile(hmacFile)
 	if err != nil {
+		u.report(1, "Reading payload", "FAILED", err.Error())
 		return fmt.Errorf("reading file: %w", err)
 	}
+	u.report(1, "Reading payload", "DONE", fmt.Sprintf("%d bytes", len(data)))
 
+	u.report(2, "Resolving HMAC secret", "RUNNING", hmacSecretEnv)
 	secret := os.Getenv(hmacSecretEnv)
 	if secret == "" {
-		return fmt.Errorf("environment variable %s is not set.\n\nHINT: Generate a key with:\n  openssl rand -base64 32\n\nThen export:\n  export %s=\"$(openssl rand -base64 32)\"", hmacSecretEnv, hmacSecretEnv)
+		err := fmt.Errorf("environment variable %s is not set.\n\nHINT: Generate a key with:\n  openssl rand -base64 32\n\nThen export:\n  export %s=\"$(openssl rand -base64 32)\"", hmacSecretEnv, hmacSecretEnv)
+		u.report(2, "Resolving HMAC secret", "FAILED", err.Error())
+		return err
 	}
-
 	if len(secret) < 32 {
-		return fmt.Errorf("HMAC secret must be at least 32 characters (got %d)", len(secret))
+		err := fmt.Errorf("HMAC secret must be at least 32 characters (got %d)", len(secret))
+		u.report(2, "Resolving HMAC secret", "FAILED", err.Error())
+		return err
 	}
+	u.report(2, "Resolving HMAC secret", "DONE", "secret available")
 
+	u.report(3, "Computing signature", "RUNNING", "")
 	mac := hmac.New(sha256.New, []byte(secret))
 	mac.Write(data)
 	sig := hex.EncodeToString(mac.Sum(nil))
+	u.report(3, "Computing signature", "DONE", sig[:16]+"...")
 
 	outPath := hmacOutput
 	if outPath == "" {
 		outPath = hmacFile + ".hmac"
 	}
-
+	u.report(4, "Writing signature", "RUNNING", outPath)
 	safeOutPath, err := cli.SafeOutputPath(outPath)
 	if err != nil {
+		u.report(4, "Writing signature", "FAILED", err.Error())
 		return fmt.Errorf("validating output path: %w", err)
 	}
-
 	sigData := []byte(fmt.Sprintf("HMAC-SHA256: %s\n", sig))
 	if err := os.WriteFile(safeOutPath, sigData, 0600); err != nil { // #nosec G703 — safeOutPath validated by ValidateOutputPath
+		u.report(4, "Writing signature", "FAILED", err.Error())
 		return fmt.Errorf("writing signature: %w", err)
 	}
+	u.report(4, "Writing signature", "DONE", safeOutPath)
+	u.report(5, "Finalizing signature result", "RUNNING", "")
+	u.report(5, "Finalizing signature result", "DONE", "signature ready")
+	if u.dashboardEnabled() {
+		u.render(safeOutPath, len(data), sig[:16])
+		return nil
+	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), "HMAC-SHA256 signature written to: %s\n", safeOutPath)
-	fmt.Fprintf(cmd.OutOrStdout(), "  Algorithm:  HMAC-SHA256\n")
-	fmt.Fprintf(cmd.OutOrStdout(), "  Payload:    %s (%d bytes)\n", hmacFile, len(data))
-	fmt.Fprintf(cmd.OutOrStdout(), "  Signature:  %s\n", sig[:16]+"...")
-
+	fmt.Fprintf(u.output, "HMAC-SHA256 signature written to: %s\n", safeOutPath)
+	fmt.Fprintln(u.output, "  Algorithm:  HMAC-SHA256")
+	fmt.Fprintf(u.output, "  Payload:    %s (%d bytes)\n", hmacFile, len(data))
+	fmt.Fprintf(u.output, "  Signature:  %s\n", sig[:16]+"...")
 	return nil
 }

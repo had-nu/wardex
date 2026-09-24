@@ -30,7 +30,7 @@ Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo
 | `wardex policy validate <dir>` | Valida schema dos ficheiros YAML |
 | `wardex policy list <dir>` | Lista estado de conformidade |
 | `wardex policy add` | Upsert de controlo por ID |
-| `wardex policy check-expiry` | Verifica aceitações a expirar |
+| `wardex policy check-expiry` | Verifica exceções de política expiradas |
 | `wardex simulate` | Simulação interactiva de risco |
 | `wardex aggregate` | Agrega decisões de múltiplos frameworks |
 | `wardex keygen` | Gera par de chaves Ed25519 |
@@ -328,7 +328,7 @@ A estrutura de directórios espelha a hierarquia de secções do framework. Quan
 | `3` | `IntegrityFailure` / `Tampered` | Configuração adulterada — selo `.wexstate` não corresponde |
 | `4` | `StoreInconsistent` | Armazém de aceitações inconsistente |
 | `10` | `GateBlocked` | Gate bloqueou — risco excede `risk_appetite` |
-| `11` | `ComplianceFail` | Gap excede `--fail-above` |
+| `11` | `ComplianceFail` | Gap excede `--fail-above` ou `policy check-expiry` encontrou exceção expirada |
 | `12` | `ActivelyExploited` | CRA Article 14 — CVE no catálogo CISA KEV |
 
 ```bash

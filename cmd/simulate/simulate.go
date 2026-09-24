@@ -6,8 +6,10 @@ package simulate
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/had-nu/wardex/v2/test"
 	"github.com/spf13/cobra"
 )
@@ -15,8 +17,57 @@ import (
 var SimulateCmd = &cobra.Command{
 	Use:   "simulate",
 	Short: "Launch the Wardex Risk Simulator",
-	Run: func(cmd *cobra.Command, args []string) {
-		html := `<!DOCTYPE html>
+	RunE:  runSimulate,
+}
+
+func runSimulate(cmd *cobra.Command, args []string) error {
+	filename := "wardex-simulator.html"
+	wd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("simulate: determine output directory: %w", err)
+	}
+	outputPath := filepath.Join(wd, filename)
+
+	stderr := cmd.ErrOrStderr()
+	progress := ui.NewTerminalProgress(stderr)
+	progress.Begin(buildSimulatorSession(outputPath))
+	reportProgress := func(number int, name, status, detail string) {
+		progress.Report(ui.PhaseEvent{
+			Number: number,
+			Name:   name,
+			Status: status,
+			Detail: detail,
+		})
+	}
+
+	reportProgress(1, "Preparing simulator asset", "RUNNING", "")
+	html := simulatorHTML()
+	reportProgress(1, "Preparing simulator asset", "DONE", fmt.Sprintf("%d bytes", len(html)))
+
+	reportProgress(2, "Writing simulator file", "RUNNING", filename)
+	if err := cli.SafeWriteFile(filename, []byte(html)); err != nil {
+		reportProgress(2, "Writing simulator file", "FAILED", err.Error())
+		return fmt.Errorf("simulate: create simulator file: %w", err)
+	}
+	reportProgress(2, "Writing simulator file", "DONE", filename)
+
+	reportProgress(3, "Finalizing simulator output", "RUNNING", "")
+	reportProgress(3, "Finalizing simulator output", "DONE", "ready to open")
+
+	if progress.Enabled() {
+		renderSimulatorResults(stderr, progress, outputPath, len(html))
+		return nil
+	}
+
+	fmt.Fprintln(cmd.OutOrStdout(), "Wardex Risk Simulator generated successfully!")
+	fmt.Fprintln(cmd.OutOrStdout(), "Open the following file in your web browser:")
+	fmt.Fprintln(cmd.OutOrStdout())
+	fmt.Fprintf(cmd.OutOrStdout(), "  file://%s\n\n", outputPath)
+	return nil
+}
+
+func simulatorHTML() string {
+	return `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -40,19 +91,4 @@ var SimulateCmd = &cobra.Command{
     </script>
 </body>
 </html>`
-
-		filename := "wardex-simulator.html"
-		err := cli.SafeWriteFile(filename, []byte(html))
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error creating simulator file: %v\n", err)
-			os.Exit(1)
-		}
-
-		wd, _ := os.Getwd()
-		fullPath := wd + string(os.PathSeparator) + filename
-
-		fmt.Printf("Wardex Risk Simulator generated successfully!\n")
-		fmt.Printf("Open the following file in your web browser:\n\n")
-		fmt.Printf("  file://%s\n\n", fullPath)
-	},
 }

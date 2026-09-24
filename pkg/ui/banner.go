@@ -4,23 +4,20 @@
 package ui
 
 import (
-	"fmt"
+	"io"
+	"os"
 )
 
-const (
-	clrPurple = "\033[38;2;111;66;193m"
-	clrMuted  = "\033[38;2;110;118;129m"
-	clrWhite  = "\033[37m"
-	clrBold   = "\033[1m"
-	clrReset  = "\033[0m"
-)
-
-// PrintBanner outputs the professional branding for Wardex.
+// PrintBanner outputs the compact Wardex branding using stdout's detected
+// capabilities. It is kept for callers that explicitly request a banner;
+// command entry points should use PrintBannerTo to avoid decorating pipes.
 func PrintBanner(version string) {
-	fmt.Printf("\n %s(⬡───────────────────────)%s  %s%sWARDEX%s  %s·%s  %srisk-based release gate%s  %sv%s%s\n\n",
-		clrPurple, clrReset,
-		clrBold, clrWhite, clrReset,
-		clrMuted, clrReset,
-		clrPurple, clrReset,
-		clrWhite, version, clrReset)
+	NewDefaultRenderer(os.Stdout).Header(version)
+}
+
+// PrintBannerTo is the writer-injectable counterpart used by commands that
+// need to keep human UI separate from structured output. It is a no-op for
+// non-interactive writers.
+func PrintBannerTo(w io.Writer, version string) bool {
+	return PrintHeaderTo(w, version)
 }

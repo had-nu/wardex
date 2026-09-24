@@ -18,6 +18,10 @@ import (
 )
 
 // policyCmd is the root of the `wardex policy` subcommand tree.
+// policyExitFunc is injectable so expiry behavior can be tested without
+// terminating the test process. The command keeps its existing exit contract.
+var policyExitFunc = os.Exit
+
 var PolicyCmd = &cobra.Command{
 	Use:   "policy",
 	Short: "Manage compliance policy files",
@@ -48,9 +52,18 @@ var policyValidateCmd = &cobra.Command{
 }
 
 func runPolicyValidate(cmd *cobra.Command, args []string) error {
+	u := beginPolicyUI(cmd, "validate", args[0])
+	u.report(1, "Loading policy framework", "RUNNING", args[0])
 	domains, err := policy.LoadFramework(args[0])
 	if err != nil {
+		u.report(1, "Loading policy framework", "FAILED", err.Error())
 		return err
+	}
+	u.report(1, "Loading policy framework", "DONE", fmt.Sprintf("%d domain(s)", len(domains)))
+
+	if u.dashboardEnabled() {
+		u.render(buildPolicyValidateDashboard(args[0], domains))
+		return nil
 	}
 
 	total := 0
@@ -58,7 +71,7 @@ func runPolicyValidate(cmd *cobra.Command, args []string) error {
 		total += len(d.Controls)
 	}
 
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(),
+	_, _ = fmt.Fprintf(u.output,
 		"[OK] %d domain file(s), %d control(s) — all valid in %q\n",
 		len(domains), total, args[0],
 	)
@@ -99,9 +112,18 @@ func assessedColor(dateStr string) string {
 }
 
 func runPolicyList(cmd *cobra.Command, args []string) error {
+	u := beginPolicyUI(cmd, "list", args[0])
+	u.report(1, "Loading policy framework", "RUNNING", args[0])
 	domains, err := policy.LoadFramework(args[0])
 	if err != nil {
+		u.report(1, "Loading policy framework", "FAILED", err.Error())
 		return err
+	}
+	u.report(1, "Loading policy framework", "DONE", fmt.Sprintf("%d domain(s)", len(domains)))
+
+	if u.dashboardEnabled() {
+		u.render(buildPolicyListDashboard(args[0], domains))
+		return nil
 	}
 
 	t := ui.NewTable(
@@ -118,7 +140,7 @@ func runPolicyList(cmd *cobra.Command, args []string) error {
 			)
 		}
 	}
-	t.Render(cmd.OutOrStdout())
+	t.Render(u.output)
 	return nil
 }
 
@@ -132,14 +154,17 @@ var policyCheckExpiryCmd = &cobra.Command{
 }
 
 func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
+	u := beginPolicyUI(cmd, "check-expiry", args[0])
+	u.report(1, "Loading policy framework", "RUNNING", args[0])
 	domains, err := policy.LoadFramework(args[0])
 	if err != nil {
+		u.report(1, "Loading policy framework", "FAILED", err.Error())
 		return err
 	}
+	u.report(1, "Loading policy framework", "DONE", fmt.Sprintf("%d domain(s)", len(domains)))
 
 	now := time.Now()
-	expiredCount := 0
-
+	expired := make([]expiredPolicyException, 0)
 	t := ui.NewTable(
 		[]string{"ID", "DOMAIN", "EXPIRY", "REASON"},
 		[]int{12, 20, 14, 50},
@@ -149,33 +174,50 @@ func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
 		for _, c := range d.Controls {
 			for _, e := range c.Exceptions {
 				if e.Expiry == "" {
-					fmt.Fprintf(os.Stderr, "[WARN] Exception for %s has no expiry date — not checked\n", c.ID)
+					fmt.Fprintf(u.stderr, "[WARN] Exception for %s has no expiry date — not checked\n", c.ID)
 					continue
 				}
 				expiry, err := time.Parse("2006-01-02", e.Expiry)
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "[WARN] Exception for %s has unparseable expiry %q — not checked\n", c.ID, e.Expiry)
+					fmt.Fprintf(u.stderr, "[WARN] Exception for %s has unparseable expiry %q — not checked\n", c.ID, e.Expiry)
 					continue
 				}
 				if expiry.Before(now) {
+					expired = append(expired, expiredPolicyException{
+						ControlID: c.ID,
+						Domain:    d.Domain,
+						Expiry:    e.Expiry,
+						Reason:    e.Reason,
+					})
 					t.AddRowStyled(
 						[]string{c.ID, d.Domain, e.Expiry, e.Reason},
 						[]string{"", "", ui.Red, ui.Red},
 						nil,
 					)
-					expiredCount++
 				}
 			}
 		}
 	}
 
-	if expiredCount > 0 {
-		t.Render(cmd.OutOrStdout())
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "\n[FAIL] Found %d expired exception(s) in %q\n", expiredCount, args[0])
-		os.Exit(exitcodes.ComplianceFail)
+	if len(expired) > 0 {
+		u.report(2, "Checking policy exceptions", "FAILED", fmt.Sprintf("%d expired", len(expired)))
+		if u.dashboardEnabled() {
+			u.render(buildPolicyExpiryDashboard(args[0], expired))
+			policyExitFunc(exitcodes.ComplianceFail)
+			return nil
+		}
+		t.Render(u.output)
+		_, _ = fmt.Fprintf(u.output, "\n[FAIL] Found %d expired exception(s) in %q\n", len(expired), args[0])
+		policyExitFunc(exitcodes.ComplianceFail)
+		return nil
 	}
 
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "[OK] No expired exceptions found in %q\n", args[0])
+	u.report(2, "Checking policy exceptions", "DONE", "no expired exceptions")
+	if u.dashboardEnabled() {
+		u.render(buildPolicyExpiryDashboard(args[0], expired))
+		return nil
+	}
+	_, _ = fmt.Fprintf(u.output, "[OK] No expired exceptions found in %q\n", args[0])
 	return nil
 }
 
@@ -220,25 +262,34 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 	status, _ := cmd.Flags().GetString("status")
 	owner, _ := cmd.Flags().GetString("owner")
 	note, _ := cmd.Flags().GetString("note")
+	u := beginPolicyUI(cmd, "add", file)
 
+	u.report(1, "Resolving policy file", "RUNNING", file)
 	// Resolve and clean the path before any I/O.
 	abs, err := cli.ValidateInputPath(".", filepath.Clean(file))
 	if err != nil {
+		u.report(1, "Resolving policy file", "FAILED", err.Error())
 		return fmt.Errorf("policy add: resolve path: %w", err)
 	}
+	u.report(1, "Resolving policy file", "DONE", abs)
 
 	var d policy.DomainFile
 
+	u.report(2, "Loading existing policy", "RUNNING", file)
 	// Load existing file if it exists; silently init a new struct otherwise.
 	data, err := cli.SafeReadFile(file)
 	switch {
 	case err == nil:
 		if err := yaml.Unmarshal(data, &d); err != nil {
+			u.report(2, "Loading existing policy", "FAILED", err.Error())
 			return fmt.Errorf("policy add: parse existing file: %w", err)
 		}
+		u.report(2, "Loading existing policy", "DONE", fmt.Sprintf("%d control(s)", len(d.Controls)))
 	case os.IsNotExist(err):
-		fmt.Fprintf(os.Stderr, "[WARN] Policy file %s not found — creating new\n", abs)
+		u.report(2, "Loading existing policy", "DONE", "new policy file")
+		fmt.Fprintf(u.stderr, "[WARN] Policy file %s not found — creating new\n", abs)
 	default:
+		u.report(2, "Loading existing policy", "FAILED", err.Error())
 		return fmt.Errorf("policy add: read: %w", err)
 	}
 
@@ -265,20 +316,28 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 		d.Controls = append(d.Controls, newControl)
 	}
 
+	u.report(3, "Writing policy file", "RUNNING", abs)
 	out, err := yaml.Marshal(&d)
 	if err != nil {
+		u.report(3, "Writing policy file", "FAILED", err.Error())
 		return fmt.Errorf("policy add: marshal: %w", err)
 	}
 
 	// 0o600: policy files contain compliance state — no need for group/other read.
 	if err := cli.SafeWriteFile(abs, out); err != nil {
+		u.report(3, "Writing policy file", "FAILED", err.Error())
 		return fmt.Errorf("policy add: write: %w", err)
 	}
+	u.report(3, "Writing policy file", "DONE", abs)
 
+	if u.dashboardEnabled() {
+		u.render(buildPolicyActionDashboard("add", file, id, updated))
+		return nil
+	}
 	verb := "Added"
 	if updated {
 		verb = "Updated"
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%s control %q in %q\n", verb, id, file)
+	_, _ = fmt.Fprintf(u.output, "%s control %q in %q\n", verb, id, file)
 	return nil
 }
