@@ -34,7 +34,7 @@ Mapeamento completo com referências `ficheiro:linha` do upstream em
 | P5 — o audit log é a fonte de verdade | — (invariante Wardex) | Índices derivados são cache reconstruível |
 | P6 — carga-antiga-tentada-primeiro | `upgrade_helpers.rs:10-47` | Loader `KnownFields(true)` + fallback leniente v1 |
 | P7 — `deny_unknown_fields` | `nym-node/config/mod.rs:478-502` | `yaml.Decoder.KnownFields(true)` |
-| P8 — gate por classes de risco/deadlines | `ci-cargo-deny.yml` vs `nightly-security-audit.yml` | `--gate-class pr\|deploy\|nightly\|canary` (L3) |
+| P8 — gate por classes de risco/deadlines | `ci-cargo-deny.yml` vs `nightly-security-audit.yml` | `--gate-class pr\|deploy\|nightly` (L3) |
 | P9 — paginação por cursor `LIMIT+1` | `gateway-storage/src/inboxes.rs:23-33` | `wardex audit export --limit --cursor` (L5) |
 | P10 — persistência cifrada em envelope | `common/store-cipher/src/lib.rs` | `pkg/keys` Argon2id + AES-256-GCM opt-in (L6) |
 | P11 — kill-switch com tripwire | `upgrade_mode/watcher.rs:19-110` | `forced_upgrade` com tripwire de atestação (L7) |

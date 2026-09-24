@@ -29,6 +29,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   progress, and narrow layouts, plus terminal-profile and pipe-format matrix
   coverage.
 
+### Changed — Brand and documentation
+
+- Replaced the legacy radar-style lockup with the Wardex shield symbol, a
+  square transparent mark derived from the approved visual reference.
+- Kept `WARDEX` and the product descriptor as README text rather than baking
+  lettering into the image.
+- Added light/dark shield variants, refreshed the Open Graph image and release
+  banner, and documented the system in `doc/architecture/BRANDING.md`.
+
 ## [2.6.0] — 2026-09-15
 
 > **Attribution:** the hardening design patterns in this release draw on the Nym
@@ -61,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   decrypt) with `--passphrase` / `WARDEX_KEY_PASSPHRASE`;
   `wardex trust --keyring` loads them transparently. Legacy plaintext
   keyrings remain supported.
-- **Risk-class gate exams (L3)**: `--gate-class pr|deploy|nightly|canary`
+- **Risk-class gate exams (L3)**: `--gate-class pr|deploy|nightly`
   profiles with per-gap severities `block|advisory|off`; class gaps are
   reported in the gate decision and audit entries. The GitHub Action
   `run-gate` gains a `gate-class` input.

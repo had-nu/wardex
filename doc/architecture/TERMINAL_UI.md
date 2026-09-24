@@ -15,6 +15,10 @@ A interface humana do Wardex foi desenhada a partir de uma referência visual de
 - Adaptar a saída a terminais estreitos e sem Unicode.
 - Não imprimir marca d’água ou tentar reproduzir uma imagem de fundo no terminal.
 
+## Identidade visual
+
+A marca, a paleta e as variantes documentais estão definidas em [BRANDING.md](BRANDING.md). A UI do terminal usa o roxo como acento de marca, ciano para estrutura e cores semânticas para estado; nenhum desses tokens altera a saída machine-oriented.
+
 ## Hierarquia visual
 
 ```text
