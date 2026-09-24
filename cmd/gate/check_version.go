@@ -6,6 +6,7 @@ package gatecmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	acceptaudit "github.com/had-nu/wardex/v2/pkg/accept/audit"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
@@ -49,12 +50,18 @@ func init() {
 }
 
 func runCheckVersion(cmd *cobra.Command, _ []string) error {
+	u := beginGateUI(cmd, "check-version", checkVersionAuditLog, checkVersionVersion)
+	u.report(1, "Checking audit log", "RUNNING", checkVersionAuditLog)
 	if _, err := os.Stat(checkVersionAuditLog); err != nil {
-		fmt.Fprintf(cmd.ErrOrStderr(), "Error: audit log: %v\n", err)
+		u.report(1, "Checking audit log", "FAILED", err.Error())
+		u.render(buildGateErrorDashboard(checkVersionAuditLog, checkVersionVersion, err.Error()))
+		fmt.Fprintf(u.stderr, "Error: audit log: %v\n", err)
 		exitFunc(exitcodes.GenericError)
 		return nil
 	}
+	u.report(1, "Checking audit log", "DONE", "log available")
 
+	u.report(2, "Loading version registry", "RUNNING", checkVersionAuditLog)
 	reg, err := versionregistry.Load(checkVersionAuditLog)
 	fresh := err == nil && reg.LastHash != ""
 	if fresh {
@@ -64,24 +71,35 @@ func runCheckVersion(cmd *cobra.Command, _ []string) error {
 	if !fresh {
 		reg = versionregistry.New()
 		if _, rerr := reg.Rebuild(checkVersionAuditLog); rerr != nil {
-			fmt.Fprintf(cmd.ErrOrStderr(), "Error: rebuild version registry from chain: %v\n", rerr)
+			u.report(2, "Loading version registry", "FAILED", rerr.Error())
+			u.render(buildGateErrorDashboard(checkVersionAuditLog, checkVersionVersion, rerr.Error()))
+			fmt.Fprintf(u.stderr, "Error: rebuild version registry from chain: %v\n", rerr)
 			exitFunc(exitcodes.GenericError)
 			return nil
 		}
 		if serr := reg.Save(checkVersionAuditLog); serr != nil {
-			fmt.Fprintf(cmd.ErrOrStderr(), "Warning: cannot refresh version registry: %v\n", serr)
+			fmt.Fprintf(u.stderr, "Warning: cannot refresh version registry: %v\n", serr)
 		}
 	}
+	u.report(2, "Loading version registry", "DONE", map[bool]string{true: "registry fresh", false: "registry rebuilt"}[fresh])
 
 	if info, ok := reg.Releases[checkVersionVersion]; ok {
-		fmt.Fprintf(cmd.OutOrStdout(), "[DUPLICATE RELEASE] version %s was already sealed\n", checkVersionVersion)
-		fmt.Fprintf(cmd.OutOrStdout(), "  policy_ref: %s\n  sealed_at:  %s\n  entry_hash: %s\n",
-			info.PolicyRef, info.SealedAt.UTC().Format("2006-01-02T15:04:05Z"), info.EntryHash)
-		fmt.Fprintf(cmd.ErrOrStderr(), "Error: release version %s already sealed — refusing duplicate release\n", checkVersionVersion)
+		u.report(3, "Checking release version", "FAILED", "version already sealed")
+		u.render(buildGateCheckDashboard(checkVersionAuditLog, checkVersionVersion, "DUPLICATE", info.PolicyRef, info.SealedAt, info.EntryHash, fresh))
+		if !u.dashboardEnabled() {
+			fmt.Fprintf(u.output, "[DUPLICATE RELEASE] version %s was already sealed\n", checkVersionVersion)
+			fmt.Fprintf(u.output, "  policy_ref: %s\n  sealed_at:  %s\n  entry_hash: %s\n",
+				info.PolicyRef, info.SealedAt.UTC().Format("2006-01-02T15:04:05Z"), info.EntryHash)
+		}
+		fmt.Fprintf(u.stderr, "Error: release version %s already sealed — refusing duplicate release\n", checkVersionVersion)
 		exitFunc(exitcodes.DuplicateRelease)
 		return nil
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), "OK: version %s has not been sealed yet\n", checkVersionVersion)
+	u.report(3, "Checking release version", "DONE", "version available")
+	u.render(buildGateCheckDashboard(checkVersionAuditLog, checkVersionVersion, "READY", "", time.Time{}, "", fresh))
+	if !u.dashboardEnabled() {
+		fmt.Fprintf(u.output, "OK: version %s has not been sealed yet\n", checkVersionVersion)
+	}
 	return nil
 }

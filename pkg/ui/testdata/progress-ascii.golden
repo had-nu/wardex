@@ -1,0 +1,12 @@
++- RELEASE GATE SESSION-------------------------------RUNNING +
+| COMMAND         EVALUATE                                    |
+| CONFIG          wardex-config.yaml                          |
++-------------------------------------------------------------+
+
+
+01 > Loading configuration                              RUNNING
+    \- config.yaml
+01 + Loading configuration                                 DONE
+    \- configuration loaded
+02 + Computing gaps                                        DONE
+    \- 3 findings

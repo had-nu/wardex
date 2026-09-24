@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -41,16 +42,21 @@ type chainSeal struct {
 }
 
 func runSeal(cmd *cobra.Command, args []string) error {
+	u := beginProvenanceUI(cmd, "seal", sealDir)
+	u.report(1, "Validating base directory", "RUNNING", sealDir)
 	safeBase, err := cli.SafePath(sealDir)
 	if err != nil {
+		u.report(1, "Validating base directory", "FAILED", err.Error())
 		return fmt.Errorf("validating base directory: %w", err)
 	}
+	u.report(1, "Validating base directory", "DONE", safeBase)
 
 	exclude := make(map[string]bool)
 	for _, e := range sealExclude {
 		exclude[e] = true
 	}
 
+	u.report(2, "Scanning artifact tree", "RUNNING", "")
 	artifacts := make(map[string]string)
 	err = filepath.Walk(safeBase, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -79,8 +85,10 @@ func runSeal(cmd *cobra.Command, args []string) error {
 		return nil
 	})
 	if err != nil {
+		u.report(2, "Scanning artifact tree", "FAILED", err.Error())
 		return fmt.Errorf("walking directory: %w", err)
 	}
+	u.report(2, "Scanning artifact tree", "DONE", fmt.Sprintf("%d file(s)", len(artifacts)))
 
 	var keys []string
 	for k := range artifacts {
@@ -103,19 +111,32 @@ func runSeal(cmd *cobra.Command, args []string) error {
 		Artifacts:  artifacts,
 	}
 
+	u.report(3, "Writing chain seal", "RUNNING", sealOutput)
 	outData, _ := json.MarshalIndent(seal, "", "  ")
 	if err := cli.SafeWriteFile(sealOutput, outData); err != nil {
+		u.report(3, "Writing chain seal", "FAILED", err.Error())
 		return fmt.Errorf("writing chain seal: %w", err)
 	}
+	u.report(3, "Writing chain seal", "DONE", sealOutput)
 
-	fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", sealOutput)
-	fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
-	fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
-
+	u.report(4, "Submitting chain hash", "RUNNING", sealLabel)
 	anchorer, err := getAnchorerFn()
 	if err != nil {
-		fmt.Fprintf(cmd.ErrOrStderr(), "Warning: provenance anchor unavailable: %v\n", err)
-		fmt.Fprintf(cmd.ErrOrStderr(), "  Seal saved locally; submit with: wardex provenance submit %s\n", chainHashHex)
+		u.report(4, "Submitting chain hash", "SKIPPED", err.Error())
+		if u.progress.Enabled() {
+			u.render(buildProvenanceActionDashboard("SEALED", []ui.Field{
+				{Label: "OUTPUT", Value: sealOutput},
+				{Label: "FILES", Value: fmt.Sprintf("%d", len(artifacts))},
+				{Label: "CHAIN HASH", Value: chainHashHex},
+				{Label: "ANCHOR", Value: "unavailable"},
+			}))
+		} else {
+			fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", sealOutput)
+			fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
+			fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
+			fmt.Fprintf(cmd.ErrOrStderr(), "Warning: provenance anchor unavailable: %v\n", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "  Seal saved locally; submit with: wardex provenance submit %s\n", chainHashHex)
+		}
 		return nil
 	}
 	defer func() { _ = anchorer.Close() }()
@@ -123,11 +144,37 @@ func runSeal(cmd *cobra.Command, args []string) error {
 	hashBytes, _ := hex.DecodeString(chainHashHex)
 	result, err := anchorer.Submit(cmd.Context(), hashBytes, sealLabel)
 	if err != nil {
-		fmt.Fprintf(cmd.ErrOrStderr(), "Warning: anchor submission failed: %v\n", err)
-		fmt.Fprintf(cmd.ErrOrStderr(), "  Seal saved locally at %s\n", sealOutput)
+		u.report(4, "Submitting chain hash", "FAILED", err.Error())
+		if u.progress.Enabled() {
+			u.render(buildProvenanceActionDashboard("SEALED", []ui.Field{
+				{Label: "OUTPUT", Value: sealOutput},
+				{Label: "FILES", Value: fmt.Sprintf("%d", len(artifacts))},
+				{Label: "CHAIN HASH", Value: chainHashHex},
+				{Label: "ANCHOR", Value: "failed"},
+			}))
+		} else {
+			fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", sealOutput)
+			fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
+			fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
+			fmt.Fprintf(cmd.ErrOrStderr(), "Warning: anchor submission failed: %v\n", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "  Seal saved locally at %s\n", sealOutput)
+		}
 		return nil
 	}
-
+	u.report(4, "Submitting chain hash", "DONE", result.Label)
+	if u.progress.Enabled() {
+		u.render(buildProvenanceActionDashboard("SEALED", []ui.Field{
+			{Label: "OUTPUT", Value: sealOutput},
+			{Label: "FILES", Value: fmt.Sprintf("%d", len(artifacts))},
+			{Label: "CHAIN HASH", Value: chainHashHex},
+			{Label: "ANCHOR", Value: result.Label},
+			{Label: "BLOCK", Value: fmt.Sprintf("%d", result.BlockIndex)},
+		}))
+		return nil
+	}
+	fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", sealOutput)
+	fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
+	fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
 	fmt.Fprintf(cmd.OutOrStdout(), "  Anchored:     %s (block ~%d)\n", result.Label, result.BlockIndex)
 	return nil
 }

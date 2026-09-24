@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
+	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/orchestrator"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
@@ -101,7 +102,7 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	if policyRef == "" {
 		policyRef = os.Getenv("WARDEX_POLICY_REF")
 	}
-	code, err := orchestrator.RunGate(cmd.Context(), orchestrator.GateOptions{
+	gateOpts := orchestrator.GateOptions{
 		ConfigPath:         configPath,
 		GateFile:           gateFile,
 		GateMode:           gateMode,
@@ -124,7 +125,17 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		Logger:             ui.Default().Logger,
 		Stderr:             stderr,
 		Stdout:             cmd.OutOrStdout(),
-	})
+	}
+	progress := ui.NewTerminalProgress(stderr)
+	progress.Begin(buildGateSession(gateOpts))
+	gateOpts.Progress = progress
+	if progress.Enabled() {
+		gateOpts.OnResult = func(report model.GateReport) {
+			renderGateResults(stderr, progress, gateOpts, report)
+		}
+	}
+
+	code, err := orchestrator.RunGate(cmd.Context(), gateOpts)
 	if err != nil {
 		return err
 	}

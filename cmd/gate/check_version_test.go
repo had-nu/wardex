@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -30,7 +31,7 @@ func sealVersion(t *testing.T, logPath, version, policyRef string) {
 	}
 }
 
-func runCheck(logPath, version string) (int, string) {
+func runCheckWithOutput(logPath, version string) (int, string, string) {
 	orig := exitFunc
 	var code int
 	exitFunc = func(c int) { code = c }
@@ -41,7 +42,12 @@ func runCheck(logPath, version string) (int, string) {
 	GateCmd.SetErr(&errBuf)
 	GateCmd.SetArgs([]string{"check-version", "--audit-log", logPath, "--version", version})
 	_ = GateCmd.Execute()
-	return code, errBuf.String()
+	return code, out.String(), errBuf.String()
+}
+
+func runCheck(logPath, version string) (int, string) {
+	code, _, stderr := runCheckWithOutput(logPath, version)
+	return code, stderr
 }
 
 func TestCheckVersionDuplicateExit13(t *testing.T) {
@@ -52,6 +58,20 @@ func TestCheckVersionDuplicateExit13(t *testing.T) {
 	code, stderr := runCheck(logPath, "9.9.9")
 	if code != exitcodes.DuplicateRelease {
 		t.Errorf("exit = %d, esperado %d (stderr: %s)", code, exitcodes.DuplicateRelease, stderr)
+	}
+}
+
+func TestCheckVersionNonInteractiveKeepsMachineOutput(t *testing.T) {
+	dir := t.TempDir()
+	logPath := filepath.Join(dir, "wardex-gate-audit.log")
+	sealVersion(t, logPath, "9.9.9", "policy")
+
+	code, stdout, _ := runCheckWithOutput(logPath, "9.9.9")
+	if code != exitcodes.DuplicateRelease {
+		t.Fatalf("exit = %d, esperado %d", code, exitcodes.DuplicateRelease)
+	}
+	if !strings.Contains(stdout, "[DUPLICATE RELEASE]") {
+		t.Fatalf("expected legacy result on configured stdout, got %q", stdout)
 	}
 }
 

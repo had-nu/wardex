@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
@@ -56,31 +55,50 @@ type gateResult struct {
 	Gate *model.GateReport `json:"Gate"`
 }
 
+type fileResult struct {
+	file     string
+	decision string
+	blocked  int
+	allowed  int
+	warned   int
+}
+
 func runAggregate(cmd *cobra.Command, args []string) error {
 	if failOn != "any-block" && failOn != "all-block" {
 		return fmt.Errorf("aggregate: --fail-on must be 'any-block' or 'all-block', got %q", failOn)
 	}
 
-	type fileResult struct {
-		file     string
-		decision string
-		blocked  int
-		allowed  int
-		warned   int
+	stderr := cmd.ErrOrStderr()
+	session := buildAggregateSession(args)
+	progress := ui.NewTerminalProgress(stderr)
+	progress.Begin(session)
+	reportProgress := func(number int, name, status, detail string) {
+		progress.Report(ui.PhaseEvent{
+			Number: number,
+			Name:   name,
+			Status: status,
+			Detail: detail,
+		})
 	}
+
+	reportProgress(1, "Validating aggregation policy", "RUNNING", "")
+	reportProgress(1, "Validating aggregation policy", "DONE", failOn)
+	reportProgress(2, "Reading gate reports", "RUNNING", "")
 
 	var results []fileResult
 	for _, path := range args {
 		data, err := cli.SafeReadFile(path)
 		if err != nil {
+			reportProgress(2, "Reading gate reports", "FAILED", err.Error())
 			return fmt.Errorf("aggregate: read %q: %w", path, err)
 		}
 		var gr gateResult
 		if err := json.Unmarshal(data, &gr); err != nil {
+			reportProgress(2, "Reading gate reports", "FAILED", err.Error())
 			return fmt.Errorf("aggregate: parse %q: %w", path, err)
 		}
 		if gr.Gate == nil {
-			fmt.Fprintf(os.Stderr, "[WARN] %q has no gate data (was --gate used?). Treating as ALLOW.\n", path)
+			fmt.Fprintf(stderr, "[WARN] %q has no gate data (was --gate used?). Treating as ALLOW.\n", path)
 			results = append(results, fileResult{file: path, decision: "allow"})
 			continue
 		}
@@ -92,64 +110,29 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 			warned:   gr.Gate.WarnCount,
 		})
 	}
+	reportProgress(2, "Reading gate reports", "DONE", fmt.Sprintf("%d report(s)", len(results)))
 
-	// Emit summary table
-	w := cmd.OutOrStdout()
-	_, _ = fmt.Fprintln(w, "")
-	_, _ = fmt.Fprintln(w, "## Wardex — Aggregate Gate Decision")
-	_, _ = fmt.Fprintln(w, "")
+	reportProgress(3, "Calculating combined decision", "RUNNING", "")
+	combined, blockCount, blocked := aggregateDecision(results, failOn)
+	reportProgress(3, "Calculating combined decision", "DONE", fmt.Sprintf("%d/%d blocked", blockCount, len(results)))
 
-	t := ui.NewTable(
-		[]string{"File", "Decision", "Blocked", "Allowed", "Warned"},
-		[]int{40, 10, 8, 8, 8},
-	)
-
-	for _, r := range results {
-		label := strings.ToUpper(r.decision)
-		var decBg string
-		switch r.decision {
-		case "block":
-			decBg = ui.BgRed
-		case "warn":
-			decBg = ui.BgYellow
-		default:
-			decBg = ui.BgGreen
+	if progress.Enabled() {
+		renderAggregateResults(stderr, progress, session, results)
+	} else {
+		w := cmd.OutOrStdout()
+		renderAggregateTable(w, results)
+		if blocked {
+			_, _ = fmt.Fprintf(w, "\n**Combined Decision:** [FAIL] %s (%s — %d/%d framework(s) blocked)\n\n",
+				combined, failOn, blockCount, len(results),
+			)
+		} else {
+			_, _ = fmt.Fprintf(w, "\n**Combined Decision:** [OK] %s\n\n", combined)
 		}
-		t.AddRowStyled(
-			[]string{r.file, label, fmt.Sprintf("%d", r.blocked), fmt.Sprintf("%d", r.allowed), fmt.Sprintf("%d", r.warned)},
-			nil,
-			[]string{"", decBg, "", "", ""},
-		)
-	}
-	t.Render(w)
-
-	// Determine combined decision
-	blockCount := 0
-	for _, r := range results {
-		if r.decision == "block" {
-			blockCount++
-		}
-	}
-
-	var combined string
-	blocked := false
-	switch failOn {
-	case "any-block":
-		blocked = blockCount > 0
-	case "all-block":
-		blocked = blockCount == len(results)
 	}
 
 	if blocked {
-		combined = "BLOCK"
-		_, _ = fmt.Fprintf(w, "\n**Combined Decision:** [FAIL] %s (%s — %d/%d framework(s) blocked)\n\n",
-			combined, failOn, blockCount, len(results),
-		)
 		os.Exit(exitcodes.GateBlocked)
 	}
-
-	combined = "ALLOW"
-	_, _ = fmt.Fprintf(w, "\n**Combined Decision:** [OK] %s\n\n", combined)
 	os.Exit(exitcodes.OK)
 	return nil
 }

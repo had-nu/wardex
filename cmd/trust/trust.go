@@ -117,35 +117,64 @@ func init() {
 }
 
 func runTrustInit(cmd *cobra.Command, args []string) error {
+	u := beginTrustUI(cmd, "init", initOut)
+	u.report(1, "Creating trust store", "RUNNING", initOut)
 	if err := trust.InitStore(keyringPath, initActor, initName, initOut); err != nil {
+		u.report(1, "Creating trust store", "FAILED", err.Error())
 		return err
 	}
+	u.report(1, "Creating trust store", "DONE", initOut)
 
-	// Extract the generated key ID from the store for the output
+	u.report(2, "Loading generated key entry", "RUNNING", "")
 	store, _, err := trust.LoadStore(initOut)
 	if err != nil {
+		u.report(2, "Loading generated key entry", "FAILED", err.Error())
 		return err
 	}
+	if len(store.Keys) == 0 {
+		err := fmt.Errorf("trust init: generated store contains no keys")
+		u.report(2, "Loading generated key entry", "FAILED", err.Error())
+		return err
+	}
+	u.report(2, "Loading generated key entry", "DONE", store.Keys[0].ID)
+	u.report(3, "Finalizing trust store", "RUNNING", "")
+	u.report(3, "Finalizing trust store", "DONE", "trust store ready")
 
-	w := cmd.OutOrStdout()
+	gitRepo := isInsideGitRepo(initOut)
+	if u.dashboardEnabled() {
+		fields := []ui.Field{
+			{Label: "ADMIN", Value: initActor},
+			{Label: "KEY ID", Value: store.Keys[0].ID},
+			{Label: "GIT REPO", Value: boolLabel(gitRepo)},
+		}
+		u.render(buildTrustActionDashboard("INITIALISED", initOut, fields))
+		return nil
+	}
+
+	w := u.output
 	fmt.Fprintln(w, "Trust store initialised.")
-	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("File:", ui.Gray), initOut)
-	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Admin:", ui.Gray), initActor)
-	fmt.Fprintf(w, "  %s %s\n\n", ui.Colorize("Key ID:", ui.Gray), store.Keys[0].ID)
-	fmt.Fprintf(w, "NEXT STEPS — do not skip:\n")
+	fileLabel, adminLabel, keyLabel := "File:", "Admin:", "Key ID:"
+	if ui.IsTerminal(w) {
+		fileLabel = ui.Colorize(fileLabel, ui.Gray)
+		adminLabel = ui.Colorize(adminLabel, ui.Gray)
+		keyLabel = ui.Colorize(keyLabel, ui.Gray)
+	}
+	fmt.Fprintf(w, "  %s %s\n", fileLabel, initOut)
+	fmt.Fprintf(w, "  %s %s\n", adminLabel, initActor)
+	fmt.Fprintf(w, "  %s %s\n\n", keyLabel, store.Keys[0].ID)
+	fmt.Fprintln(w, "NEXT STEPS — do not skip:")
 	fmt.Fprintf(w, "  1. git add %s\n", initOut)
 	fmt.Fprintf(w, "  2. git commit -m \"chore: wardex trust bootstrap\"\n")
 	fmt.Fprintf(w, "  3. Configure branch protection on this repository:\n")
-	fmt.Fprintf(w, "       - Require pull request reviews before merging\n")
-	fmt.Fprintf(w, "       - Restrict who can push to the default branch\n")
-	fmt.Fprintf(w, "     Without branch protection, this file can be overwritten by any contributor.\n")
+	fmt.Fprintln(w, "       - Require pull request reviews before merging")
+	fmt.Fprintln(w, "       - Restrict who can push to the default branch")
+	fmt.Fprintln(w, "     Without branch protection, this file can be overwritten by any contributor.")
 
-	if !isInsideGitRepo(initOut) {
-		fmt.Fprintf(cmd.OutOrStdout(), "\nWarning: %s is not inside a Git repository.\n"+
+	if !gitRepo {
+		fmt.Fprintf(u.output, "\nWarning: %s is not inside a Git repository.\n"+
 			"         wardex-trust.yaml is only effective when version-controlled with branch protection.\n",
 			filepath.Dir(initOut))
 	}
-
 	return nil
 }
 
@@ -169,44 +198,93 @@ func isInsideGitRepo(path string) bool {
 }
 
 func runTrustAdd(cmd *cobra.Command, args []string) error {
+	u := beginTrustUI(cmd, "add", trustPath)
 	role := trust.Role(addRole)
+	u.report(1, "Adding operator key", "RUNNING", addActor)
 	if err := trust.AddKey(trustPath, keyringPath, addPubkey, role, addActor, addName); err != nil {
+		u.report(1, "Adding operator key", "FAILED", err.Error())
 		return err
 	}
+	u.report(1, "Adding operator key", "DONE", addActor)
 
-	// Load updated store to get the new key ID
+	u.report(2, "Loading updated trust store", "RUNNING", "")
 	store, _, err := trust.LoadStore(trustPath)
 	if err != nil {
+		u.report(2, "Loading updated trust store", "FAILED", err.Error())
 		return err
 	}
-
+	if len(store.Keys) == 0 {
+		err := fmt.Errorf("trust add: trust store contains no keys")
+		u.report(2, "Loading updated trust store", "FAILED", err.Error())
+		return err
+	}
 	newEntry := store.Keys[len(store.Keys)-1]
+	u.report(2, "Loading updated trust store", "DONE", newEntry.ID)
+	u.report(3, "Finalizing trust update", "RUNNING", "")
+	u.report(3, "Finalizing trust update", "DONE", "operator added")
 
-	w := cmd.OutOrStdout()
+	if u.dashboardEnabled() {
+		fields := []ui.Field{
+			{Label: "KEY ID", Value: newEntry.ID},
+			{Label: "ACTOR", Value: addActor},
+			{Label: "ROLE", Value: addRole},
+			{Label: "ADDED BY", Value: "verified admin"},
+		}
+		u.render(buildTrustActionDashboard("ADDED", trustPath, fields))
+		return nil
+	}
+
+	w := u.output
 	fmt.Fprintln(w, "Key added to trust store.")
-	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Key ID:", ui.Gray), newEntry.ID)
-	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Actor:", ui.Gray), addActor)
-	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Role:", ui.Gray), addRole)
-	fmt.Fprintf(w, "  %s verified admin\n\n", ui.Colorize("Added by:", ui.Gray))
-	fmt.Fprintf(w, "Commit and merge via PR:\n")
+	keyLabel, actorLabel, roleLabel, addedLabel := "Key ID:", "Actor:", "Role:", "Added by:"
+	if ui.IsTerminal(w) {
+		keyLabel = ui.Colorize(keyLabel, ui.Gray)
+		actorLabel = ui.Colorize(actorLabel, ui.Gray)
+		roleLabel = ui.Colorize(roleLabel, ui.Gray)
+		addedLabel = ui.Colorize(addedLabel, ui.Gray)
+	}
+	fmt.Fprintf(w, "  %s %s\n", keyLabel, newEntry.ID)
+	fmt.Fprintf(w, "  %s %s\n", actorLabel, addActor)
+	fmt.Fprintf(w, "  %s %s\n", roleLabel, addRole)
+	fmt.Fprintf(w, "  %s verified admin\n\n", addedLabel)
+	fmt.Fprintln(w, "Commit and merge via PR:")
 	fmt.Fprintf(w, "  git add %s\n", trustPath)
 	fmt.Fprintf(w, "  git commit -m \"chore: trust add — %s (%s)\"\n", addActor, addRole)
-
 	return nil
 }
 
 func runTrustRevoke(cmd *cobra.Command, args []string) error {
+	u := beginTrustUI(cmd, "revoke", trustPath)
+	u.report(1, "Revoking trust key", "RUNNING", revokeID)
 	if err := trust.RevokeKey(trustPath, keyringPath, revokeID, revokeReason); err != nil {
+		u.report(1, "Revoking trust key", "FAILED", err.Error())
 		return err
 	}
+	u.report(1, "Revoking trust key", "DONE", revokeID)
+	u.report(2, "Finalizing revocation", "RUNNING", "")
+	u.report(2, "Finalizing revocation", "DONE", "trust store updated")
 
-	w := cmd.OutOrStdout()
+	if u.dashboardEnabled() {
+		fields := []ui.Field{
+			{Label: "KEY ID", Value: revokeID},
+			{Label: "REASON", Value: revokeReason},
+			{Label: "WARNING", Value: "sealed configs require re-sealing"},
+		}
+		u.render(buildTrustActionDashboard("REVOKED", trustPath, fields))
+		return nil
+	}
+
+	w := u.output
 	fmt.Fprintln(w, "Key revoked.")
-	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Key ID:", ui.Gray), revokeID)
-	fmt.Fprintf(w, "  %s %s\n\n", ui.Colorize("Reason:", ui.Gray), revokeReason)
-	fmt.Fprintf(w, "WARNING: Any sealed configs referencing this key will be rejected\n")
-	fmt.Fprintf(w, "         by wardex evaluate until re-sealed.\n\n")
+	keyLabel, reasonLabel := "Key ID:", "Reason:"
+	if ui.IsTerminal(w) {
+		keyLabel = ui.Colorize(keyLabel, ui.Gray)
+		reasonLabel = ui.Colorize(reasonLabel, ui.Gray)
+	}
+	fmt.Fprintf(w, "  %s %s\n", keyLabel, revokeID)
+	fmt.Fprintf(w, "  %s %s\n\n", reasonLabel, revokeReason)
+	fmt.Fprintln(w, "WARNING: Any sealed configs referencing this key will be rejected")
+	fmt.Fprintln(w, "         by wardex evaluate until re-sealed.")
 	fmt.Fprintf(w, "%s updated. Commit and merge via PR.\n", trustPath)
-
 	return nil
 }

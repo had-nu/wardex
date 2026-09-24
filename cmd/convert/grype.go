@@ -55,15 +55,21 @@ func init() {
 
 func runConvertGrype(cmd *cobra.Command, args []string) {
 	inFile := args[0]
-
+	outputPath := grypeOutFile
+	u := beginConvertUI(cmd, "grype", inFile, outputPath)
+	u.report(1, "Resolving input path", "RUNNING", inFile)
 	safePathStr, err := cli.SafePath(inFile)
 	if err != nil {
+		u.report(1, "Resolving input path", "FAILED", err.Error())
 		fmt.Fprintf(os.Stderr, "Error resolving safe path for input file: %v\n", err)
 		os.Exit(1)
 	}
+	u.report(1, "Resolving input path", "DONE", safePathStr)
 
+	u.report(2, "Reading Grype report", "RUNNING", safePathStr)
 	f, err := os.Open(safePathStr) // #nosec G304
 	if err != nil {
+		u.report(2, "Reading Grype report", "FAILED", err.Error())
 		fmt.Fprintf(os.Stderr, "Error opening Grype JSON file: %v\n", err)
 		os.Exit(1)
 	}
@@ -71,15 +77,19 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 
 	data, err := io.ReadAll(f)
 	if err != nil {
+		u.report(2, "Reading Grype report", "FAILED", err.Error())
 		fmt.Fprintf(os.Stderr, "Error reading Grype JSON: %v\n", err)
 		os.Exit(1)
 	}
+	u.report(2, "Reading Grype report", "DONE", fmt.Sprintf("%d bytes", len(data)))
 
 	var report GrypeReport
 	if err := json.Unmarshal(data, &report); err != nil {
+		u.report(3, "Parsing Grype report", "FAILED", err.Error())
 		fmt.Fprintf(os.Stderr, "Error parsing Grype JSON: %v\n", err)
 		os.Exit(1)
 	}
+	u.report(3, "Parsing Grype report", "DONE", fmt.Sprintf("%d match(es)", len(report.Matches)))
 
 	out := model.VulnerabilityEnvelope{
 		ConvertedBy:     "wardex-convert/grype",
@@ -168,9 +178,10 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 		fmt.Fprintf(os.Stderr, "[INFO] Skipped %d CVEs (empty ID: %d, duplicate: %d)\n", skippedEmpty+skippedDuplicate, skippedEmpty, skippedDuplicate)
 	}
 
-	outputPath := grypeOutFile
+	u.report(4, "Writing converted output", "RUNNING", outputPath)
 	yamlData, err := yaml.Marshal(&out)
 	if err != nil {
+		u.report(4, "Writing converted output", "FAILED", err.Error())
 		fmt.Fprintf(os.Stderr, "Error encoding YAML: %v\n", err)
 		os.Exit(1)
 	}
@@ -179,16 +190,28 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 		fmt.Print(string(yamlData))
 	} else {
 		if err := cli.SafeWriteFile(outputPath, yamlData); err != nil {
+			u.report(4, "Writing converted output", "FAILED", err.Error())
 			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), outputPath)
+		if !u.progress.Enabled() {
+			fmt.Printf("Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), outputPath)
+		}
 	}
+	u.report(4, "Writing converted output", "DONE", outputPath)
 
 	if attestKeyPath != "" && outputPath != "stdout" && outputPath != "-" {
 		if err := attestOutput("wardex-convert/grype", inFile, outputPath, attestKeyPath); err != nil {
+			u.report(5, "Writing tool attestation", "FAILED", err.Error())
 			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+		} else {
+			u.report(5, "Writing tool attestation", "DONE", outputPath+".attest")
 		}
+	} else {
+		u.report(5, "Writing tool attestation", "SKIPPED", "not requested")
+	}
+	if u.progress.Enabled() {
+		u.render("grype", outputPath, len(out.Vulnerabilities), skippedEmpty+skippedDuplicate, exploitedCount(out.Vulnerabilities), attestKeyPath != "")
 	}
 }
 

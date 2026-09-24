@@ -5,6 +5,7 @@ import (
 
 	"github.com/had-nu/wardex/v2/internal/cpl"
 	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -47,16 +48,32 @@ func runConfigHash(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unsupported algorithm %q: use sha256 or blake3", hashAlgorithm)
 	}
 
+	stderr := cmd.ErrOrStderr()
+	progress := ui.NewTerminalProgress(stderr)
+	progress.Begin(buildConfigHashSession(hashConfigPath, hashAlgorithm))
+	reportProgress := func(number int, name, status, detail string) {
+		progress.Report(ui.PhaseEvent{Number: number, Name: name, Status: status, Detail: detail})
+	}
+	reportProgress(1, "Reading configuration", "RUNNING", hashConfigPath)
 	raw, err := cli.SafeReadFile(hashConfigPath)
 	if err != nil {
+		reportProgress(1, "Reading configuration", "FAILED", err.Error())
 		return fmt.Errorf("reading config file: %w", err)
 	}
-
+	reportProgress(1, "Reading configuration", "DONE", fmt.Sprintf("%d bytes", len(raw)))
+	reportProgress(2, "Computing canonical hash", "RUNNING", hashAlgorithm)
 	hash, err := cpl.ComputeConfigHash(raw, algo)
 	if err != nil {
+		reportProgress(2, "Computing canonical hash", "FAILED", err.Error())
 		return fmt.Errorf("compute hash: %w", err)
 	}
-
-	fmt.Fprintln(cmd.OutOrStdout(), hash)
+	reportProgress(2, "Computing canonical hash", "DONE", hash)
+	reportProgress(3, "Finalizing hash result", "RUNNING", "")
+	reportProgress(3, "Finalizing hash result", "DONE", "hash ready")
+	if configResultEnabled(cmd, progress) {
+		_ = ui.RenderResults(stderr, buildConfigHashDashboard(hashConfigPath, hashAlgorithm, hash))
+		return nil
+	}
+	fmt.Fprintln(configCommandOutput(cmd), hash)
 	return nil
 }

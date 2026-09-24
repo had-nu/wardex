@@ -1,0 +1,20 @@
++- EVALUATION SESSION------------------------------------------------COMPLETE +
+| Input           controls.yml                                                |
+| Framework       iso27001                                                    |
++-----------------------------------------------------------------------------+
+
+
+01 + Loading configuration                                                 DONE
+    \- configuration loaded
+02 + Computing gaps                                                    COMPLETE
+    \- 3 gaps
+
++- COMPLIANCE GAP-------------------------------------------CONFIDENCE | 0.90 +
+| HIGH  Missing evidence for control                                          |
+| Control         A.5.15                                                      |
++-----------------------------------------------------------------------------+
+
++- EXECUTIVE SUMMARY----------------------------------------------------BLOCK +
+| Coverage        78%                                                         |
+| Gaps            3                                                           |
++-----------------------------------------------------------------------------+

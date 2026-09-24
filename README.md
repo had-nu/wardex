@@ -222,15 +222,51 @@ wardex provenance verify <chain-hash>
 
 ---
 
+## Interface do terminal
+
+Em terminais interativos, os comandos de avaliação, `art14`, `simulate`, `keygen`, `config`, `provenance`, `chain`, `hmac`, `audit`, `enrich`, `convert`, `assets`, `auth`, `contract`, `policy`, `state`, `gate`, `accept` e `trust` apresentam a execução como um dashboard textual com:
+
+- cabeçalho e versão;
+- cartão da sessão e parâmetros efetivos;
+- fases reais do pipeline (`RUNNING`, `DONE`, `SKIPPED` e `FAILED`);
+- cards dos gaps/decisões mais relevantes;
+- resumo de coverage, severidade e decisão do release gate.
+
+A interface é ativada automaticamente apenas quando o destino é um TTY. Saídas JSON, CSV, pipes, ficheiros e CI permanecem limpas e sem decoração. Campos potencialmente sensíveis são apresentados como `[REDACTED]`. O `audit export` mantém o seu formato de streaming machine-oriented para preservar JSONL/CSV e metadados de paginação.
+
+Variáveis de ambiente reconhecidas:
+
+- `NO_COLOR` — desativa cores;
+- `TERM=dumb` — usa fallback ASCII;
+- `COLUMNS` — largura alternativa quando o terminal não a fornece;
+- `CI`, `GITHUB_ACTIONS` e `GITLAB_CI` — desativam a interface decorativa.
+
+Para saída estruturada, use um ficheiro ou redirecionamento, por exemplo:
+
+```bash
+NO_COLOR=1 wardex --output json controls.yaml > report.json
+wardex evaluate --evidence vulns.yaml --config wardex-config.yaml
+```
+
+A especificação completa do layout está em [`doc/architecture/TERMINAL_UI.md`](doc/architecture/TERMINAL_UI.md).
+
+---
+
 ## Comandos Principais
 
 | Comando | Descrição |
 |---------|-----------|
 | `wardex evaluate` | Avalia vulnerabilidades contra o release gate |
 | `wardex assess` | Análise de lacunas de conformidade |
+| `wardex aggregate` | Combina decisões de release gate de vários frameworks |
 | `wardex convert grype/sbom` | Converte output de scanners para formato Wardex |
 | `wardex enrich epss` | Enriquece vulnerabilidades com dados EPSS |
 | `wardex accept request/verify/list` | Gestão de aceitações de risco |
+| `wardex auth status/verify` | Integridade e estado das chaves do trust store |
+| `wardex contract verify` | Verificação de integridade SHA-256 de contratos |
+| `wardex policy validate/list/add/check-expiry` | Gestão e validação de políticas |
+| `wardex state status/history/trend/dashboard/verify/cleanup` | Estado persistente e integridade da cadeia |
+| `wardex gate check-version` | Proteção contra releases duplicados |
 | `wardex art14 list/show/verify` | Ciclo de vida do artefacto CRA Article 14 |
 | `wardex provenance seal/submit/attest/verify/status` | Proveniência criptográfica 3CP com Gleipnir |
 | `wardex config hash/seal` | CPL e sealed config (CBOR determinístico v2.3.0+) |

@@ -50,16 +50,21 @@ type chainSeal struct {
 }
 
 func runChainSeal(cmd *cobra.Command, args []string) error {
+	u := beginChainUI(cmd, chainBaseDir, chainOutput)
+	u.report(1, "Validating base directory", "RUNNING", chainBaseDir)
 	safeBase, err := cli.SafePath(chainBaseDir)
 	if err != nil {
+		u.report(1, "Validating base directory", "FAILED", err.Error())
 		return fmt.Errorf("validating base directory: %w", err)
 	}
+	u.report(1, "Validating base directory", "DONE", safeBase)
 
 	_exclude := make(map[string]bool)
 	for _, e := range chainExclude {
 		_exclude[e] = true
 	}
 
+	u.report(2, "Scanning artifact tree", "RUNNING", "")
 	artifacts := make(map[string]string)
 	err = filepath.Walk(safeBase, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -96,8 +101,10 @@ func runChainSeal(cmd *cobra.Command, args []string) error {
 	})
 
 	if err != nil {
+		u.report(2, "Scanning artifact tree", "FAILED", err.Error())
 		return fmt.Errorf("walking directory: %w", err)
 	}
+	u.report(2, "Scanning artifact tree", "DONE", fmt.Sprintf("%d file(s)", len(artifacts)))
 
 	var keys []string
 	for k := range artifacts {
@@ -111,26 +118,35 @@ func runChainSeal(cmd *cobra.Command, args []string) error {
 	for _, k := range keys {
 		chainInput.WriteString(k + "|" + artifacts[k] + "\n")
 	}
+	u.report(3, "Computing chain hash", "RUNNING", "")
 	chainHash := sha256.Sum256([]byte(chainInput.String()))
+	chainHashHex := fmt.Sprintf("%x", chainHash)
+	u.report(3, "Computing chain hash", "DONE", chainHashHex[:16]+"...")
 
 	seal := chainSeal{
 		Version:    "1.0",
 		Timestamp:  "",
 		TotalFiles: len(artifacts),
-		ChainHash:  fmt.Sprintf("%x", chainHash),
+		ChainHash:  chainHashHex,
 		Artifacts:  artifacts,
 	}
 	data, _ := json.MarshalIndent(seal, "", "  ")
 	_ = data
 
+	u.report(4, "Writing chain seal", "RUNNING", chainOutput)
 	outData, _ := json.MarshalIndent(seal, "", "  ")
 	if err := cli.SafeWriteFile(chainOutput, outData); err != nil {
+		u.report(4, "Writing chain seal", "FAILED", err.Error())
 		return fmt.Errorf("writing chain seal: %w", err)
+	}
+	u.report(4, "Writing chain seal", "DONE", chainOutput)
+	if u.progress.Enabled() {
+		u.render(chainOutput, len(artifacts), chainHashHex)
+		return nil
 	}
 
 	fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", chainOutput)
 	fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
-	fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", fmt.Sprintf("%x", chainHash)[:16]+"...")
-
+	fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
 	return nil
 }

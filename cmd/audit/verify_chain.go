@@ -42,37 +42,52 @@ func init() {
 }
 
 func runVerifyChain(cmd *cobra.Command, args []string) error {
+	u := beginAuditUI(cmd, "verify-chain", auditLogPath)
+	u.report(1, "Opening audit log", "RUNNING", auditLogPath)
 	f, err := cli.SafeOpenFile(auditLogPath)
 	if err != nil {
+		u.report(1, "Opening audit log", "FAILED", err.Error())
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: reading audit log: %v\n", err)
 		os.Exit(2)
 		return nil
 	}
 	defer func() { _ = f.Close() }()
+	u.report(1, "Opening audit log", "DONE", auditLogPath)
 
+	u.report(2, "Verifying hash chain", "RUNNING", sessionLabel(sessionID))
 	report, err := cpl.VerifyStream(f, sessionID)
 	if err != nil {
+		u.report(2, "Verifying hash chain", "FAILED", err.Error())
 		fmt.Fprintf(cmd.ErrOrStderr(), "Audit log hash chain: OPERATIONAL ERROR - %v\n", err)
 		os.Exit(2)
 		return nil
 	}
-
-	for i, seg := range report.Segments {
-		if !seg.Valid {
-			fmt.Fprintf(cmd.ErrOrStderr(), "  Segment %d: TAMPERED\n", i+1)
-		}
+	u.report(2, "Verifying hash chain", "DONE", fmt.Sprintf("%d entries", report.Entries))
+	u.report(3, "Preparing verification result", "RUNNING", "")
+	u.report(3, "Preparing verification result", "DONE", "verification complete")
+	if u.progress.Enabled() {
+		u.render(buildChainVerifyDashboard(auditLogPath, sessionID, report))
 	}
 
 	if !report.Valid {
-		fmt.Fprintf(cmd.ErrOrStderr(), "\nAudit log hash chain: TAMPERED (%d segments, %d entries)\n", len(report.Segments), report.Entries)
+		if !u.progress.Enabled() {
+			for i, seg := range report.Segments {
+				if !seg.Valid {
+					fmt.Fprintf(cmd.ErrOrStderr(), "  Segment %d: TAMPERED\n", i+1)
+				}
+			}
+			fmt.Fprintf(cmd.ErrOrStderr(), "\nAudit log hash chain: TAMPERED (%d segments, %d entries)\n", len(report.Segments), report.Entries)
+		}
 		os.Exit(1)
 		return nil
 	}
 
-	if len(report.Segments) == 1 {
-		fmt.Fprintf(cmd.OutOrStdout(), "Audit log hash chain: INTACT (%d entries)\n", report.Entries)
-	} else {
-		fmt.Fprintf(cmd.OutOrStdout(), "Audit log hash chain: INTACT (%d segments, %d entries)\n", len(report.Segments), report.Entries)
+	if !u.progress.Enabled() {
+		if len(report.Segments) == 1 {
+			fmt.Fprintf(cmd.OutOrStdout(), "Audit log hash chain: INTACT (%d entries)\n", report.Entries)
+		} else {
+			fmt.Fprintf(cmd.OutOrStdout(), "Audit log hash chain: INTACT (%d segments, %d entries)\n", len(report.Segments), report.Entries)
+		}
 	}
 	return nil
 }

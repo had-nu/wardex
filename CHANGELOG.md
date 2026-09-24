@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed — Terminal UI
+
+- Added capability-aware terminal rendering with truecolor/ANSI/plain fallbacks,
+  `NO_COLOR`, `TERM=dumb`, CI detection, Unicode/ASCII layouts, and width
+  adaptation.
+- Added an interactive evaluation dashboard with session metadata, live pipeline
+  phases, compliance-gap cards, and an executive summary.
+- Added the equivalent release-gate dashboard to `wardex evaluate`, the
+  assessment dashboard to `wardex assess`, an aggregation dashboard to
+  `wardex aggregate`, lifecycle cards for `wardex art14`, a generation summary
+  for `wardex simulate`, and friendly terminal summaries for key/config/trust,
+  provenance, chain, HMAC, audit verification, enrichment, conversion, asset
+  inventory, authentication, contract, policy, state, gate, and acceptance
+  operations.
+- Kept JSON, CSV, pipes, files, and CI output free of banners and ANSI escapes.
+- Sensitive dashboard fields are redacted by default.
+- Result detection for the `auth`, `contract`, `policy`, `state`, `gate` and
+  `accept` paths now preserves legacy stdout when stdout is redirected; command
+  exit behavior remains unchanged.
+- Added deterministic ASCII golden tests for the terminal renderer, dashboard,
+  progress, and narrow layouts, plus terminal-profile and pipe-format matrix
+  coverage.
+
 ## [2.6.0] — 2026-09-15
 
 > **Attribution:** the hardening design patterns in this release draw on the Nym

@@ -57,18 +57,43 @@ func init() {
 }
 
 func runConfigSeal(cmd *cobra.Command, args []string) error {
-	if err := trust.SealConfig(cmd.Context(), keyringPath, inputPath, outPath, trustRef); err != nil {
-		return err
+	stderr := cmd.ErrOrStderr()
+	resolvedTrust := trust.ResolveTrustStoreRef(trustRef, "")
+	progress := ui.NewTerminalProgress(stderr)
+	progress.Begin(buildConfigSealSession(keyringPath, inputPath, outPath, resolvedTrust))
+	reportProgress := func(number int, name, status, detail string) {
+		progress.Report(ui.PhaseEvent{Number: number, Name: name, Status: status, Detail: detail})
 	}
 
-	w := cmd.OutOrStdout()
-	fmt.Fprintln(w, "Config sealed successfully.")
-	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Input:", ui.Gray), inputPath)
-	fmt.Fprintf(w, "  %s %s\n", ui.Colorize("Output:", ui.Gray), outPath)
-	fmt.Fprintf(w, "  %s %s\n\n", ui.Colorize("Trust:", ui.Gray), trust.ResolveTrustStoreRef(trustRef, ""))
-	fmt.Fprintf(w, "The sealed config can now be used with:\n")
-	fmt.Fprintf(w, "  wardex evaluate --config %s --evidence vulns.yaml controls.yaml\n\n", outPath)
-	fmt.Fprintf(w, "Commit the .wexstate file (not the draft yaml) to your repository.\n")
+	reportProgress(1, "Validating seal inputs", "RUNNING", "")
+	reportProgress(1, "Validating seal inputs", "DONE", "inputs accepted")
+	reportProgress(2, "Sealing configuration", "RUNNING", outPath)
+	if err := trust.SealConfig(cmd.Context(), keyringPath, inputPath, outPath, trustRef); err != nil {
+		reportProgress(2, "Sealing configuration", "FAILED", err.Error())
+		return err
+	}
+	reportProgress(2, "Sealing configuration", "DONE", outPath)
+	reportProgress(3, "Finalizing sealed config", "RUNNING", "")
+	reportProgress(3, "Finalizing sealed config", "DONE", "configuration ready")
 
+	if configResultEnabled(cmd, progress) {
+		renderConfigSealResults(stderr, progress, inputPath, outPath, resolvedTrust)
+		return nil
+	}
+
+	w := configCommandOutput(cmd)
+	fmt.Fprintln(w, "Config sealed successfully.")
+	inputLabel, outputLabel, trustLabel := "Input:", "Output:", "Trust:"
+	if ui.IsTerminal(w) {
+		inputLabel = ui.Colorize(inputLabel, ui.Gray)
+		outputLabel = ui.Colorize(outputLabel, ui.Gray)
+		trustLabel = ui.Colorize(trustLabel, ui.Gray)
+	}
+	fmt.Fprintf(w, "  %s %s\n", inputLabel, inputPath)
+	fmt.Fprintf(w, "  %s %s\n", outputLabel, outPath)
+	fmt.Fprintf(w, "  %s %s\n\n", trustLabel, resolvedTrust)
+	fmt.Fprintln(w, "The sealed config can now be used with:")
+	fmt.Fprintf(w, "  wardex evaluate --config %s --evidence vulns.yaml controls.yaml\n\n", outPath)
+	fmt.Fprintln(w, "Commit the .wexstate file (not the draft yaml) to your repository.")
 	return nil
 }

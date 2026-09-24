@@ -37,25 +37,55 @@ func init() {
 }
 
 func runContractVerify(cmd *cobra.Command, args []string) error {
+	u := beginContractUI(cmd, contractFile)
+	u.report(1, "Resolving contract path", "RUNNING", contractFile)
 	safePath, err := cli.SafePath(contractFile)
 	if err != nil {
+		u.report(1, "Resolving contract path", "FAILED", err.Error())
 		return fmt.Errorf("validating contract path: %w", err)
 	}
+	u.report(1, "Resolving contract path", "DONE", safePath)
 
+	u.report(2, "Reading contract", "RUNNING", safePath)
 	data, err := cli.SafeReadFile(contractFile)
 	if err != nil {
+		u.report(2, "Reading contract", "FAILED", err.Error())
 		return fmt.Errorf("reading contract file: %w", err)
 	}
+	u.report(2, "Reading contract", "DONE", fmt.Sprintf("%d bytes", len(data)))
 
 	info, err := os.Stat(safePath)
 	if err != nil {
+		u.report(2, "Reading contract", "FAILED", err.Error())
 		return fmt.Errorf("stat contract file: %w", err)
 	}
 
+	u.report(3, "Computing SHA-256", "RUNNING", safePath)
 	hash := sha256.Sum256(data)
 	hashStr := fmt.Sprintf("sha256:%x", hash)
+	u.report(3, "Computing SHA-256", "DONE", hashStr)
 
-	w := cmd.OutOrStdout()
+	status := "COMPUTED"
+	matched := true
+	if contractHash != "" {
+		matched = hashStr == contractHash || fmt.Sprintf("%x", hash) == contractHash
+		if matched {
+			status = "VERIFIED"
+		} else {
+			status = "MISMATCH"
+		}
+	}
+	u.report(4, "Comparing expected hash", map[bool]string{true: "DONE", false: "FAILED"}[matched], status)
+
+	if u.dashboardEnabled() {
+		u.render(buildContractDashboard(contractFile, hashStr, len(data), info.ModTime(), contractHash, status))
+		if !matched {
+			return fmt.Errorf("contract hash mismatch: got %s, expected %s", hashStr, contractHash)
+		}
+		return nil
+	}
+
+	w := u.output
 	fmt.Fprintf(w, "Contract: %s\n", contractFile)
 	fmt.Fprintf(w, "  SHA-256:         %s\n", hashStr)
 	fmt.Fprintf(w, "  Size:            %d bytes\n", len(data))
