@@ -191,8 +191,13 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 	})
 
 	// 7. Report assembly + summary.
+	frameworkName, _ := catalog.DisplayName(opts.Framework)
 	rep := model.GapReport{
-		Summary:  model.ExecutiveSummary{GeneratedAt: time.Now()},
+		Summary: model.ExecutiveSummary{
+			GeneratedAt:   time.Now(),
+			Framework:     opts.Framework,
+			FrameworkName: frameworkName,
+		},
 		Findings: findings,
 		Roadmap:  sortedRoadmap,
 	}

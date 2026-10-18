@@ -31,6 +31,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
 	enrichCli "github.com/had-nu/wardex/v2/pkg/enrich/cli"
 	"github.com/had-nu/wardex/v2/pkg/orchestrator"
+	"github.com/had-nu/wardex/v2/pkg/report"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -147,7 +148,7 @@ func init() {
 	}
 
 	rootCmd.PersistentFlags().StringVar(&configPath, "config", "./wardex-config.yaml", "Path to wardex-config.yaml")
-	rootCmd.Flags().StringVarP(&outputFormat, "output", "o", "markdown", "Output format: markdown|json|csv")
+	rootCmd.Flags().StringVarP(&outputFormat, "output", "o", "markdown", "Output format: "+report.FormatList())
 	rootCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 	rootCmd.Flags().StringVar(&gateFile, "gate", "", "Vulnerabilities file for release gate")
 	rootCmd.Flags().StringVar(&gateMode, "gate-mode", "any", "Gate mode: any|aggregate")
@@ -207,13 +208,11 @@ func machineCommandPath(path string) bool {
 	}
 }
 
+// machineOutputValue reports whether a flag value selects a format whose
+// stdout must stay free of human decoration. It delegates to ui.IsMachineFormat
+// so the banner and the progress reporter cannot disagree about a format.
 func machineOutputValue(value string) bool {
-	switch strings.ToLower(strings.TrimSpace(value)) {
-	case "json", "jsonl", "csv", "cbor", "yaml", "yml":
-		return true
-	default:
-		return false
-	}
+	return ui.IsMachineFormat(value)
 }
 
 func shouldPrintCommandBanner(cmd *cobra.Command) bool {
@@ -242,8 +241,8 @@ func main() {
 
 func runWardex(cmd *cobra.Command, args []string) {
 	outputFormat = strings.ToLower(strings.TrimSpace(outputFormat))
-	if outputFormat != "markdown" && outputFormat != "json" && outputFormat != "csv" {
-		fmt.Fprintf(cmd.ErrOrStderr(), "Error: unsupported output format %q (use markdown|json|csv)\n", outputFormat)
+	if !report.IsSupportedFormat(outputFormat) {
+		fmt.Fprintf(cmd.ErrOrStderr(), "Error: unsupported output format %q (use %s)\n", outputFormat, report.FormatList())
 		exitFunc(1)
 		return
 	}

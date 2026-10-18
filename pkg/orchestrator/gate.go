@@ -77,6 +77,13 @@ type GateOptions struct {
 	ForcedUpgradeState string
 }
 
+// gateOutputFormats is the set of formats the gate path can emit. It is a
+// strict subset of report.SupportedFormats: the gate writes markdown, JSON and
+// CSV only, so accepting a report-only format here would produce no output.
+var gateOutputFormats = map[string]bool{"markdown": true, "json": true, "csv": true}
+
+const gateFormatList = "markdown|json|csv"
+
 // RunGate executes the release-gate evaluation flow previously owned by
 // cmd/evaluate. It returns the process exit code to apply and an error for
 // input failures that the caller should surface. It never calls os.Exit.
@@ -114,8 +121,8 @@ func RunGate(ctx context.Context, opts GateOptions) (exitCode int, runErr error)
 		opts.Progress = ui.NoopProgressReporter{}
 	}
 	opts.OutputFormat = strings.ToLower(strings.TrimSpace(opts.OutputFormat))
-	if opts.OutputFormat != "" && opts.OutputFormat != "markdown" && opts.OutputFormat != "json" && opts.OutputFormat != "csv" {
-		fmt.Fprintf(opts.Stderr, "Error: unsupported output format %q (use markdown|json|csv)\n", opts.OutputFormat)
+	if opts.OutputFormat != "" && !gateOutputFormats[opts.OutputFormat] {
+		fmt.Fprintf(opts.Stderr, "Error: unsupported gate output format %q (use %s)\n", opts.OutputFormat, gateFormatList)
 		return exitcodes.GenericError, nil
 	}
 	reportProgress := func(number int, name, status, detail string) {
@@ -844,6 +851,12 @@ func writeStructuredOutput(opts GateOptions, report model.GateReport) int {
 		if code := writeCSVOutput(dest, opts, report); code != exitcodes.OK {
 			return code
 		}
+	default:
+		// RunGate validates the format before reaching this switch, so an
+		// unhandled value would mean the validator and this switch disagree.
+		// Fail loudly rather than emitting an empty file.
+		fmt.Fprintf(opts.Stderr, "Error: gate output format %q is accepted but not implemented\n", opts.OutputFormat)
+		return exitcodes.GenericError
 	}
 	return exitcodes.OK
 }

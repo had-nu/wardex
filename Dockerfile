@@ -9,8 +9,10 @@ RUN go mod download
 COPY . .
 
 ARG VERSION
+# -buildid= yields a reproducible binary. VCS stamping is left at the default
+# because .dockerignore excludes .git/; -buildvcs=true would fail this build.
 RUN CGO_ENABLED=0 go build -trimpath \
-  -ldflags="-s -w -X main.Version=${VERSION:-dev}" \
+  -ldflags="-s -w -buildid= -X main.Version=${VERSION:-dev}" \
   -o /wardex .
 
 FROM gcr.io/distroless/static:nonroot

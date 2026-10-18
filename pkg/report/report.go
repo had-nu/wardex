@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -17,6 +18,28 @@ func selectReportStdout(writers []io.Writer) io.Writer {
 		return writers[0]
 	}
 	return os.Stdout
+}
+
+// supportedFormats is the single source of truth for report output formats.
+// Flag help, validation and docs derive from it so they cannot disagree.
+var supportedFormats = []string{"markdown", "json", "csv", "html"}
+
+// SupportedFormats returns the accepted report formats in stable order.
+func SupportedFormats() []string {
+	out := make([]string, len(supportedFormats))
+	copy(out, supportedFormats)
+	return out
+}
+
+// IsSupportedFormat reports whether this build can emit the given format.
+func IsSupportedFormat(format string) bool {
+	format = strings.ToLower(strings.TrimSpace(format))
+	return slices.Contains(supportedFormats, format)
+}
+
+// FormatList renders the accepted formats for flag help and error messages.
+func FormatList() string {
+	return strings.Join(supportedFormats, "|")
 }
 
 // Generate delegates reporting based on the requested format.

@@ -9,6 +9,7 @@ import (
 
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
 	"github.com/had-nu/wardex/v2/pkg/orchestrator"
+	"github.com/had-nu/wardex/v2/pkg/report"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
@@ -76,7 +77,7 @@ func init() {
 	EvaluateCmd.Flags().StringVar(&gateFile, "evidence", "", "Vulnerabilities file for release gate evaluation (required)")
 	EvaluateCmd.Flags().StringVar(&gateMode, "gate-mode", "any", "Gate mode: any|aggregate")
 	EvaluateCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a signed EPSS enrichment file")
-	EvaluateCmd.Flags().StringVar(&outputFormat, "output", "markdown", "Output format: markdown|json|csv")
+	EvaluateCmd.Flags().StringVar(&outputFormat, "output", "markdown", "Output format: "+report.FormatList())
 	EvaluateCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 	EvaluateCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override profile")
 	EvaluateCmd.Flags().Float64Var(&failAbove, "fail-above", 0.0, "Exit 11 if any gap score exceeds this value")
