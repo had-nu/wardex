@@ -636,7 +636,7 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 - [Integração com GitHub Actions](doc/operations/github-actions-integration.md)
 - [Helm chart (referência)](deploy/helm/wardex/)
 - [Exit codes](doc/operations/EXIT_CODES.md)
-- [Migração CBOR v2.3.0](internal/doc/CBOR_MIGRATION_v2.3.0.md)
+- [Migração CBOR v2.3.0](doc/specs/CBOR_MIGRATION_v2.3.0.md)
 - [Esquemas CDDL](spec/cddl/)
 - [Ambiente de desenvolvimento (docker-compose)](docker-compose.yml)
 - [CHANGELOG](CHANGELOG.md)

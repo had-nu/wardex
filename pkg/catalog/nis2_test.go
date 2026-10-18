@@ -19,7 +19,7 @@ import (
 // NIS2.21.2.a through NIS2.21.2.y. Fifteen of those identifiers corresponded to
 // nothing in the Directive, four more carried the wrong letter, and the
 // obligation to assess the effectiveness of the measures was missing. The
-// obligation itself was described correctly in docs/regulatory-context.md, so
+// obligation itself was described correctly in doc/regulatory-context.md, so
 // two artefacts shipped in the same release disagreed about what Article 21(2)(f)
 // says.
 var article212Letters = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}

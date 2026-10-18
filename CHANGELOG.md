@@ -123,7 +123,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   actively maintained in favour of the built-in mechanism.
 - Pinned `govulncheck` by revision instead of tag so the scanner cannot change
   between two runs of the same commit.
-- Added `docs/regulatory-context.md`: the article-level traceability matrix for
+- Added `doc/regulatory-context.md`: the article-level traceability matrix for
   the NIS2 obligations the tool touches, together with the limits of what that
   mapping claims. It states explicitly that pinning a digest gives
   reproducibility and not integrity, and that integrity against the audited
@@ -393,7 +393,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Migration Notes
 
-See `internal/doc/CBOR_MIGRATION_v2.3.0.md` for detailed migration instructions,
+See `doc/specs/CBOR_MIGRATION_v2.3.0.md` for detailed migration instructions,
 including verifying test fixtures and updating CI pipelines.
 
 ## [2.2.2] — 2026-07-06

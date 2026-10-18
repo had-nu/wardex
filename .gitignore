@@ -98,7 +98,9 @@ wardex-snapshot.json
 wardex-helm-chart.zip
 epss-enrich.yaml
 wardex-erd.md.resolved
-specs/
+# A scratch directory at the root. The leading slash matters: unanchored this
+# matched doc/specs/ and three specifications were silently untracked.
+/specs/
 /benchmarks/ 
 
 # Stress Test Outputs
@@ -120,8 +122,9 @@ research/.venv/
 # Internal skills and notes
 SKILL-*.md
 
-# Spec documents (local drafts)
-SPEC-*.md
+# Spec documents (local drafts at the root). Anchored for the same reason:
+# unanchored this matched an implemented specification and left it untracked.
+/SPEC-*.md
 
 # Python Test & Calibration scripts
 test/test_calibration_*.py

@@ -305,5 +305,5 @@ derivados de uma revisão pós-Cordyceps:
 - **CI-3** — Path traversal via symlink: `utils.SafePath` substituído por
   `cli.ValidateInputPath` com `filepath.EvalSymlinks`
 
-Ver [SPEC-WARDEX-HARDEN-CORDYCPS-BASED-001.md](../../SPEC-WARDEX-HARDEN-CORDYCPS-BASED-001.md)
+Ver [SPEC-WARDEX-HARDEN-CORDYCPS-BASED-001.md](SPEC-WARDEX-HARDEN-CORDYCPS-BASED-v2.2.2.md)
 e [issue #94](https://github.com/had-nu/wardex/issues/94) para detalhes.
