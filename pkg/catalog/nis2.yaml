@@ -1,230 +1,473 @@
+# NIS2 control catalogue.
+#
+# Sources:
+#   - Directive (EU) 2022/2555 of the European Parliament and of the Council of
+#     14 December 2022, OJ L 333, 27.12.2022, CELEX 32022L2555.
+#   - Commission Guidelines on the application of Article 4(1) and (2), C(2023)
+#     6068 final, 13.9.2023, for the size thresholds that decide who is in scope.
+#   - Commission Guidelines on the application of Article 3(4), C(2023) 6070
+#     final, 13.9.2023, for the distinction between an important entity
+#     providing public services and any other important entity.
+#
+# Identifier scheme. Two namespaces, and the distinction is not cosmetic:
+#
+#   NIS2.<article>[.<paragraph>].<letter>
+#       An obligation of the Directive, quoted in substance from the article it
+#       belongs to. Article 21(2) has exactly ten lettered items, (a) to (j).
+#
+#   NIS2.SUP.<letter>
+#       A measure that supports one of those items but is not itself a lettered
+#       item. Most are ISO/IEC 27001:2022 Annex A controls, and the Annex A
+#       reference is given in the control name. These are listed separately so
+#       that no identifier claims a legal provenance it does not have.
+#
+# This split is deliberate. An earlier version of this file numbered twenty-five
+# controls as Article 21(2)(a) through (y). The Directive lists ten. Fifteen of
+# those identifiers corresponded to nothing in the Directive, four more carried
+# the wrong letter, and the obligation to assess the effectiveness of the
+# measures was absent altogether — which is the obligation this tool most
+# directly supports, and the one a reader would most expect to find.
+
+# --- Article 20: Governance ---------------------------------------------------
+
+- id: NIS2.20.1
+  name: "Art. 20(1) — Management body approves and supervises risk-management measures"
+  domain: "organizational"
+  base_score: 9.0
+  keywords:
+    - governance
+    - accountability
+    - management body
+  practices:
+    - id: PR.NIS2.20.1.1
+      name: "Record the approval of the risk-management measures by the management body, not only their existence"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.20.1.2
+      name: "Track which duties the management body may delegate and which it may not; execution may be delegated, responsibility may not"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.20.2
+  name: "Art. 20(2) — Training of the management body"
+  domain: "people"
+  base_score: 8.0
+  keywords:
+    - training
+    - management body
+  practices:
+    - id: PR.NIS2.20.2.1
+      name: "Train the management body on its obligations and on the risks specific to the entity"
+      min_maturity: 3
+      gate_relevant: false
+
+# --- Article 21(2): Risk-management measures ----------------------------------
+# The ten lettered items, in the order and with the wording of the Directive.
+
 - id: NIS2.21.2.a
-  name: "Policies on Risk Analysis and Information System Security"
+  name: "Art. 21(2)(a) — Policies on risk analysis and information system security"
   domain: "organizational"
   base_score: 9.0
   keywords:
     - risk analysis
     - policy
     - isms
+  practices:
+    - id: PR.NIS2.21.2.a.1
+      name: "Maintain a written information security policy derived from a current risk analysis"
+      min_maturity: 2
+      gate_relevant: false
+
 - id: NIS2.21.2.b
-  name: "Incident Handling — Reporting, escalation, and CERT/CSIRT capability"
+  name: "Art. 21(2)(b) — Incident handling"
   domain: "process"
   base_score: 9.5
   keywords:
-    - soc
+    - incident handling
     - incident response
     - cert
     - csirt
-    - incident handling
+  practices:
+    - id: PR.NIS2.21.2.b.1
+      name: "Operate an incident handling capability that detects, responds to and mitigates significant incidents"
+      min_maturity: 3
+      gate_relevant: true
+
 - id: NIS2.21.2.c
-  name: "Business Continuity, Backup Management and Disaster Recovery"
-  domain: "process"
+  name: "Art. 21(2)(c) — Business continuity: backup management, disaster recovery and crisis management"
+  domain: "organizational"
   base_score: 8.5
   keywords:
-    - bcp
-    - drp
+    - business continuity
     - backup
-    - recovery
+    - disaster recovery
+    - crisis management
+  practices:
+    - id: PR.NIS2.21.2.c.1
+      name: "Keep backups isolated from the systems they protect, and restore from them on a tested cycle"
+      min_maturity: 3
+      gate_relevant: false
+
 - id: NIS2.21.2.d
-  name: "Supply Chain Security — Vendor assessment, SBOM, third-party risk"
+  name: "Art. 21(2)(d) — Supply chain security, including relationships with direct suppliers and service providers"
   domain: "organizational"
-  base_score: 10.0
+  base_score: 8.5
   keywords:
     - supply chain
-    - vendor risk
     - third party
-    - sbom
+    - supplier security
   practices:
     - id: PR.NIS2.21.2.d.1
-      name: "Enforce SBOM generation and validation"
-      min_maturity: 2
-      gate_relevant: true
+      name: "Assess the security of direct suppliers and service providers before they are given access"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.21.2.d.2
+      name: "Require a software bill of materials from suppliers of software the entity depends on"
+      min_maturity: 3
+      gate_relevant: false
+
 - id: NIS2.21.2.e
-  name: "Security in Network and Information Systems Acquisition — Secure SDLC, vuln handling"
-  domain: "technological"
-  base_score: 8.0
-  keywords:
-    - vulnerability handling
-    - patching
-    - vulnerability disclosure
-    - sdlc
-- id: NIS2.21.2.f
-  name: "Cryptography and Encryption — Use of strong encryption, key management"
-  domain: "technological"
-  base_score: 8.5
-  keywords:
-    - encryption
-    - cryptography
-    - key management
-    - tls
-- id: NIS2.21.2.g
-  name: "Human Resources Security — Background checks, role-based access, offboarding"
-  domain: "people"
-  base_score: 7.0
-  keywords:
-    - background check
-    - offboarding
-    - hr security
-    - role-based access
-- id: NIS2.21.2.h
-  name: "Access Control — Least privilege, MFA, identity management"
+  name: "Art. 21(2)(e) — Security in acquisition, development and maintenance, including vulnerability handling and disclosure"
   domain: "technological"
   base_score: 9.0
   keywords:
-    - access control
-    - mfa
-    - least privilege
-    - iam
-- id: NIS2.21.2.i
-  name: "Basic Computer Hygiene Practices and Cybersecurity Training"
-  domain: "people"
-  base_score: 7.0
+    - secure sdlc
+    - vulnerability handling
+    - vulnerability disclosure
+    - patching
+  practices:
+    - id: PR.NIS2.21.2.e.1
+      name: "Run a coordinated vulnerability disclosure process with a published contact point"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.21.2.e.2
+      name: "Remediate a vulnerability within a deadline set by severity, and record an accepted risk where it is missed"
+      min_maturity: 3
+      gate_relevant: true
+
+- id: NIS2.21.2.f
+  name: "Art. 21(2)(f) — Policies and procedures to assess the effectiveness of the risk-management measures"
+  domain: "process"
+  base_score: 9.5
   keywords:
+    - effectiveness
+    - metrics
+    - measurement
+    - continuous improvement
+  practices:
+    - id: PR.NIS2.21.2.f.1
+      name: "Measure whether the measures work, rather than asserting that they exist"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.21.2.f.2
+      name: "Compare effectiveness between runs so a regression is visible rather than inferred"
+      min_maturity: 4
+      gate_relevant: false
+    - id: PR.NIS2.21.2.f.3
+      name: "Feed the measurement back into the risk analysis the measures came from"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: NIS2.21.2.g
+  name: "Art. 21(2)(g) — Basic cyber hygiene practices and cybersecurity training"
+  domain: "people"
+  base_score: 8.0
+  keywords:
+    - cyber hygiene
     - training
-    - phishing
     - awareness
-    - hygiene
-- id: NIS2.21.2.j
-  name: "Use of Multi-Factor Authentication and Secure Communication"
+  practices:
+    - id: PR.NIS2.21.2.g.1
+      name: "Deliver role-appropriate cybersecurity training and keep a record of who attended"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: NIS2.21.2.h
+  name: "Art. 21(2)(h) — Policies and procedures on the use of cryptography and, where appropriate, encryption"
   domain: "technological"
   base_score: 8.5
   keywords:
-    - mfa
-    - secure communication
-    - vpn
+    - cryptography
     - encryption
-- id: NIS2.21.2.k
-  name: "Logging and Log Management — Retention, integrity, monitoring"
+    - key management
+  practices:
+    - id: PR.NIS2.21.2.h.1
+      name: "Define which data is encrypted, in transit and at rest, and manage keys separately from the data"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.21.2.i
+  name: "Art. 21(2)(i) — Human resources security, access control policies and asset management"
+  domain: "organizational"
+  base_score: 8.5
+  keywords:
+    - hr security
+    - access control
+    - asset management
+    - offboarding
+  practices:
+    - id: PR.NIS2.21.2.i.1
+      name: "Remove access on the day employment or a contract ends, and keep the record that it happened"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.21.2.i.2
+      name: "Maintain an asset inventory with an owner for each entry"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.21.2.j
+  name: "Art. 21(2)(j) — Multi-factor or continuous authentication, and secured voice, video, text and emergency communications"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - mfa
+    - multi-factor authentication
+    - continuous authentication
+    - emergency communication
+  practices:
+    - id: PR.NIS2.21.2.j.1
+      name: "Require multi-factor authentication for remote access and for administrative access"
+      min_maturity: 3
+      gate_relevant: true
+    - id: PR.NIS2.21.2.j.2
+      name: "Keep an emergency communication channel usable when ordinary channels are compromised"
+      min_maturity: 4
+      gate_relevant: false
+
+# --- Article 23: Reporting obligations -----------------------------------------
+
+- id: NIS2.23.1
+  name: "Art. 23(1) — Notify a significant incident to the CSIRT without undue delay, and the recipients where appropriate"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - significant incident
+    - notification
+    - csirt
+    - reportable
+  practices:
+    - id: PR.NIS2.23.1.1
+      name: "Define which incidents are significant and record the decision either way"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.23.1.2
+      name: "Report anything enabling a cross-border impact to be determined"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.23.4
+  name: "Art. 23(4) — Staged notification: 24 hours, 72 hours and one month"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - early warning
+    - 24 hours
+    - 72 hours
+    - final report
+  practices:
+    - id: PR.NIS2.23.4.1
+      name: "Send an early warning within 24 hours of awareness, stating suspicion of unlawful or malicious acts and any cross-border impact"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.23.4.2
+      name: "Send the incident notification within 72 hours with an initial severity and impact assessment"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.23.4.3
+      name: "Submit the final report within one month of the incident notification, or on request after the incident"
+      min_maturity: 3
+      gate_relevant: false
+
+# --- Article 24 and Article 29 -------------------------------------------------
+
+- id: NIS2.24.1
+  name: "Art. 24 — Use of European cybersecurity certification schemes"
+  domain: "organizational"
+  base_score: 7.5
+  keywords:
+    - certification
+    - scheme
+    - conformity
+  practices:
+    - id: PR.NIS2.24.1.1
+      name: "Where certification is claimed, hold it for the products and versions actually in service"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.29.1
+  name: "Art. 29 — Cybersecurity information-sharing arrangements"
+  domain: "organizational"
+  base_score: 8.0
+  keywords:
+    - information sharing
+    - isac
+    - csirt
+  practices:
+    - id: PR.NIS2.29.1.1
+      name: "Use a mechanism for exchanging information with other entities and with the CSIRT, subject to confidentiality"
+      min_maturity: 3
+      gate_relevant: false
+
+# --- Supplementary measures ----------------------------------------------------
+# Not lettered items of the Directive. The Annex A reference is the provenance
+# where one applies.
+
+- id: NIS2.SUP.a
+  name: "Logging and log management (supports Art. 21(2)(a))"
   domain: "technological"
   base_score: 8.0
   keywords:
     - logging
-    - log retention
-    - audit trail
-    - log integrity
-- id: NIS2.21.2.l
-  name: "Vulnerability Handling and Disclosure — Coordinated disclosure process"
-  domain: "process"
-  base_score: 8.0
-  keywords:
-    - vulnerability disclosure
-    - coordinated disclosure
-    - cve
-    - bug bounty
-- id: NIS2.21.2.m
-  name: "Incident Classification and Reporting Obligations — Incident severity, reporting to competent authority"
-  domain: "process"
-  base_score: 9.5
-  keywords:
-    - incident reporting
-    - notification
-    - competent authority
-    - severity
-- id: NIS2.21.2.n
-  name: "Security Testing — Pentesting, vulnerability scanning, red team exercises"
-  domain: "technological"
-  base_score: 7.5
-  keywords:
-    - pentest
-    - vulnerability scanning
-    - red team
-    - security testing
-- id: NIS2.21.2.o
-  name: "Physical and Environmental Security"
-  domain: "organizational"
-  base_score: 6.5
-  keywords:
-    - physical security
-    - data center
-    - environmental
-- id: NIS2.21.2.p
-  name: "Asset Management — Asset inventory, classification, ownership"
-  domain: "organizational"
-  base_score: 7.0
-  keywords:
-    - asset inventory
-    - asset management
-    - classification
-- id: NIS2.21.2.q
-  name: "Network Security — Segmentation, firewalls, IDS/IPS, zero trust"
+    - log management
+    - retention
+  practices:
+    - id: PR.NIS2.SUP.a.1
+      name: "Keep logs with a retention period set by policy, and protect them from alteration"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.SUP.b
+  name: "Security testing: vulnerability scanning and penetration testing (supports Art. 21(2)(e))"
   domain: "technological"
   base_score: 8.5
   keywords:
-    - network security
-    - segmentation
-    - firewall
-    - ids
-    - ips
-- id: NIS2.21.2.r
-  name: "Identity and Access Governance — Review cycles, recertification, privileged access"
+    - security testing
+    - vulnerability scanning
+    - penetration testing
+    - red team
+  practices:
+    - id: PR.NIS2.SUP.b.1
+      name: "Run vulnerability scanning on a defined cycle and track findings to remediation"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.NIS2.SUP.b.2
+      name: "Run penetration testing proportionate to the risk, and track the results"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: NIS2.SUP.c
+  name: "Physical and environmental security (supports Art. 21(2)(a), Annex A clause 7)"
+  domain: "physical"
+  base_score: 6.5
+  keywords:
+    - physical security
+    - environmental
+    - data centre
+  practices:
+    - id: PR.NIS2.SUP.c.1
+      name: "Control physical access to premises that hold systems in scope"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: NIS2.SUP.d
+  name: "Network security (supports Art. 21(2)(i), Annex A clauses 8.20 to 8.22)"
   domain: "technological"
   base_score: 8.0
   keywords:
+    - segmentation
+    - firewall
+    - ids
+    - zero trust
+  practices:
+    - id: PR.NIS2.SUP.d.1
+      name: "Segment networks so that a compromise of one zone does not reach every zone"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.SUP.e
+  name: "Identity and access governance (supports Art. 21(2)(i), Annex A clauses 5.15 to 5.18 and 8.2 to 8.5)"
+  domain: "organizational"
+  base_score: 8.0
+  keywords:
     - privileged access
-    - pam
-    - access review
-    - identity governance
-- id: NIS2.21.2.s
-  name: "Change Management — Authorisation, testing, documentation of changes"
+    - recertification
+    - least privilege
+  practices:
+    - id: PR.NIS2.SUP.e.1
+      name: "Recertify privileged accounts on a cycle and remove access that no longer has a business need"
+      min_maturity: 3
+      gate_relevant: true
+
+- id: NIS2.SUP.f
+  name: "Change management (supports Art. 21(2)(e), Annex A clause 8.32)"
   domain: "process"
   base_score: 7.5
   keywords:
     - change management
-    - change control
-    - cab
-- id: NIS2.21.2.t
-  name: "Third-Party Service Provider Oversight — SLAs, monitoring, termination"
+    - authorisation
+    - rollback
+  practices:
+    - id: PR.NIS2.SUP.f.1
+      name: "Authorise, test and record changes to systems in scope, and keep a way back"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.SUP.g
+  name: "Service provider oversight beyond initial selection (supports Art. 21(2)(d), Annex A clauses 5.19 to 5.23)"
   domain: "organizational"
-  base_score: 8.5
+  base_score: 7.5
   keywords:
-    - third party
-    - service provider
     - sla
-    - vendor oversight
-- id: NIS2.21.2.u
-  name: "Incident Response Exercise — Tabletop, simulation, lessons learned"
+    - service level
+    - termination
+    - monitoring
+  practices:
+    - id: PR.NIS2.SUP.g.1
+      name: "Monitor a provider's security performance after selection, and define how access ends"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.SUP.h
+  name: "Incident response exercises (supports Art. 21(2)(b), Annex A clauses 5.24 to 5.28)"
   domain: "process"
   base_score: 7.5
   keywords:
     - tabletop
-    - exercise
     - simulation
-    - incident drill
-- id: NIS2.21.2.v
-  name: "Cybersecurity Insurance and Risk Transfer"
+    - lessons learned
+  practices:
+    - id: PR.NIS2.SUP.h.1
+      name: "Exercise the incident response plan and record what the exercise found"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: NIS2.SUP.i
+  name: "Cybersecurity insurance and risk transfer (supports Art. 21(2)(c))"
   domain: "organizational"
-  base_score: 5.0
+  base_score: 6.0
   keywords:
     - insurance
     - risk transfer
-    - cyber insurance
-- id: NIS2.21.2.w
-  name: "Regulatory Compliance and Reporting — Record-keeping, audit evidence"
+  practices:
+    - id: PR.NIS2.SUP.i.1
+      name: "Review insurance against the incident response obligations it would leave unmet"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: NIS2.SUP.j
+  name: "Records and audit evidence (supports Art. 20(1) and Art. 21(2)(f), Annex A clauses 5.31 and 5.33)"
   domain: "organizational"
   base_score: 8.0
   keywords:
-    - compliance
-    - audit
-    - evidence
     - record keeping
-- id: NIS2.21.2.x
-  name: "Penetration Testing Programme — Regular internal/external pentests, remediation tracking"
-  domain: "technological"
-  base_score: 7.5
-  keywords:
-    - pentest
-    - external test
-    - remediation
+    - audit evidence
+    - accountability
   practices:
-    - id: PR.NIS2.21.2.x.1
-      name: "Automate DAST in CI/CD pipeline"
+    - id: PR.NIS2.SUP.j.1
+      name: "Keep records that evidence the measures, and protect them from alteration"
       min_maturity: 3
-      gate_relevant: true
-- id: NIS2.21.2.y
-  name: "Security Architecture Review — Periodic review of ICT architecture against threats"
+      gate_relevant: false
+
+- id: NIS2.SUP.k
+  name: "Security architecture review (supports Art. 21(2)(e), Annex A clause 8.9)"
   domain: "technological"
   base_score: 7.0
   keywords:
-    - architecture review
-    - threat modeling
-    - security architecture
+    - architecture
+    - configuration
+    - hardening
+  practices:
+    - id: PR.NIS2.SUP.k.1
+      name: "Review the architecture and configuration of systems in scope against current threats"
+      min_maturity: 4
+      gate_relevant: false
