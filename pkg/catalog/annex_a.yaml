@@ -1,5 +1,32 @@
+# ISO/IEC 27001:2022 Annex A control catalogue.
+#
+# Source:
+#   - ISO/IEC 27001:2022, Annex A, the 93 controls of the 2022 statement of
+#     applicability.
+#   - ISO/IEC 27002:2022, third edition, 2022-02, reference number
+#     ISO/IEC 27002:2022(E), "Information security, cybersecurity and privacy
+#     protection — Information security controls". Every control name below is
+#     the title given in that standard. The reference is retained here because
+#     Wardex does not reproduce the standard; the titles are identifiers, not
+#     quotations of its text.
+#
+# The 93 titles were extracted from the standard and matched against the
+# identifiers this file already carried. Every identifier matched, so the
+# numbering was right and only the names were placeholders: 88 of them read
+# "Control A.x.y". An earlier version of this file therefore could not tell a
+# reader what any control meant, and two files in the repository used different
+# wording for the same control.
+#
+# Fields other than the name are Wardex's own and are deliberately not taken
+# from the standard. `keywords` in particular is the vocabulary the correlator
+# matches against operator-supplied evidence, so its wording is a product
+# decision and not a quotation.
+#
+# Domains follow the four chapters of the standard: 5 organizational, 6 people,
+# 7 physical, 8 technological.
+
 - id: A.5.1
-  name: Control A.5.1
+  name: Policies for information security
   domain: organizational
   domains:
     - organizational
@@ -18,7 +45,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.2
-  name: Control A.5.2
+  name: Information security roles and responsibilities
   domain: organizational
   domains:
     - organizational
@@ -37,7 +64,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.3
-  name: Control A.5.3
+  name: Segregation of duties
   domain: organizational
   domains:
     - organizational
@@ -56,7 +83,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.4
-  name: Control A.5.4
+  name: Management responsibilities
   domain: organizational
   domains:
     - organizational
@@ -75,7 +102,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.5
-  name: Control A.5.5
+  name: Contact with authorities
   domain: organizational
   domains:
     - organizational
@@ -94,7 +121,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.6
-  name: Control A.5.6
+  name: Contact with special interest groups
   domain: organizational
   domains:
     - organizational
@@ -129,7 +156,7 @@
     - procedure
   base_score: 7
 - id: A.5.8
-  name: Control A.5.8
+  name: Information security in project management
   domain: organizational
   domains:
     - organizational
@@ -148,7 +175,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.9
-  name: Control A.5.9
+  name: Inventory of information and other associated assets
   domain: organizational
   domains:
     - organizational
@@ -167,7 +194,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.10
-  name: Control A.5.10
+  name: Acceptable use of information and other associated assets
   domain: organizational
   domains:
     - organizational
@@ -186,7 +213,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.11
-  name: Control A.5.11
+  name: Return of assets
   domain: organizational
   domains:
     - organizational
@@ -205,7 +232,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.12
-  name: Control A.5.12
+  name: Classification of information
   domain: organizational
   domains:
     - organizational
@@ -224,7 +251,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.13
-  name: Control A.5.13
+  name: Labelling of information
   domain: organizational
   domains:
     - organizational
@@ -243,7 +270,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.14
-  name: Control A.5.14
+  name: Information transfer
   domain: organizational
   domains:
     - organizational
@@ -262,7 +289,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.15
-  name: Control A.5.15
+  name: Access control
   domain: organizational
   domains:
     - organizational
@@ -281,7 +308,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.16
-  name: Control A.5.16
+  name: Identity management
   domain: organizational
   domains:
     - organizational
@@ -300,7 +327,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.17
-  name: Control A.5.17
+  name: Authentication information
   domain: organizational
   domains:
     - organizational
@@ -319,7 +346,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.18
-  name: Control A.5.18
+  name: Access rights
   domain: organizational
   domains:
     - organizational
@@ -338,7 +365,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.19
-  name: Control A.5.19
+  name: Information security in supplier relationships
   domain: organizational
   domains:
     - organizational
@@ -357,7 +384,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.20
-  name: Control A.5.20
+  name: Addressing information security within supplier agreements
   domain: organizational
   domains:
     - organizational
@@ -376,7 +403,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.21
-  name: Control A.5.21
+  name: Managing information security in the ICT supply chain
   domain: organizational
   domains:
     - organizational
@@ -395,7 +422,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.22
-  name: Control A.5.22
+  name: Monitoring, review and change management of supplier services
   domain: organizational
   domains:
     - organizational
@@ -414,7 +441,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.23
-  name: Security of cloud services
+  name: Information security for use of cloud services
   domain: organizational
   domains:
     - organizational
@@ -432,7 +459,7 @@
     - procedure
   base_score: 7.5
 - id: A.5.24
-  name: Control A.5.24
+  name: Information security incident management planning and preparation
   domain: organizational
   domains:
     - organizational
@@ -451,7 +478,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.25
-  name: Control A.5.25
+  name: Assessment and decision on information security events
   domain: organizational
   domains:
     - organizational
@@ -470,7 +497,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.26
-  name: Control A.5.26
+  name: Response to information security incidents
   domain: organizational
   domains:
     - organizational
@@ -489,7 +516,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.27
-  name: Control A.5.27
+  name: Learning from information security incidents
   domain: organizational
   domains:
     - organizational
@@ -508,7 +535,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.28
-  name: Control A.5.28
+  name: Collection of evidence
   domain: organizational
   domains:
     - organizational
@@ -527,7 +554,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.29
-  name: Control A.5.29
+  name: Information security during disruption
   domain: organizational
   domains:
     - organizational
@@ -546,7 +573,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.30
-  name: Control A.5.30
+  name: ICT readiness for business continuity
   domain: organizational
   domains:
     - organizational
@@ -565,7 +592,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.31
-  name: Control A.5.31
+  name: Legal, statutory, regulatory and contractual requirements
   domain: organizational
   domains:
     - organizational
@@ -584,7 +611,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.32
-  name: Control A.5.32
+  name: Intellectual property rights
   domain: organizational
   domains:
     - organizational
@@ -603,7 +630,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.33
-  name: Control A.5.33
+  name: Protection of records
   domain: organizational
   domains:
     - organizational
@@ -622,7 +649,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.34
-  name: Control A.5.34
+  name: Privacy and protection of PII
   domain: organizational
   domains:
     - organizational
@@ -641,7 +668,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.35
-  name: Control A.5.35
+  name: Independent review of information security
   domain: organizational
   domains:
     - organizational
@@ -660,7 +687,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.36
-  name: Control A.5.36
+  name: Compliance with policies, rules and standards for information security
   domain: organizational
   domains:
     - organizational
@@ -679,7 +706,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.5.37
-  name: Control A.5.37
+  name: Documented operating procedures
   domain: organizational
   domains:
     - organizational
@@ -698,7 +725,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.6.1
-  name: Control A.6.1
+  name: Screening
   domain: people
   domains:
     - people
@@ -717,7 +744,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.6.2
-  name: Control A.6.2
+  name: Terms and conditions of employment
   domain: people
   domains:
     - people
@@ -736,7 +763,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.6.3
-  name: Control A.6.3
+  name: Information security awareness, education and training
   domain: people
   domains:
     - people
@@ -755,7 +782,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.6.4
-  name: Control A.6.4
+  name: Disciplinary process
   domain: people
   domains:
     - people
@@ -774,7 +801,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.6.5
-  name: Control A.6.5
+  name: Responsibilities after termination or change of employment
   domain: people
   domains:
     - people
@@ -793,7 +820,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.6.6
-  name: Control A.6.6
+  name: Confidentiality or non-disclosure agreements
   domain: people
   domains:
     - people
@@ -812,7 +839,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.6.7
-  name: Control A.6.7
+  name: Remote working
   domain: people
   domains:
     - people
@@ -831,7 +858,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.6.8
-  name: Control A.6.8
+  name: Information security event reporting
   domain: people
   domains:
     - people
@@ -850,7 +877,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.1
-  name: Control A.7.1
+  name: Physical security perimeters
   domain: physical
   domains:
     - physical
@@ -869,7 +896,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.2
-  name: Control A.7.2
+  name: Physical entry
   domain: physical
   domains:
     - physical
@@ -888,7 +915,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.3
-  name: Control A.7.3
+  name: Securing offices, rooms and facilities
   domain: physical
   domains:
     - physical
@@ -907,7 +934,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.4
-  name: Control A.7.4
+  name: Physical security monitoring
   domain: physical
   domains:
     - physical
@@ -926,7 +953,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.5
-  name: Control A.7.5
+  name: Protecting against physical and environmental threats
   domain: physical
   domains:
     - physical
@@ -945,7 +972,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.6
-  name: Control A.7.6
+  name: Working in secure areas
   domain: physical
   domains:
     - physical
@@ -964,7 +991,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.7
-  name: Control A.7.7
+  name: Clear desk and clear screen
   domain: physical
   domains:
     - physical
@@ -983,7 +1010,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.8
-  name: Control A.7.8
+  name: Equipment siting and protection
   domain: physical
   domains:
     - physical
@@ -1002,7 +1029,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.9
-  name: Control A.7.9
+  name: Security of assets off-premises
   domain: physical
   domains:
     - physical
@@ -1021,7 +1048,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.10
-  name: Control A.7.10
+  name: Storage media
   domain: physical
   domains:
     - physical
@@ -1040,7 +1067,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.11
-  name: Control A.7.11
+  name: Supporting utilities
   domain: physical
   domains:
     - physical
@@ -1059,7 +1086,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.12
-  name: Control A.7.12
+  name: Cabling security
   domain: physical
   domains:
     - physical
@@ -1078,7 +1105,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.13
-  name: Control A.7.13
+  name: Equipment maintenance
   domain: physical
   domains:
     - physical
@@ -1097,7 +1124,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.7.14
-  name: Control A.7.14
+  name: Secure disposal or re-use of equipment
   domain: physical
   domains:
     - physical
@@ -1116,7 +1143,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.1
-  name: Control A.8.1
+  name: User endpoint devices
   domain: technological
   domains:
     - technological
@@ -1135,7 +1162,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.2
-  name: Control A.8.2
+  name: Privileged access rights
   domain: technological
   domains:
     - technological
@@ -1154,7 +1181,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.3
-  name: Control A.8.3
+  name: Information access restriction
   domain: technological
   domains:
     - technological
@@ -1173,7 +1200,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.4
-  name: Control A.8.4
+  name: Access to source code
   domain: technological
   domains:
     - technological
@@ -1192,7 +1219,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.5
-  name: Control A.8.5
+  name: Secure authentication
   domain: technological
   domains:
     - technological
@@ -1211,7 +1238,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.6
-  name: Control A.8.6
+  name: Capacity management
   domain: technological
   domains:
     - technological
@@ -1230,7 +1257,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.7
-  name: Control A.8.7
+  name: Protection against malware
   domain: technological
   domains:
     - technological
@@ -1281,7 +1308,7 @@
       min_maturity: 5
       gate_relevant: false
 - id: A.8.9
-  name: Control A.8.9
+  name: Configuration management
   domain: technological
   domains:
     - technological
@@ -1300,7 +1327,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.10
-  name: Control A.8.10
+  name: Information deletion
   domain: technological
   domains:
     - technological
@@ -1319,7 +1346,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.11
-  name: Control A.8.11
+  name: Data masking
   domain: technological
   domains:
     - technological
@@ -1355,7 +1382,7 @@
     - procedure
   base_score: 6.5
 - id: A.8.13
-  name: Control A.8.13
+  name: Information backup
   domain: technological
   domains:
     - technological
@@ -1374,7 +1401,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.14
-  name: Control A.8.14
+  name: Redundancy of information processing facilities
   domain: technological
   domains:
     - technological
@@ -1393,7 +1420,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.15
-  name: Control A.8.15
+  name: Logging
   domain: technological
   domains:
     - technological
@@ -1428,7 +1455,7 @@
     - procedure
   base_score: 7.5
 - id: A.8.17
-  name: Control A.8.17
+  name: Clock synchronization
   domain: technological
   domains:
     - technological
@@ -1447,7 +1474,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.18
-  name: Control A.8.18
+  name: Use of privileged utility programs
   domain: technological
   domains:
     - technological
@@ -1466,7 +1493,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.19
-  name: Control A.8.19
+  name: Installation of software on operational systems
   domain: technological
   domains:
     - technological
@@ -1485,7 +1512,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.20
-  name: Control A.8.20
+  name: Networks security
   domain: technological
   domains:
     - technological
@@ -1504,7 +1531,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.21
-  name: Control A.8.21
+  name: Security of network services
   domain: technological
   domains:
     - technological
@@ -1523,7 +1550,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.22
-  name: Control A.8.22
+  name: Segregation of networks
   domain: technological
   domains:
     - technological
@@ -1542,7 +1569,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.23
-  name: Control A.8.23
+  name: Web filtering
   domain: technological
   domains:
     - technological
@@ -1561,7 +1588,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.24
-  name: Control A.8.24
+  name: Use of cryptography
   domain: technological
   domains:
     - technological
@@ -1580,7 +1607,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.25
-  name: Control A.8.25
+  name: Secure development life cycle
   domain: technological
   domains:
     - technological
@@ -1599,7 +1626,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.26
-  name: Control A.8.26
+  name: Application security requirements
   domain: technological
   domains:
     - technological
@@ -1618,7 +1645,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.27
-  name: Control A.8.27
+  name: Secure system architecture and engineering principles
   domain: technological
   domains:
     - technological
@@ -1637,7 +1664,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.28
-  name: Control A.8.28
+  name: Secure coding
   domain: technological
   domains:
     - technological
@@ -1656,7 +1683,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.29
-  name: Control A.8.29
+  name: Security testing in development and acceptance
   domain: technological
   domains:
     - technological
@@ -1675,7 +1702,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.30
-  name: Control A.8.30
+  name: Outsourced development
   domain: technological
   domains:
     - technological
@@ -1694,7 +1721,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.31
-  name: Control A.8.31
+  name: Separation of development, test and production environments
   domain: technological
   domains:
     - technological
@@ -1713,7 +1740,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.32
-  name: Control A.8.32
+  name: Change management
   domain: technological
   domains:
     - technological
@@ -1732,7 +1759,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.33
-  name: Control A.8.33
+  name: Test information
   domain: technological
   domains:
     - technological
@@ -1751,7 +1778,7 @@
       min_maturity: 3
       gate_relevant: false
 - id: A.8.34
-  name: Control A.8.34
+  name: Protection of information systems during audit testing
   domain: technological
   domains:
     - technological
