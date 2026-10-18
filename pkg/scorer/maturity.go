@@ -4,33 +4,36 @@
 package scorer
 
 import (
+	"slices"
+	"sort"
+
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 )
 
-// MaturityByDomain calculates maturity scores aggregated by the 4 Annex A domains.
-func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
-	domains := []string{"organizational", "people", "physical", "technological"}
+// annexADomains are the four Annex A domains. They are always reported, even
+// when a run has no findings in them, so that a report shows the same shape
+// whatever the catalogue holds.
+var annexADomains = []string{"organizational", "people", "physical", "technological"}
 
+// MaturityByDomain calculates maturity scores aggregated by domain.
+//
+// Domains outside the Annex A four are reported too, rather than dropped.
+// NIS2 already used "process" and this function excluded those controls from
+// the maturity average while printing a warning to stderr, so a report could
+// state a maturity figure that silently omitted a quarter of the controls it
+// was computed from. A catalogue author adding a domain should not have to know
+// that this file exists.
+func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 	summaries := make(map[string]*model.DomainSummary)
-	for _, d := range domains {
-		summaries[d] = &model.DomainSummary{
-			Domain:          d,
-			TotalControls:   0,
-			CoveredCount:    0,
-			PartialCount:    0,
-			GapCount:        0,
-			MaturityScore:   0,
-			CoveragePercent: 0,
-		}
+	for _, d := range annexADomains {
+		summaries[d] = newDomainSummary(d)
 	}
 
 	for _, f := range findings {
-		d := f.Control.Domain
-		s, ok := summaries[d]
+		s, ok := summaries[f.Control.Domain]
 		if !ok {
-			ui.Warnf("Domain %s not found in summaries — excluded from maturity", d)
-			continue
+			s = newDomainSummary(f.Control.Domain)
+			summaries[f.Control.Domain] = s
 		}
 
 		s.TotalControls++
@@ -48,15 +51,37 @@ func MaturityByDomain(findings []model.Finding) []model.DomainSummary {
 		s.MaturityScore += f.EffectiveMaturity
 	}
 
-	var result []model.DomainSummary
-	for _, d := range domains {
-		s := summaries[d]
-		if s.TotalControls > 0 {
-			s.CoveragePercent = float64(s.CoveredCount) / float64(s.TotalControls) * 100.0
-			s.MaturityScore = s.MaturityScore / float64(s.TotalControls)
+	// Annex A domains first in their canonical order, then any other domain in
+	// a stable order, so the report does not reshuffle between runs.
+	var extra []string
+	for d := range summaries {
+		if !slices.Contains(annexADomains, d) {
+			extra = append(extra, d)
 		}
-		result = append(result, *s)
+	}
+	sort.Strings(extra)
+
+	result := make([]model.DomainSummary, 0, len(summaries))
+	for _, d := range annexADomains {
+		result = append(result, *summaries[d])
+	}
+	for _, d := range extra {
+		result = append(result, *summaries[d])
+	}
+
+	for i := range result {
+		s := &result[i]
+		if s.TotalControls == 0 {
+			continue
+		}
+		s.CoveragePercent = float64(s.CoveredCount) / float64(s.TotalControls) * 100.0
+		s.MaturityScore = s.MaturityScore / float64(s.TotalControls)
 	}
 
 	return result
+}
+
+// newDomainSummary returns an empty summary for one domain.
+func newDomainSummary(domain string) *model.DomainSummary {
+	return &model.DomainSummary{Domain: domain}
 }

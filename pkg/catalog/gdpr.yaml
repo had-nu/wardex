@@ -1,0 +1,375 @@
+# GDPR control catalogue.
+#
+# Scope: the obligations an operator can evidence, mapped to the article that
+# imposes them. Descriptive text is Wardex's own summary of the article, not a
+# quotation from the Regulation.
+#
+# Art. 3(4) and Art. 4 are definitional and carry no control of their own. The
+# Article 33 and 34 deadlines are stated so that a maturity score cannot pass
+# for compliance with a deadline that has already passed.
+
+- id: GDPR.5
+  name: "Principles relating to processing of personal data"
+  domain: "organizational"
+  base_score: 9.0
+  keywords:
+    - accountability
+    - data minimisation
+    - storage limitation
+    - lawfulness
+  practices:
+    - id: PR.GDPR.5.1
+      name: "Record which principle each processing activity relies on, and the reason"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: GDPR.6
+  name: "Lawfulness of processing"
+  domain: "organizational"
+  base_score: 9.0
+  keywords:
+    - legal basis
+    - consent
+    - legitimate interest
+    - special category
+  practices:
+    - id: PR.GDPR.6.1
+      name: "Bind every processing activity to one documented Article 6 basis"
+      min_maturity: 2
+      gate_relevant: false
+    - id: PR.GDPR.6.2
+      name: "Record Article 9 conditions where special category data is processed"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.13
+  name: "Information to be provided to data subjects on collection"
+  domain: "governance"
+  base_score: 8.0
+  keywords:
+    - privacy notice
+    - transparency
+    - data subject
+  practices:
+    - id: PR.GDPR.13.1
+      name: "Publish a privacy notice at or before the point of collection"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: GDPR.15
+  name: "Right of access by the data subject"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - subject access request
+    - sar
+    - right of access
+  practices:
+    - id: PR.GDPR.15.1
+      name: "Operate a subject access request process"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.GDPR.15.2
+      name: "Meet the Article 12(3) deadline: without undue delay and within one month of receipt"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.16
+  name: "Right to rectification of inaccurate personal data"
+  domain: "process"
+  base_score: 7.0
+  keywords:
+    - rectification
+    - accuracy
+    - correction
+  practices:
+    - id: PR.GDPR.16.1
+      name: "Route correction requests to the system of record"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: GDPR.17
+  name: "Right to erasure (right to be forgotten)"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - erasure
+    - deletion
+    - right to be forgotten
+  practices:
+    - id: PR.GDPR.17.1
+      name: "Define deletion across replicas, backups and derived datasets"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.18
+  name: "Right to restriction of processing"
+  domain: "process"
+  base_score: 6.5
+  keywords:
+    - restriction
+    - suppression
+  practices:
+    - id: PR.GDPR.18.1
+      name: "Apply a processing restriction flag that downstream jobs honour"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.20
+  name: "Right to data portability"
+  domain: "technological"
+  base_score: 7.5
+  keywords:
+    - portability
+    - machine-readable
+    - export
+  practices:
+    - id: PR.GDPR.20.1
+      name: "Export subject data in a structured, commonly used, machine-readable format"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.21
+  name: "Right to object to processing"
+  domain: "process"
+  base_score: 7.5
+  keywords:
+    - objection
+    - direct marketing
+    - legitimate interest
+  practices:
+    - id: PR.GDPR.21.1
+      name: "Stop processing on objection, except where Article 21(1) grounds it"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.22
+  name: "Automated individual decision-making, including profiling"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - profiling
+    - automated decision
+    - significant effects
+  practices:
+    - id: PR.GDPR.22.1
+      name: "Identify decisions with legal or similarly significant effects on a person"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.GDPR.22.2
+      name: "Provide human intervention and a route to contest such decisions"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: GDPR.24
+  name: "Responsibility of the controller"
+  domain: "organizational"
+  base_score: 9.0
+  keywords:
+    - accountability
+    - controller
+    - demonstrable compliance
+  practices:
+    - id: PR.GDPR.24.1
+      name: "Maintain evidence that each measure actually operates, not only that it exists"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.25
+  name: "Data protection by design and by default"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - privacy by design
+    - privacy by default
+    - minimisation
+  practices:
+    - id: PR.GDPR.25.1
+      name: "Apply minimisation and pseudonymisation at collection"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.GDPR.25.2
+      name: "Make the privacy-protective option the default in configuration"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.28
+  name: "Processor obligations and processor contracts"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - processor
+    - sub-processor
+    - contract
+  practices:
+    - id: PR.GDPR.28.1
+      name: "Bind each processor by Article 28(3) terms before data is shared"
+      min_maturity: 2
+      gate_relevant: false
+    - id: PR.GDPR.28.2
+      name: "Track sub-processors and authorise each one"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.30
+  name: "Records of processing activities"
+  domain: "organizational"
+  base_score: 9.0
+  keywords:
+    - ropa
+    - records of processing
+    - register
+  practices:
+    - id: PR.GDPR.30.1
+      name: "Keep a record of processing activities covering all Article 30(1) fields"
+      min_maturity: 2
+      gate_relevant: false
+    - id: PR.GDPR.30.2
+      name: "Keep the record current as processing changes"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.32
+  name: "Security of processing"
+  domain: "technological"
+  base_score: 9.5
+  keywords:
+    - security of processing
+    - pseudonymisation
+    - encryption
+    - resilience
+  practices:
+    - id: PR.GDPR.32.1
+      name: "Encrypt personal data at rest and in transit"
+      min_maturity: 3
+      gate_relevant: true
+    - id: PR.GDPR.32.2
+      name: "Maintain ongoing confidentiality, integrity, availability and resilience"
+      min_maturity: 3
+      gate_relevant: true
+    - id: PR.GDPR.32.3
+      name: "Restore availability of personal data on request within the stated recovery objectives"
+      min_maturity: 4
+      gate_relevant: false
+    - id: PR.GDPR.32.4
+      name: "Test the effectiveness of security measures on a defined cycle"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: GDPR.33
+  name: "Notification of a personal data breach to the supervisory authority"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - breach notification
+    - supervisory authority
+    - 72 hours
+    - pdp
+  practices:
+    - id: PR.GDPR.33.1
+      name: "Notify without undue delay and, where feasible, not later than 72 hours after becoming aware"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.GDPR.33.2
+      name: "Record the reason any notification was late, or why none was required"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.GDPR.33.3
+      name: "Document the breach assessment even when the threshold for notification is not met"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.34
+  name: "Communication of a personal data breach to the data subject"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - breach communication
+    - high risk
+    - notification
+  practices:
+    - id: PR.GDPR.34.1
+      name: "Communicate a high-risk breach to the affected data subjects without undue delay"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.30.2
+  name: "Records of processors processing on behalf of a controller"
+  domain: "organizational"
+  base_score: 7.5
+  keywords:
+    - processor records
+    - sub-processor
+    - register
+  practices:
+    - id: PR.GDPR.30.2.1
+      name: "Maintain the Article 30(2) record for each processor acting on the controller's behalf"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.28.2
+  name: "Processor notification to the controller of a personal data breach (Article 33(2))"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - processor notification
+    - breach
+    - sub-processor
+  practices:
+    - id: PR.GDPR.28.2.1
+      name: "Notify the controller without undue delay after becoming aware of a breach"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.35
+  name: "Data protection impact assessment"
+  domain: "governance"
+  base_score: 9.0
+  keywords:
+    - dpia
+    - impact assessment
+    - high risk
+  practices:
+    - id: PR.GDPR.35.1
+      name: "Screen processing for a DPIA requirement before it starts"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.GDPR.35.2
+      name: "Review the DPIA when the processing or the risk changes materially"
+      min_maturity: 4
+      gate_relevant: false
+    - id: PR.GDPR.35.3
+      name: "Seek the advice of the DPO and record it in the assessment"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: GDPR.37
+  name: "Designation of the data protection officer"
+  domain: "organizational"
+  base_score: 7.5
+  keywords:
+    - dpo
+    - data protection officer
+  practices:
+    - id: PR.GDPR.37.1
+      name: "Designate the DPO where Article 37(1) applies and publish the contact details"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: GDPR.46
+  name: "Transfers subject to appropriate safeguards"
+  domain: "governance"
+  base_score: 9.0
+  keywords:
+    - international transfer
+    - standard contractual clauses
+    - third country
+  practices:
+    - id: PR.GDPR.46.1
+      name: "Put an Article 46 safeguard in place for every transfer outside the EEA"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.GDPR.46.2
+      name: "Assess whether a transfer impact assessment is required"
+      min_maturity: 4
+      gate_relevant: false

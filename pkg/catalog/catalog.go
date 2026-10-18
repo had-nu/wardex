@@ -34,6 +34,7 @@ var registry = map[string]entry{
 	"dora":      {file: "dora.yaml", title: "DORA"},
 	"nist_csf":  {file: "nist_csf.yaml", title: "NIST CSF"},
 	"eu_ai_act": {file: "eu_ai_act.yaml", title: "EU AI Act"},
+	"gdpr":      {file: "gdpr.yaml", title: "GDPR"},
 }
 
 // DisplayName returns the published title for a framework key. It reports false
