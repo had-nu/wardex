@@ -74,6 +74,29 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
+      # Each job gets a clean runner, so the dist/ directory the release job
+      # built does not exist here. Fetch the artefacts from the published
+      # release instead. That is also the stronger property: the attestation
+      # then describes the bytes a user downloads, not a local rebuild of them.
+      - name: Download the published artefacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p dist
+          gh release download "${{ github.ref_name }}" \
+            --pattern '*.tar.gz' \
+            --pattern '*.sbom.json' \
+            --pattern '*.sig' \
+            --dir dist
+          # Fail here with a clear message rather than letting the attestation
+          # step report a missing glob, which says nothing about its cause.
+          count=$(find dist -type f | wc -l)
+          echo "downloaded ${count} artefact(s)"
+          if [ "${count}" -eq 0 ]; then
+            echo "::error::No artefacts found for ${{ github.ref_name }}; the attestation would cover nothing."
+            exit 1
+          fi
+
       # Uses the built-in GitHub attestation service rather than
       # slsa-github-generator, which its own maintainers have marked as no
       # longer actively maintained in favour of this mechanism. The predicate
@@ -85,4 +108,3 @@ jobs:
             dist/*.tar.gz
             dist/*.sbom.json
             dist/*.sig
-            dist/*.pem
