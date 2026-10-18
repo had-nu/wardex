@@ -4,10 +4,12 @@
 package orchestrator
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/had-nu/wardex/v2/pkg/exitcodes"
@@ -208,6 +210,73 @@ func TestRunGateCSVOutput(t *testing.T) {
 	}
 	if len(data) == 0 {
 		t.Fatalf("empty CSV output")
+	}
+}
+
+func TestRunGateStructuredOutputUsesInjectedStdout(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	setupGateEnv(t)
+	writeGateFixture(t, dir, "config.yaml", "release_gate: {enabled: true, risk_appetite: 1.0}\n")
+	writeGateFixture(t, dir, "controls.yaml", gateControlsYAML)
+	writeGateFixture(t, dir, "evidence.yaml", allowEvidence())
+
+	var stdout bytes.Buffer
+	opts := baseGateOptions(dir)
+	opts.OutputFormat = "json"
+	opts.OutFile = "stdout"
+	opts.Stdout = &stdout
+	opts.GateLogPath = "/dev/null"
+
+	code, err := RunGate(context.Background(), opts)
+	if err != nil {
+		t.Fatalf("RunGate failed: %v", err)
+	}
+	if code != exitcodes.OK {
+		t.Fatalf("expected OK, got %d", code)
+	}
+	if !strings.Contains(stdout.String(), `"Gate"`) {
+		t.Fatalf("expected JSON gate report on injected stdout, got %q", stdout.String())
+	}
+}
+
+func TestRunGateOutcomeReportsEarlyFailure(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	opts := baseGateOptions(dir)
+	opts.Controls = []string{"missing-controls.yaml"}
+	var outcome GateOutcome
+	opts.OnOutcome = func(got GateOutcome) { outcome = got }
+
+	code, err := RunGate(context.Background(), opts)
+	if err == nil {
+		t.Fatal("expected missing-controls error")
+	}
+	if code != exitcodes.OK {
+		t.Fatalf("expected pipeline code OK with error, got %d", code)
+	}
+	if outcome.ExitCode != exitcodes.GenericError || outcome.Report != nil || outcome.Detail == "" {
+		t.Fatalf("unexpected early outcome: %+v", outcome)
+	}
+}
+
+func TestRunGateNormalizesOutputFormatBeforeValidation(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	setupGateEnv(t)
+	writeGateFixture(t, dir, "config.yaml", "release_gate: {enabled: true, risk_appetite: 1.0}\n")
+	writeGateFixture(t, dir, "evidence.yaml", allowEvidence())
+	writeGateFixture(t, dir, "controls.yaml", gateControlsYAML)
+	opts := baseGateOptions(dir)
+	opts.OutputFormat = " JSON "
+	var stdout bytes.Buffer
+	opts.Stdout = &stdout
+	code, err := RunGate(context.Background(), opts)
+	if err != nil {
+		t.Fatalf("RunGate failed unexpectedly: %v", err)
+	}
+	if code != exitcodes.OK || !strings.Contains(stdout.String(), `"Gate"`) {
+		t.Fatalf("case-insensitive JSON should pass validation, got code=%d output=%q", code, stdout.String())
 	}
 }
 

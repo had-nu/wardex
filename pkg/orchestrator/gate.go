@@ -33,6 +33,12 @@ import (
 
 // GateOptions carries the `wardex evaluate` command's flag values into the
 // gate evaluation pipeline.
+type GateOutcome struct {
+	ExitCode int
+	Report   *model.GateReport
+	Detail   string
+}
+
 type GateOptions struct {
 	ConfigPath   string
 	ProfileName  string
@@ -53,6 +59,9 @@ type GateOptions struct {
 	Stdout       io.Writer
 	Progress     ui.ProgressReporter
 	OnResult     func(model.GateReport)
+	// OnOutcome receives the final gate outcome on every return path,
+	// including configuration, evidence, and policy failures.
+	OnOutcome func(GateOutcome)
 	// ReleaseSeal (L4): when ReleaseVersion is set, the gate runs in
 	// release-seal mode and PolicyRef is required.
 	ReleaseVersion string
@@ -68,10 +77,37 @@ type GateOptions struct {
 	ForcedUpgradeState string
 }
 
+// gateOutputFormats is the set of formats the gate path can emit. It is a
+// strict subset of report.SupportedFormats: the gate writes markdown, JSON and
+// CSV only, so accepting a report-only format here would produce no output.
+var gateOutputFormats = map[string]bool{"markdown": true, "json": true, "csv": true}
+
+const gateFormatList = "markdown|json|csv"
+
 // RunGate executes the release-gate evaluation flow previously owned by
 // cmd/evaluate. It returns the process exit code to apply and an error for
 // input failures that the caller should surface. It never calls os.Exit.
-func RunGate(ctx context.Context, opts GateOptions) (int, error) {
+func RunGate(ctx context.Context, opts GateOptions) (exitCode int, runErr error) {
+	var finalReport *model.GateReport
+	outcomeDetail := ""
+	defer func() {
+		if opts.OnOutcome == nil {
+			return
+		}
+		outcomeCode := exitCode
+		detail := ""
+		if runErr != nil {
+			detail = runErr.Error()
+			if outcomeCode == exitcodes.OK {
+				outcomeCode = exitcodes.GenericError
+			}
+		} else if outcomeDetail != "" {
+			detail = outcomeDetail
+		} else {
+			detail = gateOutcomeDetail(outcomeCode)
+		}
+		opts.OnOutcome(GateOutcome{ExitCode: outcomeCode, Report: finalReport, Detail: detail})
+	}()
 	if opts.Logger == nil {
 		opts.Logger = slog.Default()
 	}
@@ -83,6 +119,11 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 	}
 	if opts.Progress == nil {
 		opts.Progress = ui.NoopProgressReporter{}
+	}
+	opts.OutputFormat = strings.ToLower(strings.TrimSpace(opts.OutputFormat))
+	if opts.OutputFormat != "" && !gateOutputFormats[opts.OutputFormat] {
+		fmt.Fprintf(opts.Stderr, "Error: unsupported gate output format %q (use %s)\n", opts.OutputFormat, gateFormatList)
+		return exitcodes.GenericError, nil
 	}
 	reportProgress := func(number int, name, status, detail string) {
 		opts.Progress.Report(ui.PhaseEvent{
@@ -168,6 +209,7 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 	reportProgress(3, "Loading evidence", "DONE", fmt.Sprintf("%d vulnerability record(s)", len(vulns)))
 
 	if code := handleActiveExploitation(ctx, opts, cfg, vulns, evidenceHash, class); code >= 0 {
+		outcomeDetail = "active exploitation detected"
 		reportProgress(3, "Loading evidence", "DONE", "active exploitation policy applied")
 		return code, nil
 	}
@@ -214,8 +256,9 @@ func RunGate(ctx context.Context, opts GateOptions) (int, error) {
 
 	reportProgress(5, "Evaluating release decisions", "RUNNING", "")
 	gateReport := rg.Evaluate(vulns)
+	finalReport = &gateReport
 	reportProgress(5, "Evaluating release decisions", "DONE", strings.ToUpper(string(gateReport.OverallDecision)))
-	suppressTable := opts.OnResult != nil || (opts.OutputFormat != "markdown" && opts.OutFile == "stdout")
+	suppressTable := opts.OnResult != nil || opts.OnOutcome != nil || (opts.OutputFormat != "markdown" && opts.OutFile == "stdout")
 	if !suppressTable {
 		renderGateTable(opts.Stdout, gateReport, cfg.ReleaseGate.RiskAppetite, cfg.ReleaseGate.WarnAbove)
 	}
@@ -323,11 +366,42 @@ func loadGateConfig(ctx context.Context, opts GateOptions) (*config.Config, erro
 	return cfg, nil
 }
 
+func gateOutcomeDetail(code int) string {
+	switch code {
+	case exitcodes.OK:
+		return "gate passed"
+	case exitcodes.IntegrityFailure:
+		return "integrity verification failed"
+	case exitcodes.StoreInconsistent:
+		return "acceptance store is inconsistent"
+	case exitcodes.ExpiringSoon:
+		return "an acceptance is expiring soon"
+	case exitcodes.FreshnessAdvisory:
+		return "freshness advisory"
+	case exitcodes.GateBlocked:
+		return "release gate blocked"
+	case exitcodes.ComplianceFail:
+		return "compliance threshold failed"
+	case exitcodes.ActivelyExploited:
+		return "active exploitation detected"
+	case exitcodes.DuplicateRelease:
+		return "release version already sealed"
+	default:
+		return fmt.Sprintf("gate exited with code %d", code)
+	}
+}
+
 // isCI detects common CI environment variables.
 func isCI() bool {
-	ciVars := []string{"CI", "GITHUB_ACTIONS", "GITLAB_CI", "JENKINS_URL", "BUILDKITE", "CIRCLECI"}
+	ciVars := []string{
+		"CI", "CONTINUOUS_INTEGRATION", "GITHUB_ACTIONS", "GITLAB_CI", "GITEA_ACTIONS",
+		"BUILDKITE", "CIRCLECI", "TRAVIS", "APPVEYOR", "TF_BUILD", "CODEBUILD_BUILD_ARN",
+		"CODEBUILD_BUILD_ID", "TEAMCITY_VERSION", "JENKINS_URL", "HUDSON_URL",
+		"BITBUCKET_BUILD_NUMBER", "DRONE", "WOODPECKER_CI", "CIRRUS_CI", "SEMAPHORE",
+	}
 	for _, v := range ciVars {
-		if strings.TrimSpace(os.Getenv(v)) != "" {
+		value := strings.ToLower(strings.TrimSpace(os.Getenv(v)))
+		if value != "" && value != "0" && value != "false" && value != "no" && value != "off" && value != "disabled" {
 			return true
 		}
 	}
@@ -528,7 +602,7 @@ func handleActiveExploitation(ctx context.Context, opts GateOptions, cfg *config
 	if err := accept.ChainedAuditLog(logPath, auditEntry); err != nil {
 		fmt.Fprintf(opts.Stderr, "Warning: failed to write gate audit log: %v\n", err)
 	} else {
-		fmt.Fprintf(opts.Stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
+		fmt.Fprintf(opts.Stderr, "[INFO] Gate decision logged (chained) -> %s\n", logPath)
 	}
 
 	gate.ForwardAuditEntry(ctx, cfg, auditEntry, opts.Stderr)
@@ -594,7 +668,8 @@ func renderGateTable(w io.Writer, report model.GateReport, riskApp, warnAbove fl
 	}
 	t.Render(w)
 	decision := "Overall Decision: " + strings.ToUpper(string(report.OverallDecision))
-	if ui.IsTerminal(w) {
+	profile := ui.DetectProfile(w)
+	if profile.Interactive && profile.ColorDepth != ui.ColorNone {
 		decision = ui.Colorize(decision, ui.Bold)
 	}
 	fmt.Fprintf(w, "\n%s  Gate Maturity: Level %d\n\n", decision, report.GateMaturityLevel)
@@ -664,7 +739,7 @@ func writeGateAuditLog(ctx context.Context, opts GateOptions, logPath string, cf
 	if err := accept.ChainedAuditLog(logPath, entry); err != nil {
 		fmt.Fprintf(opts.Stderr, "Warning: failed to write gate audit log: %v\n", err)
 	} else {
-		fmt.Fprintf(opts.Stderr, "[INFO] Gate decision logged (chained) → %s\n", logPath)
+		fmt.Fprintf(opts.Stderr, "[INFO] Gate decision logged (chained) -> %s\n", logPath)
 		recordReleaseSeal(opts, logPath, entry)
 	}
 
@@ -726,7 +801,7 @@ func recordStateStore(opts GateOptions, cfg *config.Config, report model.GateRep
 	if err := store.RecordDecision(report.OverallDecision, report.HighestRisk, vulnCount, activeAccepts, nil); err != nil {
 		fmt.Fprintf(opts.Stderr, "[WARN] Failed to record decision to state store: %v\n", err)
 	} else {
-		fmt.Fprintf(opts.Stderr, "[INFO] Decision recorded to state store → %s\n", stateDir)
+		fmt.Fprintf(opts.Stderr, "[INFO] Decision recorded to state store -> %s\n", stateDir)
 	}
 
 	if opts.ShowTrend {
@@ -745,7 +820,10 @@ func writeStructuredOutput(opts GateOptions, report model.GateReport) int {
 		return exitcodes.OK
 	}
 
-	dest := os.Stdout
+	dest := opts.Stdout
+	if dest == nil {
+		dest = io.Discard
+	}
 	if opts.OutFile != "stdout" {
 		safeOutPath, err := pathguard.SafeOutputPath(opts.OutFile)
 		if err != nil {
@@ -773,6 +851,12 @@ func writeStructuredOutput(opts GateOptions, report model.GateReport) int {
 		if code := writeCSVOutput(dest, opts, report); code != exitcodes.OK {
 			return code
 		}
+	default:
+		// RunGate validates the format before reaching this switch, so an
+		// unhandled value would mean the validator and this switch disagree.
+		// Fail loudly rather than emitting an empty file.
+		fmt.Fprintf(opts.Stderr, "Error: gate output format %q is accepted but not implemented\n", opts.OutputFormat)
+		return exitcodes.GenericError
 	}
 	return exitcodes.OK
 }

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"time"
@@ -45,6 +46,15 @@ func VerifyLink(log []byte, configDir string) ([]LinkResult, error) {
 }
 
 func VerifyLinkWithSchemaVersion(log []byte, configDir string, expectedSchemaVersion int) ([]LinkResult, error) {
+	return VerifyLinkWithSchemaVersionWriter(log, configDir, expectedSchemaVersion, os.Stderr)
+}
+
+// VerifyLinkWithSchemaVersionWriter is the writer-injectable variant used by
+// CLI callers so warnings follow the configured stderr destination.
+func VerifyLinkWithSchemaVersionWriter(log []byte, configDir string, expectedSchemaVersion int, warning io.Writer) ([]LinkResult, error) {
+	if warning == nil {
+		warning = io.Discard
+	}
 	return verifyLink(log, expectedSchemaVersion, func(e linkEntry) ([]byte, string, bool, error) {
 		file := findConfigForTimestamp(configDir, e.Timestamp)
 		if file == "" {
@@ -55,7 +65,7 @@ func VerifyLinkWithSchemaVersion(log []byte, configDir string, expectedSchemaVer
 			return nil, file, true, nil
 		}
 		return raw, file, false, nil
-	})
+	}, warning)
 }
 
 func VerifyLinkSingle(log []byte, configPath string) ([]LinkResult, error) {
@@ -63,11 +73,22 @@ func VerifyLinkSingle(log []byte, configPath string) ([]LinkResult, error) {
 }
 
 func VerifyLinkSingleWithSchemaVersion(log []byte, configPath string, expectedSchemaVersion int) ([]LinkResult, error) {
+	return VerifyLinkSingleWithSchemaVersionWriter(log, configPath, expectedSchemaVersion, os.Stderr)
+}
+
+// VerifyLinkSingleWithSchemaVersionWriter is the writer-injectable variant
+// for single-config verification.
+func VerifyLinkSingleWithSchemaVersionWriter(log []byte, configPath string, expectedSchemaVersion int, warning io.Writer) ([]LinkResult, error) {
 	raw, err := cli.ReadFile(configPath)
 	if err != nil {
 		return nil, err
 	}
-	return VerifyLinkWithConfigAndSchemaVersion(log, raw, expectedSchemaVersion)
+	if warning == nil {
+		warning = io.Discard
+	}
+	return verifyLink(log, expectedSchemaVersion, func(e linkEntry) ([]byte, string, bool, error) {
+		return raw, "", false, nil
+	}, warning)
 }
 
 func VerifyLinkWithConfig(log []byte, configRaw []byte) ([]LinkResult, error) {
@@ -77,13 +98,16 @@ func VerifyLinkWithConfig(log []byte, configRaw []byte) ([]LinkResult, error) {
 func VerifyLinkWithConfigAndSchemaVersion(log []byte, configRaw []byte, expectedSchemaVersion int) ([]LinkResult, error) {
 	return verifyLink(log, expectedSchemaVersion, func(e linkEntry) ([]byte, string, bool, error) {
 		return configRaw, "", false, nil
-	})
+	}, os.Stderr)
 }
 
 // verifyLink is the shared verification core. read resolves the archived
 // configuration for an entry: a missing=false, nil-error result carries the
 // raw config; missing=true maps to a MISSING status (no archived file).
-func verifyLink(log []byte, expectedSchemaVersion int, read func(linkEntry) ([]byte, string, bool, error)) ([]LinkResult, error) {
+func verifyLink(log []byte, expectedSchemaVersion int, read func(linkEntry) ([]byte, string, bool, error), warning io.Writer) ([]LinkResult, error) {
+	if warning == nil {
+		warning = io.Discard
+	}
 	lines := bytes.Split(bytes.TrimSpace(log), []byte("\n"))
 	if len(lines) == 0 {
 		return nil, fmt.Errorf("cpl: empty log")
@@ -102,7 +126,7 @@ func verifyLink(log []byte, expectedSchemaVersion int, read func(linkEntry) ([]b
 		}
 
 		if entry.ConfigHash == "" {
-			fmt.Fprintf(os.Stderr, "[WARN] CPL entry at line %d has empty config hash — skipped\n", lineNum+1)
+			fmt.Fprintf(warning, "[WARN] CPL entry at line %d has empty config hash - skipped\n", lineNum+1)
 			continue
 		}
 

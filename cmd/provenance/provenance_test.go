@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/fxamacker/cbor/v2"
+	"github.com/had-nu/wardex/v2/pkg/attest"
 	"github.com/had-nu/wardex/v2/pkg/provenance"
 )
 
@@ -113,7 +115,9 @@ func TestAttestCmd(t *testing.T) {
 		t.Fatalf("write key: %v", err)
 	}
 
-	// --input bypasses SafePath so we can use tmp dirs
+	// attest reads its input through cli.SafeReadFile, which confines paths to
+	// the workspace. The fixture must therefore live under the working
+	// directory rather than in t.TempDir(), which pathguard rejects.
 	out, _ := setupTest(t)
 
 	attFlags = attestFlags{} // reset flags between tests
@@ -138,6 +142,13 @@ func TestAttestCmd(t *testing.T) {
 	}
 	if len(data) == 0 {
 		t.Fatal("empty attestation file")
+	}
+	var signed attest.SignedAttestation
+	if err := cbor.Unmarshal(data, &signed); err != nil {
+		t.Fatalf("attestation is not CBOR: %v", err)
+	}
+	if len(signed.Signatures) == 0 {
+		t.Fatal("CBOR attestation has no signatures")
 	}
 }
 

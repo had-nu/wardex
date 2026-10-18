@@ -14,7 +14,7 @@ import (
 func buildAggregateSession(args []string) ui.SessionView {
 	inputs := strings.Join(args, ", ")
 	if inputs == "" {
-		inputs = "—"
+		inputs = "-"
 	}
 	return ui.SessionView{
 		Title:  "AGGREGATION SESSION",
@@ -100,7 +100,7 @@ func renderAggregateResults(w io.Writer, progress *ui.TerminalProgress, session 
 
 func renderAggregateTable(w io.Writer, results []fileResult) {
 	_, _ = fmt.Fprintln(w, "")
-	_, _ = fmt.Fprintln(w, "## Wardex — Aggregate Gate Decision")
+	_, _ = fmt.Fprintln(w, "## Wardex - Aggregate Gate Decision")
 	_, _ = fmt.Fprintln(w, "")
 
 	table := ui.NewTable(

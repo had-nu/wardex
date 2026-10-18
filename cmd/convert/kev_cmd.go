@@ -5,10 +5,10 @@ package convert
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"time"
 
-	"github.com/had-nu/wardex/v2/internal/cpl"
 	"github.com/had-nu/wardex/v2/pkg/attest"
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -50,7 +50,7 @@ func runConvertKEV(cmd *cobra.Command, args []string) error {
 	u.report(1, "Resolving KEV catalogue", "DONE", safePath)
 
 	if warn := CheckKEVAge(safePath, KEVMaxAgeDays); warn != "" {
-		fmt.Fprintln(os.Stderr, warn)
+		fmt.Fprintln(commandStderr(cmd), warn)
 	}
 
 	u.report(2, "Loading KEV catalogue", "RUNNING", safePath)
@@ -106,7 +106,7 @@ func runConvertKEV(cmd *cobra.Command, args []string) error {
 			u.report(3, "Writing converted output", "FAILED", err.Error())
 			return fmt.Errorf("writing output: %w", err)
 		}
-		if !u.progress.Enabled() {
+		if !u.dashboardEnabled() {
 			fmt.Fprintf(commandOutput(cmd), "Converted %d KEV entries to %s\n", len(out.Vulnerabilities), kevOutFile)
 		}
 	}
@@ -114,22 +114,26 @@ func runConvertKEV(cmd *cobra.Command, args []string) error {
 
 	if kevAttestKey != "" && kevOutFile != "stdout" && kevOutFile != "-" {
 		u.report(4, "Writing tool attestation", "RUNNING", kevAttestKey)
-		if err := attestKEV(inFile, kevOutFile, kevAttestKey); err != nil {
+		if err := attestKEV(inFile, kevOutFile, kevAttestKey, commandStderr(cmd)); err != nil {
 			u.report(4, "Writing tool attestation", "FAILED", err.Error())
-			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+			fmt.Fprintf(commandStderr(cmd), "[WARN] Attestation failed: %v\n", err)
 		} else {
 			u.report(4, "Writing tool attestation", "DONE", kevOutFile+".attest")
 		}
 	} else {
 		u.report(4, "Writing tool attestation", "SKIPPED", "not requested")
 	}
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render("kev", kevOutFile, len(out.Vulnerabilities), 0, len(out.Vulnerabilities), kevAttestKey != "")
 	}
 	return nil
 }
 
-func attestKEV(inputFile, outputFile, keyPath string) error {
+func attestKEV(inputFile, outputFile, keyPath string, warningWriters ...io.Writer) error {
+	warnings := io.Writer(os.Stderr)
+	if len(warningWriters) > 0 && warningWriters[0] != nil {
+		warnings = warningWriters[0]
+	}
 	inHash, err := attest.FileHash(inputFile)
 	if err != nil {
 		return fmt.Errorf("hash input: %w", err)
@@ -160,7 +164,7 @@ func attestKEV(inputFile, outputFile, keyPath string) error {
 	}
 
 	attestPath := outputFile + ".attest"
-	out, err := yaml.Marshal(signed)
+	out, err := signed.MarshalAttestationCBOR()
 	if err != nil {
 		return fmt.Errorf("marshal attestation: %w", err)
 	}
@@ -168,11 +172,6 @@ func attestKEV(inputFile, outputFile, keyPath string) error {
 		return fmt.Errorf("write attestation: %w", err)
 	}
 
-	cfgHash, err := cpl.ComputeConfigHash(outHash, cpl.AlgoSHA256)
-	if err == nil {
-		a.SetConfigHash(cfgHash)
-	}
-
-	fmt.Fprintf(os.Stderr, "[PROVENANCE] Signed attestation written to %s\n", attestPath)
+	fmt.Fprintf(warnings, "[PROVENANCE] Signed attestation written to %s\n", attestPath)
 	return nil
 }

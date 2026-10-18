@@ -1,8 +1,12 @@
 package audit
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 )
+
+var exitFunc = os.Exit
 
 var AuditCmd = &cobra.Command{
 	Use:   "audit",

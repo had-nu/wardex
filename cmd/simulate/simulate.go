@@ -29,7 +29,8 @@ func runSimulate(cmd *cobra.Command, args []string) error {
 	outputPath := filepath.Join(wd, filename)
 
 	stderr := cmd.ErrOrStderr()
-	progress := ui.NewTerminalProgress(stderr)
+	output := cmd.OutOrStdout()
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(buildSimulatorSession(outputPath))
 	reportProgress := func(number int, name, status, detail string) {
 		progress.Report(ui.PhaseEvent{
@@ -54,15 +55,15 @@ func runSimulate(cmd *cobra.Command, args []string) error {
 	reportProgress(3, "Finalizing simulator output", "RUNNING", "")
 	reportProgress(3, "Finalizing simulator output", "DONE", "ready to open")
 
-	if progress.Enabled() {
+	if progress.Enabled() && ui.IsTerminal(output) {
 		renderSimulatorResults(stderr, progress, outputPath, len(html))
 		return nil
 	}
 
-	fmt.Fprintln(cmd.OutOrStdout(), "Wardex Risk Simulator generated successfully!")
-	fmt.Fprintln(cmd.OutOrStdout(), "Open the following file in your web browser:")
-	fmt.Fprintln(cmd.OutOrStdout())
-	fmt.Fprintf(cmd.OutOrStdout(), "  file://%s\n\n", outputPath)
+	fmt.Fprintln(output, "Wardex Risk Simulator generated successfully!")
+	fmt.Fprintln(output, "Open the following file in your web browser:")
+	fmt.Fprintln(output)
+	fmt.Fprintf(output, "  file://%s\n\n", outputPath)
 	return nil
 }
 

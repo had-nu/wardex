@@ -36,7 +36,7 @@ func beginStateUI(cmd *cobra.Command, command, path string) *stateUI {
 		stderr = cmd.ErrOrStderr()
 	}
 	output := stateCommandOutput(cmd)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(ui.SessionView{
 		Title:  "STATE STORE SESSION",
 		Status: "RUNNING",

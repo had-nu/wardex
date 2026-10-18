@@ -32,17 +32,24 @@ var statusCmd = &cobra.Command{
 		u.report(2, "Reading anchor health", "DONE", "health received")
 		u.report(3, "Preparing status result", "RUNNING", "")
 		u.report(3, "Preparing status result", "DONE", "status ready")
-		if u.progress.Enabled() {
+		if u.dashboardEnabled() {
 			u.render(buildProvenanceStatusDashboard(health))
 			return nil
 		}
+		if health == nil {
+			return fmt.Errorf("status failed: empty health response")
+		}
+		if health.DryRun {
+			fmt.Fprintln(u.output, "Provenance anchor is in dry-run mode; no persistence or health query is available")
+			return nil
+		}
 
-		fmt.Fprintln(cmd.OutOrStdout(), "PROVENANCE ANCHOR STATUS")
-		fmt.Fprintln(cmd.OutOrStdout(), "========================")
-		fmt.Fprintln(cmd.OutOrStdout())
-		fmt.Fprintf(cmd.OutOrStdout(), "Block Height:  %d\n", health.BlockHeight)
-		fmt.Fprintf(cmd.OutOrStdout(), "Active Peers:  %d\n", health.ActivePeers)
-		fmt.Fprintf(cmd.OutOrStdout(), "Pending:       %d\n", health.Pending)
+		fmt.Fprintln(u.output, "PROVENANCE ANCHOR STATUS")
+		fmt.Fprintln(u.output, "========================")
+		fmt.Fprintln(u.output)
+		fmt.Fprintf(u.output, "Block Height:  %d\n", health.BlockHeight)
+		fmt.Fprintf(u.output, "Active Peers:  %d\n", health.ActivePeers)
+		fmt.Fprintf(u.output, "Pending:       %d\n", health.Pending)
 		return nil
 	},
 }

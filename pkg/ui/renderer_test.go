@@ -121,3 +121,39 @@ func TestThemeColorNoneIsPlain(t *testing.T) {
 		}
 	}
 }
+
+func TestRendererSanitizesUntrustedDisplayValues(t *testing.T) {
+	var out bytes.Buffer
+	renderer := NewRenderer(&out, Profile{
+		Interactive: true,
+		ColorDepth:  ColorNone,
+		Unicode:     true,
+		Width:       120,
+	})
+	dashboard := testDashboard()
+	injection := "visible\x1b[31m-value\nnext\x00"
+	dashboard.Session.Title = injection
+	dashboard.Session.Fields[0].Value = injection
+	dashboard.Phases[0].Name = injection
+	dashboard.Phases[0].Detail = "detail\x1b]0;window-title\a"
+	dashboard.Findings[0].Title = "finding\u009b2Jvalue"
+	dashboard.Summary.Decision = "block\x1b[0m"
+
+	renderer.Dashboard(dashboard)
+	got := out.String()
+
+	if strings.Contains(got, "\x1b") || strings.Contains(got, "\u009b") {
+		t.Fatalf("renderer retained an ANSI escape: %q", got)
+	}
+	if strings.ContainsAny(got, "\x00\r\t") {
+		t.Fatalf("renderer retained a C0 control: %q", got)
+	}
+	if strings.Contains(got, "window-title") {
+		t.Fatalf("renderer retained an OSC payload: %q", got)
+	}
+	for _, want := range []string{"visible-value next", "detail", "findingvalue", "BLOCK"} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("renderer lost sanitized text %q: %q", want, got)
+		}
+	}
+}

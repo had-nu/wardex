@@ -4,6 +4,7 @@
 package trustcmd
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -56,6 +57,9 @@ func init() {
 }
 
 func runTrustList(cmd *cobra.Command, args []string) error {
+	if listOutput != "table" && listOutput != "json" && listOutput != "csv" {
+		return fmt.Errorf("unsupported trust list output %q (use table|json|csv)", listOutput)
+	}
 	u := beginTrustUI(cmd, "list", trustPath)
 	u.report(1, "Loading trust store", "RUNNING", trustPath)
 	store, _, err := trust.LoadStore(trustPath)
@@ -101,21 +105,33 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 		fmt.Fprintln(u.output, string(data))
 
 	case "csv":
-		fmt.Fprintln(u.output, "id,actor,name,role,status,added_at,added_by")
+		cw := csv.NewWriter(u.output)
+		if err := cw.Write([]string{"id", "actor", "name", "role", "status", "added_at", "added_by"}); err != nil {
+			return fmt.Errorf("trust list csv header: %w", err)
+		}
 		for _, k := range store.Keys {
 			status := "active"
 			if revoked[k.ID] {
 				status = "revoked"
 			}
-			fmt.Fprintf(u.output, "%s,%s,%s,%s,%s,%s,%s\n",
-				k.ID, k.Actor, k.Name, k.Role, status,
-				k.AddedAt.Format("2006-01-02T15:04:05Z"), k.AddedBy)
+			if err := cw.Write([]string{
+				k.ID, k.Actor, k.Name, string(k.Role), status,
+				k.AddedAt.Format("2006-01-02T15:04:05Z"), k.AddedBy,
+			}); err != nil {
+				return fmt.Errorf("trust list csv row: %w", err)
+			}
+		}
+		cw.Flush()
+		if err := cw.Error(); err != nil {
+			return fmt.Errorf("trust list csv: %w", err)
 		}
 
 	default: // table
 		w := u.output
+		profile := ui.DetectProfile(w)
+		color := profile.Interactive && profile.ColorDepth != ui.ColorNone
 		hdr := func(s string, w2 int) string {
-			if ui.IsTerminal(w) {
+			if color {
 				return ui.PadANSI(ui.Colorize(s, ui.Cyan+ui.Bold), w2)
 			}
 			return ui.PadANSI(s, w2)
@@ -129,14 +145,14 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 			wDate   = 22
 		)
 		lineChar := '─'
-		if !ui.IsTerminal(w) {
+		if !profile.Unicode {
 			lineChar = '-'
 		}
 		fill := func(n int) string {
 			return strings.Repeat(string(lineChar), n)
 		}
 		rule := func(value string) string {
-			if ui.IsTerminal(w) {
+			if color {
 				return ui.Colorize(value, ui.Gray)
 			}
 			return value
@@ -168,7 +184,7 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 				actor = actor[:23] + "..."
 			}
 			statusValue := status
-			if ui.IsTerminal(w) {
+			if color {
 				statusValue = ui.Colorize(status, sc)
 			}
 			fmt.Fprintf(w, "%s  %s  %s  %s  %s  %s\n",
@@ -185,6 +201,9 @@ func runTrustList(cmd *cobra.Command, args []string) error {
 }
 
 func runTrustShow(cmd *cobra.Command, args []string) error {
+	if showOutput != "table" && showOutput != "json" {
+		return fmt.Errorf("unsupported trust show output %q (use table|json)", showOutput)
+	}
 	u := beginTrustUI(cmd, "show", trustPath)
 	u.report(1, "Loading trust store", "RUNNING", trustPath)
 	store, _, err := trust.LoadStore(trustPath)
@@ -277,8 +296,9 @@ func runTrustVerify(cmd *cobra.Command, args []string) error {
 			u.render(buildTrustVerifyDashboard(trustPath, adminID, len(store.Keys), activeCount, revokedCount, false))
 		} else {
 			w := u.output
+			profile := ui.DetectProfile(w)
 			status := "INVALID"
-			if ui.IsTerminal(w) {
+			if profile.Interactive && profile.ColorDepth != ui.ColorNone {
 				status = ui.Colorize(status, ui.Red)
 			}
 			fmt.Fprintf(w, "Trust store: %s\n", trustPath)
@@ -298,7 +318,8 @@ func runTrustVerify(cmd *cobra.Command, args []string) error {
 	w := u.output
 	fmt.Fprintf(w, "Trust store: %s\n", trustPath)
 	rootStatus := "VALID"
-	if ui.IsTerminal(w) {
+	profile := ui.DetectProfile(w)
+	if profile.Interactive && profile.ColorDepth != ui.ColorNone {
 		rootStatus = ui.Colorize(rootStatus, ui.Green)
 	}
 	fmt.Fprintf(w, "Root signature: %s\n", rootStatus)

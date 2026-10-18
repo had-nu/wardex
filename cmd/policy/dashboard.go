@@ -34,7 +34,7 @@ func beginPolicyUI(cmd *cobra.Command, command, path string) *policyUI {
 		stderr = cmd.ErrOrStderr()
 	}
 	output := policyCommandOutput(cmd)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(ui.SessionView{
 		Title:  "POLICY WORKSPACE SESSION",
 		Status: "RUNNING",

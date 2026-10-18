@@ -51,30 +51,6 @@ func buildConfigSealDashboard(input, output, trustRef string) ui.Dashboard {
 	}
 }
 
-func buildConfigHashSession(path, algorithm string) ui.SessionView {
-	return ui.SessionView{
-		Title:  "CONFIG HASH SESSION",
-		Status: "RUNNING",
-		Fields: []ui.Field{
-			{Label: "CONFIG", Value: path},
-			{Label: "ALGORITHM", Value: algorithm},
-		},
-	}
-}
-
-func buildConfigHashDashboard(path, algorithm, hash string) ui.Dashboard {
-	return ui.Dashboard{
-		Summary: ui.SummaryView{
-			Decision: "COMPUTED",
-			Fields: []ui.Field{
-				{Label: "CONFIG", Value: path},
-				{Label: "ALGORITHM", Value: algorithm},
-				{Label: "HASH", Value: hash},
-			},
-		},
-	}
-}
-
 func buildConfigShowSession(path string) ui.SessionView {
 	return ui.SessionView{
 		Title:  "CONFIG INSPECTION SESSION",

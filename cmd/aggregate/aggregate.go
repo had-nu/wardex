@@ -15,7 +15,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var failOn string
+var (
+	failOn   string
+	exitFunc = os.Exit
+)
 
 // AggregateCmd reads multiple JSON gate reports and returns a combined decision.
 // It is intended to be used after running `wardex evaluate` for multiple frameworks
@@ -34,12 +37,12 @@ Examples:
   wardex aggregate iso-result.json nis2-result.json --fail-on all-block
 
 --fail-on modes:
-  any-block  (default) — exit 10 if ANY framework produced a BLOCK decision
-  all-block            — exit 10 only if ALL frameworks produced a BLOCK decision
+  any-block  (default) - exit 10 if ANY framework produced a BLOCK decision
+  all-block            - exit 10 only if ALL frameworks produced a BLOCK decision
 
 Exit codes:
-   0 — Combined decision: ALLOW
-  10 — Combined decision: BLOCK`,
+   0 - Combined decision: ALLOW
+  10 - Combined decision: BLOCK`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: runAggregate,
 }
@@ -69,8 +72,9 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 	}
 
 	stderr := cmd.ErrOrStderr()
+	w := cmd.OutOrStdout()
 	session := buildAggregateSession(args)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, w)
 	progress.Begin(session)
 	reportProgress := func(number int, name, status, detail string) {
 		progress.Report(ui.PhaseEvent{
@@ -116,13 +120,12 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 	combined, blockCount, blocked := aggregateDecision(results, failOn)
 	reportProgress(3, "Calculating combined decision", "DONE", fmt.Sprintf("%d/%d blocked", blockCount, len(results)))
 
-	if progress.Enabled() {
+	if progress.Enabled() && ui.IsTerminal(w) {
 		renderAggregateResults(stderr, progress, session, results)
 	} else {
-		w := cmd.OutOrStdout()
 		renderAggregateTable(w, results)
 		if blocked {
-			_, _ = fmt.Fprintf(w, "\n**Combined Decision:** [FAIL] %s (%s — %d/%d framework(s) blocked)\n\n",
+			_, _ = fmt.Fprintf(w, "\n**Combined Decision:** [FAIL] %s (%s - %d/%d framework(s) blocked)\n\n",
 				combined, failOn, blockCount, len(results),
 			)
 		} else {
@@ -131,8 +134,9 @@ func runAggregate(cmd *cobra.Command, args []string) error {
 	}
 
 	if blocked {
-		os.Exit(exitcodes.GateBlocked)
+		exitFunc(exitcodes.GateBlocked)
+		return nil
 	}
-	os.Exit(exitcodes.OK)
+	exitFunc(exitcodes.OK)
 	return nil
 }

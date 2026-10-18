@@ -4,11 +4,8 @@ import (
 	"crypto/ed25519"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"os"
 
-	"github.com/had-nu/wardex/v2/internal/cpl"
 	"github.com/had-nu/wardex/v2/pkg/attest"
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/trust"
@@ -115,12 +112,12 @@ func runAttest(cmd *cobra.Command, args []string) error {
 	reportProgress(3, "Signing attestation", "DONE", keyID[:16]+"...")
 
 	reportProgress(4, "Writing attestation", "RUNNING", attFlags.outputFile)
-	outData, err := json.MarshalIndent(signed, "", "  ")
+	attestCBOR, err := signed.MarshalAttestationCBOR()
 	if err != nil {
 		reportProgress(4, "Writing attestation", "FAILED", err.Error())
 		return fmt.Errorf("marshal attestation: %w", err)
 	}
-	if err := os.WriteFile(attFlags.outputFile, outData, 0600); err != nil { // #nosec G703 -- caller controls output path
+	if err := cli.SafeWriteFile(attFlags.outputFile, attestCBOR); err != nil {
 		reportProgress(4, "Writing attestation", "FAILED", err.Error())
 		return fmt.Errorf("write attestation: %w", err)
 	}
@@ -137,27 +134,23 @@ func runAttest(cmd *cobra.Command, args []string) error {
 		}
 		defer func() { _ = anchorer.Close() }()
 
-		attestCBOR, err := signed.MarshalAttestationCBOR()
-		if err != nil {
-			reportProgress(5, "Submitting attestation", "FAILED", err.Error())
-			return fmt.Errorf("marshal attestation for submission: %w", err)
-		}
-		cfgHash, err := cpl.ComputeConfigHash(inputHash[:], cpl.AlgoSHA256)
-		if err == nil {
-			signed.Attestation.ConfigHash = cfgHash
-		}
 		result, err := anchorer.SubmitAttested(cmd.Context(), inputHash[:], attFlags.label, attestCBOR)
 		if err != nil {
 			reportProgress(5, "Submitting attestation", "FAILED", err.Error())
-			if !u.progress.Enabled() {
+			if !u.dashboardEnabled() {
 				fmt.Fprintf(cmd.ErrOrStderr(), "[WARN] Attestation submitted locally but anchor submission failed: %v\n", err)
 			}
 			anchorLabel = "failed"
 		} else {
-			block := result.BlockIndex
-			anchorBlock = &block
 			anchorLabel = result.Label
-			reportProgress(5, "Submitting attestation", "DONE", result.Label)
+			if result.DryRun {
+				anchorLabel = "dry-run (not anchored)"
+				reportProgress(5, "Submitting attestation", "SKIPPED", anchorLabel)
+			} else {
+				block := result.BlockIndex
+				anchorBlock = &block
+				reportProgress(5, "Submitting attestation", "DONE", result.Label)
+			}
 		}
 	} else {
 		reportProgress(5, "Submitting attestation", "SKIPPED", "not requested")
@@ -174,17 +167,19 @@ func runAttest(cmd *cobra.Command, args []string) error {
 	if anchorBlock != nil {
 		fields = append(fields, ui.Field{Label: "BLOCK", Value: fmt.Sprintf("%d", *anchorBlock)})
 	}
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render(buildProvenanceActionDashboard("ATTESTED", fields))
 		return nil
 	}
-	fmt.Fprintf(cmd.OutOrStdout(), "Signed attestation written to %s\n", attFlags.outputFile)
-	fmt.Fprintf(cmd.OutOrStdout(), "  Tool:     %s %s\n", a.Tool, a.Version)
-	fmt.Fprintf(cmd.OutOrStdout(), "  Key:      %s\n", keyID[:16]+"...")
-	fmt.Fprintf(cmd.OutOrStdout(), "  Input:    %s\n", inputPath)
-	fmt.Fprintf(cmd.OutOrStdout(), "  Hash:     sha256:%x\n", inputHash)
+	fmt.Fprintf(u.output, "Signed attestation written to %s\n", attFlags.outputFile)
+	fmt.Fprintf(u.output, "  Tool:     %s %s\n", a.Tool, a.Version)
+	fmt.Fprintf(u.output, "  Key:      %s\n", keyID[:16]+"...")
+	fmt.Fprintf(u.output, "  Input:    %s\n", inputPath)
+	fmt.Fprintf(u.output, "  Hash:     sha256:%x\n", inputHash)
 	if anchorBlock != nil {
-		fmt.Fprintf(cmd.OutOrStdout(), "  Anchored:  %s (block ~%d)\n", anchorLabel, *anchorBlock)
+		fmt.Fprintf(u.output, "  Anchored:  %s (block ~%d)\n", anchorLabel, *anchorBlock)
+	} else if attFlags.submit && anchorLabel == "dry-run (not anchored)" {
+		fmt.Fprintf(u.output, "  Anchor:    %s\n", anchorLabel)
 	}
 	return nil
 }

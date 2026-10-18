@@ -13,7 +13,6 @@ import (
 	pathguard "github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/epss"
 	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -42,8 +41,9 @@ var epssCmd = &cobra.Command{
 		cfg, err := config.Load(*configPathPtr)
 		if err != nil {
 			u.report(1, "Loading configuration", "FAILED", err.Error())
-			ui.Errorf("Error loading config from %s: %v", *configPathPtr, err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Error loading config from %s: %v\n", *configPathPtr, err)
 			exitFunc(1)
+			return
 		}
 		u.report(1, "Loading configuration", "DONE", "configuration loaded")
 
@@ -51,8 +51,9 @@ var epssCmd = &cobra.Command{
 		key, err := accept.ResolveSecret(*cfg)
 		if err != nil {
 			u.report(2, "Resolving signing secret", "FAILED", err.Error())
-			ui.Errorf("Missing or invalid WARDEX_SECRET. Enrichment non-repudiation requires a valid signature key.\n%v", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Missing or invalid WARDEX_ACCEPT_SECRET. Enrichment non-repudiation requires a valid signature key.\n%v\n", err)
 			exitFunc(1)
+			return
 		}
 		u.report(2, "Resolving signing secret", "DONE", "secret available")
 
@@ -60,16 +61,18 @@ var epssCmd = &cobra.Command{
 		vdata, err := pathguard.SafeReadFile(inFile)
 		if err != nil {
 			u.report(3, "Reading vulnerability file", "FAILED", err.Error())
-			ui.Errorf("Failed to read vulnerability file: %v", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Failed to read vulnerability file: %v\n", err)
 			exitFunc(1)
+			return
 		}
 		var vulnsFormat struct {
 			Vulnerabilities []model.Vulnerability `yaml:"vulnerabilities"`
 		}
 		if err := yaml.Unmarshal(vdata, &vulnsFormat); err != nil {
 			u.report(3, "Reading vulnerability file", "FAILED", err.Error())
-			ui.Errorf("Failed to parse vulnerabilities: %v", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Failed to parse vulnerabilities: %v\n", err)
 			exitFunc(1)
+			return
 		}
 		u.report(3, "Reading vulnerability file", "DONE", fmt.Sprintf("%d records", len(vulnsFormat.Vulnerabilities)))
 
@@ -81,20 +84,22 @@ var epssCmd = &cobra.Command{
 		}
 		if len(cvesToFetch) == 0 {
 			u.report(4, "Checking EPSS coverage", "DONE", "no missing scores")
-			if u.progress.Enabled() {
+			if u.dashboardEnabled() {
 				u.render(0)
 			} else {
-				fmt.Fprintln(cmd.OutOrStdout(), "[INFO] No missing EPSS scores found in the input file.")
+				fmt.Fprintln(u.output, "[INFO] No missing EPSS scores found in the input file.")
 			}
 			exitFunc(0)
+			return
 		}
 
 		u.report(4, "Fetching EPSS scores", "RUNNING", fmt.Sprintf("%d CVE(s)", len(cvesToFetch)))
 		scores, provenance, err := epss.FetchScores(cmd.Context(), cvesToFetch)
 		if err != nil {
 			u.report(4, "Fetching EPSS scores", "FAILED", err.Error())
-			ui.Errorf("First.org API query failed: %v", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "First.org API query failed: %v\n", err)
 			exitFunc(1)
+			return
 		}
 		u.report(4, "Fetching EPSS scores", "DONE", fmt.Sprintf("%d score(s)", len(scores)))
 
@@ -111,8 +116,9 @@ var epssCmd = &cobra.Command{
 		sig, err := epss.Sign(outFormat, key)
 		if err != nil {
 			u.report(5, "Signing enrichment record", "FAILED", err.Error())
-			ui.Errorf("Failed to sign EPSS payload: %v", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Failed to sign EPSS payload: %v\n", err)
 			exitFunc(1)
+			return
 		}
 		outFormat.Signature = sig
 		u.report(5, "Signing enrichment record", "DONE", "signature ready")
@@ -121,19 +127,21 @@ var epssCmd = &cobra.Command{
 		outData, err := yaml.Marshal(&outFormat)
 		if err != nil {
 			u.report(6, "Writing enrichment file", "FAILED", err.Error())
-			ui.Errorf("Failed to generate yaml: %v", err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Failed to generate yaml: %v\n", err)
 			exitFunc(1)
+			return
 		}
-		if err := os.WriteFile(outputFile, outData, 0600); err != nil {
+		if err := pathguard.SafeWriteFile(outputFile, outData); err != nil {
 			u.report(6, "Writing enrichment file", "FAILED", err.Error())
-			ui.Errorf("Failed to write %s: %v", outputFile, err)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Failed to write %s: %v\n", outputFile, err)
 			exitFunc(1)
+			return
 		}
 		u.report(6, "Writing enrichment file", "DONE", outputFile)
-		if u.progress.Enabled() {
+		if u.dashboardEnabled() {
 			u.render(len(scores))
 		} else {
-			fmt.Fprintf(cmd.OutOrStdout(), "[PASS] Cryptographically signed enrichment written to %s.\n", outputFile)
+			fmt.Fprintf(u.output, "[PASS] Cryptographically signed enrichment written to %s.\n", outputFile)
 		}
 	},
 }

@@ -17,7 +17,7 @@ const maxAssessFindings = 5
 func buildAssessSession(args []string) ui.SessionView {
 	inputs := strings.Join(args, ", ")
 	if inputs == "" {
-		inputs = "—"
+		inputs = "-"
 	}
 	output := outputFormat
 	if output == "" {
@@ -91,11 +91,11 @@ func buildAssessFinding(finding model.Finding, frameworkName string) ui.FindingV
 
 	reason := strings.Join(finding.GapReasons, "; ")
 	if reason == "" {
-		reason = "—"
+		reason = "-"
 	}
 	recommendation := finding.Recommendation
 	if recommendation == "" {
-		recommendation = "—"
+		recommendation = "-"
 	}
 
 	severity := "LOW"
@@ -148,10 +148,9 @@ func assessFindingConfidence(finding model.Finding) string {
 }
 
 func renderAssessResults(w io.Writer, progress *ui.TerminalProgress, session ui.SessionView, report model.GapReport) {
-	dashboard := buildAssessDashboard(session, report, framework)
-	if progress != nil && progress.Enabled() {
-		_ = ui.RenderResults(w, dashboard)
+	if progress == nil || !progress.Enabled() {
 		return
 	}
-	_ = ui.RenderDashboard(w, dashboard)
+	dashboard := buildAssessDashboard(session, report, framework)
+	_ = ui.RenderResults(w, dashboard)
 }

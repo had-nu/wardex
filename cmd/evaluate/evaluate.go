@@ -4,11 +4,12 @@
 package evaluate
 
 import (
+	"io"
 	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
-	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/orchestrator"
+	"github.com/had-nu/wardex/v2/pkg/report"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 )
@@ -45,7 +46,7 @@ vulnerability evidence file. Exits with code 10 if the gate blocks the release.
 
 This command is a focused alias for the gate evaluation portion of the root
 wardex command, intended for use in CI steps where the gap analysis report
-is not needed — only the gate decision.
+is not needed - only the gate decision.
 
 Example:
   wardex evaluate \
@@ -54,19 +55,19 @@ Example:
     ./frameworks/iso27001/*.yml
 
 Exit codes:
-   0 — Gate passed (ALLOW)
-   3 — Seal integrity failure (revoked key, trust store drift, invalid sig)
+   0 - Gate passed (ALLOW)
+   3 - Seal integrity failure (revoked key, trust store drift, invalid sig)
        Also returned if --strict is used with an unsealed config.
-   6 — Freshness advisory (pr/nightly classes; missing EPSS score with
-       advisory freshness exam — the pipeline is NOT blocked)
-  10 — Gate blocked (BLOCK)
-  11 — Compliance gap exceeded --fail-above threshold
-  12 — Active exploitation detected (hard stop)
-  13 — Release version already sealed (release-seal duplicate)
+   6 - Freshness advisory (pr/nightly classes; missing EPSS score with
+       advisory freshness exam - the pipeline is NOT blocked)
+  10 - Gate blocked (BLOCK)
+  11 - Compliance gap exceeded --fail-above threshold
+  12 - Active exploitation detected (hard stop)
+  13 - Release version already sealed (release-seal duplicate)
 
 forced_upgrade (L7): when armed by flag or sealed config, exit 10 also
 covers an unattestable release (evidence not fresh enough). A tripwire
-disarms after N consecutive refresh failures — see gate.forced_upgrade.`,
+disarms after N consecutive refresh failures - see gate.forced_upgrade.`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: runEvaluate,
 }
@@ -76,7 +77,7 @@ func init() {
 	EvaluateCmd.Flags().StringVar(&gateFile, "evidence", "", "Vulnerabilities file for release gate evaluation (required)")
 	EvaluateCmd.Flags().StringVar(&gateMode, "gate-mode", "any", "Gate mode: any|aggregate")
 	EvaluateCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a signed EPSS enrichment file")
-	EvaluateCmd.Flags().StringVar(&outputFormat, "output", "markdown", "Output format: markdown|json|csv")
+	EvaluateCmd.Flags().StringVar(&outputFormat, "output", "markdown", "Output format: "+report.FormatList())
 	EvaluateCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 	EvaluateCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override profile")
 	EvaluateCmd.Flags().Float64Var(&failAbove, "fail-above", 0.0, "Exit 11 if any gap score exceeds this value")
@@ -95,6 +96,18 @@ func init() {
 	cli.AddCommands(EvaluateCmd, &configPath)
 }
 
+func commandStderr(cmd *cobra.Command) io.Writer {
+	if cmd == nil {
+		return stderr
+	}
+	w := cmd.ErrOrStderr()
+	if file, ok := w.(*os.File); ok && file == os.Stderr {
+		// Preserve the package-level test seam when Cobra is using its default writer.
+		return stderr
+	}
+	return w
+}
+
 func runEvaluate(cmd *cobra.Command, args []string) error {
 	if releaseVersion == "" {
 		releaseVersion = os.Getenv("WARDEX_RELEASE_VERSION")
@@ -102,6 +115,8 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 	if policyRef == "" {
 		policyRef = os.Getenv("WARDEX_POLICY_REF")
 	}
+	errWriter := commandStderr(cmd)
+	output := cmd.OutOrStdout()
 	gateOpts := orchestrator.GateOptions{
 		ConfigPath:         configPath,
 		GateFile:           gateFile,
@@ -123,15 +138,18 @@ func runEvaluate(cmd *cobra.Command, args []string) error {
 		ForcedUpgrade:      forcedUpgrade,
 		ForcedUpgradeState: forcedUpgradeState,
 		Logger:             ui.Default().Logger,
-		Stderr:             stderr,
-		Stdout:             cmd.OutOrStdout(),
+		Stderr:             errWriter,
+		Stdout:             output,
 	}
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgress(io.Discard)
+	if (outFile == "" || outFile == "stdout") && !ui.IsMachineFormat(outputFormat) {
+		progress = ui.NewTerminalProgressForOutput(errWriter, output)
+	}
 	progress.Begin(buildGateSession(gateOpts))
 	gateOpts.Progress = progress
 	if progress.Enabled() {
-		gateOpts.OnResult = func(report model.GateReport) {
-			renderGateResults(stderr, progress, gateOpts, report)
+		gateOpts.OnOutcome = func(outcome orchestrator.GateOutcome) {
+			renderGateOutcome(errWriter, progress, gateOpts, outcome)
 		}
 	}
 

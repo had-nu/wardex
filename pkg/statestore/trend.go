@@ -34,7 +34,7 @@ func FormatTrend(analysis *TrendAnalysis, history []TrendPoint) string {
 	fmt.Fprintf(&sb, "  Block:        %d\n", analysis.BlockCount)
 
 	// Time range
-	fmt.Fprintf(&sb, "\nPeriod:         %s → %s\n",
+	fmt.Fprintf(&sb, "\nPeriod:         %s -> %s\n",
 		analysis.OldestRun.Format("2006-01-02"),
 		analysis.NewestRun.Format("2006-01-02"),
 	)
@@ -183,7 +183,7 @@ func FormatDashboard(state *State, analysis *TrendAnalysis) string {
 				p.Date.Format("01-02"),
 				p.Risk*100,
 				strings.ToUpper(string(p.Decision)),
-				strings.Repeat("█", barLen),
+				strings.Repeat("#", barLen),
 			)
 		}
 	}

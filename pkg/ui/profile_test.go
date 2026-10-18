@@ -31,6 +31,11 @@ func TestNormalizeProfileBoundsWidthAndColour(t *testing.T) {
 	if p.Width != MaxWidth {
 		t.Fatalf("maximum width not applied: %d", p.Width)
 	}
+
+	p = normalizeProfile(Profile{Interactive: false, ColorDepth: ColorANSI})
+	if p.ColorDepth != ColorNone {
+		t.Fatalf("non-interactive profile retained colour: %v", p.ColorDepth)
+	}
 }
 
 type testWriter struct{}

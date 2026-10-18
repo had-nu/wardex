@@ -7,6 +7,7 @@ import (
 	_ "embed"
 	"fmt"
 	"html/template"
+	"io"
 	"os"
 	"strings"
 
@@ -18,7 +19,10 @@ import (
 var reportTemplate string
 
 type templateData struct {
-	Title       string
+	Title string
+	// Framework is the framework the run evaluated against, or an explicit
+	// statement that it was not recorded.
+	Framework   string
 	GeneratedAt string
 	Version     string
 	Summary     templateSummary
@@ -131,10 +135,12 @@ func svgBar(filled, total int) string {
 	)
 }
 
-func generateHTML(report model.GapReport, outFile string) error {
+func generateHTML(report model.GapReport, outFile string, writers ...io.Writer) error {
+	stdout := selectReportStdout(writers)
 	sum := report.Summary
 	data := templateData{
-		Title:       "Wardex — Compliance & Release Gate Report",
+		Title:       reportTitle(sum.FrameworkName, sum.Framework),
+		Framework:   reportFrameworkLine(sum.FrameworkName, sum.Framework),
 		GeneratedAt: sum.GeneratedAt.Format("2006-01-02 15:04:05"),
 		Version:     "2.0.0",
 		Summary: templateSummary{
@@ -284,7 +290,7 @@ func generateHTML(report model.GapReport, outFile string) error {
 	output := buf.Bytes()
 
 	if outFile == "stdout" || outFile == "" {
-		_, err = os.Stdout.Write(output)
+		_, err = stdout.Write(output)
 		return err
 	}
 

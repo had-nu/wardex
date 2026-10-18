@@ -5,34 +5,36 @@ package report
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
-func generateMarkdown(report model.GapReport, outFile string, limit int) error { // nolint:errcheck
-	var f *os.File
+func generateMarkdown(report model.GapReport, outFile string, limit int, writers ...io.Writer) error { // nolint:errcheck
+	stdout := selectReportStdout(writers)
+	f := io.Writer(stdout)
 
-	if outFile == "stdout" || outFile == "" {
-		f = os.Stdout
-	} else {
+	if outFile != "stdout" && outFile != "" {
 		safePathStr, err := cli.SafeOutputPath(outFile)
 		if err != nil {
 			return err
 		}
-		f, err = os.Create(safePathStr) // #nosec G304
+		file, err := os.Create(safePathStr) // #nosec G304
 		if err != nil {
 			return fmt.Errorf("failed to create Markdown file: %w", err)
 		}
-		defer func() { _ = f.Close() }()
+		f = file
+		defer func() { _ = file.Close() }()
 	}
 
 	// Simplify Markdown generation manually since lipgloss is for terminal ANSI colors
 
-	_, _ = fmt.Fprintf(f, "# ISO 27001:2022 — Compliance & Release Gate Report\n")                           // nolint:errcheck
-	_, _ = fmt.Fprintf(f, "**Generated:** %s\n\n", report.Summary.GeneratedAt.Format("2006-01-02 15:04:05")) // nolint:errcheck
-	_, _ = fmt.Fprintf(f, "---\n\n## Executive Summary\n\n")                                                 // nolint:errcheck
+	_, _ = fmt.Fprintf(f, "# %s\n", reportTitle(report.Summary.FrameworkName, report.Summary.Framework))                      // nolint:errcheck
+	_, _ = fmt.Fprintf(f, "**Framework:** %s\n", reportFrameworkLine(report.Summary.FrameworkName, report.Summary.Framework)) // nolint:errcheck
+	_, _ = fmt.Fprintf(f, "**Generated:** %s\n\n", report.Summary.GeneratedAt.Format("2006-01-02 15:04:05"))                  // nolint:errcheck
+	_, _ = fmt.Fprintf(f, "---\n\n## Executive Summary\n\n")                                                                  // nolint:errcheck
 
 	_, _ = fmt.Fprintf(f, "| Metric | Value |\n|---|---|\n")
 	_, _ = fmt.Fprintf(f, "| Global Compliance Coverage | %.1f%% |\n", report.Summary.GlobalCoverage)
