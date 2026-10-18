@@ -137,5 +137,8 @@ gen-sbom
 # Third-party integrations (downloaded archives)
 integrations/
 
+# Tool caches: code-understanding graph, fingerprints and scratch batches
+.ua/
+
 # Blueprint (internal architecture document)
 wardex-blueprint.html

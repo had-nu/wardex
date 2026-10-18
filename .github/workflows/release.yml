@@ -58,3 +58,31 @@ jobs:
         with:
           name: sbom
           path: wardex-*.sbom.json
+
+  attest:
+    name: Attest Build Provenance
+    runs-on: ubuntu-latest
+    # Attestations describe the artefacts the release job produced, so it must
+    # run after it. Permissions are per-job on purpose: the release job keeps
+    # its own set and does not inherit write access to attestations.
+    needs: goreleaser
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # Uses the built-in GitHub attestation service rather than
+      # slsa-github-generator, which its own maintainers have marked as no
+      # longer actively maintained in favour of this mechanism. The predicate
+      # still carries the SLSA build provenance shape.
+      - name: Attest release artefacts
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            dist/*.tar.gz
+            dist/*.sbom.json
+            dist/*.sig
+            dist/*.pem
