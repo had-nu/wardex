@@ -29,6 +29,7 @@ import (
 	"github.com/had-nu/wardex/v2/cmd/state"
 	trustcmd "github.com/had-nu/wardex/v2/cmd/trust"
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
+	"github.com/had-nu/wardex/v2/pkg/catalog"
 	enrichCli "github.com/had-nu/wardex/v2/pkg/enrich/cli"
 	"github.com/had-nu/wardex/v2/pkg/orchestrator"
 	"github.com/had-nu/wardex/v2/pkg/report"
@@ -159,7 +160,8 @@ func init() {
 	rootCmd.Flags().BoolVar(&verbose, "verbose", false, "Verbose output")
 	rootCmd.Flags().IntVar(&roadmapLimit, "roadmap-limit", 10, "Max roadmap items in report (0 for unlimited)")
 	rootCmd.Flags().StringVar(&profileName, "profile", "", "RBAC threshold override (Warning: Identity is cryptographically trusted only in CI environments via WARDEX_ACTOR)")
-	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", "Compliance framework: iso27001|soc2|nis2|dora|nist_csf|eu_ai_act")
+	rootCmd.Flags().StringVar(&frameworkName, "framework", "iso27001", frameworkHelp())
+
 	rootCmd.Flags().StringVar(&epssEnrich, "epss-enrichment", "", "Path to a cryptographically signed EPSS enrichment file")
 
 	convertCmd.AddCommand(convert.GrypeCmd, convert.SbomCmd, convert.KevCmd)
@@ -184,6 +186,16 @@ func init() {
 	rootCmd.AddCommand(hmaccmd.HMACCmd)
 	rootCmd.AddCommand(assets.AssetsCmd)
 	rootCmd.AddCommand(provenancecmd.ProvenanceCmd)
+}
+
+// frameworkHelp describes the --framework flag from the catalogue registry.
+//
+// The help text used to name the frameworks in a literal, and went stale the
+// moment one was added: it omitted gdpr and cra while both were registered and
+// both worked. A flag help string that lists what is not supported is worse than
+// one that does not list at all.
+func frameworkHelp() string {
+	return "Compliance framework: " + strings.Join(catalog.Keys(), "|")
 }
 
 func commandFlagValue(cmd *cobra.Command, name string) string {

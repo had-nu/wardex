@@ -29,7 +29,7 @@
 
 | Modo | Descrição | Output |
 |---|---|---|
-| **Compliance Gap Analysis** | Cruza o que as equipas declararam contra o que está operacionalmente confirmado, mapeando ambos contra um catálogo normativo (ISO 27001, SOC 2, NIS 2, DORA, NIST CSF 2.0) | `GapReport` com cobertura, gaps e roadmap |
+| **Compliance Gap Analysis** | Cruza o que as equipas declararam contra o que está operacionalmente confirmado, mapeando ambos contra um catálogo normativo (ISO 27001, EU AI Act, CRA, DORA, NIS 2, RGPD, NIST CSF 2.0) | `GapReport` com cobertura, gaps e roadmap |
 | **Risk-Based Release Gate** | Avalia cada vulnerabilidade no contexto do asset (criticidade, exposição efectiva, controlos compensatórios), produzindo uma decisão assinada e datada | `GateReport` com ALLOW/WARN/BLOCK |
 
 **Princípio Fundamental**: O Wardex é *stateless* por design — cada execução é independente, sem base de dados, sem estado persistente entre corridas (excepto o snapshot delta e o log de auditoria append-only).
@@ -123,7 +123,7 @@ lukechampine.com/blake3
 | Package | Ficheiro-chave | Responsabilidade |
 |---|---|---|
 | `ingestion` | `ingestion.go` | Load YAML/JSON/CSV, validação de schema, `LoadMany()` com deduplicação |
-| `catalog` | `catalog.go` | Catálogos embedded (ISO/SOC2/NIS2/DORA/NIST), parsing com validação estrita |
+| `catalog` | `catalog.go` | Catálogos embedded (ISO 27001, EU AI Act, CRA, DORA, NIS2, RGPD, NIST CSF), parsing com validação estrita |
 | `correlator` | `correlator.go` | Mapeamento controlos↔framework: alta confiança (intersecção domínios) + baixa (`strings.Contains`) |
 | `analyzer` | `analyzer.go` | `Analyze()` → Finding, `ComputeLayerDelta()` → paper/shadow, `AssessAssets()` → per-asset |
 | `scorer` | `scorer.go` | `Score()` → FinalScore, `Summarize()` → ExecutiveSummary, `Roadmap()` → priorização |

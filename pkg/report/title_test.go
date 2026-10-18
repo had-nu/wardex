@@ -42,7 +42,8 @@ func TestTitleNamesTheFrameworkThatRan(t *testing.T) {
 		{"dora", "DORA", "DORA"},
 		{"nist_csf", "NIST CSF", "NIST CSF"},
 		{"eu_ai_act", "EU AI Act", "EU AI Act"},
-		{"soc2", "SOC 2", "SOC 2"},
+		{"cra", "Cyber Resilience Act", "Cyber Resilience Act"},
+		{"gdpr", "GDPR", "GDPR"},
 	}
 
 	for _, tc := range cases {

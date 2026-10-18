@@ -23,7 +23,7 @@ inputs:
     default: 'wardex-config.yaml'
     required: false
   framework:
-    description: 'Compliance framework: iso27001 | nis2 | dora | soc2.'
+    description: 'Compliance framework: iso27001 | nis2 | dora.'
     default: 'iso27001'
     required: false
   output-format:
