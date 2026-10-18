@@ -1,0 +1,668 @@
+# Cyber Resilience Act control catalogue.
+#
+# Source:
+#   - Regulation (EU) 2024/2847 of the European Parliament and of the Council of
+#     23 October 2024 on horizontal cybersecurity requirements for products with
+#     digital elements, OJ L, 20.11.2024, ELI
+#     http://data.europa.eu/eli/reg/2024/2847/oj.
+#     Article numbers, titles and every requirement quoted here were read from
+#     that text. Application dates are in Article 71: the Regulation applies from
+#     11 December 2027, with Article 14 reporting obligations from 11 September
+#     2026.
+#
+# Who this applies to. Wardex helps a manufacturer produce the evidence. It is not
+# a manufacturer, and most of the obligations below are not Wardex's. Annex VII
+# and Article 28 are the manufacturer's to produce; what Wardex can do is assemble
+# the inputs and check that what exists is consistent.
+#
+# Identifier scheme:
+#   CRA.Art13.<n>          an obligation of an article, by paragraph
+#   CRA.AnnexI.1.<n>      a requirement of Annex I Part I
+#   CRA.AnnexI.2.<n>      a vulnerability handling requirement of Annex I Part II
+#   CRA.AnnexVII.<n>      a field of the technical documentation
+#   CRA.SUP.<x>           a supporting measure that is not itself a requirement,
+#                         named by what it supports
+#
+# Scope note. This file covers the obligations a manufacturer of a product with
+# digital elements can evidence with tooling. Economic operator duties that
+# belong to importers, distributors and authorised representatives (Articles 18
+# to 22) are not listed: they apply to different actors and putting them in a
+# manufacturer's catalogue invites a reader to score the wrong party. Article 71
+# and Annex III carry dates and are recorded on CRA.SUP rather than as controls,
+# because a date is an applicability test rather than a measure.
+
+# --- Article 13: Obligations of manufacturers ---------------------------------
+
+- id: CRA.Art13.1
+  name: "Art. 13(1) — Design, development and production in accordance with Annex I Part I"
+  domain: "technological"
+  base_score: 9.5
+  keywords:
+    - essential requirements
+    - annex i
+    - secure by design
+  practices:
+    - id: PR.CRA.Art13.1.1
+      name: "Trace each product to the Annex I Part I requirements it claims and to the evidence for each"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.Art13.2
+  name: "Art. 13(2) and (3) — Cybersecurity risk assessment, documented and kept current"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - risk assessment
+    - threat model
+    - documented
+  practices:
+    - id: PR.CRA.Art13.2.1
+      name: "Assess risk on the intended purpose and reasonably foreseeable use, including the operational environment and the assets to protect"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art13.2.2
+      name: "State whether the Annex I Part I point (2) requirements apply and how each is implemented"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art13.2.3
+      name: "Take the assessment into account during planning, design, development, production, delivery and maintenance"
+      min_maturity: 4
+      gate_relevant: false
+    - id: PR.CRA.Art13.2.4
+      name: "Update the assessment during the support period, not only at release"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.Art13.4
+  name: "Art. 13(4) — Risk assessment in the technical documentation, with justification for what does not apply"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - annex vii
+    - technical documentation
+    - justification
+  practices:
+    - id: PR.CRA.Art13.4.1
+      name: "Include the risk assessment in the Article 31 and Annex VII technical documentation"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art13.4.2
+      name: "Where a requirement does not apply, record a clear justification rather than omitting it"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.Art13.5
+  name: "Art. 13(5) — Due diligence on third-party components"
+  domain: "organizational"
+  base_score: 9.0
+  keywords:
+    - third party
+    - component
+    - open source
+    - due diligence
+  practices:
+    - id: PR.CRA.Art13.5.1
+      name: "Assess integrated components, including open-source components not placed on the market commercially"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.Art13.6
+  name: "Art. 13(6) — Report a component vulnerability upstream and remediate in accordance with Annex I Part II"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - component vulnerability
+    - upstream
+    - remediation
+  practices:
+    - id: PR.CRA.Art13.6.1
+      name: "Report a vulnerability found in a component to whoever manufactures or maintains it"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art13.6.2
+      name: "Where a fix was written locally, share the code or documentation upstream in a machine-readable format where appropriate"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: CRA.Art13.7
+  name: "Art. 13(7) — Systematically document relevant cybersecurity aspects, proportionately"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - documentation
+    - proportionality
+    - third party information
+  practices:
+    - id: PR.CRA.Art13.7.1
+      name: "Record vulnerabilities the manufacturer becomes aware of and relevant information from third parties"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.Art13.8
+  name: "Art. 13(8) — Support period: at least five years, or the expected use time where shorter"
+  domain: "governance"
+  base_score: 9.5
+  keywords:
+    - support period
+    - lifetime
+    - five years
+  practices:
+    - id: PR.CRA.Art13.8.1
+      name: "Determine the support period to reflect expected use, taking account of reasonable user expectations, the nature of the product and Union law on product lifetime"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art13.8.2
+      name: "Set the support period to at least five years, except where the product is expected to be in use for less than five years"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art13.8.3
+      name: "Consider support periods of comparable products, availability of the operating environment, component support periods and ADCO or Commission guidance"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art13.8.4
+      name: "Keep the support period under review; delegated acts may raise the minimum for specific product categories"
+      min_maturity: 4
+      gate_relevant: false
+    - id: PR.CRA.Art13.8.5
+      name: "Ensure vulnerabilities are handled effectively for the whole support period, not only until launch"
+      min_maturity: 3
+      gate_relevant: true
+
+- id: CRA.Art14.1
+  name: "Art. 14(1) and (2) — Report actively exploited vulnerabilities and severe incidents"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - actively exploited
+    - early warning
+    - single reporting platform
+    - 24 hours
+  practices:
+    - id: PR.CRA.Art14.1.1
+      name: "Send an early warning within 24 hours of becoming aware, through the single reporting platform"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art14.1.2
+      name: "Follow with an incident notification and, unless already provided, a final report"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.Art28.1
+  name: "Art. 28(1) — EU declaration of conformity"
+  domain: "governance"
+  base_score: 9.5
+  keywords:
+    - declaration of conformity
+    - art 28
+    - ce marking
+  practices:
+    - id: PR.CRA.Art28.1.1
+      name: "State that fulfilment of the applicable Annex I essential requirements has been demonstrated"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art28.1.2
+      name: "Keep the declaration and the technical documentation consistent with what is actually shipped"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.Art28.2
+  name: "Art. 28(2) — Structure per Annex V, in the languages the Member State requires"
+  domain: "governance"
+  base_score: 9.0
+  keywords:
+    - annex v
+    - model structure
+    - translation
+  practices:
+    - id: PR.CRA.Art28.2.1
+      name: "Follow the Annex V model structure rather than a house format"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.Art28.2.2
+      name: "Update the declaration as appropriate, and make it available in the language the Member State requires"
+      min_maturity: 3
+      gate_relevant: false
+
+# --- Annex V: the EU declaration of conformity, field by field -----------------
+# Article 28(1) and (2) require this structure. A field that is missing is not a
+# formatting defect; it is an incomplete declaration.
+
+- id: CRA.AnnexV.1
+  name: "Annex V (1) — Name, type and any information allowing unique identification of the product"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - identification
+    - type designation
+  practices:
+    - id: PR.CRA.AnnexV.1.1
+      name: "Identify the product uniquely enough that it can be told apart from every other product of the same type"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: CRA.AnnexV.2
+  name: "Annex V (2) — Name and address of the manufacturer or its authorised representative"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - manufacturer
+    - authorised representative
+  practices:
+    - id: PR.CRA.AnnexV.2.1
+      name: "Name the party legally responsible, which is the authorised representative where one is used"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: CRA.AnnexV.3
+  name: "Annex V (3) — Statement that the declaration is issued under the sole responsibility of the provider"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - sole responsibility
+    - provider
+  practices:
+    - id: PR.CRA.AnnexV.3.1
+      name: "Carry the sole-responsibility statement verbatim, since its wording is prescribed"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: CRA.AnnexV.4
+  name: "Annex V (4) — Object of the declaration, identified for traceability"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - traceability
+    - identification
+  practices:
+    - id: PR.CRA.AnnexV.4.1
+      name: "Identify the declared product so that it can be traced to a serial, a version or an equivalent"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexV.5
+  name: "Annex V (5) — Statement of conformity with the relevant Union harmonisation legislation"
+  domain: "governance"
+  base_score: 9.0
+  keywords:
+    - conformity statement
+    - harmonisation legislation
+  practices:
+    - id: PR.CRA.AnnexV.5.1
+      name: "Reference this Regulation as the harmonisation legislation the declaration is made under"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: CRA.AnnexV.6
+  name: "Annex V (6) — Harmonised standards, common specifications or certification relied on"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - harmonised standards
+    - common specification
+    - certification
+  practices:
+    - id: PR.CRA.AnnexV.6.1
+      name: "List what conformity is declared against, so a verifier knows which claims rest on a presumption and which do not"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexV.7
+  name: "Annex V (7) — Where applicable, the notified body, the procedure performed and the certificate"
+  domain: "governance"
+  base_score: 9.0
+  keywords:
+    - notified body
+    - eu-type examination
+    - certificate
+  practices:
+    - id: PR.CRA.AnnexV.7.1
+      name: "Where a notified body was involved, name it, describe the procedure and identify the certificate; where none was, say so explicitly"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexV.8
+  name: "Annex V (8) — Additional information, and signature with place and date of issue"
+  domain: "governance"
+  base_score: 8.0
+  keywords:
+    - additional information
+    - signature
+    - date of issue
+  practices:
+    - id: PR.CRA.AnnexV.8.1
+      name: "Sign for and on behalf of a named party, and record place and date of issue"
+      min_maturity: 2
+      gate_relevant: false
+
+# --- Annex I Part I: properties of the product ---------------------------------
+
+- id: CRA.AnnexI.1.1
+  name: "Annex I Part I (1) — An appropriate level of cybersecurity based on the risks"
+  domain: "technological"
+  base_score: 9.5
+  keywords:
+    - risk based
+    - appropriate level
+  practices:
+    - id: PR.CRA.AnnexI.1.1.1
+      name: "Justify the level of security chosen by reference to the documented risk assessment rather than to a fixed baseline"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexI.1.2a
+  name: "Annex I Part I (2)(a) — Placed on the market without known exploitable vulnerabilities"
+  domain: "technological"
+  base_score: 10.0
+  keywords:
+    - exploitable
+    - known vulnerable
+    - release gate
+  practices:
+    - id: PR.CRA.AnnexI.1.2a.1
+      name: "Hold the release when a known exploitable vulnerability is present, and record the decision either way"
+      min_maturity: 3
+      gate_relevant: true
+
+- id: CRA.AnnexI.1.2b
+  name: "Annex I Part I (2)(b) — Secure by default configuration, resettable"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - secure by default
+    - configuration
+    - reset
+  practices:
+    - id: PR.CRA.AnnexI.1.2b.1
+      name: "Ship with a secure configuration as the default, and allow the product to be reset to its original state"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.AnnexI.1.2b.2
+      name: "Where a tailor-made product departs from the default, record the agreement with the business user"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: CRA.AnnexI.1.2c
+  name: "Annex I Part I (2)(c) — Vulnerabilities addressable through security updates, including automatic updates by default"
+  domain: "technological"
+  base_score: 9.0
+  keywords:
+    - security update
+    - automatic update
+    - opt-out
+  practices:
+    - id: PR.CRA.AnnexI.1.2c.1
+      name: "Enable automatic security updates by default, with a clear and easy-to-use opt-out"
+      min_maturity: 3
+      gate_relevant: true
+    - id: PR.CRA.AnnexI.1.2c.2
+      name: "Notify users of available updates and let them postpone them temporarily"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexI.1.2d
+  name: "Annex I Part I (2)(d) — Protection from unauthorised access, and reporting of such access"
+  domain: "technological"
+  base_score: 9.5
+  keywords:
+    - authentication
+    - access management
+    - unauthorised access
+  practices:
+    - id: PR.CRA.AnnexI.1.2d.1
+      name: "Apply authentication and identity or access management appropriate to the assessed risk"
+      min_maturity: 3
+      gate_relevant: true
+
+# --- Annex I Part II: vulnerability handling -----------------------------------
+
+- id: CRA.AnnexI.2.1
+  name: "Annex I Part II (1) — Identify and document vulnerabilities and the components contained"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - vulnerability identification
+    - components
+    - sbom
+  practices:
+    - id: PR.CRA.AnnexI.2.1.1
+      name: "Keep a component inventory that can be produced on demand"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexI.2.2
+  name: "Annex I Part II (2) — Address and remediate vulnerabilities without delay, proportionate to risk"
+  domain: "process"
+  base_score: 10.0
+  keywords:
+    - remediation
+    - severity
+    - patch
+  practices:
+    - id: PR.CRA.AnnexI.2.2.1
+      name: "Set remediation deadlines by severity and follow them, recording an accepted risk where one is missed"
+      min_maturity: 3
+      gate_relevant: true
+
+- id: CRA.AnnexI.2.3
+  name: "Annex I Part II (3) — Effective and regular tests and reviews of product security"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - security testing
+    - review
+  practices:
+    - id: PR.CRA.AnnexI.2.3.1
+      name: "Test and review product security on a cycle defined by the risk assessment"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexI.2.4
+  name: "Annex I Part II (4) — Publicly disclose information about fixed vulnerabilities once fixed"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - disclosure
+    - advisory
+    - fixed
+  practices:
+    - id: PR.CRA.AnnexI.2.4.1
+      name: "Publish an advisory for a fixed vulnerability, not only distribute the update privately"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexI.2.5
+  name: "Annex I Part II (5) — Policy on coordinated vulnerability disclosure, in place and enforced"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - coordinated vulnerability disclosure
+    - cvd
+    - contact point
+  practices:
+    - id: PR.CRA.AnnexI.2.5.1
+      name: "Publish and enforce a coordinated vulnerability disclosure policy with a working contact point"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexI.2.6
+  name: "Annex I Part II (6) — Facilitate the sharing of information about potential vulnerabilities"
+  domain: "process"
+  base_score: 8.0
+  keywords:
+    - information sharing
+    - reporter
+  practices:
+    - id: PR.CRA.AnnexI.2.6.1
+      name: "Make it straightforward for a third party to report a potential vulnerability and to receive an answer"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexI.2.7
+  name: "Annex I Part II (7) — Secure mechanisms to distribute updates"
+  domain: "technological"
+  base_score: 9.5
+  keywords:
+    - update distribution
+    - signing
+    - transport security
+  practices:
+    - id: PR.CRA.AnnexI.2.7.1
+      name: "Authenticate and integrity-protect updates so a tampered update cannot be delivered"
+      min_maturity: 3
+      gate_relevant: true
+
+- id: CRA.AnnexI.2.8
+  name: "Annex I Part II (8) — Disseminate security updates without delay"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - dissemination
+    - availability
+  practices:
+    - id: PR.CRA.AnnexI.2.8.1
+      name: "Deliver updates without delay to users who are entitled to them, and reach users who do not auto-update"
+      min_maturity: 3
+      gate_relevant: false
+
+# --- Annex VII: technical documentation ----------------------------------------
+# The catalogue Wardex can populate from its own outputs is marked in the
+# practice name. The rest are the manufacturer's to write.
+
+- id: CRA.AnnexVII.1
+  name: "Annex VII (1) — General description of the product with digital elements"
+  domain: "governance"
+  base_score: 8.0
+  keywords:
+    - product description
+    - intended purpose
+  practices:
+    - id: PR.CRA.AnnexVII.1.1
+      name: "State the intended purpose and the reasonably foreseeable use, since the risk assessment depends on both"
+      min_maturity: 2
+      gate_relevant: false
+
+- id: CRA.AnnexVII.2
+  name: "Annex VII (2) — Design, development, production and vulnerability handling"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - secure development
+    - vulnerability handling
+  practices:
+    - id: PR.CRA.AnnexVII.2.1
+      name: "Describe the design, development, production and vulnerability handling processes relied on"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexVII.3
+  name: "Annex VII (3) — Assessment of the cybersecurity risks"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - risk assessment
+    - annex vii
+  practices:
+    - id: PR.CRA.AnnexVII.3.1
+      name: "Include the Article 13(3) assessment, which is the same artefact, and keep them in step"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexVII.4
+  name: "Annex VII (4) — Information taken into account to determine the support period under Article 13(8)"
+  domain: "governance"
+  base_score: 9.5
+  keywords:
+    - support period
+    - justification
+    - art 13 8
+  practices:
+    - id: PR.CRA.AnnexVII.4.1
+      name: "Record what was considered in setting the support period: expected use, user expectations, product nature, comparable products, component support and any guidance"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.CRA.AnnexVII.4.2
+      name: "Record the resulting period and why it is not shorter than five years, or why expected use is shorter"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexVII.5
+  name: "Annex VII (5) — Harmonised standards applied in full or in part"
+  domain: "governance"
+  base_score: 8.0
+  keywords:
+    - harmonised standards
+    - presumption of conformity
+  practices:
+    - id: PR.CRA.AnnexVII.5.1
+      name: "List each standard applied in full or in part, with the Official Journal reference where one exists"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexVII.6
+  name: "Annex VII (6) — Reports of tests verifying conformity and vulnerability handling"
+  domain: "process"
+  base_score: 8.5
+  keywords:
+    - test report
+    - verification
+  practices:
+    - id: PR.CRA.AnnexVII.6.1
+      name: "Attach the test reports and make them reproducible, so a verifier can obtain the same result"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: CRA.AnnexVII.7
+  name: "Annex VII (7) — Copy of the EU declaration of conformity"
+  domain: "governance"
+  base_score: 9.0
+  keywords:
+    - declaration of conformity
+    - art 28
+  practices:
+    - id: PR.CRA.AnnexVII.7.1
+      name: "Attach the declaration and check it names the product and version actually placed on the market"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: CRA.AnnexVII.8
+  name: "Annex VII (8) — Software bill of materials, on a reasoned request from market surveillance"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - sbom
+    - market surveillance
+  practices:
+    - id: PR.CRA.AnnexVII.8.1
+      name: "Be able to produce an SBOM on request, which means generating it during the build rather than reconstructing it later"
+      min_maturity: 3
+      gate_relevant: true
+
+# --- Supporting measures -------------------------------------------------------
+
+- id: CRA.SUP.a
+  name: "Dates that decide applicability (Article 71 and Annex III), supports scoping"
+  domain: "governance"
+  base_score: 9.0
+  keywords:
+    - application date
+    - timeline
+    - scoping
+  practices:
+    - id: PR.CRA.SUP.a.1
+      name: "Article 14 reporting obligations apply from 11 September 2026; the remainder of the Regulation from 11 December 2027"
+      min_maturity: 1
+      gate_relevant: false
+
+- id: CRA.SUP.b
+  name: "Conformity assessment procedure (Article 32 and Annex VIII), supports Art. 27 and Art. 28"
+  domain: "process"
+  base_score: 9.0
+  keywords:
+    - internal control
+    - eu-type examination
+    - annex viii
+  practices:
+    - id: PR.CRA.SUP.b.1
+      name: "Identify which procedure applies to the product class, and where a notified body is required, keep its current identification"
+      min_maturity: 3
+      gate_relevant: false
