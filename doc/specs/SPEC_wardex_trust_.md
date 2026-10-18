@@ -742,7 +742,7 @@ For centralized trust stores (multi-project environments), set:
 export WARDEX_TRUST_STORE=https://raw.githubusercontent.com/your-org/security-governance/main/wardex-trust.yaml
 \`\`\`
 
-See [docs/configuration.md](docs/configuration.md) for the full setup guide.
+See the configuration guide in the repository [README](../../README.md#trust-and-configuration) for the full setup guide.
 ```
 
 ### `docs/configuration.md`

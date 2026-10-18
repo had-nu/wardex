@@ -20,7 +20,7 @@ O símbolo aprovado é um **shield/armamento simétrico**:
 - o quadrado e a geometria fechada comunicam integridade e confiança;
 - o símbolo é produzido sozinho, sem lettering, num asset quadrado com fundo transparente.
 
-A referência visual fornecida está em `doc/internal/assets/shield-w.jpg`. O asset de produção `pkg/ui/wardex-shield.png` é um recorte quadrado, transparente e recolorido na cor do Wardex. `pkg/ui/wardex-shield-dark.png` é a variante para fundos escuros.
+A referência visual fornecida está em `doc/assets/shield-w.jpg`. O asset de produção `pkg/ui/wardex-shield.png` é um recorte quadrado, transparente e recolorido na cor do Wardex. `pkg/ui/wardex-shield-dark.png` é a variante para fundos escuros.
 
 Não reintroduzir o símbolo radar/scanner, o W de traço contínuo ou construções experimentais anteriores.
 
@@ -51,13 +51,13 @@ O roxo é a cor de assinatura. Ciano, verde, âmbar e vermelho têm função sem
 - `pkg/ui/wardex-icon-teal.svg` — nome legado, mantido para compatibilidade.
 - `docs/assets/og-image.svg` — fonte do Open Graph image.
 - `docs/assets/favicon.svg` — ícone da página GitHub Pages.
-- `doc/internal/assets/banner.svg` — fonte do banner de release.
+- `doc/assets/banner.svg` — fonte do banner de release.
 
 Os SVGs de lockup são wrappers do PNG e não contêm lettering. O README compõe `WARDEX` e o descriptor como HTML. Os PNGs de saída são gerados a partir dos SVG:
 
 ```bash
 rsvg-convert -w 1200 -h 630 docs/assets/og-image.svg -o docs/assets/og-image.png
-rsvg-convert -w 840 -h 228 doc/internal/assets/banner.svg -o doc/internal/assets/banner.png
+rsvg-convert -w 840 -h 228 doc/assets/banner.svg -o doc/assets/banner.png
 ```
 
 Os SVGs devem manter `title`, `desc`, `role="img"` e `aria-labelledby`. No README, usar `<picture>` para seleccionar a variante dark com `prefers-color-scheme`.

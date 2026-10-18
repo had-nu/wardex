@@ -104,7 +104,7 @@ desconhecidos. Esta lacuna é a guard-rail em falta — adicionada em v1.9.1.
 - Reescrita de `doc/examples/wardex-config.yaml` para reflectir o schema vivo, com
   campos verificados contra structs
 - Limpeza de `test/testdata/wardex-config.yaml`
-- Anotação histórica em `internal/SPEC_wardex_trust_.md` (linha ~345 referencia
+- Anotação histórica em `doc/specs/SPEC_wardex_trust_.md` (linha ~345 referencia
   `domain_weights.technological: "PENDING_APPROVAL"` num exemplo de seal — esse exemplo
   fica obsoleto)
 - Bump da constante `Version` em `main.go:41` para `"1.9.1"`
@@ -353,14 +353,14 @@ ficheiros em `test/testdata/`. `config/config_profile_test.go` opera sobre YAML 
 | `pkg/model/release.go` | MODIFIED | Remover `AssetContext.DataClass` (linha 21). Manter `Justification` em `CompensatingControl` (audit field, ver acima). |
 | `doc/examples/wardex-config.yaml` | REWRITTEN | Schema vivo com campos verificados contra structs. `compensating_controls` usa `type`/`effectiveness`/`justification`. `asset_context` cobre todos os campos consumidos pelo scorer. |
 | `test/testdata/wardex-config.yaml` | MODIFIED | Schema correcto em `compensating_controls` e remoção de `data_classification:` orfão. |
-| `internal/SPEC_wardex_trust_.md` | ANNOTATED | Adicionar nota próximo da linha 345: o exemplo `domain_weights.technological: "PENDING_APPROVAL"` é histórico — o campo foi removido em v1.9.1; usar `release_gate.risk_appetite` em exemplos futuros. |
+| `doc/specs/SPEC_wardex_trust_.md` | ANNOTATED | Adicionar nota próximo da linha 345: o exemplo `domain_weights.technological: "PENDING_APPROVAL"` é histórico — o campo foi removido em v1.9.1; usar `release_gate.risk_appetite` em exemplos futuros. |
 | `main.go` (linha 41) | MODIFIED | `Version = "1.9.0"` → `Version = "1.9.1"` |
 | `config/config_v191_test.go` | MODIFIED | Estender fixture inline para incluir `data_class: "restricted"` em `release_gate.asset_context`. |
 | `config/config_examples_test.go` | NEW | Guard-rail genérica `TestPublishedExamplesMatchSchema`. |
 | `CHANGELOG.md` | MODIFIED | Entrada `## [1.9.1] — 2026-05-09` actualizada para listar `data_class` no rol de campos removidos e a guard-rail nova. |
 | `doc/releases/v1.9.1-notes.md` | MODIFIED | Release notes corrigidas. |
 
-### Anotação proposta para `internal/SPEC_wardex_trust_.md`
+### Anotação proposta para `doc/specs/SPEC_wardex_trust_.md`
 
 Adicionar imediatamente acima do bloco que contém a linha 345:
 
