@@ -101,7 +101,11 @@ func runAssess(cmd *cobra.Command, args []string) error {
 	cat, err := catalog.Load(framework)
 	if err != nil {
 		reportProgress(3, "Loading framework catalog", "FAILED", err.Error())
-		return fmt.Errorf("assess: %w\n[HINT] Use --framework para especificar um framework valido: iso27001, soc2, nis2, dora, nist_csf, eu_ai_act", err)
+		// The valid keys come from the registry rather than a literal list
+		// repeated here. A literal went stale the moment a framework was
+		// added, and the hint then named every framework but the new one.
+		return fmt.Errorf("assess: %w\n[HINT] Use --framework with one of: %s",
+			err, strings.Join(catalog.Keys(), ", "))
 	}
 	fmt.Fprintf(stderr, "[INFO] Using framework: %s (%d controls in catalog).\n", framework, len(cat))
 	reportProgress(3, "Loading framework catalog", "DONE", fmt.Sprintf("%d catalog controls", len(cat)))
