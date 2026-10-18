@@ -40,22 +40,30 @@ var verifyCmd = &cobra.Command{
 			u.report(3, "Verifying provenance hash", "FAILED", err.Error())
 			return fmt.Errorf("verify failed: %w", err)
 		}
-		u.report(3, "Verifying provenance hash", "DONE", "verification complete")
-		if u.progress.Enabled() {
+		if result.DryRun {
+			u.report(3, "Verifying provenance hash", "SKIPPED", "dry-run backend")
+		} else {
+			u.report(3, "Verifying provenance hash", "DONE", "verification complete")
+		}
+		if u.dashboardEnabled() {
 			u.render(buildProvenanceVerifyDashboard(args[0], result))
 			return nil
 		}
 
-		if !result.Found {
-			fmt.Fprintln(cmd.OutOrStdout(), "Hash not found in provenance chain")
+		if result.DryRun {
+			fmt.Fprintln(u.output, "Dry-run backend: hash was not checked")
 			return nil
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), "Hash FOUND in provenance chain")
-		fmt.Fprintf(cmd.OutOrStdout(), "  Block:       %d\n", result.BlockIndex)
-		fmt.Fprintf(cmd.OutOrStdout(), "  Timestamp:   %s\n", time.Unix(0, result.BlockTime).UTC().Format(time.RFC3339))
-		fmt.Fprintf(cmd.OutOrStdout(), "  State Root:  %x\n", result.StateRoot)
-		fmt.Fprintf(cmd.OutOrStdout(), "  Label:       %s\n", result.Label)
-		fmt.Fprintf(cmd.OutOrStdout(), "  SMT Proof:   %x (len=%d)\n", result.Proof, len(result.Proof))
+		if result == nil || !result.Found {
+			fmt.Fprintln(u.output, "Hash not found in provenance chain")
+			return nil
+		}
+		fmt.Fprintln(u.output, "Hash FOUND in provenance chain")
+		fmt.Fprintf(u.output, "  Block:       %d\n", result.BlockIndex)
+		fmt.Fprintf(u.output, "  Timestamp:   %s\n", time.Unix(0, result.BlockTime).UTC().Format(time.RFC3339))
+		fmt.Fprintf(u.output, "  State Root:  %x\n", result.StateRoot)
+		fmt.Fprintf(u.output, "  Label:       %s\n", result.Label)
+		fmt.Fprintf(u.output, "  SMT Proof:   %x (len=%d)\n", result.Proof, len(result.Proof))
 		return nil
 	},
 }

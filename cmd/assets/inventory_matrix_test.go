@@ -2,6 +2,7 @@ package assets
 
 import (
 	"bytes"
+	"encoding/csv"
 	"encoding/json"
 	"os"
 	"strings"
@@ -9,6 +10,41 @@ import (
 
 	"github.com/spf13/cobra"
 )
+
+func TestInventoryCSVQuotesDelimitedValues(t *testing.T) {
+	oldFile, oldFormat := assetsFile, assetsFormat
+	defer func() { assetsFile, assetsFormat = oldFile, oldFormat }()
+
+	dir := t.TempDir()
+	t.Chdir(dir)
+	contents := []byte(`- id: api-02
+  name: "API, gateway"
+  type: service
+  owner: "Platform, team"
+  controls: [MFA, WAF]
+  exposure:
+    network_zone: "dmz, east"
+`)
+	if err := os.WriteFile("assets.yaml", contents, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	assetsFile, assetsFormat = "assets.yaml", "csv"
+
+	var out, errOut bytes.Buffer
+	cmd := &cobra.Command{Use: "inventory"}
+	cmd.SetOut(&out)
+	cmd.SetErr(&errOut)
+	if err := runAssetsInventory(cmd, nil); err != nil {
+		t.Fatalf("inventory returned error: %v", err)
+	}
+	rows, err := csv.NewReader(strings.NewReader(out.String())).ReadAll()
+	if err != nil {
+		t.Fatalf("invalid CSV: %v\n%s", err, out.String())
+	}
+	if len(rows) != 2 || rows[1][1] != "API, gateway" || rows[1][6] != "Platform, team" {
+		t.Fatalf("CSV fields were not escaped: %#v", rows)
+	}
+}
 
 func TestInventoryOutputMatrixUsesConfiguredWriter(t *testing.T) {
 	oldFile, oldFormat := assetsFile, assetsFormat

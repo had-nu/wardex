@@ -7,6 +7,7 @@ import (
 	_ "embed"
 	"fmt"
 	"html/template"
+	"io"
 	"os"
 	"strings"
 
@@ -131,7 +132,8 @@ func svgBar(filled, total int) string {
 	)
 }
 
-func generateHTML(report model.GapReport, outFile string) error {
+func generateHTML(report model.GapReport, outFile string, writers ...io.Writer) error {
+	stdout := selectReportStdout(writers)
 	sum := report.Summary
 	data := templateData{
 		Title:       "Wardex — Compliance & Release Gate Report",
@@ -284,7 +286,7 @@ func generateHTML(report model.GapReport, outFile string) error {
 	output := buf.Bytes()
 
 	if outFile == "stdout" || outFile == "" {
-		_, err = os.Stdout.Write(output)
+		_, err = stdout.Write(output)
 		return err
 	}
 

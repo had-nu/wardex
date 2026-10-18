@@ -56,10 +56,19 @@ func (r *Renderer) Rule() string {
 	return r.theme.Structure(strings.Repeat(char, r.ContentWidth()))
 }
 
+func (r *Renderer) display(value string) string {
+	if !r.profile.Unicode {
+		return SanitizeDisplayASCII(value)
+	}
+	return SanitizeDisplay(value)
+}
+
 // KeyValue formats a stable two-column metadata line. labelWidth is measured
 // in terminal cells using the same simple convention as VisibleLen; the UI
 // currently uses single-cell labels and glyphs.
 func (r *Renderer) KeyValue(label, value string, labelWidth int) string {
+	label = r.display(label)
+	value = r.display(value)
 	if SensitiveLabel(label) {
 		value = Redact(value)
 	}
@@ -80,6 +89,8 @@ func (r *Renderer) KeyValue(label, value string, labelWidth int) string {
 
 // SectionHeader formats a left title and an optional right-aligned status.
 func (r *Renderer) SectionHeader(title, status string) string {
+	title = r.display(title)
+	status = r.display(status)
 	if status == "" {
 		return r.theme.Heading(truncate(title, r.ContentWidth()))
 	}
@@ -97,6 +108,7 @@ func (r *Renderer) SectionHeader(title, status string) string {
 // interactive session. It intentionally avoids a large ASCII logo so the
 // layout remains useful in narrow terminals and fast-changing output.
 func (r *Renderer) Header(version string) {
+	version = r.display(version)
 	marker := "◆"
 	if !r.profile.Unicode {
 		marker = "[*]"

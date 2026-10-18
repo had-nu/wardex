@@ -13,9 +13,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var exitFunc = os.Exit
+
+func commandStderr(cmd *cobra.Command) io.Writer {
+	if cmd != nil {
+		return cmd.ErrOrStderr()
+	}
+	return os.Stderr
+}
+
 type convertUI struct {
-	progress *ui.TerminalProgress
-	stderr   io.Writer
+	progress          *ui.TerminalProgress
+	stderr            io.Writer
+	output            io.Writer
+	resultInteractive bool
 }
 
 func commandOutput(cmd *cobra.Command) io.Writer {
@@ -30,7 +41,8 @@ func beginConvertUI(cmd *cobra.Command, command, input, output string) *convertU
 	if cmd != nil {
 		stderr = cmd.ErrOrStderr()
 	}
-	progress := ui.NewTerminalProgress(stderr)
+	outputWriter := commandOutput(cmd)
+	progress := ui.NewTerminalProgressForOutput(stderr, outputWriter)
 	progress.Begin(ui.SessionView{
 		Title:  "CONVERTER SESSION",
 		Status: "RUNNING",
@@ -40,7 +52,12 @@ func beginConvertUI(cmd *cobra.Command, command, input, output string) *convertU
 			{Label: "OUTPUT", Value: output},
 		},
 	})
-	return &convertUI{progress: progress, stderr: stderr}
+	return &convertUI{
+		progress:          progress,
+		stderr:            stderr,
+		output:            outputWriter,
+		resultInteractive: ui.IsTerminal(outputWriter) && ui.IsTerminal(stderr),
+	}
 }
 
 func (u *convertUI) report(number int, name, status, detail string) {
@@ -60,8 +77,12 @@ func exploitedCount(vulnerabilities []model.Vulnerability) int {
 	return count
 }
 
+func (u *convertUI) dashboardEnabled() bool {
+	return u != nil && u.progress != nil && u.progress.Enabled() && u.resultInteractive
+}
+
 func (u *convertUI) render(format, output string, count, skipped, exploited int, attested bool) {
-	if u == nil || u.progress == nil || !u.progress.Enabled() {
+	if !u.dashboardEnabled() {
 		return
 	}
 	attestation := "not requested"

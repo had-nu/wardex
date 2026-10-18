@@ -60,6 +60,7 @@ type EvaluationOptions struct {
 	EPSSEnrich    string
 	Logger        *slog.Logger
 	Stderr        io.Writer
+	Stdout        io.Writer
 	Progress      ui.ProgressReporter
 }
 
@@ -238,7 +239,7 @@ func (p *EvaluationPipeline) Run(ctx context.Context, opts EvaluationOptions) (*
 	if finalOutFile == "stdout" && cfg.Reporting.Output != "" {
 		finalOutFile = cfg.Reporting.Output
 	}
-	if err := report.Generate(rep, finalFormat, finalOutFile, opts.RoadmapLimit); err != nil {
+	if err := report.GenerateTo(rep, finalFormat, finalOutFile, opts.RoadmapLimit, opts.Stdout); err != nil {
 		p.report(8, "Generating report", "FAILED", err.Error())
 		return nil, fmt.Errorf("generate report: %w", err)
 	}

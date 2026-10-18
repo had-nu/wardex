@@ -50,7 +50,7 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Bootstrap a new trust store with the admin key",
 	Long: `Create a new wardex-trust.yaml with the initial admin key.
-This can only be run once — subsequent calls fail if the file exists.
+This can only be run once - subsequent calls fail if the file exists.
 
 After initialisation, configure branch protection on your repository
 to prevent unauthorised modifications to the trust store.`,
@@ -64,16 +64,16 @@ var addCmd = &cobra.Command{
 Requires the signing key to have role 'admin'.
 
 Roles:
-  admin   — Can manage the trust store and seal configs
-  ciso    — Can seal configs and approve acceptances
-  analyst — Can evaluate and create acceptance requests`,
+  admin   - Can manage the trust store and seal configs
+  ciso    - Can seal configs and approve acceptances
+  analyst - Can evaluate and create acceptance requests`,
 	RunE: runTrustAdd,
 }
 
 var revokeCmd = &cobra.Command{
 	Use:   "revoke",
 	Short: "Revoke a key from the trust store",
-	Long: `Revoke an existing key in the trust store. The revocation is append-only —
+	Long: `Revoke an existing key in the trust store. The revocation is append-only -
 the original key entry is never modified or deleted.
 
 Any sealed configs signed by the revoked key will be rejected by
@@ -154,7 +154,8 @@ func runTrustInit(cmd *cobra.Command, args []string) error {
 	w := u.output
 	fmt.Fprintln(w, "Trust store initialised.")
 	fileLabel, adminLabel, keyLabel := "File:", "Admin:", "Key ID:"
-	if ui.IsTerminal(w) {
+	profile := ui.DetectProfile(w)
+	if profile.Interactive && profile.ColorDepth != ui.ColorNone {
 		fileLabel = ui.Colorize(fileLabel, ui.Gray)
 		adminLabel = ui.Colorize(adminLabel, ui.Gray)
 		keyLabel = ui.Colorize(keyLabel, ui.Gray)
@@ -162,7 +163,7 @@ func runTrustInit(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(w, "  %s %s\n", fileLabel, initOut)
 	fmt.Fprintf(w, "  %s %s\n", adminLabel, initActor)
 	fmt.Fprintf(w, "  %s %s\n\n", keyLabel, store.Keys[0].ID)
-	fmt.Fprintln(w, "NEXT STEPS — do not skip:")
+	fmt.Fprintln(w, "NEXT STEPS - do not skip:")
 	fmt.Fprintf(w, "  1. git add %s\n", initOut)
 	fmt.Fprintf(w, "  2. git commit -m \"chore: wardex trust bootstrap\"\n")
 	fmt.Fprintf(w, "  3. Configure branch protection on this repository:\n")
@@ -237,7 +238,8 @@ func runTrustAdd(cmd *cobra.Command, args []string) error {
 	w := u.output
 	fmt.Fprintln(w, "Key added to trust store.")
 	keyLabel, actorLabel, roleLabel, addedLabel := "Key ID:", "Actor:", "Role:", "Added by:"
-	if ui.IsTerminal(w) {
+	profile := ui.DetectProfile(w)
+	if profile.Interactive && profile.ColorDepth != ui.ColorNone {
 		keyLabel = ui.Colorize(keyLabel, ui.Gray)
 		actorLabel = ui.Colorize(actorLabel, ui.Gray)
 		roleLabel = ui.Colorize(roleLabel, ui.Gray)
@@ -249,7 +251,7 @@ func runTrustAdd(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(w, "  %s verified admin\n\n", addedLabel)
 	fmt.Fprintln(w, "Commit and merge via PR:")
 	fmt.Fprintf(w, "  git add %s\n", trustPath)
-	fmt.Fprintf(w, "  git commit -m \"chore: trust add — %s (%s)\"\n", addActor, addRole)
+	fmt.Fprintf(w, "  git commit -m \"chore: trust add - %s (%s)\"\n", addActor, addRole)
 	return nil
 }
 
@@ -277,7 +279,8 @@ func runTrustRevoke(cmd *cobra.Command, args []string) error {
 	w := u.output
 	fmt.Fprintln(w, "Key revoked.")
 	keyLabel, reasonLabel := "Key ID:", "Reason:"
-	if ui.IsTerminal(w) {
+	profile := ui.DetectProfile(w)
+	if profile.Interactive && profile.ColorDepth != ui.ColorNone {
 		keyLabel = ui.Colorize(keyLabel, ui.Gray)
 		reasonLabel = ui.Colorize(reasonLabel, ui.Gray)
 	}

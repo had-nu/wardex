@@ -123,7 +123,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 	anchorer, err := getAnchorerFn()
 	if err != nil {
 		u.report(4, "Submitting chain hash", "SKIPPED", err.Error())
-		if u.progress.Enabled() {
+		if u.dashboardEnabled() {
 			u.render(buildProvenanceActionDashboard("SEALED", []ui.Field{
 				{Label: "OUTPUT", Value: sealOutput},
 				{Label: "FILES", Value: fmt.Sprintf("%d", len(artifacts))},
@@ -131,9 +131,9 @@ func runSeal(cmd *cobra.Command, args []string) error {
 				{Label: "ANCHOR", Value: "unavailable"},
 			}))
 		} else {
-			fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", sealOutput)
-			fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
-			fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
+			fmt.Fprintf(u.output, "Chain seal written to: %s\n", sealOutput)
+			fmt.Fprintf(u.output, "  Total files:  %d\n", len(artifacts))
+			fmt.Fprintf(u.output, "  Chain hash:   %s\n", chainHashHex[:16]+"...")
 			fmt.Fprintf(cmd.ErrOrStderr(), "Warning: provenance anchor unavailable: %v\n", err)
 			fmt.Fprintf(cmd.ErrOrStderr(), "  Seal saved locally; submit with: wardex provenance submit %s\n", chainHashHex)
 		}
@@ -145,7 +145,7 @@ func runSeal(cmd *cobra.Command, args []string) error {
 	result, err := anchorer.Submit(cmd.Context(), hashBytes, sealLabel)
 	if err != nil {
 		u.report(4, "Submitting chain hash", "FAILED", err.Error())
-		if u.progress.Enabled() {
+		if u.dashboardEnabled() {
 			u.render(buildProvenanceActionDashboard("SEALED", []ui.Field{
 				{Label: "OUTPUT", Value: sealOutput},
 				{Label: "FILES", Value: fmt.Sprintf("%d", len(artifacts))},
@@ -153,29 +153,44 @@ func runSeal(cmd *cobra.Command, args []string) error {
 				{Label: "ANCHOR", Value: "failed"},
 			}))
 		} else {
-			fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", sealOutput)
-			fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
-			fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
+			fmt.Fprintf(u.output, "Chain seal written to: %s\n", sealOutput)
+			fmt.Fprintf(u.output, "  Total files:  %d\n", len(artifacts))
+			fmt.Fprintf(u.output, "  Chain hash:   %s\n", chainHashHex[:16]+"...")
 			fmt.Fprintf(cmd.ErrOrStderr(), "Warning: anchor submission failed: %v\n", err)
 			fmt.Fprintf(cmd.ErrOrStderr(), "  Seal saved locally at %s\n", sealOutput)
 		}
 		return nil
 	}
-	u.report(4, "Submitting chain hash", "DONE", result.Label)
-	if u.progress.Enabled() {
-		u.render(buildProvenanceActionDashboard("SEALED", []ui.Field{
+	anchorLabel := result.Label
+	command := "SEALED"
+	if result.DryRun {
+		anchorLabel = "dry-run (not anchored)"
+		command = "SEALED LOCALLY"
+		u.report(4, "Submitting chain hash", "SKIPPED", anchorLabel)
+	} else {
+		u.report(4, "Submitting chain hash", "DONE", result.Label)
+	}
+	if u.dashboardEnabled() {
+		fields := []ui.Field{
 			{Label: "OUTPUT", Value: sealOutput},
 			{Label: "FILES", Value: fmt.Sprintf("%d", len(artifacts))},
 			{Label: "CHAIN HASH", Value: chainHashHex},
-			{Label: "ANCHOR", Value: result.Label},
-			{Label: "BLOCK", Value: fmt.Sprintf("%d", result.BlockIndex)},
-		}))
+			{Label: "ANCHOR", Value: anchorLabel},
+		}
+		if !result.DryRun {
+			fields = append(fields, ui.Field{Label: "BLOCK", Value: fmt.Sprintf("%d", result.BlockIndex)})
+		}
+		u.render(buildProvenanceActionDashboard(command, fields))
 		return nil
 	}
-	fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", sealOutput)
-	fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
-	fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
-	fmt.Fprintf(cmd.OutOrStdout(), "  Anchored:     %s (block ~%d)\n", result.Label, result.BlockIndex)
+	fmt.Fprintf(u.output, "Chain seal written to: %s\n", sealOutput)
+	fmt.Fprintf(u.output, "  Total files:  %d\n", len(artifacts))
+	fmt.Fprintf(u.output, "  Chain hash:   %s\n", chainHashHex[:16]+"...")
+	if result.DryRun {
+		fmt.Fprintf(u.output, "  Anchor:      %s\n", anchorLabel)
+	} else {
+		fmt.Fprintf(u.output, "  Anchored:     %s (block ~%d)\n", result.Label, result.BlockIndex)
+	}
 	return nil
 }
 

@@ -55,7 +55,14 @@ func NewLogger(level slog.Level, useSyslog bool, endpoint string) (*Logger, erro
 // NewLoggerTo builds a text logger writing to w at the given level.
 // Used by tests and by components that own their sink (e.g. cobra ErrOrStderr).
 func NewLoggerTo(w io.Writer, level slog.Level) *Logger {
-	return &Logger{slog.New(newTextHandler(w, level))}
+	return NewLoggerToWithProfile(w, level, DetectProfile(w))
+}
+
+// NewLoggerToWithProfile builds a text logger with an explicit rendering
+// profile. It is useful when the caller has already detected capabilities for
+// a wrapped or shared destination.
+func NewLoggerToWithProfile(w io.Writer, level slog.Level, profile Profile) *Logger {
+	return &Logger{slog.New(newTextHandlerWithProfile(w, level, profile))}
 }
 
 // SetLogger swaps the process-wide default logger used by the package helpers.
@@ -147,12 +154,17 @@ func levelColour(l slog.Level) string {
 // textHandler renders slog records in the classic "[PREFIX] message" style,
 // coloured when the sink is a terminal.
 type textHandler struct {
-	level slog.Level
-	w     io.Writer
+	level   slog.Level
+	w       io.Writer
+	profile Profile
 }
 
 func newTextHandler(w io.Writer, level slog.Level) *textHandler {
-	return &textHandler{level: level, w: w}
+	return newTextHandlerWithProfile(w, level, DetectProfile(w))
+}
+
+func newTextHandlerWithProfile(w io.Writer, level slog.Level, profile Profile) *textHandler {
+	return &textHandler{level: level, w: w, profile: normalizeProfile(profile)}
 }
 
 func (h *textHandler) Enabled(_ context.Context, l slog.Level) bool {
@@ -162,7 +174,7 @@ func (h *textHandler) Enabled(_ context.Context, l slog.Level) bool {
 func (h *textHandler) Handle(_ context.Context, r slog.Record) error {
 	prefix := levelPrefix(r.Level)
 	var sb strings.Builder
-	if IsTerminal(h.w) {
+	if h.profile.Interactive && h.profile.ColorDepth != ColorNone {
 		sb.WriteString(levelColour(r.Level))
 		sb.WriteString("[")
 		sb.WriteString(prefix)
@@ -174,15 +186,21 @@ func (h *textHandler) Handle(_ context.Context, r slog.Record) error {
 		sb.WriteString(prefix)
 		sb.WriteString("] ")
 	}
-	sb.WriteString(r.Message)
+	display := SanitizeDisplay
+	if !h.profile.Unicode {
+		display = SanitizeDisplayASCII
+	}
+	sb.WriteString(display(r.Message))
 	r.Attrs(func(a slog.Attr) bool {
 		if a.Equal(slog.Attr{}) {
 			return true
 		}
 		sb.WriteString(" ")
-		sb.WriteString(a.Key)
+		sb.WriteString(display(a.Key))
 		sb.WriteString("=")
-		fmt.Fprint(&sb, a.Value.Any())
+		var value strings.Builder
+		fmt.Fprint(&value, a.Value.Any())
+		sb.WriteString(display(value.String()))
 		return true
 	})
 	sb.WriteString("\n")

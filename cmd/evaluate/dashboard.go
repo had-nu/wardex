@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/had-nu/wardex/v2/pkg/exitcodes"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/orchestrator"
 	"github.com/had-nu/wardex/v2/pkg/ui"
@@ -19,7 +20,7 @@ const maxGateDashboardDecisions = 5
 func buildGateSession(opts orchestrator.GateOptions) ui.SessionView {
 	controls := strings.Join(opts.Controls, ", ")
 	if controls == "" {
-		controls = "—"
+		controls = "-"
 	}
 	profile := opts.ProfileName
 	if profile == "" {
@@ -40,11 +41,11 @@ func buildGateSession(opts orchestrator.GateOptions) ui.SessionView {
 
 	evidence := opts.GateFile
 	if evidence == "" {
-		evidence = "—"
+		evidence = "-"
 	}
 	config := opts.ConfigPath
 	if config == "" {
-		config = "—"
+		config = "-"
 	}
 
 	return ui.SessionView{
@@ -142,10 +143,69 @@ func buildGateFinding(item model.ReleaseDecision) ui.FindingView {
 }
 
 func renderGateResults(w io.Writer, progress *ui.TerminalProgress, opts orchestrator.GateOptions, report model.GateReport) {
-	dashboard := buildGateDashboard(opts, report)
-	if progress != nil && progress.Enabled() {
-		_ = ui.RenderResults(w, dashboard)
+	if progress == nil || !progress.Enabled() {
 		return
 	}
-	_ = ui.RenderDashboard(w, dashboard)
+	dashboard := buildGateDashboard(opts, report)
+	_ = ui.RenderResults(w, dashboard)
+}
+
+func buildGateOutcomeDashboard(opts orchestrator.GateOptions, outcome orchestrator.GateOutcome) ui.Dashboard {
+	decision := "ERROR"
+	severity := "HIGH"
+	switch outcome.ExitCode {
+	case exitcodes.OK:
+		decision = "COMPLETE"
+		severity = "LOW"
+	case exitcodes.FreshnessAdvisory:
+		decision = "ADVISORY"
+		severity = "MEDIUM"
+	case exitcodes.GateBlocked:
+		decision = "BLOCK"
+	case exitcodes.ComplianceFail:
+		decision = "COMPLIANCE FAIL"
+	case exitcodes.ActivelyExploited:
+		decision = "ACTIVE EXPLOITATION"
+	case exitcodes.DuplicateRelease:
+		decision = "DUPLICATE"
+	}
+	status := "FAILED"
+	if outcome.ExitCode == exitcodes.OK || outcome.ExitCode == exitcodes.FreshnessAdvisory {
+		status = "COMPLETE"
+	}
+	return ui.Dashboard{
+		Session: func() ui.SessionView {
+			session := buildGateSession(opts)
+			session.Status = status
+			return session
+		}(),
+		Findings: []ui.FindingView{{
+			Kind:     "RELEASE GATE ERROR",
+			Severity: severity,
+			Title:    decision,
+			Fields: []ui.Field{
+				{Label: "EXIT CODE", Value: fmt.Sprintf("%d", outcome.ExitCode)},
+				{Label: "DETAIL", Value: outcome.Detail},
+			},
+		}},
+		Summary: ui.SummaryView{
+			Decision: decision,
+			Fields: []ui.Field{
+				{Label: "EXIT CODE", Value: fmt.Sprintf("%d", outcome.ExitCode)},
+				{Label: "DETAIL", Value: outcome.Detail},
+			},
+		},
+	}
+}
+
+func renderGateOutcome(w io.Writer, progress *ui.TerminalProgress, opts orchestrator.GateOptions, outcome orchestrator.GateOutcome) {
+	if progress == nil || !progress.Enabled() {
+		return
+	}
+	if outcome.Report != nil {
+		renderGateResults(w, progress, opts, *outcome.Report)
+		return
+	}
+	dashboard := buildGateOutcomeDashboard(opts, outcome)
+	_ = ui.RenderResults(w, dashboard)
 }

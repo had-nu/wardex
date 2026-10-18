@@ -89,6 +89,14 @@ func CheckKEVAge(path string, maxAgeDays int) string {
 // on each vulnerability that appears in the KEV catalogue.
 // CVEs not found in the catalogue are left unchanged.
 func CorrelateKEV(vulns []model.Vulnerability, catalogue *KEVCatalogue) []model.Vulnerability {
+	return CorrelateKEVWithWriter(vulns, catalogue, os.Stderr)
+}
+
+// CorrelateKEVWithWriter is the writer-injectable form used by CLI commands.
+func CorrelateKEVWithWriter(vulns []model.Vulnerability, catalogue *KEVCatalogue, warnings io.Writer) []model.Vulnerability {
+	if warnings == nil {
+		warnings = io.Discard
+	}
 	kevMap := make(map[string]KEVEntry, len(catalogue.Vulnerabilities))
 	for _, entry := range catalogue.Vulnerabilities {
 		kevMap[entry.CveID] = entry
@@ -97,7 +105,7 @@ func CorrelateKEV(vulns []model.Vulnerability, catalogue *KEVCatalogue) []model.
 	for i, v := range vulns {
 		entry, found := kevMap[v.CVEID]
 		if !found {
-			fmt.Fprintf(os.Stderr, "[INFO] CVE %s not found in KEV catalogue — no enrichment applied\n", v.CVEID)
+			fmt.Fprintf(warnings, "[INFO] CVE %s not found in KEV catalogue - no enrichment applied\n", v.CVEID)
 			continue
 		}
 

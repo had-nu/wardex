@@ -31,7 +31,8 @@ func init() {
 
 func runConfigShow(cmd *cobra.Command, args []string) error {
 	stderr := cmd.ErrOrStderr()
-	progress := ui.NewTerminalProgress(stderr)
+	output := configCommandOutput(cmd)
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(buildConfigShowSession(showConfigPath))
 	reportProgress := func(number int, name, status, detail string) {
 		progress.Report(ui.PhaseEvent{Number: number, Name: name, Status: status, Detail: detail})

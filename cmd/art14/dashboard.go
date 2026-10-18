@@ -16,9 +16,11 @@ import (
 const maxArt14Cards = 10
 
 type art14UI struct {
-	progress *ui.TerminalProgress
-	session  ui.SessionView
-	stderr   io.Writer
+	progress          *ui.TerminalProgress
+	session           ui.SessionView
+	stderr            io.Writer
+	output            io.Writer
+	resultInteractive bool
 }
 
 func beginArt14UI(cmd *cobra.Command, command, dir string) *art14UI {
@@ -31,9 +33,16 @@ func beginArt14UI(cmd *cobra.Command, command, dir string) *art14UI {
 			{Label: "DIRECTORY", Value: dir},
 		},
 	}
-	progress := ui.NewTerminalProgress(stderr)
+	output := cmd.OutOrStdout()
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(session)
-	return &art14UI{progress: progress, session: session, stderr: stderr}
+	return &art14UI{
+		progress:          progress,
+		session:           session,
+		stderr:            stderr,
+		output:            output,
+		resultInteractive: ui.IsTerminal(output) && ui.IsTerminal(stderr),
+	}
 }
 
 func (u *art14UI) report(number int, name, status, detail string) {
@@ -48,8 +57,12 @@ func (u *art14UI) report(number int, name, status, detail string) {
 	})
 }
 
+func (u *art14UI) dashboardEnabled() bool {
+	return u != nil && u.resultInteractive
+}
+
 func (u *art14UI) render(dashboard ui.Dashboard) {
-	if u == nil || u.progress == nil || !u.progress.Enabled() {
+	if u == nil || u.progress == nil || !u.dashboardEnabled() {
 		return
 	}
 	_ = ui.RenderResults(u.stderr, dashboard)
@@ -64,8 +77,9 @@ func buildArt14ListDashboard(artefacts []*model.Art14NotificationArtefact, dir s
 		} else {
 			draft++
 		}
-		if deadlineOverdue(artefact.EarlyWarning.Deadline, artefact.Status) ||
-			deadlineOverdue(artefact.Notification.Deadline, artefact.Status) {
+		if deadlineOverdue(artefact.EarlyWarning.Deadline, artefact.Status, art14DeadlineEarlyWarning) ||
+			deadlineOverdue(artefact.Notification.Deadline, artefact.Status, art14DeadlineNotification) ||
+			deadlineOverdue(artefact.FinalReport.Deadline, artefact.Status, art14DeadlineFinalReport) {
 			overdue++
 		}
 	}
@@ -103,7 +117,14 @@ func buildArt14DetailDashboard(artefact *model.Art14NotificationArtefact, action
 		decision = "COMPLETE"
 	}
 	if action != "" {
-		decision = "UPDATED"
+		switch strings.ToLower(action) {
+		case "verification failed":
+			decision = "FAILED"
+		case "verified":
+			decision = "VERIFIED"
+		default:
+			decision = "UPDATED"
+		}
 	}
 	dashboard.Summary = ui.SummaryView{
 		Decision: decision,
@@ -119,12 +140,17 @@ func buildArt14DetailDashboard(artefact *model.Art14NotificationArtefact, action
 func buildArt14ArtefactView(artefact *model.Art14NotificationArtefact, action string) ui.FindingView {
 	severity := "MEDIUM"
 	if strings.HasPrefix(artefact.Status, "dispatched") &&
-		!deadlineOverdue(artefact.EarlyWarning.Deadline, artefact.Status) &&
-		!deadlineOverdue(artefact.Notification.Deadline, artefact.Status) {
+		!deadlineOverdue(artefact.EarlyWarning.Deadline, artefact.Status, art14DeadlineEarlyWarning) &&
+		!deadlineOverdue(artefact.Notification.Deadline, artefact.Status, art14DeadlineNotification) &&
+		!deadlineOverdue(artefact.FinalReport.Deadline, artefact.Status, art14DeadlineFinalReport) {
 		severity = "LOW"
 	}
-	if deadlineOverdue(artefact.EarlyWarning.Deadline, artefact.Status) ||
-		deadlineOverdue(artefact.Notification.Deadline, artefact.Status) {
+	if strings.EqualFold(action, "verification failed") {
+		severity = "HIGH"
+	}
+	if deadlineOverdue(artefact.EarlyWarning.Deadline, artefact.Status, art14DeadlineEarlyWarning) ||
+		deadlineOverdue(artefact.Notification.Deadline, artefact.Status, art14DeadlineNotification) ||
+		deadlineOverdue(artefact.FinalReport.Deadline, artefact.Status, art14DeadlineFinalReport) {
 		severity = "HIGH"
 	}
 

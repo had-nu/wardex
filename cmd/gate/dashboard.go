@@ -33,7 +33,7 @@ func beginGateUI(cmd *cobra.Command, command, auditLog, version string) *gateUI 
 		stderr = cmd.ErrOrStderr()
 	}
 	output := gateCommandOutput(cmd)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(ui.SessionView{
 		Title:  "RELEASE GATE SESSION",
 		Status: "RUNNING",

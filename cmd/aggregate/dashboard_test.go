@@ -5,10 +5,12 @@ package aggregate
 
 import (
 	"bytes"
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/spf13/cobra"
 )
 
 func TestAggregateDecisionPolicies(t *testing.T) {
@@ -56,6 +58,32 @@ func TestRenderAggregateTableDoesNotEmitANSIForBuffer(t *testing.T) {
 	renderAggregateTable(&out, []fileResult{{file: "iso.json", decision: "allow"}})
 	if strings.Contains(out.String(), "\033[") {
 		t.Fatalf("non-terminal aggregate table contains ANSI: %q", out.String())
+	}
+}
+
+func TestRunAggregateStopsAfterBlockedExit(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	path := "gate.json"
+	if err := os.WriteFile(path, []byte(`{"Gate":{"OverallDecision":"block","BlockedCount":1}}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	oldFailOn, oldExit := failOn, exitFunc
+	t.Cleanup(func() { failOn, exitFunc = oldFailOn, oldExit })
+	failOn = "any-block"
+	var codes []int
+	exitFunc = func(code int) { codes = append(codes, code) }
+
+	var out bytes.Buffer
+	cmd := &cobra.Command{Use: "aggregate"}
+	cmd.SetOut(&out)
+	cmd.SetErr(&out)
+	if err := runAggregate(cmd, []string{path}); err != nil {
+		t.Fatalf("runAggregate failed: %v", err)
+	}
+	if len(codes) != 1 || codes[0] != 10 {
+		t.Fatalf("blocked aggregate should call exit once with 10, got %v", codes)
 	}
 }
 

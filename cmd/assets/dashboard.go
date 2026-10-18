@@ -33,7 +33,7 @@ func beginAssetsUI(cmd *cobra.Command, path, format string) *assetsUI {
 		stderr = cmd.ErrOrStderr()
 	}
 	output := assetsCommandOutput(cmd)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output, format)
 	progress.Begin(ui.SessionView{
 		Title:  "ASSET INVENTORY SESSION",
 		Status: "RUNNING",

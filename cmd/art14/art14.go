@@ -19,6 +19,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 )
 
 var (
@@ -130,16 +131,44 @@ func statusColor(status string) string {
 
 func fmtTime(t time.Time) string {
 	if t.IsZero() {
-		return "—"
+		return "-"
 	}
 	return t.UTC().Format("2006-01-02 15:04 UTC")
 }
 
-func deadlineOverdue(deadline time.Time, status string) bool {
+const (
+	art14DeadlineEarlyWarning = "early-warning"
+	art14DeadlineNotification = "notification"
+	art14DeadlineFinalReport  = "final-report"
+)
+
+func deadlineOverdue(deadline time.Time, status string, phases ...string) bool {
+	phase := art14DeadlineEarlyWarning
+	if len(phases) > 0 {
+		phase = phases[0]
+	}
 	if deadline.IsZero() {
 		return false
 	}
-	if strings.HasPrefix(status, "dispatched") {
+
+	// A deadline is satisfied only when its own lifecycle phase has been
+	// dispatched. An early-warning dispatch must not hide an overdue
+	// notification/final-report deadline (and vice versa).
+	fulfilled := false
+	switch phase {
+	case art14DeadlineEarlyWarning:
+		fulfilled = status == "dispatched:early-warning" ||
+			status == "dispatched:notification" ||
+			status == "dispatched:final-report" ||
+			status == "dispatched"
+	case art14DeadlineNotification:
+		fulfilled = status == "dispatched:notification" ||
+			status == "dispatched:final-report" ||
+			status == "dispatched"
+	case art14DeadlineFinalReport:
+		fulfilled = status == "dispatched:final-report" || status == "dispatched"
+	}
+	if fulfilled {
 		return false
 	}
 	return time.Now().UTC().After(deadline)
@@ -162,19 +191,25 @@ func runList(cmd *cobra.Command, args []string) error {
 
 	u.report(2, "Preparing inventory", "RUNNING", "")
 	u.report(2, "Preparing inventory", "DONE", "inventory ready")
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render(buildArt14ListDashboard(artefacts, dir))
 		return nil
 	}
 
 	if len(artefacts) == 0 {
-		fmt.Fprintf(cmd.OutOrStdout(), "No Article 14 artefacts found in %s\n", dir)
+		fmt.Fprintf(u.output, "No Article 14 artefacts found in %s\n", dir)
 		return nil
 	}
 
-	w := cmd.OutOrStdout()
+	w := u.output
+	profile := ui.DetectProfile(w)
+	color := profile.Interactive && profile.ColorDepth != ui.ColorNone
+	sanitize := ui.SanitizeDisplay
+	if !profile.Unicode {
+		sanitize = ui.SanitizeDisplayASCII
+	}
 	hdr := func(s string, width int) string {
-		if ui.IsTerminal(w) {
+		if color {
 			return ui.PadANSI(ui.Colorize(s, ui.Cyan+ui.Bold), width)
 		}
 		return ui.PadANSI(s, width)
@@ -191,7 +226,7 @@ func runList(cmd *cobra.Command, args []string) error {
 	)
 
 	lineChar := '─'
-	if !ui.IsTerminal(w) {
+	if !profile.Unicode {
 		lineChar = '-'
 	}
 	fill := func(n int) string {
@@ -203,7 +238,7 @@ func runList(cmd *cobra.Command, args []string) error {
 		hdr("Early Warning", wEW), hdr("Notification", wNotif),
 		hdr("Status", wStat), hdr("HMAC", wHMAC))
 	rule := func(value string) string {
-		if ui.IsTerminal(w) {
+		if color {
 			return ui.Colorize(value, ui.Gray)
 		}
 		return value
@@ -218,16 +253,16 @@ func runList(cmd *cobra.Command, args []string) error {
 		rule(fill(wHMAC)))
 
 	for _, a := range artefacts {
-		id := shortID(a.ArtefactID)
-		cves := strings.Join(a.Notification.CVEIDs, ", ")
+		id := sanitize(shortID(a.ArtefactID))
+		cves := sanitize(strings.Join(a.Notification.CVEIDs, ", "))
 		if len(cves) > 16 {
 			cves = cves[:13] + "..."
 		}
-		detected := fmtTime(a.EarlyWarning.AwarenessTimestamp)
-		ewDeadline := fmtTime(a.EarlyWarning.Deadline)
-		notifDeadline := fmtTime(a.Notification.Deadline)
+		detected := sanitize(fmtTime(a.EarlyWarning.AwarenessTimestamp))
+		ewDeadline := sanitize(fmtTime(a.EarlyWarning.Deadline))
+		notifDeadline := sanitize(fmtTime(a.Notification.Deadline))
 
-		statusStr := a.Status
+		statusStr := sanitize(a.Status)
 		sc := statusColor(a.Status)
 		switch statusStr {
 		case "draft":
@@ -240,20 +275,20 @@ func runList(cmd *cobra.Command, args []string) error {
 			statusStr = "FR"
 		}
 
-		hmacShort := shortHMAC(a.HMAC)
+		hmacShort := sanitize(shortHMAC(a.HMAC))
 
-		if ui.IsTerminal(w) {
-			if deadlineOverdue(a.EarlyWarning.Deadline, a.Status) {
+		if color {
+			if deadlineOverdue(a.EarlyWarning.Deadline, a.Status, art14DeadlineEarlyWarning) {
 				ewDeadline = ui.Colorize(ewDeadline, ui.Red)
 			}
-			if deadlineOverdue(a.Notification.Deadline, a.Status) {
+			if deadlineOverdue(a.Notification.Deadline, a.Status, art14DeadlineNotification) {
 				notifDeadline = ui.Colorize(notifDeadline, ui.Red)
 			}
 		}
 
 		statusValue := statusStr
 		hmacValue := hmacShort
-		if ui.IsTerminal(w) {
+		if color {
 			statusValue = ui.Colorize(statusStr, sc)
 			hmacValue = ui.Colorize(hmacShort, ui.Gray)
 		}
@@ -287,7 +322,7 @@ func runShow(cmd *cobra.Command, args []string) error {
 	u.report(2, "Preparing artefact details", "RUNNING", "")
 	u.report(2, "Preparing artefact details", "DONE", "details ready")
 
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render(buildArt14DetailDashboard(artefact, ""))
 		return nil
 	}
@@ -296,7 +331,7 @@ func runShow(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(cmd.OutOrStdout(), string(data))
+	fmt.Fprintln(u.output, string(data))
 	return nil
 }
 
@@ -351,14 +386,14 @@ func runMarkDispatched(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(u.stderr, "[WARN] Failed to write dispatch event to gate audit log: %v\n", err)
 	}
 
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		updated, readErr := art14.ReadArtefact(path)
 		if readErr == nil {
 			u.render(buildArt14DetailDashboard(updated, "marked "+phase))
 		}
 		return nil
 	}
-	fmt.Fprintf(cmd.OutOrStdout(), "Successfully marked artefact %s as dispatched (phase: %s) and re-signed.\n", args[0], phase)
+	fmt.Fprintf(u.output, "Successfully marked artefact %s as dispatched (phase: %s) and re-signed.\n", args[0], phase)
 	return nil
 }
 
@@ -418,9 +453,16 @@ func runFinalize(cmd *cobra.Command, args []string) error {
 			art.FinalReport.SecurityUpdateDetails = updateDetails
 		}
 	} else {
+		if !u.dashboardEnabled() {
+			return fmt.Errorf("finalize requires --non-interactive when stdin/stdout/stderr are not interactive terminals")
+		}
+		input, ok := cmd.InOrStdin().(*os.File)
+		if !ok || !term.IsTerminal(int(input.Fd())) {
+			return fmt.Errorf("finalize requires --non-interactive when stdin is not a TTY")
+		}
 		// Interactive mode
 		reader := bufio.NewReader(cmd.InOrStdin())
-		fmt.Fprint(cmd.OutOrStdout(), "Patch Available Date (RFC3339, default: now): ")
+		fmt.Fprint(u.output, "Patch Available Date (RFC3339, default: now): ")
 		pStr, _ := reader.ReadString('\n')
 		pStr = strings.TrimSpace(pStr)
 		pTime := time.Now().UTC()
@@ -433,23 +475,23 @@ func runFinalize(cmd *cobra.Command, args []string) error {
 			}
 		}
 
-		fmt.Fprint(cmd.OutOrStdout(), "Vulnerability Description: ")
+		fmt.Fprint(u.output, "Vulnerability Description: ")
 		desc, _ := reader.ReadString('\n')
 		desc = strings.TrimSpace(desc)
 
-		fmt.Fprint(cmd.OutOrStdout(), "Severity: ")
+		fmt.Fprint(u.output, "Severity: ")
 		sev, _ := reader.ReadString('\n')
 		sev = strings.TrimSpace(sev)
 
-		fmt.Fprint(cmd.OutOrStdout(), "Impact: ")
+		fmt.Fprint(u.output, "Impact: ")
 		imp, _ := reader.ReadString('\n')
 		imp = strings.TrimSpace(imp)
 
-		fmt.Fprint(cmd.OutOrStdout(), "Threat Actor Info: ")
+		fmt.Fprint(u.output, "Threat Actor Info: ")
 		ta, _ := reader.ReadString('\n')
 		ta = strings.TrimSpace(ta)
 
-		fmt.Fprint(cmd.OutOrStdout(), "Security Update Details: ")
+		fmt.Fprint(u.output, "Security Update Details: ")
 		sud, _ := reader.ReadString('\n')
 		sud = strings.TrimSpace(sud)
 
@@ -491,14 +533,14 @@ func runFinalize(cmd *cobra.Command, args []string) error {
 	}
 	u.report(4, "Signing and writing artefact", "DONE", "artefact re-signed")
 
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		updated, readErr := art14.ReadArtefact(path)
 		if readErr == nil {
 			u.render(buildArt14DetailDashboard(updated, "finalized"))
 		}
 		return nil
 	}
-	fmt.Fprintf(cmd.OutOrStdout(), "Successfully finalized artefact %s and re-signed.\n", args[0])
+	fmt.Fprintf(u.output, "Successfully finalized artefact %s and re-signed.\n", args[0])
 	return nil
 }
 
@@ -529,19 +571,19 @@ func runVerify(cmd *cobra.Command, args []string) error {
 	err = art14.VerifyArtefact(artefact, key)
 	if err != nil {
 		u.report(3, "Verifying HMAC integrity", "FAILED", err.Error())
-		if u.progress.Enabled() {
+		if u.dashboardEnabled() {
 			u.render(buildArt14DetailDashboard(artefact, "verification failed"))
 		} else {
-			fmt.Fprintf(cmd.OutOrStdout(), "[TAMPERED] HMAC verification failed for %s: %v\n", args[0], err)
+			fmt.Fprintf(u.output, "[TAMPERED] HMAC verification failed for %s: %v\n", args[0], err)
 		}
 		exitFunc(exitcodes.IntegrityFailure)
 		return nil
 	}
 	u.report(3, "Verifying HMAC integrity", "DONE", "integrity valid")
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render(buildArt14DetailDashboard(artefact, "verified"))
 		return nil
 	}
-	fmt.Fprintf(cmd.OutOrStdout(), "[PASS] HMAC integrity verification passed for %s\n", args[0])
+	fmt.Fprintf(u.output, "[PASS] HMAC integrity verification passed for %s\n", args[0])
 	return nil
 }

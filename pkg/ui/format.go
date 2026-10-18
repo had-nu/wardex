@@ -6,6 +6,7 @@ package ui
 import (
 	"io"
 	"strings"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -44,6 +45,151 @@ func Redact(value string) string {
 		return ""
 	}
 	return "[REDACTED]"
+}
+
+// SanitizeDisplay makes an untrusted value safe for human-facing terminal
+// output. ANSI control sequences are removed, and C0/C1 controls, Unicode
+// format controls and invalid UTF-8 are replaced without changing printable
+// text. Structured encoders should serialize the original value instead.
+func SanitizeDisplay(value string) string {
+	if value == "" {
+		return ""
+	}
+
+	var b strings.Builder
+	b.Grow(len(value))
+	for i := 0; i < len(value); {
+		r, size := utf8.DecodeRuneInString(value[i:])
+		if r == utf8.RuneError && size == 1 {
+			b.WriteByte('?')
+			i++
+			continue
+		}
+
+		if r == '\x1b' {
+			i = skipANSISequence(value, i)
+			continue
+		}
+		if r >= 0x80 && r <= 0x9f {
+			next := skipC1ANSISequence(value, i, size, r)
+			if next != i {
+				i = next
+				continue
+			}
+		}
+		if unicode.IsControl(r) || unicode.Is(unicode.Cf, r) {
+			b.WriteByte(' ')
+			i += size
+			continue
+		}
+
+		b.WriteRune(r)
+		i += size
+	}
+	return b.String()
+}
+
+func skipANSISequence(value string, start int) int {
+	if start+1 >= len(value) {
+		return len(value)
+	}
+
+	switch value[start+1] {
+	case '[':
+		return skipCSI(value, start+2)
+	case ']':
+		return skipStringControl(value, start+2, true)
+	case 'P', 'X', '^', '_':
+		return skipStringControl(value, start+2, false)
+	default:
+		end := start + 1
+		for end < len(value) && value[end] >= 0x20 && value[end] <= 0x2f {
+			end++
+		}
+		if end < len(value) && value[end] >= 0x30 && value[end] <= 0x7e {
+			end++
+		}
+		return end
+	}
+}
+
+func skipC1ANSISequence(value string, start, size int, control rune) int {
+	next := start + size
+	switch control {
+	case 0x9b: // CSI
+		return skipCSI(value, next)
+	case 0x9d: // OSC
+		return skipStringControl(value, next, true)
+	case 0x90, 0x98, 0x9e, 0x9f: // DCS, SOS, PM and APC
+		return skipStringControl(value, next, false)
+	default:
+		return start
+	}
+}
+
+func skipCSI(value string, start int) int {
+	for i := start; i < len(value); i++ {
+		if value[i] >= 0x40 && value[i] <= 0x7e {
+			return i + 1
+		}
+	}
+	return len(value)
+}
+
+func skipStringControl(value string, start int, allowBell bool) int {
+	for i := start; i < len(value); i++ {
+		if allowBell && value[i] == '\a' {
+			return i + 1
+		}
+		if value[i] == '\x1b' && i+1 < len(value) && value[i+1] == '\\' {
+			return i + 2
+		}
+		if value[i] == '\x9c' {
+			return i + 1
+		}
+	}
+	return len(value)
+}
+
+// SanitizeDisplayASCII additionally maps common presentation glyphs to
+// ASCII and replaces other non-ASCII characters for TERM=dumb/C locales.
+func SanitizeDisplayASCII(value string) string {
+	value = SanitizeDisplay(value)
+	var b strings.Builder
+	b.Grow(len(value))
+	for _, r := range value {
+		if r <= unicode.MaxASCII {
+			b.WriteRune(r)
+			continue
+		}
+		switch r {
+		case '—', '–', '−':
+			b.WriteByte('-')
+		case '→':
+			b.WriteString("->")
+		case '·':
+			b.WriteByte('|')
+		case '✓':
+			b.WriteByte('+')
+		case '✗':
+			b.WriteByte('x')
+		case '▶':
+			b.WriteByte('>')
+		case '◆':
+			b.WriteByte('*')
+		case '█':
+			b.WriteByte('#')
+		case '…':
+			b.WriteString("...")
+		case '“', '”':
+			b.WriteByte('"')
+		case '‘', '’':
+			b.WriteByte('\'')
+		default:
+			b.WriteByte('?')
+		}
+	}
+	return b.String()
 }
 
 // SensitiveLabel reports whether a field should be redacted by default.

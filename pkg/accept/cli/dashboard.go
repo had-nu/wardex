@@ -47,7 +47,11 @@ func acceptErrorWriter(cmd *cobra.Command) io.Writer {
 func beginAcceptUI(cmd *cobra.Command, command, detail string) *acceptUI {
 	writer := acceptErrorWriter(cmd)
 	output := acceptCommandOutput(cmd)
-	progress := ui.NewTerminalProgress(writer)
+	format := ""
+	if command == "list" {
+		format = listOutput
+	}
+	progress := ui.NewTerminalProgressForOutput(writer, output, format)
 	progress.Begin(ui.SessionView{
 		Title:  "RISK ACCEPTANCE SESSION",
 		Status: "RUNNING",
@@ -60,7 +64,7 @@ func beginAcceptUI(cmd *cobra.Command, command, detail string) *acceptUI {
 		progress:          progress,
 		stderr:            writer,
 		output:            output,
-		resultInteractive: ui.IsTerminal(output),
+		resultInteractive: !ui.IsMachineFormat(format) && ui.IsTerminal(output),
 	}
 }
 

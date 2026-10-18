@@ -4,6 +4,7 @@
 package assets
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -51,6 +52,9 @@ type assetEntry struct {
 }
 
 func runAssetsInventory(cmd *cobra.Command, args []string) error {
+	if assetsFormat != "table" && assetsFormat != "json" && assetsFormat != "csv" {
+		return fmt.Errorf("unsupported asset inventory format %q (use table|json|csv)", assetsFormat)
+	}
 	u := beginAssetsUI(cmd, assetsFile, assetsFormat)
 	u.report(1, "Reading asset inventory", "RUNNING", assetsFile)
 	data, err := cli.SafeReadFile(assetsFile)
@@ -79,12 +83,22 @@ func runAssetsInventory(cmd *cobra.Command, args []string) error {
 		fmt.Fprintln(u.output, string(out))
 
 	case "csv":
-		fmt.Fprintln(u.output, "id,name,type,criticality,internet_facing,zone,owner,controls")
+		cw := csv.NewWriter(u.output)
+		if err := cw.Write([]string{"id", "name", "type", "criticality", "internet_facing", "zone", "owner", "controls"}); err != nil {
+			return fmt.Errorf("asset inventory csv header: %w", err)
+		}
 		for _, a := range assets {
-			fmt.Fprintf(u.output, "%s,%s,%s,%.2f,%t,%s,%s,\"%s\"\n",
-				a.ID, a.Name, a.Type, a.Criticality,
-				a.Exposure.InternetFacing, a.Exposure.NetworkZone,
-				a.Owner, strings.Join(a.Controls, ";"))
+			if err := cw.Write([]string{
+				a.ID, a.Name, a.Type, fmt.Sprintf("%.2f", a.Criticality),
+				fmt.Sprintf("%t", a.Exposure.InternetFacing), a.Exposure.NetworkZone,
+				a.Owner, strings.Join(a.Controls, ";"),
+			}); err != nil {
+				return fmt.Errorf("asset inventory csv row: %w", err)
+			}
+		}
+		cw.Flush()
+		if err := cw.Error(); err != nil {
+			return fmt.Errorf("asset inventory csv: %w", err)
 		}
 
 	default: // table
@@ -92,7 +106,7 @@ func runAssetsInventory(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(w, "%-18s %-35s %-14s %-12s %-8s %-10s %-18s\n",
 			"Asset ID", "Name", "Type", "Criticality", "Internet", "Zone", "Owner")
 		fmt.Fprintf(w, "%-18s %-35s %-14s %-12s %-8s %-10s %-18s\n",
-			"──────────────────", "──────────────────────────────────", "──────────────", "────────────", "────────", "──────────", "──────────────────")
+			"------------------", "----------------------------------", "--------------", "------------", "--------", "----------", "------------------")
 		for _, a := range assets {
 			name := a.Name
 			if len(name) > 33 {

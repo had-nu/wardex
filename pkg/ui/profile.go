@@ -74,7 +74,12 @@ func applyEnvironment(p Profile, getenv envLookup) Profile {
 	if isCI(getenv) {
 		return normalizeProfile(Profile{ColorDepth: ColorNone, Unicode: false, Width: DefaultWidth})
 	}
-	if getenv("NO_COLOR") != "" || strings.EqualFold(getenv("TERM"), "dumb") {
+	if strings.EqualFold(getenv("TERM"), "dumb") {
+		p.ColorDepth = ColorNone
+		p.Unicode = false
+		return normalizeProfile(p)
+	}
+	if getenv("NO_COLOR") != "" {
 		p.ColorDepth = ColorNone
 		return normalizeProfile(p)
 	}
@@ -124,13 +129,45 @@ func unicodeSupported(getenv envLookup) bool {
 }
 
 func isCI(getenv envLookup) bool {
-	for _, key := range []string{"CI", "GITHUB_ACTIONS", "GITLAB_CI"} {
-		value := strings.TrimSpace(getenv(key))
-		if value != "" && !strings.EqualFold(value, "0") && !strings.EqualFold(value, "false") {
+	// CI is the cross-provider convention; the provider-specific entries cover
+	// systems that do not consistently set it.
+	keys := []string{
+		"CI",
+		"CONTINUOUS_INTEGRATION",
+		"GITHUB_ACTIONS",
+		"GITLAB_CI",
+		"GITEA_ACTIONS",
+		"BUILDKITE",
+		"CIRCLECI",
+		"TRAVIS",
+		"APPVEYOR",
+		"TF_BUILD",
+		"CODEBUILD_BUILD_ARN",
+		"CODEBUILD_BUILD_ID",
+		"TEAMCITY_VERSION",
+		"JENKINS_URL",
+		"HUDSON_URL",
+		"BITBUCKET_BUILD_NUMBER",
+		"DRONE",
+		"WOODPECKER_CI",
+		"CIRRUS_CI",
+		"SEMAPHORE",
+	}
+	for _, key := range keys {
+		if ciValueEnabled(getenv(key)) {
 			return true
 		}
 	}
 	return false
+}
+
+func ciValueEnabled(value string) bool {
+	switch strings.ToLower(strings.TrimSpace(value)) {
+	case "", "0", "false", "no", "off", "disabled":
+		return false
+	default:
+		return true
+	}
 }
 
 func normalizeProfile(p Profile) Profile {
@@ -144,6 +181,9 @@ func normalizeProfile(p Profile) Profile {
 		p.Width = MaxWidth
 	}
 	if p.ColorDepth > ColorTrueColor {
+		p.ColorDepth = ColorNone
+	}
+	if !p.Interactive {
 		p.ColorDepth = ColorNone
 	}
 	return p

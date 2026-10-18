@@ -22,6 +22,19 @@ func TestTerminalProgressIsDisabledForBuffer(t *testing.T) {
 	}
 }
 
+func TestTerminalProgressForMachineOutputIsDisabled(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	progress := NewTerminalProgressForOutput(&stderr, &stdout, "JSON")
+	if progress.Enabled() {
+		t.Fatal("machine-format progress reporter should be disabled")
+	}
+	progress.Begin(SessionView{Title: "SESSION"})
+	progress.Report(PhaseEvent{Number: 1, Status: "DONE"})
+	if stdout.Len() != 0 || stderr.Len() != 0 {
+		t.Fatalf("machine-format progress wrote output: stdout=%q stderr=%q", stdout.String(), stderr.String())
+	}
+}
+
 func TestTerminalProgressExplicitRenderer(t *testing.T) {
 	var out bytes.Buffer
 	profile := Profile{Interactive: true, ColorDepth: ColorNone, Unicode: true, Width: 80}

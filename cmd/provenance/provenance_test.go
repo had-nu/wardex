@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/fxamacker/cbor/v2"
+	"github.com/had-nu/wardex/v2/pkg/attest"
 	"github.com/had-nu/wardex/v2/pkg/provenance"
 )
 
@@ -138,6 +140,13 @@ func TestAttestCmd(t *testing.T) {
 	}
 	if len(data) == 0 {
 		t.Fatal("empty attestation file")
+	}
+	var signed attest.SignedAttestation
+	if err := cbor.Unmarshal(data, &signed); err != nil {
+		t.Fatalf("attestation is not CBOR: %v", err)
+	}
+	if len(signed.Signatures) == 0 {
+		t.Fatal("CBOR attestation has no signatures")
 	}
 }
 

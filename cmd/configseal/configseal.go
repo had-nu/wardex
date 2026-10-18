@@ -59,7 +59,8 @@ func init() {
 func runConfigSeal(cmd *cobra.Command, args []string) error {
 	stderr := cmd.ErrOrStderr()
 	resolvedTrust := trust.ResolveTrustStoreRef(trustRef, "")
-	progress := ui.NewTerminalProgress(stderr)
+	output := configCommandOutput(cmd)
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(buildConfigSealSession(keyringPath, inputPath, outPath, resolvedTrust))
 	reportProgress := func(number int, name, status, detail string) {
 		progress.Report(ui.PhaseEvent{Number: number, Name: name, Status: status, Detail: detail})
@@ -84,7 +85,8 @@ func runConfigSeal(cmd *cobra.Command, args []string) error {
 	w := configCommandOutput(cmd)
 	fmt.Fprintln(w, "Config sealed successfully.")
 	inputLabel, outputLabel, trustLabel := "Input:", "Output:", "Trust:"
-	if ui.IsTerminal(w) {
+	profile := ui.DetectProfile(w)
+	if profile.Interactive && profile.ColorDepth != ui.ColorNone {
 		inputLabel = ui.Colorize(inputLabel, ui.Gray)
 		outputLabel = ui.Colorize(outputLabel, ui.Gray)
 		trustLabel = ui.Colorize(trustLabel, ui.Gray)
