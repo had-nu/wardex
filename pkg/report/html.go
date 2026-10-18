@@ -19,7 +19,10 @@ import (
 var reportTemplate string
 
 type templateData struct {
-	Title       string
+	Title string
+	// Framework is the framework the run evaluated against, or an explicit
+	// statement that it was not recorded.
+	Framework   string
 	GeneratedAt string
 	Version     string
 	Summary     templateSummary
@@ -136,7 +139,8 @@ func generateHTML(report model.GapReport, outFile string, writers ...io.Writer) 
 	stdout := selectReportStdout(writers)
 	sum := report.Summary
 	data := templateData{
-		Title:       "Wardex — Compliance & Release Gate Report",
+		Title:       reportTitle(sum.FrameworkName, sum.Framework),
+		Framework:   reportFrameworkLine(sum.FrameworkName, sum.Framework),
 		GeneratedAt: sum.GeneratedAt.Format("2006-01-02 15:04:05"),
 		Version:     "2.0.0",
 		Summary: templateSummary{

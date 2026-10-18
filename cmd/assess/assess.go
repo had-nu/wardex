@@ -50,14 +50,14 @@ func init() {
 	AssessCmd.Flags().StringVar(&assetsFile, "assets", "", "Path to assets definition file")
 	AssessCmd.Flags().StringVar(&framework, "framework", "iso27001", "Target framework name")
 	AssessCmd.Flags().StringVar(&snapshotPath, "snapshot", "", "Path to previous report for delta analysis")
-	AssessCmd.Flags().StringVar(&outputFormat, "output", "markdown", "Output format: markdown|json|csv")
+	AssessCmd.Flags().StringVar(&outputFormat, "output", "markdown", "Output format: "+report.FormatList())
 	AssessCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 }
 
 func runAssess(cmd *cobra.Command, args []string) error {
 	outputFormat = strings.ToLower(strings.TrimSpace(outputFormat))
-	if outputFormat != "markdown" && outputFormat != "json" && outputFormat != "csv" {
-		return fmt.Errorf("unsupported assess output format %q (use markdown|json|csv)", outputFormat)
+	if !report.IsSupportedFormat(outputFormat) {
+		return fmt.Errorf("unsupported assess output format %q (use %s)", outputFormat, report.FormatList())
 	}
 	stderr := cmd.ErrOrStderr()
 	output := cmd.OutOrStdout()
@@ -162,6 +162,9 @@ func runAssess(cmd *cobra.Command, args []string) error {
 		LayerDelta:      &layerDelta,
 		AssetCompliance: assetCompliance,
 	}
+	displayName, _ := catalog.DisplayName(framework)
+	finalReport.Summary.Framework = framework
+	finalReport.Summary.FrameworkName = displayName
 
 	// 9. Delta analysis (snapshot comparison).
 	reportProgress(9, "Comparing snapshot", "RUNNING", "")

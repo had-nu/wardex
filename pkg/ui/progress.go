@@ -61,10 +61,11 @@ func NewTerminalProgress(w io.Writer) *TerminalProgress {
 }
 
 // IsMachineFormat reports formats whose stdout contract must not be decorated
-// with human progress, dashboards, banners, or ANSI sequences.
+// with human progress, dashboards, banners, or ANSI sequences. html is included
+// because it is an artefact format: it must reach stdout untouched.
 func IsMachineFormat(format string) bool {
 	switch strings.ToLower(strings.TrimSpace(format)) {
-	case "json", "jsonl", "csv", "cbor", "yaml", "yml":
+	case "json", "jsonl", "csv", "cbor", "yaml", "yml", "html":
 		return true
 	default:
 		return false
