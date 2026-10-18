@@ -78,6 +78,31 @@ Wardex strictly uses a **Simplified Gitflow** model (`main` + `dev` branches) to
 
 Example: `feat: add support for YAML config replay`
 
+### Attribution Trailers
+
+A `Co-authored-by:` trailer is attribution. It records who contributed to the
+work. It is not a review, a sign-off or an authorisation, and it does not make
+the party named responsible for the commit.
+
+Adding a trailer names a party to work they may never have seen. Do not add one
+for another person or organisation without their agreement. A tool that adds
+such a trailer by default has been authorised by nobody.
+
+A trailer naming an AI assistant is attribution in the same sense as any other
+trailer. This repository neither requires one nor infers consent from one.
+
+CI enforces this on new work. `tools/check-attribution` fails the build when a
+pull request adds a `Co-authored-by` trailer naming a coding assistant, and it
+reads only the range the pull request proposes to merge, so it says nothing
+about history that predates the check. Treat a failure as a prompt to look, not
+as proof that nothing is wrong: the deny list is matched against free text and
+does not resist a deliberate change.
+
+**History is not rewritten to remove a trailer.** Rewriting is reserved for
+correcting content — credentials, personal data, malicious code. Where a
+trailer was added without the agreement of the party named, remove it going
+forward and record that in the pull request rather than rewriting silently.
+
 ## Testing Requirements
 
 - All new code must include unit tests.
