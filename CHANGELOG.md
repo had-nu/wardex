@@ -96,6 +96,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `.goreleaser.yaml` instead of repeating them, builds the revision in separate
   git worktrees, and fails when the digests diverge. Removing `-trimpath` from
   the release config makes the check fail, which is how it was validated.
+- Made report output deterministic. Two executions of `wardex assess` over
+  identical evidence produced different reports, because four sites built
+  slices by ranging over a map and Go randomises map iteration. Affected the
+  layer delta lists, per-asset missing controls and the domain summary order.
+  This sat directly on the obligation to evaluate whether the measures work: a
+  reviewer comparing two runs would have seen a difference that was ordering
+  alone.
+- Suppressed the banner on `wardex completion <shell>`. The machine command
+  classifier compared whole command paths for equality, and cobra reports the
+  path including any subcommand, so `wardex completion bash` never matched the
+  `wardex completion` case. Paths now match on a segment boundary.
+- Added GitHub artifact attestations to the release pipeline. The SLSA
+  provenance deferred by the v2.0.1 hardening spec named
+  `slsa-github-generator`, which its own maintainers now mark as no longer
+  actively maintained in favour of the built-in mechanism.
+- Pinned `govulncheck` by revision instead of tag so the scanner cannot change
+  between two runs of the same commit.
+- Added `docs/regulatory-context.md`: the article-level traceability matrix for
+  the NIS2 obligations the tool touches, together with the limits of what that
+  mapping claims. It states explicitly that pinning a digest gives
+  reproducibility and not integrity, and that integrity against the audited
+  operator requires external custody.
 
 ### Tests
 

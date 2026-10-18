@@ -4,6 +4,7 @@
 package analyzer
 
 import (
+	"slices"
 	"time"
 
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -72,6 +73,10 @@ func AssessAssets(assets []model.Asset, controls []model.ExistingControl, catalo
 				compliance.MissingControls = append(compliance.MissingControls, reqID)
 			}
 		}
+		// requiredIDs is a map, so this list came out in a different order on
+		// every run and two executions over identical evidence produced
+		// different reports. Sort.
+		slices.Sort(compliance.MissingControls)
 
 		if len(requiredIDs) > 0 {
 			compliance.ComplianceScore = float64(coveredCount) / float64(len(requiredIDs))

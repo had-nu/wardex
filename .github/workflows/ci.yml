@@ -107,7 +107,12 @@ jobs:
           cache: true
 
       - name: Install govulncheck
-        run: go install golang.org/x/vuln/cmd/govulncheck@v1.6.0
+        # Pinned by revision rather than tag, so the scanner cannot change
+        # between two runs of the same commit. This is reproducibility of the
+        # build chain, not integrity: govulncheck does not attest to the
+        # artefacts it scans. Integrity against the audited operator comes from
+        # external custody, not from anything pinned here.
+        run: go install golang.org/x/vuln/cmd/govulncheck@19b0bb6a272792b9afa8a6983c3e9b9a1816947f
 
       - name: Run govulncheck
         run: govulncheck ./...

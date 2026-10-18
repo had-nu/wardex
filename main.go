@@ -199,13 +199,33 @@ func commandFlagValue(cmd *cobra.Command, name string) string {
 	return ""
 }
 
+// machineCommandPath reports whether a command path is machine-oriented and
+// must stay free of the banner, progress and dashboards.
+//
+// Paths are matched on a segment boundary rather than by exact equality. Cobra
+// reports the full path including any subcommand, so `wardex completion bash`
+// never equals `wardex completion`. Exact matching therefore let the banner
+// through on `wardex completion <shell>` and `wardex help <command>`, both of
+// which the terminal UI specification lists as machine-oriented.
 func machineCommandPath(path string) bool {
-	switch strings.TrimSpace(path) {
-	case "wardex completion", "wardex help", "wardex audit export", "wardex audit verify-link", "wardex config hash", "wardex provenance attest":
-		return true
-	default:
-		return false
+	path = strings.TrimSpace(path)
+	for _, machine := range machineCommandPrefixes {
+		if path == machine || strings.HasPrefix(path, machine+" ") {
+			return true
+		}
 	}
+	return false
+}
+
+// machineCommandPrefixes lists the machine-oriented command paths. Each entry
+// also matches its subcommands.
+var machineCommandPrefixes = []string{
+	"wardex completion",
+	"wardex help",
+	"wardex audit export",
+	"wardex audit verify-link",
+	"wardex config hash",
+	"wardex provenance attest",
 }
 
 // machineOutputValue reports whether a flag value selects a format whose
