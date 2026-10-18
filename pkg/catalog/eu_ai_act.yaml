@@ -1,3 +1,24 @@
+# EU AI Act control catalogue.
+#
+# Source:
+#   - Regulation (EU) 2024/1689 of the European Parliament and of the Council of
+#     13 June 2024 laying down harmonised rules on artificial intelligence
+#     (Artificial Intelligence Act), OJ L, 2024/1689, 12.7.2024.
+#
+# Identifier scheme. "EUAIA.Art<N>" names the article of the Regulation. The title
+# after the identifier is the Regulation's own.
+#
+# Every control sits under the article whose subject it describes, read from the
+# text of the Regulation.
+#
+# Scope. Articles 28 to 47 and 64 to 79 concern notifying authorities, notified
+# bodies, the AI Office, the Board and market surveillance. Those bind authorities
+# rather than a provider or a deployer and are not listed.
+#
+# Note: the OJ reference for this Regulation is also the number in its CELEX-style
+# filename, which is a coincidence of numbering. The instrument is 2024/1689 and
+# not part of the series that includes Regulation (EU) 2024/2847.
+
 - id: EUAIA.Art4
   name: "AI Literacy — Ensure AI literacy among staff and deployers"
   domain: "people"

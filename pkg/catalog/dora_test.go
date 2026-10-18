@@ -5,7 +5,6 @@ package catalog_test
 
 import (
 	"regexp"
-	"strings"
 	"testing"
 
 	"github.com/had-nu/wardex/v2/pkg/catalog"
@@ -49,14 +48,6 @@ var doraArticleTitles = map[int]string{
 }
 
 var doraIDPattern = regexp.MustCompile(`^DORA\.Art(\d+)(\.\d+)?$`)
-
-// stop words are excluded when comparing a control name against an article
-// title, so that "and" or "of" does not count as agreement.
-var stop = map[string]bool{
-	"the": true, "and": true, "for": true, "of": true, "a": true, "an": true,
-	"with": true, "on": true, "in": true, "to": true, "or": true, "its": true,
-	"that": true, "are": true, "by": true,
-}
 
 // TestDORAControlsSitUnderTheArticleWhoseSubjectTheyDescribe is the check that
 // was missing for NIS2, for NIST CSF and for DORA itself.
@@ -113,19 +104,6 @@ func TestDORAControlsSitUnderTheArticleWhoseSubjectTheyDescribe(t *testing.T) {
 				c.ID, c.Name, n, title)
 		}
 	}
-}
-
-// distinctive returns the content words of s, lowercased.
-func distinctive(s string) map[string]bool {
-	out := map[string]bool{}
-	for _, w := range strings.FieldsFunc(strings.ToLower(s), func(r rune) bool {
-		return r < 'a' || r > 'z'
-	}) {
-		if len(w) > 3 && !stop[w] {
-			out[w] = true
-		}
-	}
-	return out
 }
 
 // TestDORADoesNotCoverArticlesConsecutively catches the shape of the defect
