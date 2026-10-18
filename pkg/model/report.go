@@ -50,6 +50,16 @@ type DomainSummary struct {
 
 // ExecutiveSummary é desenhado para management reviews.
 type ExecutiveSummary struct {
+	// Framework is the catalogue the run evaluated against, for example
+	// "iso27001" or "nis2". Report generators use it for the document title.
+	// An empty value means the run had no explicit framework, and generators
+	// must say so rather than name a framework the run did not use.
+	Framework string
+	// FrameworkName is the human-readable catalogue name, for example
+	// "ISO/IEC 27001:2022". Generators prefer it over Framework and fall back
+	// to Framework when the caller did not supply a display name.
+	FrameworkName string
+
 	GeneratedAt     time.Time
 	TotalControls   int
 	CoveredCount    int

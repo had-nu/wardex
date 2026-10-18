@@ -32,7 +32,7 @@ func beginHMACUI(cmd *cobra.Command, payload string) *hmacUI {
 		stderr = cmd.ErrOrStderr()
 	}
 	output := hmacCommandOutput(cmd)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(ui.SessionView{
 		Title:  "HMAC SIGNATURE SESSION",
 		Status: "RUNNING",

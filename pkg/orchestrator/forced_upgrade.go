@@ -195,5 +195,5 @@ func (f *forcedUpgradeStatus) logTransition(event, detail string) {
 		fmt.Fprintf(f.opts.Stderr, "Warning: failed to chain forced_upgrade audit entry: %v\n", err)
 		return
 	}
-	fmt.Fprintf(f.opts.Stderr, "[INFO] forced_upgrade transition chained → %s\n", f.logPath)
+	fmt.Fprintf(f.opts.Stderr, "[INFO] forced_upgrade transition chained -> %s\n", f.logPath)
 }

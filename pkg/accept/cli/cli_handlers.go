@@ -5,6 +5,7 @@ package cli
 
 import (
 	"bufio"
+	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -517,6 +518,11 @@ func runRequest(cmd *cobra.Command, args []string) {
 }
 
 func runList(cmd *cobra.Command, args []string) {
+	if listOutput != "table" && listOutput != "json" && listOutput != "csv" {
+		fmt.Fprintf(acceptErrorWriter(cmd), "unsupported acceptance list output %q (use table|json|csv)\n", listOutput)
+		exitFunc(1)
+		return
+	}
 	u := beginAcceptUI(cmd, "list", "wardex-acceptances.yaml")
 	u.report(1, "Loading acceptance configuration", "RUNNING", *acceptCfgPath)
 	cfg, err := config.Load(*acceptCfgPath)
@@ -583,9 +589,20 @@ func runList(cmd *cobra.Command, args []string) {
 	}
 
 	if listOutput == "csv" {
-		fmt.Fprintln(u.output, "ID,CVE,AcceptedBy,ExpiresAt,Status")
+		cw := csv.NewWriter(u.output)
+		if err := cw.Write([]string{"ID", "CVE", "AcceptedBy", "ExpiresAt", "Status"}); err != nil {
+			fmt.Fprintf(u.stderr, "CSV header error: %v\n", err)
+			return
+		}
 		for _, a := range filtered {
-			fmt.Fprintf(u.output, "%s,%s,%s,%s,VALID\n", a.ID, a.CVE, a.AcceptedBy, a.ExpiresAt.Format(time.RFC3339))
+			if err := cw.Write([]string{a.ID, a.CVE, a.AcceptedBy, a.ExpiresAt.Format(time.RFC3339), "VALID"}); err != nil {
+				fmt.Fprintf(u.stderr, "CSV row error: %v\n", err)
+				return
+			}
+		}
+		cw.Flush()
+		if err := cw.Error(); err != nil {
+			fmt.Fprintf(u.stderr, "CSV output error: %v\n", err)
 		}
 		return
 	}

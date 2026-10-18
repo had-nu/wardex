@@ -4,8 +4,11 @@
 package report_test
 
 import (
+	"bytes"
+	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -72,6 +75,29 @@ func TestReportGeneration(t *testing.T) {
 	}
 	if _, err := os.Stat(htmlFile); os.IsNotExist(err) {
 		t.Fatalf("HTML file not created")
+	}
+}
+
+func TestGenerateToUsesInjectedStdout(t *testing.T) {
+	rep := model.GapReport{Summary: model.ExecutiveSummary{GeneratedAt: time.Now()}}
+	var output bytes.Buffer
+	if err := report.GenerateTo(rep, "json", "stdout", 10, &output); err != nil {
+		t.Fatalf("GenerateTo failed: %v", err)
+	}
+	if !strings.Contains(output.String(), `"Summary"`) {
+		t.Fatalf("expected JSON report on injected stdout, got %q", output.String())
+	}
+}
+
+type failingWriter struct{}
+
+func (failingWriter) Write([]byte) (int, error) {
+	return 0, errors.New("injected writer failure")
+}
+
+func TestGenerateToReportsCSVFlushError(t *testing.T) {
+	if err := report.GenerateTo(model.GapReport{}, "csv", "stdout", 10, failingWriter{}); err == nil {
+		t.Fatal("expected CSV writer failure")
 	}
 }
 

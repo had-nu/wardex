@@ -35,6 +35,13 @@ func beginTrustUI(cmd *cobra.Command, command, path string) *trustUI {
 		stderr = cmd.ErrOrStderr()
 	}
 	output := trustCommandOutput(cmd)
+	format := ""
+	switch command {
+	case "list":
+		format = listOutput
+	case "show":
+		format = showOutput
+	}
 	session := ui.SessionView{
 		Title:  "TRUST STORE SESSION",
 		Status: "RUNNING",
@@ -43,14 +50,14 @@ func beginTrustUI(cmd *cobra.Command, command, path string) *trustUI {
 			{Label: "STORE", Value: path},
 		},
 	}
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output, format)
 	progress.Begin(session)
 	return &trustUI{
 		progress:          progress,
 		session:           session,
 		stderr:            stderr,
 		output:            output,
-		resultInteractive: ui.IsTerminal(output),
+		resultInteractive: !ui.IsMachineFormat(format) && ui.IsTerminal(output),
 	}
 }
 

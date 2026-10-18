@@ -6,10 +6,10 @@ package convert
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
-	"github.com/had-nu/wardex/v2/internal/cpl"
 	"github.com/had-nu/wardex/v2/pkg/attest"
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -73,8 +73,9 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 	format, err := peekSbomFormat(inFile)
 	if err != nil {
 		u.report(1, "Detecting SBOM format", "FAILED", err.Error())
-		fmt.Fprintf(os.Stderr, "Error analyzing SBOM file: %v\n", err)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error analyzing SBOM file: %v\n", err)
+		exitFunc(1)
+		return
 	}
 	u.report(1, "Detecting SBOM format", "DONE", format)
 
@@ -90,14 +91,16 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 		vulns, err = sboms.ParseOpenVEX(inFile)
 	default:
 		u.report(2, "Parsing SBOM", "FAILED", "unsupported format")
-		fmt.Fprintf(os.Stderr, "Error: Unknown or unsupported format in %s. Supported formats: CycloneDX 1.5 JSON, SPDX, OpenVEX.\n", inFile)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error: Unknown or unsupported format in %s. Supported formats: CycloneDX 1.5 JSON, SPDX, OpenVEX.\n", inFile)
+		exitFunc(1)
+		return
 	}
 
 	if err != nil {
 		u.report(2, "Parsing SBOM", "FAILED", err.Error())
-		fmt.Fprintf(os.Stderr, "Error parsing SBOM: %v\n", err)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error parsing SBOM: %v\n", err)
+		exitFunc(1)
+		return
 	}
 	u.report(2, "Parsing SBOM", "DONE", fmt.Sprintf("%d vulnerabilities", len(vulns)))
 
@@ -110,8 +113,9 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 	yamlData, err := yaml.Marshal(&out)
 	if err != nil {
 		u.report(3, "Writing converted output", "FAILED", err.Error())
-		fmt.Fprintf(os.Stderr, "Error encoding YAML: %v\n", err)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error encoding YAML: %v\n", err)
+		exitFunc(1)
+		return
 	}
 
 	outputPath := sbomOutFile
@@ -120,10 +124,11 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 	} else {
 		if err := cli.SafeWriteFile(outputPath, yamlData); err != nil {
 			u.report(3, "Writing converted output", "FAILED", err.Error())
-			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
-			os.Exit(1)
+			fmt.Fprintf(commandStderr(cmd), "Error writing output file: %v\n", err)
+			exitFunc(1)
+			return
 		}
-		if !u.progress.Enabled() {
+		if !u.dashboardEnabled() {
 			fmt.Fprintf(commandOutput(cmd), "Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), outputPath)
 		}
 	}
@@ -131,21 +136,25 @@ func runConvertSbom(cmd *cobra.Command, args []string) {
 
 	if sbomAttestKey != "" && outputPath != "stdout" && outputPath != "-" {
 		u.report(4, "Writing tool attestation", "RUNNING", sbomAttestKey)
-		if err := attestSBOM(inFile, outputPath, sbomAttestKey); err != nil {
+		if err := attestSBOM(inFile, outputPath, sbomAttestKey, commandStderr(cmd)); err != nil {
 			u.report(4, "Writing tool attestation", "FAILED", err.Error())
-			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+			fmt.Fprintf(commandStderr(cmd), "[WARN] Attestation failed: %v\n", err)
 		} else {
 			u.report(4, "Writing tool attestation", "DONE", outputPath+".attest")
 		}
 	} else {
 		u.report(4, "Writing tool attestation", "SKIPPED", "not requested")
 	}
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render("sbom/"+format, outputPath, len(out.Vulnerabilities), 0, 0, sbomAttestKey != "")
 	}
 }
 
-func attestSBOM(inputFile, outputFile, keyPath string) error {
+func attestSBOM(inputFile, outputFile, keyPath string, warningWriters ...io.Writer) error {
+	warnings := io.Writer(os.Stderr)
+	if len(warningWriters) > 0 && warningWriters[0] != nil {
+		warnings = warningWriters[0]
+	}
 	inHash, err := attest.FileHash(inputFile)
 	if err != nil {
 		return fmt.Errorf("hash input: %w", err)
@@ -176,7 +185,7 @@ func attestSBOM(inputFile, outputFile, keyPath string) error {
 	}
 
 	attestPath := outputFile + ".attest"
-	out, err := yaml.Marshal(signed)
+	out, err := signed.MarshalAttestationCBOR()
 	if err != nil {
 		return fmt.Errorf("marshal attestation: %w", err)
 	}
@@ -184,11 +193,6 @@ func attestSBOM(inputFile, outputFile, keyPath string) error {
 		return fmt.Errorf("write attestation: %w", err)
 	}
 
-	cfgHash, err := cpl.ComputeConfigHash(outHash, cpl.AlgoSHA256)
-	if err == nil {
-		a.SetConfigHash(cfgHash)
-	}
-
-	fmt.Fprintf(os.Stderr, "[PROVENANCE] Signed attestation written to %s\n", attestPath)
+	fmt.Fprintf(warnings, "[PROVENANCE] Signed attestation written to %s\n", attestPath)
 	return nil
 }

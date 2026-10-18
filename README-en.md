@@ -240,7 +240,7 @@ When the destination is an interactive terminal, the evaluation commands, `art14
 - focused compliance-gap or release-gate decision cards;
 - coverage, severity, and release-gate summary.
 
-JSON, CSV, pipes, files, and CI output remain clean and undecorated. Sensitive fields are displayed as `[REDACTED]`. `audit export` remains machine-oriented and streaming to preserve JSONL/CSV and pagination metadata.
+JSON, CSV, pipes, files, and CI output remain clean and undecorated. The shared renderer also controls tables, logs, and ASCII/Unicode profiles, sanitizes control characters, and masks sensitive fields as `[REDACTED]`. `audit export` remains machine-oriented and streaming to preserve JSONL/CSV and pagination metadata.
 
 Environment controls:
 

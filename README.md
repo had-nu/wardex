@@ -257,7 +257,7 @@ Em terminais interativos, os comandos de avaliação, `art14`, `simulate`, `keyg
 - cards dos gaps/decisões mais relevantes;
 - resumo de coverage, severidade e decisão do release gate.
 
-A interface é ativada automaticamente apenas quando o destino é um TTY. Saídas JSON, CSV, pipes, ficheiros e CI permanecem limpas e sem decoração. Campos potencialmente sensíveis são apresentados como `[REDACTED]`. O `audit export` mantém o seu formato de streaming machine-oriented para preservar JSONL/CSV e metadados de paginação.
+A interface é ativada automaticamente apenas quando o destino é um TTY. Saídas JSON, CSV, pipes, ficheiros e CI permanecem limpas e sem decoração. O renderer partilhado também controla tabelas, logs e profiles ASCII/Unicode, sanitiza caracteres de controlo e mascara campos sensíveis como `[REDACTED]`. O `audit export` mantém o seu formato de streaming machine-oriented para preservar JSONL/CSV e metadados de paginação.
 
 Variáveis de ambiente reconhecidas:
 

@@ -79,7 +79,18 @@ func TestProfileEnvironmentMatrix(t *testing.T) {
 		{name: "ascii-locale", env: map[string]string{"LANG": "C"}, wantUnicode: false},
 		{name: "dumb-terminal", env: map[string]string{"TERM": "dumb", "LANG": "C.UTF-8"}, wantUnicode: false},
 		{name: "github-actions", env: map[string]string{"GITHUB_ACTIONS": "true"}, wantUnicode: true, wantCI: true},
+		{name: "gitlab", env: map[string]string{"GITLAB_CI": "true"}, wantUnicode: true, wantCI: true},
+		{name: "azure-pipelines", env: map[string]string{"TF_BUILD": "True"}, wantUnicode: true, wantCI: true},
+		{name: "circleci", env: map[string]string{"CIRCLECI": "true"}, wantUnicode: true, wantCI: true},
+		{name: "travis", env: map[string]string{"TRAVIS": "true"}, wantUnicode: true, wantCI: true},
+		{name: "buildkite", env: map[string]string{"BUILDKITE": "true"}, wantUnicode: true, wantCI: true},
+		{name: "aws-codebuild", env: map[string]string{"CODEBUILD_BUILD_ARN": "arn:aws:codebuild:..."}, wantUnicode: true, wantCI: true},
+		{name: "teamcity", env: map[string]string{"TEAMCITY_VERSION": "2026.1"}, wantUnicode: true, wantCI: true},
+		{name: "jenkins", env: map[string]string{"JENKINS_URL": "https://ci.example.test/"}, wantUnicode: true, wantCI: true},
+		{name: "bitbucket", env: map[string]string{"BITBUCKET_BUILD_NUMBER": "42"}, wantUnicode: true, wantCI: true},
+		{name: "drone", env: map[string]string{"DRONE": "true"}, wantUnicode: true, wantCI: true},
 		{name: "ci-disabled", env: map[string]string{"CI": "false", "LANG": "C.UTF-8"}, wantUnicode: true, wantCI: false},
+		{name: "provider-disabled", env: map[string]string{"CIRCLECI": "false", "TRAVIS": "0"}, wantUnicode: true, wantCI: false},
 	}
 
 	for _, tc := range tests {

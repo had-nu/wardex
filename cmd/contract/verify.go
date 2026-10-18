@@ -32,7 +32,7 @@ since it was last reviewed or signed.`,
 
 func init() {
 	VerifyCmd.Flags().StringVar(&contractFile, "file", "", "Path to contract file (required)")
-	VerifyCmd.Flags().StringVar(&contractHash, "hash", "", "Expected SHA-256 hash (optional — if provided, verifies match)")
+	VerifyCmd.Flags().StringVar(&contractHash, "hash", "", "Expected SHA-256 hash (optional - if provided, verifies match)")
 	_ = VerifyCmd.MarkFlagRequired("file")
 }
 

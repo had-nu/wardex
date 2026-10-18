@@ -25,6 +25,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Result detection for the `auth`, `contract`, `policy`, `state`, `gate` and
   `accept` paths now preserves legacy stdout when stdout is redirected; command
   exit behavior remains unchanged.
+- Hardened the shared UI primitives: `Table` and the text logger now consume
+  the detected profile, support `NO_COLOR`/`TERM=dumb`/expanded CI detection,
+  and sanitize terminal control sequences and display values.
+- Added writer-injectable structured report output and CSV escaping; redirected
+  `art14 show` now preserves JSON on stdout without decorating the machine
+  output, while an interactive TTY retains the detail dashboard.
+- Added final outcome dashboards for early gate failures, a non-interactive
+  guard for Article 14 prompts, and explicit output-format validation.
+- Standardized CLI-generated tool attestations on deterministic CBOR.
+- Made progress and result dashboards conditional on both TTY outputs and
+  human-oriented formats; `config hash` and machine-oriented help/export paths
+  now remain free of session decoration.
+- Made provenance noop/dry-run results explicit instead of reporting zero-value
+  health or an anchored block, and corrected Article 14 intermediate/final
+  deadline and integrity-failure outcomes.
+- Hardened audit CSV JSON decoding, report CSV flush/error propagation, format
+  normalization, and injectable audit-link warning output.
 - Added deterministic ASCII golden tests for the terminal renderer, dashboard,
   progress, and narrow layouts, plus terminal-profile and pipe-format matrix
   coverage.
@@ -37,6 +54,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   lettering into the image.
 - Added light/dark shield variants, refreshed the Open Graph image and release
   banner, and documented the system in `doc/architecture/BRANDING.md`.
+
+### Fixed
+
+- Report titles now name the framework the run actually evaluated. Every report
+  was titled "ISO 27001:2022" regardless of `--framework`, because the gap
+  report carried no framework field. `ExecutiveSummary` now records the
+  framework key and its catalogue title, and the Markdown and HTML generators
+  derive the heading from it. A run with no recorded framework produces an
+  untitled heading and says so in the metadata line, rather than naming a
+  framework it did not use.
+- Made the accepted report formats a single source of truth in `pkg/report`.
+  Flag help, CLI validation and the format list were duplicated across five
+  sites and could disagree. `html` is now selectable from the CLI, matching the
+  generator and its existing tests, which previously had no CLI path at all.
+- Fixed a silent failure in the gate output path. The structured-output switch
+  had no default arm, so a format that passed validation but had no
+  implementation would emit an empty file. It now fails with a diagnostic.
+- Unified the banner and progress format classifiers. `main.go` carried a
+  private format list alongside `ui.IsMachineFormat`, so `html` suppressed
+  progress but still printed a banner. Both now delegate to one policy.
+- Corrected a misleading test comment in `cmd/provenance` that claimed the
+  `--input` flag bypasses path validation. It does not; the test writes under
+  the working directory because the path guard confines reads to the workspace.
+- Replaced English error messages in the framework catalogue loader, which were
+  emitted in Portuguese and hard-coded the supported list.
+- Bounded the remote trust store read. `pkg/trust` fetched through
+  `http.DefaultClient` with no timeout, and the caller context originates from
+  `rootCmd.Execute()`, which supplies a context with no deadline. An
+  unresponsive trust store endpoint could therefore stall `evaluate` and
+  `seal` indefinitely. The read now applies a 10s deadline inside
+  `fetchRemote`, backed by a dedicated client with a transport-level ceiling.
+  The 1MB response cap is unchanged.
+- Made release builds reproducible. Release builds now pass `-trimpath` and
+  `-buildvcs=true`, and clear the build ID via `-ldflags="-buildid="`; the
+  Dockerfile and the Makefile target clear the build ID too. Two builds of the
+  same tree from different paths now produce identical SHA-256 digests, where
+  the previous flags produced different digests.
+- Added `tools/verify-reproducible` and a CI job so the property is enforced
+  rather than observed once. The tool reads its build settings from
+  `.goreleaser.yaml` instead of repeating them, builds the revision in separate
+  git worktrees, and fails when the digests diverge. Removing `-trimpath` from
+  the release config makes the check fail, which is how it was validated.
+
+### Tests
+
+- Added exhaustive coverage for the terminal status vocabulary. The renderer
+  accepted roughly forty-seven status strings, all of which resolved through
+  one untested switch; a table test now pins every string to its semantic
+  colour, including the two spellings of the initialised state and the
+  deliberately neutral skipped states.
+- Rewrote the exit code contract tests to derive the declared constants from
+  the source instead of hand-copied lists. The previous invariants covered six
+  of ten codes and their expected count was pinned to six, so moving
+  `IntegrityFailure` onto a POSIX-reserved code passed the entire suite.
+  Invariants now run over every declared constant and fail when a constant is
+  added without a contract entry.
+- Added regression tests for the report framework title across every supported
+  framework, asserting that a non-ISO run never claims ISO 27001.
+- Added tests that the banner classifier and the format policy agree, and that
+  the advertised format list stays truthful.
 
 ## [2.6.0] — 2026-09-15
 

@@ -49,7 +49,8 @@ func init() {
 
 func runKeygen(cmd *cobra.Command, _ []string) error {
 	stderr := cmd.ErrOrStderr()
-	progress := ui.NewTerminalProgress(stderr)
+	output := cmd.OutOrStdout()
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(buildKeygenSession(outPath, encrypt, force))
 	reportProgress := func(number int, name, status, detail string) {
 		progress.Report(ui.PhaseEvent{Number: number, Name: name, Status: status, Detail: detail})
@@ -91,16 +92,17 @@ func runKeygen(cmd *cobra.Command, _ []string) error {
 
 	w := keygenCommandOutput(cmd)
 	if encrypt {
-		fmt.Fprintln(w, "Encrypted keypair generated (envelope v1 — Argon2id + AES-256-GCM).")
+		fmt.Fprintln(w, "Encrypted keypair generated (envelope v1 - Argon2id + AES-256-GCM).")
 	} else {
 		fmt.Fprintln(w, "Keypair generated.")
 	}
 	privateLabel, publicLabel := "Private key:", "Public key:"
-	if ui.IsTerminal(w) {
+	profile := ui.DetectProfile(w)
+	if profile.Interactive && profile.ColorDepth != ui.ColorNone {
 		privateLabel = ui.Colorize(privateLabel, ui.Gray)
 		publicLabel = ui.Colorize(publicLabel, ui.Gray)
 	}
-	fmt.Fprintf(w, "  %s %s     (mode 0400 — do not copy)\n", privateLabel, outPath)
+	fmt.Fprintf(w, "  %s %s     (mode 0400 - do not copy)\n", privateLabel, outPath)
 	fmt.Fprintf(w, "  %s %s.pub (send this to your admin)\n\n", publicLabel, outPath)
 	fmt.Fprintln(w, "This keypair has no role until an admin adds it to the trust store.")
 	return nil

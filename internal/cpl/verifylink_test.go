@@ -1,6 +1,8 @@
 package cpl_test
 
 import (
+	"bytes"
+	"strings"
 	"testing"
 
 	"github.com/had-nu/wardex/v2/internal/cpl"
@@ -130,6 +132,25 @@ func TestVerifyLinkLegacyEntryCountsAsV1(t *testing.T) {
 	}
 	if results[0].Status != cpl.StatusSchemaVersion {
 		t.Errorf("entrada legacy vs esperado v2 deveria reportar SCHEMA_VERSION: %+v", results[0])
+	}
+}
+
+func TestVerifyLinkWarningsUseInjectedWriter(t *testing.T) {
+	var warning bytes.Buffer
+	_, err := cpl.VerifyLinkWithSchemaVersionWriter(
+		[]byte(`{"ts":"2026-06-20T10:00:00Z","event":"gate.evaluated","config_hash":""}`+"\n"),
+		".",
+		0,
+		&warning,
+	)
+	if err != nil {
+		t.Fatalf("verify-link: %v", err)
+	}
+	if !strings.Contains(warning.String(), "empty config hash") {
+		t.Fatalf("expected warning in injected writer, got %q", warning.String())
+	}
+	if strings.Contains(warning.String(), "\x1b[") {
+		t.Fatalf("warning contains ANSI: %q", warning.String())
 	}
 }
 

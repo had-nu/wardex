@@ -140,13 +140,13 @@ func runChainSeal(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("writing chain seal: %w", err)
 	}
 	u.report(4, "Writing chain seal", "DONE", chainOutput)
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render(chainOutput, len(artifacts), chainHashHex)
 		return nil
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), "Chain seal written to: %s\n", chainOutput)
-	fmt.Fprintf(cmd.OutOrStdout(), "  Total files:  %d\n", len(artifacts))
-	fmt.Fprintf(cmd.OutOrStdout(), "  Chain hash:   %s\n", chainHashHex[:16]+"...")
+	fmt.Fprintf(u.output, "Chain seal written to: %s\n", chainOutput)
+	fmt.Fprintf(u.output, "  Total files:  %d\n", len(artifacts))
+	fmt.Fprintf(u.output, "  Chain hash:   %s\n", chainHashHex[:16]+"...")
 	return nil
 }

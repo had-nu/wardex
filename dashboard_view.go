@@ -123,6 +123,28 @@ func buildEvaluationDashboard(opts orchestrator.EvaluationOptions, result *orche
 	return dashboard
 }
 
+func buildEvaluationErrorDashboard(opts orchestrator.EvaluationOptions, detail string) ui.Dashboard {
+	session := buildEvaluationSession(opts)
+	session.Status = "FAILED"
+	return ui.Dashboard{
+		Session: session,
+		Findings: []ui.FindingView{{
+			Kind:     "EVALUATION ERROR",
+			Severity: "HIGH",
+			Title:    "FAILED",
+			Fields: []ui.Field{
+				{Label: "DETAIL", Value: detail},
+			},
+		}},
+		Summary: ui.SummaryView{
+			Decision: "ERROR",
+			Fields: []ui.Field{
+				{Label: "DETAIL", Value: detail},
+			},
+		},
+	}
+}
+
 func buildFindingView(finding model.Finding, framework string) ui.FindingView {
 	title := finding.Control.Name
 	if title == "" {

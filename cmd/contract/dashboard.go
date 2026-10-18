@@ -34,7 +34,7 @@ func beginContractUI(cmd *cobra.Command, path string) *contractUI {
 		stderr = cmd.ErrOrStderr()
 	}
 	output := contractCommandOutput(cmd)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(ui.SessionView{
 		Title:  "CONTRACT INTEGRITY SESSION",
 		Status: "RUNNING",

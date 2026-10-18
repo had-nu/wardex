@@ -89,6 +89,10 @@ func Analyze(controls []model.ExistingControl, framework string) (*AssessmentRes
 	summary := buildSummary(cat, findings)
 	posture := an.AssessPosture(findings)
 
+	displayName, _ := catalog.DisplayName(framework)
+	summary.Framework = framework
+	summary.FrameworkName = displayName
+
 	return &AssessmentResult{
 		Summary:  summary,
 		Findings: findings,
@@ -142,6 +146,10 @@ func AnalyzeWithConfig(controls []model.ExistingControl, framework string, opts 
 
 	summary := buildSummary(cat, findings)
 	posture := an.AssessPosture(findings)
+
+	displayName, _ := catalog.DisplayName(framework)
+	summary.Framework = framework
+	summary.FrameworkName = displayName
 
 	return &AssessmentResult{
 		Summary:  summary,

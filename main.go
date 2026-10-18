@@ -5,7 +5,9 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
+	"strings"
 
 	"github.com/had-nu/wardex/v2/cmd/aggregate"
 	art14cmd "github.com/had-nu/wardex/v2/cmd/art14"
@@ -29,6 +31,7 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/accept/cli"
 	enrichCli "github.com/had-nu/wardex/v2/pkg/enrich/cli"
 	"github.com/had-nu/wardex/v2/pkg/orchestrator"
+	"github.com/had-nu/wardex/v2/pkg/report"
 	"github.com/had-nu/wardex/v2/pkg/ui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -36,6 +39,7 @@ import (
 
 var (
 	Version       = "2.6.0"
+	exitFunc      = os.Exit
 	configPath    string
 	outputFormat  string
 	outFile       string
@@ -137,9 +141,14 @@ func groupedHelpFunc(cmd *cobra.Command, args []string) {
 func init() {
 	defaultHelpFunc = rootCmd.HelpFunc()
 	rootCmd.SetHelpFunc(groupedHelpFunc)
+	rootCmd.PersistentPreRun = func(cmd *cobra.Command, _ []string) {
+		if shouldPrintCommandBanner(cmd) {
+			_ = ui.PrintBannerTo(cmd.ErrOrStderr(), Version)
+		}
+	}
 
 	rootCmd.PersistentFlags().StringVar(&configPath, "config", "./wardex-config.yaml", "Path to wardex-config.yaml")
-	rootCmd.Flags().StringVarP(&outputFormat, "output", "o", "markdown", "Output format: markdown|json|csv")
+	rootCmd.Flags().StringVarP(&outputFormat, "output", "o", "markdown", "Output format: "+report.FormatList())
 	rootCmd.Flags().StringVar(&outFile, "out-file", "stdout", "Output file destination")
 	rootCmd.Flags().StringVar(&gateFile, "gate", "", "Vulnerabilities file for release gate")
 	rootCmd.Flags().StringVar(&gateMode, "gate-mode", "any", "Gate mode: any|aggregate")
@@ -177,17 +186,68 @@ func init() {
 	rootCmd.AddCommand(provenancecmd.ProvenanceCmd)
 }
 
+func commandFlagValue(cmd *cobra.Command, name string) string {
+	if cmd == nil {
+		return ""
+	}
+	if flag := cmd.Flags().Lookup(name); flag != nil {
+		return flag.Value.String()
+	}
+	if flag := cmd.InheritedFlags().Lookup(name); flag != nil {
+		return flag.Value.String()
+	}
+	return ""
+}
+
+func machineCommandPath(path string) bool {
+	switch strings.TrimSpace(path) {
+	case "wardex completion", "wardex help", "wardex audit export", "wardex audit verify-link", "wardex config hash", "wardex provenance attest":
+		return true
+	default:
+		return false
+	}
+}
+
+// machineOutputValue reports whether a flag value selects a format whose
+// stdout must stay free of human decoration. It delegates to ui.IsMachineFormat
+// so the banner and the progress reporter cannot disagree about a format.
+func machineOutputValue(value string) bool {
+	return ui.IsMachineFormat(value)
+}
+
+func shouldPrintCommandBanner(cmd *cobra.Command) bool {
+	if cmd == nil || machineCommandPath(cmd.CommandPath()) {
+		return false
+	}
+	for _, name := range []string{"output", "format", "output-format", "report-format"} {
+		if machineOutputValue(commandFlagValue(cmd, name)) {
+			return false
+		}
+	}
+	if destination := strings.ToLower(strings.TrimSpace(commandFlagValue(cmd, "out-file"))); destination != "" && destination != "stdout" {
+		return false
+	}
+	// A banner is a human-session decoration. It must not appear when either
+	// stream is a pipe/file, even if the other stream is a terminal.
+	return ui.IsTerminal(cmd.OutOrStdout()) && ui.IsTerminal(cmd.ErrOrStderr())
+}
+
 func main() {
-	// Keep the human-facing header on stderr so JSON/CSV stdout remains valid.
-	_ = ui.PrintBannerTo(os.Stderr, Version)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		exitFunc(1)
 	}
 }
 
 func runWardex(cmd *cobra.Command, args []string) {
+	outputFormat = strings.ToLower(strings.TrimSpace(outputFormat))
+	if !report.IsSupportedFormat(outputFormat) {
+		fmt.Fprintf(cmd.ErrOrStderr(), "Error: unsupported output format %q (use %s)\n", outputFormat, report.FormatList())
+		exitFunc(1)
+		return
+	}
 	stderr := cmd.ErrOrStderr()
+	output := cmd.OutOrStdout()
 	opts := orchestrator.EvaluationOptions{
 		ConfigPath:    configPath,
 		ProfileName:   profileName,
@@ -205,8 +265,12 @@ func runWardex(cmd *cobra.Command, args []string) {
 		EPSSEnrich:    epssEnrich,
 		Logger:        ui.Default().Logger,
 		Stderr:        stderr,
+		Stdout:        output,
 	}
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgress(io.Discard)
+	if (outFile == "" || outFile == "stdout") && !ui.IsMachineFormat(outputFormat) {
+		progress = ui.NewTerminalProgressForOutput(stderr, output)
+	}
 	progress.Begin(buildEvaluationSession(opts))
 	opts.Progress = progress
 
@@ -214,13 +278,16 @@ func runWardex(cmd *cobra.Command, args []string) {
 	result, err := pipeline.Run(cmd.Context(), opts)
 	if err != nil {
 		fmt.Fprintf(stderr, "Error: %v\n", err)
-		os.Exit(1)
+		dashboard := buildEvaluationErrorDashboard(opts, err.Error())
+		if progress.Enabled() {
+			_ = ui.RenderResults(stderr, dashboard)
+		}
+		exitFunc(1)
+		return
 	}
 	dashboard := buildEvaluationDashboard(opts, result)
 	if progress.Enabled() {
 		_ = ui.RenderResults(stderr, dashboard)
-	} else {
-		_ = ui.RenderDashboard(stderr, dashboard)
 	}
-	os.Exit(result.ExitCode)
+	exitFunc(result.ExitCode)
 }

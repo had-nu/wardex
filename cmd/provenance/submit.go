@@ -44,18 +44,31 @@ var submitCmd = &cobra.Command{
 			u.report(3, "Submitting provenance hash", "FAILED", err.Error())
 			return fmt.Errorf("submit failed: %w", err)
 		}
-		u.report(3, "Submitting provenance hash", "DONE", result.Label)
-		if u.progress.Enabled() {
-			u.render(buildProvenanceActionDashboard("SUBMITTED", []ui.Field{
+		status := "pending"
+		command := "SUBMITTED"
+		if result.DryRun {
+			u.report(3, "Submitting provenance hash", "SKIPPED", "dry-run backend")
+			status = "dry-run (not anchored)"
+			command = "DRY RUN"
+		} else {
+			u.report(3, "Submitting provenance hash", "DONE", result.Label)
+		}
+		if u.dashboardEnabled() {
+			u.render(buildProvenanceActionDashboard(command, []ui.Field{
 				{Label: "HASH", Value: args[0]},
 				{Label: "LABEL", Value: result.Label},
-				{Label: "STATUS", Value: "pending"},
+				{Label: "STATUS", Value: status},
 			}))
 			return nil
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), "Hash submitted for anchoring")
-		fmt.Fprintf(cmd.OutOrStdout(), "  Label:     %s\n", result.Label)
-		fmt.Fprintln(cmd.OutOrStdout(), "  Status:    pending")
+		if result.DryRun {
+			fmt.Fprintln(u.output, "Dry-run backend: hash was not persisted or anchored")
+			fmt.Fprintf(u.output, "  Label:     %s\n", result.Label)
+			return nil
+		}
+		fmt.Fprintln(u.output, "Hash submitted for anchoring")
+		fmt.Fprintf(u.output, "  Label:     %s\n", result.Label)
+		fmt.Fprintf(u.output, "  Status:    %s\n", status)
 		return nil
 	},
 }

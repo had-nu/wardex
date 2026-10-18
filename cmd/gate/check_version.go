@@ -23,15 +23,15 @@ so release jobs never seal the same version twice.
 
 The version registry (<audit-log>.version-registry.json) is a derived index:
 if it is missing, stale or corrupt it is rebuilt from the chain, which is the
-source of truth. A missing index never blocks — only chain evidence decides.
+source of truth. A missing index never blocks - only chain evidence decides.
 
 Examples:
   wardex gate check-version --audit-log wardex-gate-audit.log --version 2.6.0
 
 Exit codes:
-   0 — version not sealed yet
-  13 — version already sealed (DuplicateRelease)
-   1 — operational error`,
+   0 - version not sealed yet
+  13 - version already sealed (DuplicateRelease)
+   1 - operational error`,
 	Args: cobra.NoArgs,
 	RunE: runCheckVersion,
 }
@@ -91,7 +91,7 @@ func runCheckVersion(cmd *cobra.Command, _ []string) error {
 			fmt.Fprintf(u.output, "  policy_ref: %s\n  sealed_at:  %s\n  entry_hash: %s\n",
 				info.PolicyRef, info.SealedAt.UTC().Format("2006-01-02T15:04:05Z"), info.EntryHash)
 		}
-		fmt.Fprintf(u.stderr, "Error: release version %s already sealed — refusing duplicate release\n", checkVersionVersion)
+		fmt.Fprintf(u.stderr, "Error: release version %s already sealed - refusing duplicate release\n", checkVersionVersion)
 		exitFunc(exitcodes.DuplicateRelease)
 		return nil
 	}

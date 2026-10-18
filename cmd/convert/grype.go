@@ -9,7 +9,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/had-nu/wardex/v2/internal/cpl"
 	"github.com/had-nu/wardex/v2/pkg/attest"
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -61,8 +60,9 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 	safePathStr, err := cli.SafePath(inFile)
 	if err != nil {
 		u.report(1, "Resolving input path", "FAILED", err.Error())
-		fmt.Fprintf(os.Stderr, "Error resolving safe path for input file: %v\n", err)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error resolving safe path for input file: %v\n", err)
+		exitFunc(1)
+		return
 	}
 	u.report(1, "Resolving input path", "DONE", safePathStr)
 
@@ -70,24 +70,27 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 	f, err := os.Open(safePathStr) // #nosec G304
 	if err != nil {
 		u.report(2, "Reading Grype report", "FAILED", err.Error())
-		fmt.Fprintf(os.Stderr, "Error opening Grype JSON file: %v\n", err)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error opening Grype JSON file: %v\n", err)
+		exitFunc(1)
+		return
 	}
 	defer func() { _ = f.Close() }()
 
 	data, err := io.ReadAll(f)
 	if err != nil {
 		u.report(2, "Reading Grype report", "FAILED", err.Error())
-		fmt.Fprintf(os.Stderr, "Error reading Grype JSON: %v\n", err)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error reading Grype JSON: %v\n", err)
+		exitFunc(1)
+		return
 	}
 	u.report(2, "Reading Grype report", "DONE", fmt.Sprintf("%d bytes", len(data)))
 
 	var report GrypeReport
 	if err := json.Unmarshal(data, &report); err != nil {
 		u.report(3, "Parsing Grype report", "FAILED", err.Error())
-		fmt.Fprintf(os.Stderr, "Error parsing Grype JSON: %v\n", err)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error parsing Grype JSON: %v\n", err)
+		exitFunc(1)
+		return
 	}
 	u.report(3, "Parsing Grype report", "DONE", fmt.Sprintf("%d match(es)", len(report.Matches)))
 
@@ -149,14 +152,14 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 	if kevCataloguePath != "" {
 		// Check catalogue staleness
 		if warn := CheckKEVAge(kevCataloguePath, KEVMaxAgeDays); warn != "" {
-			fmt.Fprintln(os.Stderr, warn)
+			fmt.Fprintln(commandStderr(cmd), warn)
 		}
 
 		catalogue, err := LoadKEVCatalogue(kevCataloguePath)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "[WARN] Failed to load KEV catalogue: %v. Proceeding without KEV correlation.\n", err)
+			fmt.Fprintf(commandStderr(cmd), "[WARN] Failed to load KEV catalogue: %v. Proceeding without KEV correlation.\n", err)
 		} else {
-			out.Vulnerabilities = CorrelateKEV(out.Vulnerabilities, catalogue)
+			out.Vulnerabilities = CorrelateKEVWithWriter(out.Vulnerabilities, catalogue, commandStderr(cmd))
 			var exploited int
 			for _, v := range out.Vulnerabilities {
 				if v.ActivelyExploited {
@@ -164,58 +167,64 @@ func runConvertGrype(cmd *cobra.Command, args []string) {
 				}
 			}
 			if exploited > 0 {
-				fmt.Fprintf(os.Stderr, "[WARN] %d CVE(s) found in CISA KEV catalogue and marked actively_exploited=true.\n", exploited)
+				fmt.Fprintf(commandStderr(cmd), "[WARN] %d CVE(s) found in CISA KEV catalogue and marked actively_exploited=true.\n", exploited)
 			}
 		}
 	} else {
-		fmt.Fprintf(os.Stderr,
+		fmt.Fprintf(commandStderr(cmd),
 			"[INFO] No KEV catalogue provided. To correlate against CISA Known Exploited Vulnerabilities, download it with:\n"+
 				"       curl -sSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json -o kev-catalogue.json\n"+
 				"       Then re-run with: wardex convert grype %s --kev kev-catalogue.json\n", inFile)
 	}
 
 	if skippedEmpty > 0 || skippedDuplicate > 0 {
-		fmt.Fprintf(os.Stderr, "[INFO] Skipped %d CVEs (empty ID: %d, duplicate: %d)\n", skippedEmpty+skippedDuplicate, skippedEmpty, skippedDuplicate)
+		fmt.Fprintf(commandStderr(cmd), "[INFO] Skipped %d CVEs (empty ID: %d, duplicate: %d)\n", skippedEmpty+skippedDuplicate, skippedEmpty, skippedDuplicate)
 	}
 
 	u.report(4, "Writing converted output", "RUNNING", outputPath)
 	yamlData, err := yaml.Marshal(&out)
 	if err != nil {
 		u.report(4, "Writing converted output", "FAILED", err.Error())
-		fmt.Fprintf(os.Stderr, "Error encoding YAML: %v\n", err)
-		os.Exit(1)
+		fmt.Fprintf(commandStderr(cmd), "Error encoding YAML: %v\n", err)
+		exitFunc(1)
+		return
 	}
 
 	if outputPath == "stdout" || outputPath == "-" {
-		fmt.Print(string(yamlData))
+		_, _ = fmt.Fprint(commandOutput(cmd), string(yamlData))
 	} else {
 		if err := cli.SafeWriteFile(outputPath, yamlData); err != nil {
 			u.report(4, "Writing converted output", "FAILED", err.Error())
-			fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
-			os.Exit(1)
+			fmt.Fprintf(commandStderr(cmd), "Error writing output file: %v\n", err)
+			exitFunc(1)
+			return
 		}
-		if !u.progress.Enabled() {
-			fmt.Printf("Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), outputPath)
+		if !u.dashboardEnabled() {
+			_, _ = fmt.Fprintf(commandOutput(cmd), "Successfully converted %d vulnerabilities to %s\n", len(out.Vulnerabilities), outputPath)
 		}
 	}
 	u.report(4, "Writing converted output", "DONE", outputPath)
 
 	if attestKeyPath != "" && outputPath != "stdout" && outputPath != "-" {
-		if err := attestOutput("wardex-convert/grype", inFile, outputPath, attestKeyPath); err != nil {
+		if err := attestOutput("wardex-convert/grype", inFile, outputPath, attestKeyPath, commandStderr(cmd)); err != nil {
 			u.report(5, "Writing tool attestation", "FAILED", err.Error())
-			fmt.Fprintf(os.Stderr, "[WARN] Attestation failed: %v\n", err)
+			fmt.Fprintf(commandStderr(cmd), "[WARN] Attestation failed: %v\n", err)
 		} else {
 			u.report(5, "Writing tool attestation", "DONE", outputPath+".attest")
 		}
 	} else {
 		u.report(5, "Writing tool attestation", "SKIPPED", "not requested")
 	}
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render("grype", outputPath, len(out.Vulnerabilities), skippedEmpty+skippedDuplicate, exploitedCount(out.Vulnerabilities), attestKeyPath != "")
 	}
 }
 
-func attestOutput(toolName, inputFile, outputFile, keyPath string) error {
+func attestOutput(toolName, inputFile, outputFile, keyPath string, warningWriters ...io.Writer) error {
+	warnings := io.Writer(os.Stderr)
+	if len(warningWriters) > 0 && warningWriters[0] != nil {
+		warnings = warningWriters[0]
+	}
 	inHash, err := attest.FileHash(inputFile)
 	if err != nil {
 		return fmt.Errorf("hash input: %w", err)
@@ -247,7 +256,7 @@ func attestOutput(toolName, inputFile, outputFile, keyPath string) error {
 	}
 
 	attestPath := outputFile + ".attest"
-	out, err := yaml.Marshal(signed)
+	out, err := signed.MarshalAttestationCBOR()
 	if err != nil {
 		return fmt.Errorf("marshal attestation: %w", err)
 	}
@@ -255,11 +264,6 @@ func attestOutput(toolName, inputFile, outputFile, keyPath string) error {
 		return fmt.Errorf("write attestation: %w", err)
 	}
 
-	cfgHash, err := cpl.ComputeConfigHash(outHash, cpl.AlgoSHA256)
-	if err == nil {
-		a.SetConfigHash(cfgHash)
-	}
-
-	fmt.Fprintf(os.Stderr, "[PROVENANCE] Signed attestation written to %s\n", attestPath)
+	fmt.Fprintf(warnings, "[PROVENANCE] Signed attestation written to %s\n", attestPath)
 	return nil
 }

@@ -34,7 +34,7 @@ func beginAuthUI(cmd *cobra.Command, command, detail string) *authUI {
 		stderr = cmd.ErrOrStderr()
 	}
 	output := authCommandOutput(cmd)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output)
 	progress.Begin(ui.SessionView{
 		Title:  "AUTHENTICATION SESSION",
 		Status: "RUNNING",
