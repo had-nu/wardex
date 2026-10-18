@@ -38,7 +38,7 @@ import (
 )
 
 var (
-	Version       = "2.6.0"
+	Version       = "2.6.1"
 	exitFunc      = os.Exit
 	configPath    string
 	outputFormat  string

@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.1] — 2026-10-18
+
+> This release is a patch in name. It carries the terminal UI work merged after
+> `v2.6.0`, which adds dashboard output where several commands previously printed
+> none. Under strict Semantic Versioning that is additive and would be `2.7.0`.
+> It is released as `2.6.1` because no command, flag or output field changed
+> shape — the difference is presentation — and because downstream automation
+> pins this series. If you depend on the exact output of a command, read
+> "Changed — Terminal UI" below before upgrading.
+
 ### Changed — Terminal UI
 
 - Added capability-aware terminal rendering with truecolor/ANSI/plain fallbacks,

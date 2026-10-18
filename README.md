@@ -21,7 +21,7 @@
 
 </div>
 
-> **Release actual:** `v2.6.0` · Go `1.27` · configuração schema `2`
+> **Release actual:** `v2.6.1` · Go `1.27` · configuração schema `2`
 
 > [!IMPORTANT]
 > **CRA Article 14 (disponível desde v2.0; mantido em v2.6.0):** As obrigações de notificação por exploração activa do Cyber Resilience Act entram em vigor em setembro de 2026. O caminho actual correlaciona o catálogo CISA KEV, usa o exit code `12`, assina o artefacto com HMAC-SHA256 e regista os três prazos regulatórios. Este caminho não pode ser substituído por aceitações de risco.
@@ -72,9 +72,21 @@ wardex audit export --audit-log wardex-gate-audit.log --format jsonl --limit 500
 
 ---
 
-## What's New — v2.6.0 (2026-09-15)
+## What's New — v2.6.1 (2026-10-18)
 
-A linha actual é a **v2.6.0** e mantém compatibilidade com os formatos legados.
+A linha actual é a **v2.6.1** e mantém compatibilidade com os formatos legados.
+
+**Relatórios determinísticos e limites de saída máquina:**
+- `wardex assess` produz o mesmo relatório para a mesma evidência. Quatro listas
+  passaram a ordenação explícita, porque eram construídas percorrendo um mapa e o
+  Go randomiza a ordem de iteração de mapas. Isto affectava a comparação entre
+  execuções que sustenta a avaliação de eficácia.
+- `wardex completion <shell>` já não imprime o banner: o classificador comparava o
+  caminho do comando por igualdade e nunca coincidia com o subcomando.
+- `tools/check-attribution` falha um pull request que acrescente um trailer
+  `Co-authored-by` a nomear um assistente. `CONTRIBUTING.md` declara que um
+  trailer é atribuição e não autorização, e que o histórico não se reescreve para
+  remover um.
 
 **Cadeia CPL e provenance (P0/L1/L4/L5):**
 - `config_schema_version: 2` e `cpl_schema_version` explícitos; a cadeia usa
@@ -166,7 +178,7 @@ wardex assess controls.yaml --framework eu_ai_act
 
 ```bash
 # Versão actual
-go install github.com/had-nu/wardex/v2@v2.6.0
+go install github.com/had-nu/wardex/v2@v2.6.1
 
 # Último tag publicado
 go install github.com/had-nu/wardex/v2@latest
@@ -233,7 +245,7 @@ WARDEX_KEY_PASSPHRASE="$(openssl rand -base64 32)" wardex keygen --encrypt
 ### 3. Selar e verificar provenance
 
 ```bash
-# Selar diretório de artefactos com Gleipnir (v2.6.0; compatível com v2.4.0+)
+# Selar diretório de artefactos com Gleipnir (v2.6.1; compatível com v2.4.0+)
 wardex provenance seal \
   --dir ./dist \
   --output chain-seal.json \
@@ -375,7 +387,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex/v2@v2.6.0
+        run: go install github.com/had-nu/wardex/v2@v2.6.1
       - name: Guard duplicate release
         run: wardex gate check-version --audit-log wardex-gate-audit.log --version "${GITHUB_REF_NAME#v}"
       - name: Evaluate risk gate
@@ -628,6 +640,7 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 - [Esquemas CDDL](spec/cddl/)
 - [Ambiente de desenvolvimento (docker-compose)](docker-compose.yml)
 - [CHANGELOG](CHANGELOG.md)
+- [Release notes v2.6.1](doc/releases/v2.6.1-notes.md)
 - [Release notes v2.6.0](doc/releases/v2.6.0-notes.md)
 - [Contribuir](CONTRIBUTING.md)
 

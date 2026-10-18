@@ -5,7 +5,7 @@ Wardex é um **release gate**, não um scanner. Não encontra vulnerabilidades �
 Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo GitHub Actions.
 
 > **Versão de referência:** v2.6.0<br>
-> **Instalação:** `go install github.com/had-nu/wardex/v2@v2.6.0`
+> **Instalação:** `go install github.com/had-nu/wardex/v2@v2.6.1`
 
 > **Hardening (linha actual):** O Wardex implementa validação de paths via
 > `pkg/cli/pathguard.go`. Se usas a Marketplace Action, os inputs `--evidence`,
@@ -75,7 +75,7 @@ jobs:
 
       # Passo 2: Instalar Wardex (SHA-pinned)
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex/v2@v2.6.0
+        run: go install github.com/had-nu/wardex/v2@v2.6.1
 
       # Passo 3: Validar que os policy files estão bem formados
       - name: Validate policy files
@@ -260,7 +260,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex/v2@v2.6.0
+        run: go install github.com/had-nu/wardex/v2@v2.6.1
 
       - name: Validate all framework policy files
         run: |

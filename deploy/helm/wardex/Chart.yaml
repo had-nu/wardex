@@ -6,7 +6,7 @@ description: >
   Produces signed, auditable decision artefacts. Enable, never execute.
 type: application
 version: 0.1.0
-appVersion: "2.6.0"
+appVersion: "2.6.1"
 keywords:
   - security
   - vulnerability
