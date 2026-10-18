@@ -19,7 +19,7 @@
 # for compliance with a deadline that has already passed.
 
 - id: GDPR.5
-  name: "Principles relating to processing of personal data"
+  name: "Art. 5 — Principles relating to processing of personal data"
   domain: "organizational"
   base_score: 9.0
   keywords:
@@ -34,7 +34,7 @@
       gate_relevant: false
 
 - id: GDPR.6
-  name: "Lawfulness of processing"
+  name: "Art. 6 — Lawfulness of processing"
   domain: "organizational"
   base_score: 9.0
   keywords:
@@ -53,7 +53,7 @@
       gate_relevant: false
 
 - id: GDPR.13
-  name: "Information to be provided to data subjects on collection"
+  name: "Art. 13 — Information to be provided to data subjects on collection"
   domain: "governance"
   base_score: 8.0
   keywords:
@@ -67,7 +67,7 @@
       gate_relevant: false
 
 - id: GDPR.15
-  name: "Right of access by the data subject"
+  name: "Art. 15 — Right of access by the data subject"
   domain: "process"
   base_score: 8.5
   keywords:
@@ -85,7 +85,7 @@
       gate_relevant: false
 
 - id: GDPR.16
-  name: "Right to rectification of inaccurate personal data"
+  name: "Art. 16 — Right to rectification of inaccurate personal data"
   domain: "process"
   base_score: 7.0
   keywords:
@@ -99,7 +99,7 @@
       gate_relevant: false
 
 - id: GDPR.17
-  name: "Right to erasure (right to be forgotten)"
+  name: "Art. 17 — Right to erasure (right to be forgotten)"
   domain: "process"
   base_score: 8.5
   keywords:
@@ -113,7 +113,7 @@
       gate_relevant: false
 
 - id: GDPR.18
-  name: "Right to restriction of processing"
+  name: "Art. 18 — Right to restriction of processing"
   domain: "process"
   base_score: 6.5
   keywords:
@@ -126,7 +126,7 @@
       gate_relevant: false
 
 - id: GDPR.20
-  name: "Right to data portability"
+  name: "Art. 20 — Right to data portability"
   domain: "technological"
   base_score: 7.5
   keywords:
@@ -140,7 +140,7 @@
       gate_relevant: false
 
 - id: GDPR.21
-  name: "Right to object to processing"
+  name: "Art. 21 — Right to object to processing"
   domain: "process"
   base_score: 7.5
   keywords:
@@ -154,7 +154,7 @@
       gate_relevant: false
 
 - id: GDPR.22
-  name: "Automated individual decision-making, including profiling"
+  name: "Art. 22 — Automated individual decision-making, including profiling"
   domain: "governance"
   base_score: 8.5
   keywords:
@@ -176,7 +176,7 @@
       gate_relevant: false
 
 - id: GDPR.24
-  name: "Responsibility of the controller"
+  name: "Art. 24 — Responsibility of the controller"
   domain: "organizational"
   base_score: 9.0
   keywords:
@@ -190,7 +190,7 @@
       gate_relevant: false
 
 - id: GDPR.25
-  name: "Data protection by design and by default"
+  name: "Art. 25 — Data protection by design and by default"
   domain: "technological"
   base_score: 9.0
   keywords:
@@ -208,7 +208,7 @@
       gate_relevant: false
 
 - id: GDPR.28
-  name: "Processor obligations and processor contracts"
+  name: "Art. 28 — Processor obligations and processor contracts"
   domain: "governance"
   base_score: 8.5
   keywords:
@@ -226,7 +226,7 @@
       gate_relevant: false
 
 - id: GDPR.30
-  name: "Records of processing activities"
+  name: "Art. 30 — Records of processing activities"
   domain: "organizational"
   base_score: 9.0
   keywords:
@@ -244,7 +244,7 @@
       gate_relevant: false
 
 - id: GDPR.32
-  name: "Security of processing"
+  name: "Art. 32 — Security of processing"
   domain: "technological"
   base_score: 9.5
   keywords:
@@ -271,7 +271,7 @@
       gate_relevant: false
 
 - id: GDPR.33
-  name: "Notification of a personal data breach to the supervisory authority"
+  name: "Art. 33 — Notification of a personal data breach to the supervisory authority"
   domain: "process"
   base_score: 9.5
   keywords:
@@ -294,7 +294,7 @@
       gate_relevant: false
 
 - id: GDPR.34
-  name: "Communication of a personal data breach to the data subject"
+  name: "Art. 34 — Communication of a personal data breach to the data subject"
   domain: "process"
   base_score: 8.5
   keywords:
@@ -308,7 +308,7 @@
       gate_relevant: false
 
 - id: GDPR.30.2
-  name: "Records of processors processing on behalf of a controller"
+  name: "Art. 30(2) — Records of processors processing on behalf of a controller"
   domain: "organizational"
   base_score: 7.5
   keywords:
@@ -322,7 +322,7 @@
       gate_relevant: false
 
 - id: GDPR.28.2
-  name: "Processor notification to the controller of a personal data breach (Article 33(2))"
+  name: "Art. 28(2) — Processor notification to the controller of a personal data breach (Article 33(2))"
   domain: "process"
   base_score: 9.0
   keywords:
@@ -336,7 +336,7 @@
       gate_relevant: false
 
 - id: GDPR.35
-  name: "Data protection impact assessment"
+  name: "Art. 35 — Data protection impact assessment"
   domain: "governance"
   base_score: 9.0
   keywords:
@@ -366,7 +366,7 @@
       gate_relevant: false
 
 - id: GDPR.37
-  name: "Designation of the data protection officer"
+  name: "Art. 37 — Designation of the data protection officer"
   domain: "organizational"
   base_score: 7.5
   keywords:
@@ -379,7 +379,7 @@
       gate_relevant: false
 
 - id: GDPR.46
-  name: "Transfers subject to appropriate safeguards"
+  name: "Art. 46 — Transfers subject to appropriate safeguards"
   domain: "governance"
   base_score: 9.0
   keywords:
