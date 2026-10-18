@@ -137,6 +137,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added tests that the banner classifier and the format policy agree, and that
   the advertised format list stays truthful.
 
+### Policy
+
+- Added `tools/check-attribution` and a CI job that fails a pull request which
+  adds a `Co-authored-by` trailer naming a coding assistant. The check reads
+  only the range the pull request proposes to merge, so it makes no claim about
+  history that predates it. CONTRIBUTING.md now states that a trailer is
+  attribution and not authorisation, that history is not rewritten to remove
+  one, and that rewriting is reserved for correcting content.
+  The check is not a security control: the deny list is matched against free
+  text and does not resist a deliberate change. It catches the default of a
+  tool that adds the trailer on an author's behalf, which is the failure it
+  exists for.
+
 ## [2.6.0] — 2026-09-15
 
 > **Attribution:** the hardening design patterns in this release draw on the Nym
