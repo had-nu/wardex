@@ -55,13 +55,24 @@ Executive summary
 
 A base em `pkg/ui` é responsável por:
 
-- detectar capacidade do terminal;
-- controlar largura e fallback ASCII;
+- detectar capacidade do terminal e o perfil CI;
+- controlar largura e fallback ASCII/Unicode;
 - centralizar cores semânticas;
-- renderizar header, rules e linhas key/value;
+- sanitizar valores destinados ao terminal;
+- activar progresso/dashboard apenas quando stdout e stderr são TTY e o formato é humano;
+- renderizar header, rules, tabelas e linhas key/value;
 - manter o renderer separado do domínio.
 
-O pipeline deve enviar eventos ao renderer; ele não deve imprimir ANSI diretamente. A cobertura alcança `wardex`, `wardex evaluate`, `wardex assess`, `wardex aggregate`, `wardex art14`, `wardex simulate`, `keygen`, `config`, `provenance`, `chain`, `hmac`, `audit`, `enrich`, `convert`, `assets`, `auth`, `contract`, `policy`, `state`, `gate`, `accept` e `trust`; `audit export` permanece deliberadamente machine-oriented para preservar JSONL/CSV e metadados de paginação. Os demais subcomandos podem ser migrados incrementalmente para o mesmo renderer.
+O pipeline deve enviar eventos ao renderer; ele não deve imprimir ANSI diretamente. `RunGate` publica também um `GateOutcome` final em todos os retornos, incluindo falhas de configuração, evidência e Early Exit, para que o comando possa renderizar o mesmo dashboard sem duplicar a tabela. A cobertura funcional alcança `wardex`, `wardex evaluate`, `wardex assess`, `wardex aggregate`, `wardex art14`, `wardex simulate`, `keygen`, `config`, `provenance`, `chain`, `hmac`, `audit`, `enrich`, `convert`, `assets`, `auth`, `contract`, `policy`, `state`, `gate`, `accept` e `trust`.
+
+Permanecem deliberadamente machine-oriented, sem dashboard:
+
+- `wardex completion` e `wardex help`;
+- `wardex audit export`;
+- `wardex config hash`;
+- modos JSON/CSV, pipes, ficheiros e outputs de attestation.
+
+Estes caminhos não são lacunas de migração: são contratos de interoperabilidade. A cobertura funcional está concluída; a matriz determinística e a smoke test PTY manual foram executadas como gate final de encerramento.
 
 ## Golden tests
 
@@ -79,10 +90,23 @@ UPDATE_GOLDEN=1 go test ./... -run 'Golden'
 
 O golden suite usa perfis ASCII sem ANSI para tornar as diferenças visíveis e evitar dependência de terminal, locale ou cor.
 
-A matriz de perfis e pipes é validada com:
+A matriz de perfis, pipes, logger e sanitização é validada com:
 
 ```bash
-go test ./pkg/ui ./cmd/assets -run 'Matrix|PipeDestinations|Golden'
+go test ./pkg/ui ./cmd/assets -run 'Matrix|PipeDestinations|Golden|Logger|Sanitize'
 ```
 
-Cobre larguras estreitas, ANSI/truecolor, Unicode/ASCII, `NO_COLOR`, `TERM=dumb`, CI e outputs table/JSON/CSV sem decoração em destinations não interativos.
+Cobre larguras estreitas, ANSI/truecolor, Unicode/ASCII, `NO_COLOR`, `TERM=dumb`, CI, logs textuais, control characters e outputs table/JSON/CSV sem decoração em destinos não interativos.
+
+## Definição de conclusão
+
+A migração pode ser marcada como concluída quando:
+
+- todos os comandos humanos respeitam a separação stdout/stderr;
+- paths machine-oriented não recebem dashboard, banner ou ANSI;
+- `NO_COLOR`, `TERM=dumb`, CI e ASCII narrow estão testados;
+- redirects de output são injectáveis e cobertos por testes;
+- prompts interactivos falham de forma explícita em stdin/stdout/stderr não interactivos;
+- a smoke test PTY manual passa em ANSI e ASCII.
+
+A validação PTY manual é executada com `script -qec` sobre um comando real, complementada pela matriz determinística de profiles.

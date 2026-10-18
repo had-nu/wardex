@@ -10,6 +10,19 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/orchestrator"
 )
 
+func TestBuildGateOutcomeDashboardMapsEarlyExit(t *testing.T) {
+	dashboard := buildGateOutcomeDashboard(orchestrator.GateOptions{}, orchestrator.GateOutcome{
+		ExitCode: 12,
+		Detail:   "active exploitation detected",
+	})
+	if dashboard.Summary.Decision != "ACTIVE EXPLOITATION" {
+		t.Fatalf("unexpected outcome decision: %q", dashboard.Summary.Decision)
+	}
+	if dashboard.Session.Status != "FAILED" || len(dashboard.Findings) != 1 {
+		t.Fatalf("unexpected outcome dashboard: %+v", dashboard)
+	}
+}
+
 func TestBuildGateDashboardMapsDecisions(t *testing.T) {
 	opts := orchestrator.GateOptions{
 		Controls:     []string{"controls.yml"},

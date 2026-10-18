@@ -6,6 +6,8 @@ package ui
 import (
 	"fmt"
 	"io"
+	"slices"
+	"strings"
 	"sync"
 )
 
@@ -56,6 +58,31 @@ func NewTerminalProgress(w io.Writer) *TerminalProgress {
 		renderer: NewRenderer(w, profile),
 		enabled:  true,
 	}
+}
+
+// IsMachineFormat reports formats whose stdout contract must not be decorated
+// with human progress, dashboards, banners, or ANSI sequences.
+func IsMachineFormat(format string) bool {
+	switch strings.ToLower(strings.TrimSpace(format)) {
+	case "json", "jsonl", "csv", "cbor", "yaml", "yml":
+		return true
+	default:
+		return false
+	}
+}
+
+// NewTerminalProgressForOutput creates a progress reporter only when both the
+// human/error stream and the command output stream are interactive and the
+// selected format is human-oriented. Machine output therefore stays clean
+// even when stderr remains attached to a terminal.
+func NewTerminalProgressForOutput(w, output io.Writer, format ...string) *TerminalProgress {
+	if slices.ContainsFunc(format, IsMachineFormat) {
+		return NewTerminalProgress(io.Discard)
+	}
+	if !IsTerminal(w) || !IsTerminal(output) {
+		return NewTerminalProgress(io.Discard)
+	}
+	return NewTerminalProgress(w)
 }
 
 // Enabled reports whether the reporter has an interactive destination.

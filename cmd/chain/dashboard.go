@@ -12,13 +12,16 @@ import (
 )
 
 type chainUI struct {
-	progress *ui.TerminalProgress
-	stderr   io.Writer
+	progress          *ui.TerminalProgress
+	stderr            io.Writer
+	output            io.Writer
+	resultInteractive bool
 }
 
 func beginChainUI(cmd *cobra.Command, baseDir, output string) *chainUI {
 	stderr := cmd.ErrOrStderr()
-	progress := ui.NewTerminalProgress(stderr)
+	outputWriter := cmd.OutOrStdout()
+	progress := ui.NewTerminalProgressForOutput(stderr, outputWriter)
 	progress.Begin(ui.SessionView{
 		Title:  "CHAIN SEAL SESSION",
 		Status: "RUNNING",
@@ -27,7 +30,12 @@ func beginChainUI(cmd *cobra.Command, baseDir, output string) *chainUI {
 			{Label: "OUTPUT", Value: output},
 		},
 	})
-	return &chainUI{progress: progress, stderr: stderr}
+	return &chainUI{
+		progress:          progress,
+		stderr:            stderr,
+		output:            outputWriter,
+		resultInteractive: ui.IsTerminal(outputWriter) && ui.IsTerminal(stderr),
+	}
 }
 
 func (u *chainUI) report(number int, name, status, detail string) {
@@ -37,8 +45,12 @@ func (u *chainUI) report(number int, name, status, detail string) {
 	u.progress.Report(ui.PhaseEvent{Number: number, Name: name, Status: status, Detail: detail})
 }
 
+func (u *chainUI) dashboardEnabled() bool {
+	return u != nil && u.progress != nil && u.progress.Enabled() && u.resultInteractive
+}
+
 func (u *chainUI) render(output string, files int, hash string) {
-	if u == nil || u.progress == nil || !u.progress.Enabled() {
+	if !u.dashboardEnabled() {
 		return
 	}
 	_ = ui.RenderResults(u.stderr, ui.Dashboard{Summary: ui.SummaryView{

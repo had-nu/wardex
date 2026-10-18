@@ -43,6 +43,38 @@ func TestBuildArt14ListDashboardSummarizesLifecycle(t *testing.T) {
 	}
 }
 
+func TestBuildArt14ListDashboardChecksIntermediateDeadlines(t *testing.T) {
+	now := time.Now().UTC()
+	artefacts := []*model.Art14NotificationArtefact{{
+		ArtefactID: "12345678-1234-1234-1234-123456789abc",
+		Status:     "dispatched:early-warning",
+		EarlyWarning: model.Art14EarlyWarning{
+			Deadline: now.Add(-2 * time.Hour),
+		},
+		Notification: model.Art14Notification{
+			Deadline: now.Add(-time.Hour),
+		},
+		FinalReport: model.Art14FinalReport{
+			Deadline: now.Add(24 * time.Hour),
+		},
+	}}
+
+	dashboard := buildArt14ListDashboard(artefacts, "artifacts")
+	if dashboard.Findings[0].Severity != "HIGH" || dashboard.Summary.Decision != "REVIEW" {
+		t.Fatalf("intermediate deadline was not surfaced: %+v", dashboard)
+	}
+}
+
+func TestBuildArt14DetailDashboardMarksVerificationFailure(t *testing.T) {
+	dashboard := buildArt14DetailDashboard(&model.Art14NotificationArtefact{
+		ArtefactID: "12345678-1234-1234-1234-123456789abc",
+		Status:     "draft",
+	}, "verification failed")
+	if dashboard.Summary.Decision != "FAILED" || dashboard.Findings[0].Severity != "HIGH" {
+		t.Fatalf("verification failure was rendered as success: %+v", dashboard)
+	}
+}
+
 func TestBuildArt14DetailDashboardDoesNotExposeFullHMAC(t *testing.T) {
 	artefact := &model.Art14NotificationArtefact{
 		ArtefactID: "12345678-1234-1234-1234-123456789abc",
@@ -53,6 +85,9 @@ func TestBuildArt14DetailDashboardDoesNotExposeFullHMAC(t *testing.T) {
 		},
 	}
 	dashboard := buildArt14DetailDashboard(artefact, "verified")
+	if dashboard.Summary.Decision != "VERIFIED" {
+		t.Fatalf("verified action should not be reported as updated: %q", dashboard.Summary.Decision)
+	}
 	if len(dashboard.Findings) != 1 {
 		t.Fatalf("expected detail card, got %d", len(dashboard.Findings))
 	}

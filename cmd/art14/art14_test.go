@@ -17,6 +17,81 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func TestFinalizeRejectsNonInteractiveInput(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	t.Setenv("WARDEX_ACCEPT_SECRET", "test-secret-key-123456789012345678901234")
+
+	cfgArt := art14.Config{ProductName: "Test", ProductVersion: "1.0", GeneratedBy: "wardex/test"}
+	art, err := art14.GenerateArtefact([]string{"CVE-2026-0001"}, time.Now().UTC(), cfgArt)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := art14.SignArtefact(art, []byte("test-secret-key-123456789012345678901234")); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := art14.WriteArtefact(art, dir); err != nil {
+		t.Fatal(err)
+	}
+	configFile := filepath.Join(dir, "config.yaml")
+	if err := os.WriteFile(configFile, []byte("cra:\n  art14:\n    output_dir: "+dir+"\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	oldConfigPath, oldOutputDir, oldNonInteractive := configPath, artOutputDir, nonInteractive
+	t.Cleanup(func() {
+		configPath, artOutputDir, nonInteractive = oldConfigPath, oldOutputDir, oldNonInteractive
+	})
+	configPath = configFile
+	artOutputDir = dir
+	nonInteractive = false
+
+	var output bytes.Buffer
+	cmd := &cobra.Command{}
+	cmd.SetIn(strings.NewReader("\\n"))
+	cmd.SetOut(&output)
+	cmd.SetErr(&output)
+
+	err = runFinalize(cmd, []string{art.ArtefactID})
+	if err == nil || !strings.Contains(err.Error(), "--non-interactive") {
+		t.Fatalf("expected non-interactive guard, got %v", err)
+	}
+}
+
+func TestArt14ListSanitizesUntrustedStatusAndHMAC(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	cfg := art14.Config{ProductName: "Test", ProductVersion: "1.0", GeneratedBy: "wardex/test"}
+	artefact, err := art14.GenerateArtefact([]string{"CVE-2026-0001"}, time.Now().UTC(), cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	artefact.Status = "draft\x1b[31m"
+	artefact.HMAC = "abcd\x1b]0;owned\x07tail"
+	data, err := json.Marshal(artefact)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile("wardex-art14-test.json", data, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	oldConfigPath, oldOutputDir := configPath, artOutputDir
+	t.Cleanup(func() { configPath, artOutputDir = oldConfigPath, oldOutputDir })
+	configPath, artOutputDir = "missing-config.yaml", dir
+
+	var output bytes.Buffer
+	cmd := &cobra.Command{}
+	cmd.SetOut(&output)
+	cmd.SetErr(&output)
+	if err := runList(cmd, nil); err != nil {
+		t.Fatalf("runList failed: %v", err)
+	}
+	if strings.Contains(output.String(), "\x1b[") || strings.Contains(output.String(), "\x1b]") {
+		t.Fatalf("list output contains terminal controls: %q", output.String())
+	}
+}
+
 func TestArt14CLI(t *testing.T) {
 	dir := t.TempDir()
 	t.Chdir(dir)

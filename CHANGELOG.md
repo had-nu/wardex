@@ -25,6 +25,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Result detection for the `auth`, `contract`, `policy`, `state`, `gate` and
   `accept` paths now preserves legacy stdout when stdout is redirected; command
   exit behavior remains unchanged.
+- Hardened the shared UI primitives: `Table` and the text logger now consume
+  the detected profile, support `NO_COLOR`/`TERM=dumb`/expanded CI detection,
+  and sanitize terminal control sequences and display values.
+- Added writer-injectable structured report output and CSV escaping; redirected
+  `art14 show` now preserves JSON on stdout without decorating the machine
+  output, while an interactive TTY retains the detail dashboard.
+- Added final outcome dashboards for early gate failures, a non-interactive
+  guard for Article 14 prompts, and explicit output-format validation.
+- Standardized CLI-generated tool attestations on deterministic CBOR.
+- Made progress and result dashboards conditional on both TTY outputs and
+  human-oriented formats; `config hash` and machine-oriented help/export paths
+  now remain free of session decoration.
+- Made provenance noop/dry-run results explicit instead of reporting zero-value
+  health or an anchored block, and corrected Article 14 intermediate/final
+  deadline and integrity-failure outcomes.
+- Hardened audit CSV JSON decoding, report CSV flush/error propagation, format
+  normalization, and injectable audit-link warning output.
 - Added deterministic ASCII golden tests for the terminal renderer, dashboard,
   progress, and narrow layouts, plus terminal-profile and pipe-format matrix
   coverage.

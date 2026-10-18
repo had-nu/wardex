@@ -5,6 +5,8 @@ package assess
 
 import (
 	"fmt"
+	"io"
+	"strings"
 
 	"github.com/had-nu/wardex/v2/config"
 	"github.com/had-nu/wardex/v2/pkg/analyzer"
@@ -53,9 +55,17 @@ func init() {
 }
 
 func runAssess(cmd *cobra.Command, args []string) error {
+	outputFormat = strings.ToLower(strings.TrimSpace(outputFormat))
+	if outputFormat != "markdown" && outputFormat != "json" && outputFormat != "csv" {
+		return fmt.Errorf("unsupported assess output format %q (use markdown|json|csv)", outputFormat)
+	}
 	stderr := cmd.ErrOrStderr()
+	output := cmd.OutOrStdout()
 	session := buildAssessSession(args)
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgress(io.Discard)
+	if (outFile == "" || outFile == "stdout") && !ui.IsMachineFormat(outputFormat) {
+		progress = ui.NewTerminalProgressForOutput(stderr, output)
+	}
 	progress.Begin(session)
 	reportProgress := func(number int, name, status, detail string) {
 		progress.Report(ui.PhaseEvent{
@@ -91,7 +101,7 @@ func runAssess(cmd *cobra.Command, args []string) error {
 	cat, err := catalog.Load(framework)
 	if err != nil {
 		reportProgress(3, "Loading framework catalog", "FAILED", err.Error())
-		return fmt.Errorf("assess: %w\n[HINT] Use --framework para especificar um framework válido: iso27001, soc2, nis2, dora, nist_csf, eu_ai_act", err)
+		return fmt.Errorf("assess: %w\n[HINT] Use --framework para especificar um framework valido: iso27001, soc2, nis2, dora, nist_csf, eu_ai_act", err)
 	}
 	fmt.Fprintf(stderr, "[INFO] Using framework: %s (%d controls in catalog).\n", framework, len(cat))
 	reportProgress(3, "Loading framework catalog", "DONE", fmt.Sprintf("%d catalog controls", len(cat)))
@@ -119,7 +129,7 @@ func runAssess(cmd *cobra.Command, args []string) error {
 	// 6. Layer delta analysis (Paper vs Code).
 	reportProgress(6, "Computing layer delta", "RUNNING", "")
 	layerDelta := an.ComputeLayerDelta()
-	reportProgress(6, "Computing layer delta", "DONE", fmt.Sprintf("%d documented · %d implemented", layerDelta.DocumentedCount, layerDelta.ImplementedCount))
+	reportProgress(6, "Computing layer delta", "DONE", fmt.Sprintf("%d documented | %d implemented", layerDelta.DocumentedCount, layerDelta.ImplementedCount))
 
 	// 7. Asset-level compliance (if provided).
 	var assetCompliance []model.AssetCompliance
@@ -172,7 +182,7 @@ func runAssess(cmd *cobra.Command, args []string) error {
 
 	// 10. Generate report.
 	reportProgress(10, "Generating report", "RUNNING", "")
-	if err := report.Generate(finalReport, outputFormat, outFile, 0); err != nil {
+	if err := report.GenerateTo(finalReport, outputFormat, outFile, 0, cmd.OutOrStdout()); err != nil {
 		reportProgress(10, "Generating report", "FAILED", err.Error())
 		return fmt.Errorf("assess: report generation failed: %w", err)
 	}

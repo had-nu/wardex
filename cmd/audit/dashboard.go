@@ -14,13 +14,20 @@ import (
 )
 
 type auditUI struct {
-	progress *ui.TerminalProgress
-	session  ui.SessionView
-	stderr   io.Writer
+	progress          *ui.TerminalProgress
+	session           ui.SessionView
+	stderr            io.Writer
+	output            io.Writer
+	resultInteractive bool
 }
 
 func beginAuditUI(cmd *cobra.Command, command, detail string) *auditUI {
 	stderr := cmd.ErrOrStderr()
+	output := cmd.OutOrStdout()
+	format := ""
+	if command == "verify-link" {
+		format = "json"
+	}
 	session := ui.SessionView{
 		Title:  "AUDIT VERIFICATION SESSION",
 		Status: "RUNNING",
@@ -29,9 +36,15 @@ func beginAuditUI(cmd *cobra.Command, command, detail string) *auditUI {
 			{Label: "TARGET", Value: detail},
 		},
 	}
-	progress := ui.NewTerminalProgress(stderr)
+	progress := ui.NewTerminalProgressForOutput(stderr, output, format)
 	progress.Begin(session)
-	return &auditUI{progress: progress, session: session, stderr: stderr}
+	return &auditUI{
+		progress:          progress,
+		session:           session,
+		stderr:            stderr,
+		output:            output,
+		resultInteractive: !ui.IsMachineFormat(format) && ui.IsTerminal(output) && ui.IsTerminal(stderr),
+	}
 }
 
 func (u *auditUI) report(number int, name, status, detail string) {
@@ -41,8 +54,12 @@ func (u *auditUI) report(number int, name, status, detail string) {
 	u.progress.Report(ui.PhaseEvent{Number: number, Name: name, Status: status, Detail: detail})
 }
 
+func (u *auditUI) dashboardEnabled() bool {
+	return u != nil && u.progress != nil && u.progress.Enabled() && u.resultInteractive
+}
+
 func (u *auditUI) render(dashboard ui.Dashboard) {
-	if u == nil || u.progress == nil || !u.progress.Enabled() {
+	if !u.dashboardEnabled() {
 		return
 	}
 	_ = ui.RenderResults(u.stderr, dashboard)

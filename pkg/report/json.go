@@ -6,19 +6,23 @@ package report
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
-func generateJSON(report model.GapReport, outFile string) error {
+func generateJSON(report model.GapReport, outFile string, writers ...io.Writer) error {
+	stdout := selectReportStdout(writers)
 	data, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal JSON report: %w", err)
 	}
 
 	if outFile == "stdout" || outFile == "" {
-		fmt.Println(string(data))
+		if _, err := fmt.Fprintln(stdout, string(data)); err != nil {
+			return err
+		}
 		return nil
 	}
 

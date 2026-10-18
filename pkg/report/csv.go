@@ -6,31 +6,31 @@ package report
 import (
 	"encoding/csv"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
-func generateCSV(report model.GapReport, outFile string) error {
-	var f *os.File
+func generateCSV(report model.GapReport, outFile string, writers ...io.Writer) error {
+	stdout := selectReportStdout(writers)
+	f := io.Writer(stdout)
 
-	if outFile == "stdout" || outFile == "" {
-		f = os.Stdout
-	} else {
+	if outFile != "stdout" && outFile != "" {
 		safePathStr, err := cli.SafeOutputPath(outFile)
 		if err != nil {
 			return err
 		}
-		f, err = os.Create(safePathStr) // #nosec G304
+		file, err := os.Create(safePathStr) // #nosec G304
 		if err != nil {
 			return fmt.Errorf("failed to create CSV file: %w", err)
 		}
-		defer func() { _ = f.Close() }()
+		f = file
+		defer func() { _ = file.Close() }()
 	}
 
 	writer := csv.NewWriter(f)
-	defer writer.Flush()
 
 	header := []string{"Control ID", "Name", "Domain", "Status", "Score", "Maturity", "Gap Reasons"}
 	if err := writer.Write(header); err != nil {
@@ -57,8 +57,6 @@ func generateCSV(report model.GapReport, outFile string) error {
 			return fmt.Errorf("failed to write CSV row: %w", err)
 		}
 	}
-
-	writer.Flush()
 
 	if report.Gate != nil || report.Delta != nil {
 		if err := writer.Write([]string{}); err != nil {
@@ -135,12 +133,21 @@ func generateCSV(report model.GapReport, outFile string) error {
 		if err := writer.Write([]string{"## Layer Delta"}); err != nil {
 			return fmt.Errorf("failed to write section header: %w", err)
 		}
-		_ = writer.Write([]string{"Metric", "Value"})
-		_ = writer.Write([]string{"Documented Count", fmt.Sprintf("%d", report.LayerDelta.DocumentedCount)})
-		_ = writer.Write([]string{"Implemented Count", fmt.Sprintf("%d", report.LayerDelta.ImplementedCount)})
-		_ = writer.Write([]string{"Active Coverage", fmt.Sprintf("%d", len(report.LayerDelta.ActiveCoverage))})
-		_ = writer.Write([]string{"Policy Gap", fmt.Sprintf("%d", len(report.LayerDelta.PolicyGap))})
-		_ = writer.Write([]string{"Shadow Security", fmt.Sprintf("%d", len(report.LayerDelta.ImplementedOnly))})
+		if err := writer.Write([]string{"Metric", "Value"}); err != nil {
+			return fmt.Errorf("failed to write layer metric header: %w", err)
+		}
+		layerRows := [][]string{
+			{"Documented Count", fmt.Sprintf("%d", report.LayerDelta.DocumentedCount)},
+			{"Implemented Count", fmt.Sprintf("%d", report.LayerDelta.ImplementedCount)},
+			{"Active Coverage", fmt.Sprintf("%d", len(report.LayerDelta.ActiveCoverage))},
+			{"Policy Gap", fmt.Sprintf("%d", len(report.LayerDelta.PolicyGap))},
+			{"Shadow Security", fmt.Sprintf("%d", len(report.LayerDelta.ImplementedOnly))},
+		}
+		for _, row := range layerRows {
+			if err := writer.Write(row); err != nil {
+				return fmt.Errorf("failed to write layer metric: %w", err)
+			}
+		}
 	}
 
 	if len(report.AssetCompliance) > 0 {
@@ -150,18 +157,25 @@ func generateCSV(report model.GapReport, outFile string) error {
 		if err := writer.Write([]string{"## Asset Compliance"}); err != nil {
 			return fmt.Errorf("failed to write section header: %w", err)
 		}
-		_ = writer.Write([]string{"Asset ID", "Asset Name", "Score", "Status", "Missing Count"})
+		if err := writer.Write([]string{"Asset ID", "Asset Name", "Score", "Status", "Missing Count"}); err != nil {
+			return fmt.Errorf("failed to write asset header: %w", err)
+		}
 		for _, ac := range report.AssetCompliance {
-			_ = writer.Write([]string{
+			if err := writer.Write([]string{
 				ac.AssetID,
 				ac.AssetName,
 				fmt.Sprintf("%.1f%%", ac.ComplianceScore*100.0),
 				ac.Status,
 				fmt.Sprintf("%d", len(ac.MissingControls)),
-			})
+			}); err != nil {
+				return fmt.Errorf("failed to write asset row: %w", err)
+			}
 		}
 	}
 
 	writer.Flush()
+	if err := writer.Error(); err != nil {
+		return fmt.Errorf("failed to flush CSV output: %w", err)
+	}
 	return nil
 }

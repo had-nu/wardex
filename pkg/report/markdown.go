@@ -5,27 +5,28 @@ package report
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
-func generateMarkdown(report model.GapReport, outFile string, limit int) error { // nolint:errcheck
-	var f *os.File
+func generateMarkdown(report model.GapReport, outFile string, limit int, writers ...io.Writer) error { // nolint:errcheck
+	stdout := selectReportStdout(writers)
+	f := io.Writer(stdout)
 
-	if outFile == "stdout" || outFile == "" {
-		f = os.Stdout
-	} else {
+	if outFile != "stdout" && outFile != "" {
 		safePathStr, err := cli.SafeOutputPath(outFile)
 		if err != nil {
 			return err
 		}
-		f, err = os.Create(safePathStr) // #nosec G304
+		file, err := os.Create(safePathStr) // #nosec G304
 		if err != nil {
 			return fmt.Errorf("failed to create Markdown file: %w", err)
 		}
-		defer func() { _ = f.Close() }()
+		f = file
+		defer func() { _ = file.Close() }()
 	}
 
 	// Simplify Markdown generation manually since lipgloss is for terminal ANSI colors

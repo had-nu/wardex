@@ -72,7 +72,7 @@ func runPolicyValidate(cmd *cobra.Command, args []string) error {
 	}
 
 	_, _ = fmt.Fprintf(u.output,
-		"[OK] %d domain file(s), %d control(s) — all valid in %q\n",
+		"[OK] %d domain file(s), %d control(s) - all valid in %q\n",
 		len(domains), total, args[0],
 	)
 	return nil
@@ -174,12 +174,12 @@ func runPolicyCheckExpiry(cmd *cobra.Command, args []string) error {
 		for _, c := range d.Controls {
 			for _, e := range c.Exceptions {
 				if e.Expiry == "" {
-					fmt.Fprintf(u.stderr, "[WARN] Exception for %s has no expiry date — not checked\n", c.ID)
+					fmt.Fprintf(u.stderr, "[WARN] Exception for %s has no expiry date - not checked\n", c.ID)
 					continue
 				}
 				expiry, err := time.Parse("2006-01-02", e.Expiry)
 				if err != nil {
-					fmt.Fprintf(u.stderr, "[WARN] Exception for %s has unparseable expiry %q — not checked\n", c.ID, e.Expiry)
+					fmt.Fprintf(u.stderr, "[WARN] Exception for %s has unparseable expiry %q - not checked\n", c.ID, e.Expiry)
 					continue
 				}
 				if expiry.Before(now) {
@@ -287,7 +287,7 @@ func runPolicyAdd(cmd *cobra.Command, args []string) error {
 		u.report(2, "Loading existing policy", "DONE", fmt.Sprintf("%d control(s)", len(d.Controls)))
 	case os.IsNotExist(err):
 		u.report(2, "Loading existing policy", "DONE", "new policy file")
-		fmt.Fprintf(u.stderr, "[WARN] Policy file %s not found — creating new\n", abs)
+		fmt.Fprintf(u.stderr, "[WARN] Policy file %s not found - creating new\n", abs)
 	default:
 		u.report(2, "Loading existing policy", "FAILED", err.Error())
 		return fmt.Errorf("policy add: read: %w", err)

@@ -25,12 +25,23 @@ func TestBuildProvenanceVerifyDashboard(t *testing.T) {
 	if notFound.Summary.Decision != "NOT_FOUND" {
 		t.Fatalf("unexpected not-found decision: %q", notFound.Summary.Decision)
 	}
+	dryRun := buildProvenanceVerifyDashboard("abcd", &prov.AnchorResult{DryRun: true})
+	if dryRun.Summary.Decision != "DRY RUN" {
+		t.Fatalf("unexpected dry-run decision: %q", dryRun.Summary.Decision)
+	}
 }
 
 func TestBuildProvenanceStatusDashboard(t *testing.T) {
 	dashboard := buildProvenanceStatusDashboard(&prov.Health{BlockHeight: 42, ActivePeers: 2, Pending: 1})
 	if dashboard.Summary.Decision != "HEALTHY" || len(dashboard.Summary.Fields) != 3 {
 		t.Fatalf("unexpected status dashboard: %+v", dashboard)
+	}
+}
+
+func TestBuildProvenanceStatusDashboardDryRun(t *testing.T) {
+	dashboard := buildProvenanceStatusDashboard(&prov.Health{DryRun: true})
+	if dashboard.Summary.Decision != "DRY RUN" {
+		t.Fatalf("unexpected dry-run status decision: %q", dashboard.Summary.Decision)
 	}
 }
 

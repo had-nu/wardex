@@ -47,6 +47,9 @@ type AnchorResult struct {
 	StateRoot  []byte
 	Proof      []byte
 	Label      string
+	// DryRun is true when the selected backend intentionally does not
+	// persist or query an anchor (for example, the noop driver).
+	DryRun bool `json:"dry_run,omitempty"`
 }
 
 // Health represents the health of the 3CP provenance network.
@@ -54,6 +57,9 @@ type Health struct {
 	BlockHeight uint64
 	Pending     int
 	ActivePeers int
+	// DryRun identifies a non-persistent backend. Zero health values must not
+	// be presented as a healthy live anchor in that mode.
+	DryRun bool `json:"dry_run,omitempty"`
 }
 
 // SubmitEnvelope is the 3CP canonical submission format used by

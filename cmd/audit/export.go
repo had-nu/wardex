@@ -4,11 +4,12 @@
 package audit
 
 import (
+	"bytes"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
-	"os"
+	"strconv"
 	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/auditlog"
@@ -50,8 +51,8 @@ Examples:
   wardex audit export --audit-log wardex-gate-audit.log --format csv --tail --limit 100
 
 Exit codes:
-   0 — export complete
-   1 — operational error (read failure, tampered resume, cursor not found)`,
+   0 - export complete
+   1 - operational error (read failure, tampered resume, cursor not found)`,
 	Args: cobra.NoArgs,
 	RunE: runExport,
 }
@@ -69,7 +70,7 @@ func runExport(cmd *cobra.Command, _ []string) error {
 	f, err := cli.SafeOpenFile(exportAuditLog)
 	if err != nil {
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: open audit log: %v\n", err)
-		os.Exit(exitcodes.GenericError)
+		exitFunc(exitcodes.GenericError)
 		return nil
 	}
 	defer func() { _ = f.Close() }()
@@ -77,7 +78,7 @@ func runExport(cmd *cobra.Command, _ []string) error {
 	format := strings.ToLower(exportFormat)
 	if format != "jsonl" && format != "csv" {
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: unsupported format %q (use jsonl|csv)\n", exportFormat)
-		os.Exit(exitcodes.GenericError)
+		exitFunc(exitcodes.GenericError)
 		return nil
 	}
 
@@ -88,7 +89,7 @@ func runExport(cmd *cobra.Command, _ []string) error {
 	})
 	if err != nil {
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: export: %v\n", err)
-		os.Exit(exitcodes.GenericError)
+		exitFunc(exitcodes.GenericError)
 		return nil
 	}
 
@@ -96,14 +97,14 @@ func runExport(cmd *cobra.Command, _ []string) error {
 	if format == "csv" {
 		if err := writeCSV(out, res.Entries); err != nil {
 			fmt.Fprintf(cmd.ErrOrStderr(), "Error: write csv: %v\n", err)
-			os.Exit(exitcodes.GenericError)
+			exitFunc(exitcodes.GenericError)
 			return nil
 		}
 	} else {
 		for _, e := range res.Entries {
 			if _, err := out.Write(append(append([]byte(nil), e.Raw...), '\n')); err != nil {
 				fmt.Fprintf(cmd.ErrOrStderr(), "Error: write export: %v\n", err)
-				os.Exit(exitcodes.GenericError)
+				exitFunc(exitcodes.GenericError)
 				return nil
 			}
 		}
@@ -116,10 +117,36 @@ func runExport(cmd *cobra.Command, _ []string) error {
 	return nil
 }
 
-// csvColumns is the fixed CSV export schema. The raw value bytes of each known
-// field are emitted; JSON strings are unquoted. Unknown record fields are
-// dropped; the raw JSONL export remains lossless.
+// csvColumns is the fixed CSV export schema. JSON values are decoded before
+// CSV encoding, so escaped strings, numbers, booleans, and nulls retain their
+// semantic values. Unknown record fields are dropped; the raw JSONL export
+// remains lossless.
 var csvColumns = []string{"ts", "event", "status", "risk", "config_hash", "previous_entry_hash", "release_version", "policy_ref", "evidence_hash", "detail"}
+
+func decodeCSVValue(raw json.RawMessage) (string, error) {
+	decoder := json.NewDecoder(bytes.NewReader(raw))
+	decoder.UseNumber()
+	var value any
+	if err := decoder.Decode(&value); err != nil {
+		return "", err
+	}
+	switch typed := value.(type) {
+	case nil:
+		return "", nil
+	case string:
+		return typed, nil
+	case json.Number:
+		return typed.String(), nil
+	case bool:
+		return strconv.FormatBool(typed), nil
+	default:
+		encoded, err := json.Marshal(typed)
+		if err != nil {
+			return "", err
+		}
+		return string(encoded), nil
+	}
+}
 
 func writeCSV(w io.Writer, entries []auditlog.ExportEntry) error {
 	cw := csv.NewWriter(w)
@@ -138,7 +165,11 @@ func writeCSV(w io.Writer, entries []auditlog.ExportEntry) error {
 				row[i] = ""
 				continue
 			}
-			row[i] = strings.Trim(string(raw), `"`)
+			value, err := decodeCSVValue(raw)
+			if err != nil {
+				return fmt.Errorf("decode CSV field %q: %w", col, err)
+			}
+			row[i] = value
 		}
 		if err := cw.Write(row); err != nil {
 			return err

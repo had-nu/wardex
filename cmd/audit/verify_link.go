@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 
@@ -60,7 +61,7 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		u.report(1, "Reading audit log", "FAILED", err.Error())
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: reading audit log: %v\n", err)
-		os.Exit(2)
+		exitFunc(2)
 		return nil
 	}
 	u.report(1, "Reading audit log", "DONE", fmt.Sprintf("%d bytes", len(logData)))
@@ -68,14 +69,14 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	u.report(2, "Verifying config links", "RUNNING", "")
 	var results []cpl.LinkResult
 	if singleConfig != "" {
-		results, err = cpl.VerifyLinkSingleWithSchemaVersion(logData, singleConfig, expectedSchemaVersion)
+		results, err = cpl.VerifyLinkSingleWithSchemaVersionWriter(logData, singleConfig, expectedSchemaVersion, cmd.ErrOrStderr())
 	} else {
-		results, err = cpl.VerifyLinkWithSchemaVersion(logData, configArchive, expectedSchemaVersion)
+		results, err = cpl.VerifyLinkWithSchemaVersionWriter(logData, configArchive, expectedSchemaVersion, cmd.ErrOrStderr())
 	}
 	if err != nil {
 		u.report(2, "Verifying config links", "FAILED", err.Error())
 		fmt.Fprintf(cmd.ErrOrStderr(), "Error: verify-link failed: %v\n", err)
-		os.Exit(2)
+		exitFunc(2)
 		return nil
 	}
 	u.report(2, "Verifying config links", "DONE", fmt.Sprintf("%d result(s)", len(results)))
@@ -101,27 +102,31 @@ func runVerifyLink(cmd *cobra.Command, args []string) error {
 	}
 
 	u.report(3, "Preparing link report", "RUNNING", "")
-	enc := json.NewEncoder(cmd.OutOrStdout())
+	enc := json.NewEncoder(u.output)
 	enc.SetIndent("", "  ")
 	_ = enc.Encode(struct {
 		Summary any              `json:"summary"`
 		Results []cpl.LinkResult `json:"results"`
 	}{Summary: summary, Results: results})
 	u.report(3, "Preparing link report", "DONE", "report emitted")
-	if u.progress.Enabled() {
+	if u.dashboardEnabled() {
 		u.render(buildLinkVerifyDashboard(auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, summary.Schema, results))
 	}
 
 	if summary.Mismatch > 0 || summary.Missing > 0 || summary.Schema > 0 {
 		if webhookURL != "" {
-			dispatchNotification(cmd.Context(), auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, summary.Schema, results)
+			dispatchNotification(cmd.Context(), auditLogPath, summary.Total, summary.OK, summary.Mismatch, summary.Missing, summary.Schema, results, cmd.ErrOrStderr())
 		}
-		os.Exit(1)
+		exitFunc(1)
 	}
 	return nil
 }
 
-func dispatchNotification(ctx context.Context, auditLog string, total, ok, mismatch, missing, schema int, results []cpl.LinkResult) {
+func dispatchNotification(ctx context.Context, auditLog string, total, ok, mismatch, missing, schema int, results []cpl.LinkResult, warningWriters ...io.Writer) {
+	stderr := io.Writer(os.Stderr)
+	if len(warningWriters) > 0 && warningWriters[0] != nil {
+		stderr = warningWriters[0]
+	}
 	payload := notification.DivergencePayload{
 		Source:    "wardex",
 		EventType: "cpl.verify_link.mismatch",
@@ -161,6 +166,6 @@ func dispatchNotification(ctx context.Context, auditLog string, total, ok, misma
 	}
 
 	if err := notification.Send(ctx, cfg, payload); err != nil {
-		fmt.Fprintf(os.Stderr, "[wardex] notification: webhook failed: %v\n", err)
+		fmt.Fprintf(stderr, "[wardex] notification: webhook failed: %v\n", err)
 	}
 }

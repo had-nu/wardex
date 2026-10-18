@@ -104,8 +104,8 @@ func (r *Renderer) Results(d Dashboard) {
 }
 
 func (r *Renderer) sessionCard(session SessionView) {
-	title := session.Title
-	status := strings.ToUpper(session.Status)
+	title := r.display(session.Title)
+	status := strings.ToUpper(r.display(session.Status))
 	lines := make([]string, 0, len(session.Fields))
 	for _, field := range session.Fields {
 		lines = append(lines, r.KeyValue(field.Label, field.Value, 14))
@@ -132,12 +132,12 @@ func (r *Renderer) writePhaseLine(phase PhaseView, includeDetail bool) {
 	if number <= 0 {
 		number = 1
 	}
-	status := strings.ToUpper(phase.Status)
+	status := strings.ToUpper(r.display(phase.Status))
 	if status == "" {
 		status = "PENDING"
 	}
 	marker := phaseMarker(status, r.profile.Unicode)
-	name := truncate(phase.Name, max(1, r.ContentWidth()-8))
+	name := truncate(r.display(phase.Name), max(1, r.ContentWidth()-8))
 	leftPlain := fmt.Sprintf("%02d %s %s", number, marker, name)
 	gap := max(r.ContentWidth()-VisibleLen(leftPlain)-VisibleLen(status), 1)
 
@@ -147,42 +147,45 @@ func (r *Renderer) writePhaseLine(phase PhaseView, includeDetail bool) {
 	fmt.Fprint(r.w, strings.Repeat(" ", gap))
 	fmt.Fprintln(r.w, r.theme.Status(status, statusKind(status)))
 
-	if includeDetail && phase.Detail != "" {
+	detail := r.display(phase.Detail)
+	if includeDetail && detail != "" {
 		prefix := "└─ "
 		if !r.profile.Unicode {
 			prefix = "\\- "
 		}
-		detail := truncate(prefix+phase.Detail, r.ContentWidth()-4)
+		detail = truncate(prefix+detail, r.ContentWidth()-4)
 		fmt.Fprintln(r.w, "    "+r.theme.Muted(detail))
 	}
 }
 
 func (r *Renderer) findingCard(finding FindingView) {
-	kind := finding.Kind
+	kind := r.display(finding.Kind)
 	if kind == "" {
 		kind = "COMPLIANCE GAP"
 	}
 	right := ""
-	if finding.Confidence != "" {
+	confidence := r.display(finding.Confidence)
+	if confidence != "" {
 		separator := "·"
 		if !r.profile.Unicode {
 			separator = "|"
 		}
-		right = "CONFIDENCE " + separator + " " + finding.Confidence
+		right = "CONFIDENCE " + separator + " " + confidence
 	}
 
 	lines := make([]string, 0, len(finding.Fields)+1)
-	if finding.Title != "" {
-		title := finding.Title
-		if finding.Severity != "" {
-			title = finding.Severity + "  " + title
+	severity := r.display(finding.Severity)
+	title := r.display(finding.Title)
+	if title != "" {
+		if severity != "" {
+			title = severity + "  " + title
 		}
-		lines = append(lines, r.theme.Status(title, statusKind(finding.Severity)))
+		lines = append(lines, r.theme.Status(title, statusKind(severity)))
 	}
 	for _, field := range finding.Fields {
 		lines = append(lines, r.KeyValue(field.Label, field.Value, 14))
 	}
-	r.card(kind, right, statusKind(finding.Severity), lines)
+	r.card(kind, right, statusKind(severity), lines)
 }
 
 func (r *Renderer) summaryCard(summary SummaryView) {
@@ -190,14 +193,17 @@ func (r *Renderer) summaryCard(summary SummaryView) {
 	for _, field := range summary.Fields {
 		fields = append(fields, r.KeyValue(field.Label, field.Value, 14))
 	}
+	decision := r.display(summary.Decision)
 	right := ""
-	if summary.Decision != "" {
-		right = strings.ToUpper(summary.Decision)
+	if decision != "" {
+		right = strings.ToUpper(decision)
 	}
-	r.card("EXECUTIVE SUMMARY", right, statusKind(summary.Decision), fields)
+	r.card("EXECUTIVE SUMMARY", right, statusKind(decision), fields)
 }
 
 func (r *Renderer) card(title, right string, kind StatusKind, lines []string) {
+	title = r.display(title)
+	right = r.display(right)
 	width := r.ContentWidth()
 	left, horizontal, vertical, bottomLeft, bottomRight := r.boxChars()
 	corner := rightCornerFor(vertical)
