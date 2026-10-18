@@ -12,8 +12,10 @@
 # text of the Regulation.
 #
 # Scope. Articles 28 to 47 and 64 to 79 concern notifying authorities, notified
-# bodies, the AI Office, the Board and market surveillance. Those bind authorities
-# rather than a provider or a deployer and are not listed.
+# bodies, the AI Office, the Board and market surveillance. Articles 56, 62 and 71
+# bind the AI Office, Member States and the Commission. None of those binds a
+# provider or a deployer and none is listed: a catalogue an entity scores itself
+# against should not carry obligations that are not its own.
 #
 # Note: the OJ reference for this Regulation is also the number in its CELEX-style
 # filename, which is a coincidence of numbering. The instrument is 2024/1689 and
@@ -53,6 +55,24 @@
     - high-risk
     - risk classification
     - annex iii
+- id: EUAIA.Art8
+  name: "Compliance with the requirements"
+  domain: "organizational"
+  base_score: 9.5
+  keywords:
+    - compliance
+    - requirements
+    - state of the art
+  practices:
+    - id: PR.EUAIA.Art8.1
+      name: "Ensure the system complies with the Chapter III requirements, taking account of its intended purpose and the acknowledged state of the art"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.EUAIA.Art8.2
+      name: "Take the Article 9 risk management system into account when demonstrating compliance, rather than treating it as a separate exercise"
+      min_maturity: 3
+      gate_relevant: false
+
 - id: EUAIA.Art9
   name: "Risk Management System — Continuous iterative risk management throughout AI system lifecycle"
   domain: "risk_management"
@@ -275,6 +295,28 @@
     - ce marking
     - annex v
     - conformity marking
+- id: EUAIA.Art48
+  name: "CE marking"
+  domain: "governance"
+  base_score: 9.5
+  keywords:
+    - ce marking
+    - affixing
+    - notified body number
+  practices:
+    - id: PR.EUAIA.Art48.1
+      name: "Affix the CE marking visibly, legibly and indelibly, or on the packaging or accompanying documentation where the nature of the system warrants it"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.EUAIA.Art48.2
+      name: "Follow the marking with the notified body identification number where a notified body was involved, and repeat that number in promotional material claiming CE compliance"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.EUAIA.Art48.3
+      name: "Use a digital CE marking for a digitally provided system where it can easily be seen by the person accessing it"
+      min_maturity: 4
+      gate_relevant: false
+
 - id: EUAIA.Art49
   name: "Registration in EU Database — Register high-risk AI systems in EU-wide database per Annex VIII"
   domain: "governance"
@@ -296,6 +338,81 @@
     - emotion recognition
     - biometric categorisation
     - watermarking
+- id: EUAIA.Art51
+  name: "Classification of general-purpose AI models with systemic risk"
+  domain: "governance"
+  base_score: 9.5
+  keywords:
+    - systemic risk
+    - high impact capabilities
+    - classification
+    - compute threshold
+  practices:
+    - id: PR.EUAIA.Art51.1
+      name: "Evaluate high impact capabilities against technical tools, indicators and benchmarks, and on a Commission designation having regard to Annex XI"
+      min_maturity: 4
+      gate_relevant: false
+    - id: PR.EUAIA.Art51.2
+      name: "Treat the training compute threshold in Article 51(2) as a presumption, not as the only test"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: EUAIA.Art52
+  name: "Procedure: notification to the Commission of a model meeting the systemic risk threshold"
+  domain: "process"
+  base_score: 9.5
+  keywords:
+    - notification
+    - two weeks
+    - commission
+    - substantiated arguments
+  practices:
+    - id: PR.EUAIA.Art52.1
+      name: "Notify the Commission without delay and in any event within two weeks of meeting, or coming to know it will be met, the Article 51(1)(a) condition"
+      min_maturity: 4
+      gate_relevant: false
+    - id: PR.EUAIA.Art52.2
+      name: "Where arguing that the model does not present systemic risk, present sufficiently substantiated arguments with the notification rather than later"
+      min_maturity: 4
+      gate_relevant: false
+
+- id: EUAIA.Art54
+  name: "Authorised representatives of providers of general-purpose AI models"
+  domain: "governance"
+  base_score: 8.5
+  keywords:
+    - authorised representative
+    - third country
+    - mandate
+  practices:
+    - id: PR.EUAIA.Art54.1
+      name: "Appoint an authorised representative established in the Union before placing a general-purpose AI model on the Union market"
+      min_maturity: 3
+      gate_relevant: false
+    - id: PR.EUAIA.Art54.2
+      name: "Give the representative a written mandate and enable it to perform the tasks that mandate specifies"
+      min_maturity: 3
+      gate_relevant: false
+
+- id: EUAIA.Art59
+  name: "Further processing of personal data in the AI regulatory sandbox"
+  domain: "technological"
+  base_score: 8.0
+  keywords:
+    - sandbox
+    - personal data
+    - public interest
+    - data protection
+  practices:
+    - id: PR.EUAIA.Art59.1
+      name: "Use further-processed personal data in a sandbox only where the system serves a substantial public interest in one of the Article 59(1)(a) areas"
+      min_maturity: 4
+      gate_relevant: false
+    - id: PR.EUAIA.Art59.2
+      name: "Meet every condition in Article 59(1) at once, and record how each is met"
+      min_maturity: 4
+      gate_relevant: false
+
 - id: EUAIA.Art53
   name: "General-Purpose AI Model Provider Obligations — Technical documentation, downstream information, copyright policy, training data summary"
   domain: "gpai"

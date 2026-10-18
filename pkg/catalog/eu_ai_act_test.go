@@ -20,6 +20,7 @@ var aiactArticleTitles = map[int]string{
 	4:  "AI literacy",
 	5:  "Prohibited AI practices",
 	6:  "Classification rules for high-risk AI systems",
+	8:  "Compliance with the requirements",
 	9:  "Risk management system",
 	10: "Data and data governance",
 	11: "Technical documentation",
@@ -41,7 +42,15 @@ var aiactArticleTitles = map[int]string{
 	27: "Fundamental rights impact assessment for high-risk AI systems",
 	43: "Conformity assessment",
 	47: "EU declaration of conformity",
+	48: "CE marking",
 	49: "Registration",
+	51: "Classification of general-purpose AI models as general-purpose AI models with systemic risk",
+	52: "Procedure",
+	54: "Authorised representatives of providers of general-purpose AI models",
+	56: "Codes of practice",
+	59: "Further processing of personal data for developing certain AI systems in the public interest in the AI regulatory sandbox",
+	62: "Measures for providers and deployers, in particular SMEs, including start-ups",
+	71: "EU database for high-risk AI systems listed in Annex III",
 	50: "Transparency obligations for providers and deployers of certain AI systems",
 	53: "Obligations for providers of general-purpose AI models",
 	55: "Obligations of providers of general-purpose AI models with systemic risk",
@@ -54,8 +63,13 @@ var aiactIDPattern = regexp.MustCompile(`^EUAIA\.Art(\d+)$`)
 
 // aiactAuthorityArticles bind authorities rather than a provider or a deployer,
 // and are excluded by the scope decision recorded in the file header.
+// Articles 56, 62 and 71 sit apart from the notifying-authority block and are
+// excluded for the same reason with a different addressee: Article 56 directs the
+// AI Office and the Board, Article 62 directs Member States, and Article 71
+// directs the Commission and Member States to maintain the database. The duty on
+// a provider is to register, which is Article 49 and is listed.
 var aiactAuthorityArticles = []int{28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-	41, 42, 44, 45, 46, 64, 65, 66, 67, 68, 69, 70, 74, 75, 76, 77, 78, 79}
+	41, 42, 44, 45, 46, 56, 62, 64, 65, 66, 67, 68, 69, 70, 71, 74, 75, 76, 77, 78, 79}
 
 // TestAIActControlsSitUnderTheArticleWhoseSubjectTheyDescribe compares each
 // control's name against the article's own title.
@@ -177,13 +191,14 @@ func TestAIActCoversEachSubjectArea(t *testing.T) {
 
 	areas := map[string][]int{
 		"literacy and classification":  {4, 5, 6},
-		"provider requirements (III)":  {9, 10, 11, 12, 13, 14, 15},
+		"provider requirements (III)":  {8, 9, 10, 11, 12, 13, 14, 15},
 		"provider administration (IV)": {16, 17, 18, 19, 20, 21, 22},
 		"value chain (V)":              {23, 24, 25},
 		"deployers (VI)":               {26, 27},
-		"conformity and registration":  {43, 47, 49},
+		"conformity and registration":  {43, 47, 48, 49},
 		"transparency (VII)":           {50},
-		"general-purpose AI (VIII)":    {53, 55},
+		"general-purpose AI (VIII)":    {51, 52, 53, 54, 55},
+		"regulatory sandbox (XI)":      {59},
 		"post-market (IX)":             {72, 73},
 		"penalties (XII)":              {99},
 	}
