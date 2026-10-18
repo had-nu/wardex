@@ -5,6 +5,7 @@ package analyzer
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/scorer"
@@ -146,6 +147,13 @@ func (a *Analyzer) ComputeLayerDelta() model.LayerDelta {
 			delta.ImplementedOnly = append(delta.ImplementedOnly, id) // Implemented but not documented
 		}
 	}
+
+	// Map iteration order is randomised by the runtime, so these three lists
+	// came out in a different order on every run and two executions over
+	// identical evidence produced different reports. Sort them.
+	slices.Sort(delta.ActiveCoverage)
+	slices.Sort(delta.PolicyGap)
+	slices.Sort(delta.ImplementedOnly)
 
 	return delta
 }

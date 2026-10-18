@@ -365,6 +365,11 @@ func (p *EvaluationPipeline) buildDomainSummaries(rep *model.GapReport, findings
 		}
 		rep.Summary.DomainSummaries = append(rep.Summary.DomainSummaries, *ds)
 	}
+	// domainMap iteration order is randomised by the runtime, so the same
+	// evidence used to produce a different row order on every run. Sort.
+	slices.SortFunc(rep.Summary.DomainSummaries, func(a, b model.DomainSummary) int {
+		return cmp.Compare(a.Domain, b.Domain)
+	})
 
 	rep.Summary.TotalControls = len(cat)
 	for _, f := range findings {

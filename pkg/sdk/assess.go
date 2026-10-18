@@ -269,6 +269,11 @@ func buildSummary(cat []model.CatalogControl, findings []model.Finding) model.Ex
 		}
 		domainSummaries = append(domainSummaries, *ds)
 	}
+	// domainMap iteration order is randomised by the runtime, so the same
+	// evidence used to produce a different row order on every run. Sort.
+	slices.SortFunc(domainSummaries, func(a, b model.DomainSummary) int {
+		return cmp.Compare(a.Domain, b.Domain)
+	})
 
 	totalControls := len(cat)
 	covered := 0
