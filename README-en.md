@@ -21,7 +21,7 @@
 
 </div>
 
-> **Current release:** `v2.6.0` · Go `1.27` · configuration schema `2`
+> **Current release:** `v2.6.1` · Go `1.27` · configuration schema `2`
 
 > [!IMPORTANT]
 > **CRA Article 14 (available since v2.0; maintained in v2.6.0):** The Cyber Resilience Act's active exploitation notification obligations enter into force in September 2026. The current path correlates the CISA KEV catalogue, uses exit code `12`, signs the artefact with HMAC-SHA256, and records the three regulatory deadlines. This path cannot be overridden by risk acceptances.
@@ -72,9 +72,21 @@ wardex audit export --audit-log wardex-gate-audit.log --format jsonl --limit 500
 
 ---
 
-## What's New — v2.6.0 (2026-09-15)
+## What's New — v2.6.1 (2026-10-18)
 
-The current line is **v2.6.0** and remains compatible with legacy formats.
+The current line is **v2.6.1** and remains compatible with legacy formats.
+
+**Deterministic reports and machine output boundaries:**
+- `wardex assess` produces the same report for the same evidence. Four lists gained
+  explicit sorting, because they were built by ranging over a map and Go
+  randomises map iteration. This affected the run-to-run comparison that
+  effectiveness assessment rests on.
+- `wardex completion <shell>` no longer prints the banner: the classifier compared
+  the command path for equality and never matched the subcommand.
+- `tools/check-attribution` fails a pull request that adds a `Co-authored-by`
+  trailer naming an assistant. `CONTRIBUTING.md` records that a trailer is
+  attribution and not authorisation, and that history is not rewritten to remove
+  one.
 
 **CPL chain and provenance (P0/L1/L4/L5):**
 - Explicit `config_schema_version: 2` and `cpl_schema_version`; the chain uses
@@ -149,7 +161,7 @@ wardex assess controls.yaml --framework eu_ai_act
 
 ```bash
 # Current release
-go install github.com/had-nu/wardex/v2@v2.6.0
+go install github.com/had-nu/wardex/v2@v2.6.1
 
 # Latest published tag
 go install github.com/had-nu/wardex/v2@latest
@@ -216,7 +228,7 @@ WARDEX_KEY_PASSPHRASE="$(openssl rand -base64 32)" wardex keygen --encrypt
 ### 3. Seal and verify provenance
 
 ```bash
-# Seal artifact directory with Gleipnir (v2.6.0; compatible with v2.4.0+)
+# Seal artifact directory with Gleipnir (v2.6.1; compatible with v2.4.0+)
 wardex provenance seal \
   --dir ./dist \
   --output chain-seal.json \
@@ -351,7 +363,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex/v2@v2.6.0
+        run: go install github.com/had-nu/wardex/v2@v2.6.1
       - name: Guard duplicate release
         run: wardex gate check-version --audit-log wardex-gate-audit.log --version "${GITHUB_REF_NAME#v}"
       - name: Evaluate risk gate
@@ -599,6 +611,7 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 - [Exit codes](doc/operations/EXIT_CODES.md)
 - [Dev environment (docker-compose)](docker-compose.yml)
 - [CHANGELOG](CHANGELOG.md)
+- [v2.6.1 release notes](doc/releases/v2.6.1-notes.md)
 - [v2.6.0 release notes](doc/releases/v2.6.0-notes.md)
 - [Contributing](CONTRIBUTING.md)
 
