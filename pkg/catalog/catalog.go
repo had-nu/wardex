@@ -27,9 +27,15 @@ type entry struct {
 
 // registry is the single source of truth for supported frameworks. Flag help,
 // error messages and report titles all derive from it so they cannot disagree.
+//
+// Scope: Wardex is built for the European market. The frameworks listed here are
+// the ones a European regulated entity is asked to evidence: the EU AI Act, the
+// Cyber Resilience Act, DORA, the GDPR, NIS2 and two international standards
+// used across the EU. SOC 2 was removed for this reason; it is an AICPA
+// framework with no standing in EU law, and carrying it implied a scope the
+// tool does not serve.
 var registry = map[string]entry{
 	"iso27001":  {file: "annex_a.yaml", title: "ISO/IEC 27001:2022"},
-	"soc2":      {file: "soc2.yaml", title: "SOC 2"},
 	"nis2":      {file: "nis2.yaml", title: "NIS2"},
 	"dora":      {file: "dora.yaml", title: "DORA"},
 	"nist_csf":  {file: "nist_csf.yaml", title: "NIST CSF"},

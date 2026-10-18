@@ -30,7 +30,7 @@ Este manual é o ponto de partida para quem está a chegar ao projeto — seja p
 
 O **Wardex** é uma **CLI e biblioteca Go** (`github.com/had-nu/wardex/v2`) que transforma decisões de segurança e conformidade em **evidência auditável**. A baseline actual é **v2.6.0**, com Go **1.27** e `config_schema_version: 2`. Opera em dois modos independentes:
 
-1. **Gap Analysis** — avalia o estado de conformidade de uma organização contra catálogos de controlos de regulamentos/frameworks (NIS2, DORA, CRA, EU AI Act, ISO 27001, SOC 2).
+1. **Gap Analysis** — avalia o estado de conformidade de uma organização contra catálogos de controlos de regulamentos/frameworks (NIS2, DORA, CRA, EU AI Act, ISO 27001, RGPD, NIST CSF).
 2. **Release Gate** — avalia uma lista de vulnerabilidades e produz uma decisão de risco (**ALLOW / WARN / BLOCK**) com base num *risk appetite* configurável.
 
 Cada decisão, cada aceitação de risco e cada artefacto regulamentar é **selado criptograficamente** e registado num **audit log encadeado** à prova de adulteração.
@@ -56,7 +56,6 @@ O Wardex é construído **de raiz para a regulamentação europeia**, e para o p
 | **CRA Art. 14** | Suportado (v2.0+) | **Notificação de exploração ativa** — correlação com catálogo CISA KEV, exit code distinto `12`, centro do release gate |
 | **EU AI Act** | Suportado (v2.4.0+) | Regulamento IA (UE 2024/1689), 31 controlos catalogados |
 | **ISO/IEC 27001:2022** | Suportado | Anexo A |
-| **SOC 2** | Suportado | Trust Services Criteria |
 | **NIST CSF 2.0** | Suportado | Estrutura de cibersegurança |
 
 > [!IMPORTANT]
@@ -85,7 +84,7 @@ wardex/
 │   ├── policy/             # Carregamento de políticas
 │   └── doc/                # Documentação interna / guias de migração
 ├── config/                 # Carregamento e validação de configuração
-├── frameworks/             # Catálogos YAML (dora, eu_ai_act, iso27001, nis2, soc2)
+├── frameworks/             # Ficheiros de política YAML (dora, eu_ai_act, iso27001, nis2)
 │                           # NIST CSF 2.0 está em pkg/catalog/nist_csf.yaml
 ├── spec/cddl/              # Esquemas CDDL (RFC 8610) para serialização
 ├── data/                   # Datasets (calibração, dados históricos)
@@ -303,7 +302,7 @@ O CLI tem **21 comandos operacionais** registados em `main.go`. Cada um delega n
 
 ```bash
 --config PATH       Caminho para wardex-config.yaml (default ./wardex-config.yaml)
---framework NAME    iso27001|soc2|nis2|dora|nist_csf|eu_ai_act
+--framework NAME    cra|dora|eu_ai_act|gdpr|iso27001|nis2|nist_csf
 --gate FILE         Ficheiro de vulnerabilidades para o release gate
 --gate-mode         any|aggregate
 --output FORMAT     markdown|json|csv

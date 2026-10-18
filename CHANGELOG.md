@@ -147,6 +147,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added tests that the banner classifier and the format policy agree, and that
   the advertised format list stays truthful.
 
+### Removed
+
+- **SOC 2.** Wardex is built for the European market and SOC 2 is an AICPA
+  framework with no standing in EU law. Carrying it implied a scope the tool does
+  not serve, and a catalogue is the part of this product a regulator reads.
+  Removing it touches the registry, the embedded catalogue, the policy files,
+  the Helm ConfigMap, the Action metadata and six documents.
+  This is a breaking change for anyone invoking `--framework soc2`; the flag now
+  reports it as unsupported and names the frameworks that remain.
+
 ### Policy
 
 - Added `tools/check-attribution` and a CI job that fails a pull request which

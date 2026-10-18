@@ -144,7 +144,7 @@ The current line is **v2.6.1** and remains compatible with legacy formats.
 
 ## Frameworks and workflows
 
-**Selectable frameworks:** ISO/IEC 27001:2022 · SOC 2 · NIS 2 · DORA · NIST CSF 2.0 · **EU AI Act**
+**Selectable frameworks:** ISO/IEC 27001:2022 · **EU AI Act** · **CRA** · **DORA** · **NIS 2** · **GDPR** · NIST CSF 2.0
 
 **Regulatory workflows:** CRA Article 14, risk acceptances, provenance, chained audit logs, and release governance.
 

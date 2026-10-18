@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/had-nu/wardex/v2/pkg/catalog"
 	"github.com/had-nu/wardex/v2/pkg/model"
 	"github.com/had-nu/wardex/v2/pkg/sdk"
 )
@@ -60,7 +61,7 @@ func TestAnalyze_AllFrameworks(t *testing.T) {
 		{ID: "C1", Name: "Access Control", Maturity: 3, Domains: []string{"access_control"}},
 	}
 
-	frameworks := []string{"iso27001", "dora", "nis2", "soc2"}
+	frameworks := catalog.Keys()
 	for _, fw := range frameworks {
 		t.Run(fw, func(t *testing.T) {
 			result, err := sdk.Analyze(controls, fw)
@@ -147,7 +148,7 @@ func TestLoadFramework_Iso27001(t *testing.T) {
 }
 
 func TestLoadFramework_AllFrameworks(t *testing.T) {
-	frameworks := []string{"iso27001", "dora", "nis2", "soc2"}
+	frameworks := catalog.Keys()
 	for _, fw := range frameworks {
 		t.Run(fw, func(t *testing.T) {
 			controls, err := sdk.LoadFramework(fw)

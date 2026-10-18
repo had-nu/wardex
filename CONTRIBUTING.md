@@ -41,7 +41,7 @@ Wardex strictly uses a **Simplified Gitflow** model (`main` + `dev` branches) to
    - Always pristine, deployable, and cryptographically sound.
    - Contains only tagged production releases (e.g., `v1.7.0`).
    - Direct commits are **prohibited**. All code arrives via Pull Requests from `dev`.
-   - Used as the ultimate source of truth for SOC2/ISO 27001 auditors.
+   - Used as the ultimate source of truth for an auditor of any supported framework.
 
 2. **`dev` (Integration / Pre-Release)**
    - The primary working branch.

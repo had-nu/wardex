@@ -120,3 +120,51 @@ func TestUnsupportedFrameworkNamesEveryKey(t *testing.T) {
 		}
 	}
 }
+
+// retiredFrameworks were supported and are not any more, with the reason.
+//
+// This is a list of absences on purpose. Removing a framework touches the
+// registry, its catalogue, the policy files, the Helm ConfigMap, the Action
+// metadata and six documents, and every one of those is a place a stale
+// reference can survive. SOC 2 was removed because Wardex is built for the
+// European market and it is an AICPA framework with no standing in EU law.
+var retiredFrameworks = map[string]string{
+	"soc2": "AICPA framework, no standing in EU law; Wardex targets the European market",
+}
+
+func TestRetiredFrameworksAreGone(t *testing.T) {
+	for key, reason := range retiredFrameworks {
+		t.Run(key, func(t *testing.T) {
+			if _, ok := catalog.DisplayName(key); ok {
+				t.Errorf("%s is still registered; it was retired because %s", key, reason)
+			}
+			if _, err := catalog.Load(key); err == nil {
+				t.Errorf("Load(%q) still succeeds", key)
+			}
+		})
+	}
+}
+
+// TestEveryRegisteredFrameworkIsInEuropeanScope guards the registry against
+// quietly regaining a framework that belongs to another regime. It is a
+// reminder rather than a legal test: the reason column is the one to update
+// when this fails.
+func TestEveryRegisteredFrameworkIsInEuropeanScope(t *testing.T) {
+	// Each of these is in force in the European Union or is an international
+	// standard that EU regulation and audit practice routinely require.
+	inScope := map[string]string{
+		"iso27001":  "ISO/IEC 27001, widely required by EU regulation and procurement",
+		"eu_ai_act": "Regulation (EU) 2024/1689, the EU AI Act",
+		"cra":       "Regulation (EU) 2024/2847, the Cyber Resilience Act",
+		"dora":      "Regulation (EU) 2022/2554, DORA for the financial sector",
+		"nis2":      "Directive (EU) 2022/2555, NIS2",
+		"gdpr":      "Regulation (EU) 2016/679, the GDPR",
+		"nist_csf":  "NIST CSF, referenced by NIS2 and by EU procurement",
+	}
+
+	for _, key := range catalog.Keys() {
+		if _, ok := inScope[key]; !ok {
+			t.Errorf("framework %q is registered but has no recorded European basis; add it to inScope with the reason, or retire it", key)
+		}
+	}
+}

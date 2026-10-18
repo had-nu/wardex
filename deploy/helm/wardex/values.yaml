@@ -72,7 +72,7 @@ config:
       product_version: ""
 
 # -- Framework controls to mount and pass to wardex evaluate.
-# Supported: iso27001 | nis2 | dora | soc2
+# Supported: iso27001 | nis2 | dora
 # The corresponding bundled YAML is mounted at /frameworks/<framework>/
 framework: iso27001
 
