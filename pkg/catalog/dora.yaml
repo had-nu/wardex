@@ -1,6 +1,26 @@
+# DORA control catalogue.
+#
+# Source:
+#   - Regulation (EU) 2022/2554 of the European Parliament and of the Council of
+#     14 December 2022 on digital operational resilience for the financial sector,
+#     OJ L 333, 27.12.2022, CELEX 32022R2554.
+#
+# Identifier scheme. "DORA.Art<N>" names the article of the Regulation. Where one
+# article carries more than one distinct obligation, a second control carries
+# ".2". The title after the identifier is the Regulation's own.
+#
+# Every control was placed under the article whose subject it describes, read
+# from the text of the Regulation rather than from an outline of the subject
+# matter.
+#
+# Scope. Articles 32 to 44 and 46 to 56 concern the Lead Overseer, supervisory
+# authorities and administrative penalties. Those bind authorities rather than a
+# financial entity and are not listed: a catalogue an entity scores itself
+# against should not carry obligations that are not its own.
+
 - id: DORA.Art5
-  name: "Governance and ICT Risk Management Framework — Board accountability, strategy, and structure"
-  domain: "organizational"
+  name: Governance and organisation
+  domain: organizational
   base_score: 10.0
   keywords:
     - board accountability
@@ -8,26 +28,26 @@
     - strategy
     - governance
 - id: DORA.Art6
-  name: "ICT Risk Management Framework — Policies, procedures, and control environment"
-  domain: "organizational"
+  name: ICT risk management framework
+  domain: organizational
   base_score: 9.5
   keywords:
     - risk management framework
     - policy
     - control environment
     - icrf
-- id: DORA.Art7
-  name: "ICT Risk Identification and Classification — Asset inventory, critical functions, dependency mapping"
-  domain: "technological"
+- id: DORA.Art8
+  name: "Identification: asset inventory and classification"
+  domain: technological
   base_score: 9.0
   keywords:
     - asset inventory
     - critical function
     - dependency mapping
     - business process
-- id: DORA.Art8
-  name: "ICT Risk Assessment — Threat scenarios, impact analysis, residual risk evaluation"
-  domain: "process"
+- id: DORA.Art8.2
+  name: "Identification: risk classification and risk assessment scenarios"
+  domain: process
   base_score: 9.0
   keywords:
     - risk assessment
@@ -35,22 +55,17 @@
     - impact analysis
     - residual risk
 - id: DORA.Art9
-  name: "Protection and Prevention — Encryption, access control, segmentation, hardening"
-  domain: "technological"
+  name: Protection and prevention
+  domain: technological
   base_score: 9.5
   keywords:
     - encryption
     - crypto
     - access control
     - segmentation
-  practices:
-    - id: PR.DORA.Art9.1
-      name: "Enforce strict zero-trust segmentation"
-      min_maturity: 4
-      gate_relevant: true
 - id: DORA.Art10
-  name: "Detection — Anomaly detection, SIEM, monitoring, alerting"
-  domain: "technological"
+  name: Detection
+  domain: technological
   base_score: 8.5
   keywords:
     - anomaly detection
@@ -58,8 +73,8 @@
     - monitoring
     - alerting
 - id: DORA.Art11
-  name: "Response and Recovery — Incident response plans, DR, business continuity"
-  domain: "process"
+  name: Response and recovery
+  domain: process
   base_score: 9.0
   keywords:
     - incident
@@ -67,25 +82,33 @@
     - bcp
     - drp
 - id: DORA.Art12
-  name: "Backup and Restoration — Frequency, off-site, integrity testing"
-  domain: "process"
+  name: "Backup policies and procedures, restoration and recovery"
+  domain: process
   base_score: 8.0
   keywords:
     - backup
     - restoration
     - off-site
     - integrity test
+- id: DORA.Art12.2
+  name: "Recovery procedures, including restoration and recovery testing"
+  domain: process
+  base_score: 7.0
+  keywords:
+    - financial impact
+    - cost
+    - incident cost
 - id: DORA.Art13
-  name: "Communication Plans and Crisis Communication"
-  domain: "process"
+  name: Learning and evolving
+  domain: process
   base_score: 7.0
   keywords:
     - crisis communication
     - stakeholder notification
     - press
 - id: DORA.Art14
-  name: "Incident Classification and Reporting Obligations — Timelines, competent authorities"
-  domain: "process"
+  name: "Communication: incident communication plan and crisis communication"
+  domain: process
   base_score: 10.0
   keywords:
     - incident reporting
@@ -93,16 +116,9 @@
     - notification
     - competent authority
     - esc
-- id: DORA.Art15
-  name: "Voluntary Notification — Optional early warning to authorities"
-  domain: "process"
-  base_score: 5.0
-  keywords:
-    - voluntary notification
-    - early warning
 - id: DORA.Art16
-  name: "ICT Third-Party Risk Management — Vendor due diligence, contractual oversight"
-  domain: "organizational"
+  name: Simplified ICT risk management framework
+  domain: organizational
   base_score: 9.0
   keywords:
     - third party
@@ -110,66 +126,48 @@
     - contractual
     - ict outsourcing
 - id: DORA.Art17
-  name: "Key Contractual Provisions — Audit rights, SLA, termination, location of data"
-  domain: "organizational"
+  name: ICT-related incident management process
+  domain: process
   base_score: 8.5
   keywords:
-    - contractual
-    - audit rights
-    - sla
-    - data location
+    - post-incident review
+    - corrective action
+    - ir plan
 - id: DORA.Art18
-  name: "Register of Information — ICT third-party register maintained and reviewed"
-  domain: "organizational"
+  name: Classification of ICT-related incidents and cyber threats
+  domain: organizational
   base_score: 8.0
   keywords:
     - third-party register
     - vendor inventory
     - register
 - id: DORA.Art19
-  name: "Concentration Risk — Identification of critical single points of failure in third-party dependencies"
-  domain: "organizational"
-  base_score: 8.0
-  keywords:
-    - concentration risk
-    - single point of failure
-    - dependency
-- id: DORA.Art20
-  name: "ICT Third-Party Risk Assessment — Ongoing monitoring and reassessment"
-  domain: "process"
-  base_score: 8.5
-  keywords:
-    - ongoing monitoring
-    - reassessment
-    - tprm
-- id: DORA.Art21
-  name: "Subcontracting Oversight — End-to-end visibility of subcontractor chain"
-  domain: "organizational"
-  base_score: 7.5
-  keywords:
-    - subcontractor
-    - sub-contracting
-    - supply chain visibility
-- id: DORA.Art22
-  name: "Information Sharing Arrangements — Threat intelligence sharing"
-  domain: "process"
-  base_score: 6.0
-  keywords:
-    - threat intelligence
-    - information sharing
-    - tisp
-- id: DORA.Art23
-  name: "ICT Risk Management Reporting — Regular reporting to management and board"
-  domain: "organizational"
+  name: Reporting content and templates
+  domain: organizational
   base_score: 8.0
   keywords:
     - reporting
     - board report
     - management
     - dashboards
-- id: DORA.Art24
-  name: "Digital Operational Resilience Testing — TLPT, pentest, vulnerability scanning"
-  domain: "technological"
+- id: DORA.Art19.2
+  name: Reporting of major ICT-related incidents
+  domain: organizational
+  base_score: 8.0
+  keywords:
+    - concentration risk
+    - single point of failure
+    - dependency
+- id: DORA.Art19.3
+  name: Voluntary notification of significant cyber threats
+  domain: process
+  base_score: 5.0
+  keywords:
+    - voluntary notification
+    - early warning
+- id: DORA.Art25
+  name: Testing of ICT tools and systems
+  domain: technological
   base_score: 7.5
   keywords:
     - pentest
@@ -177,57 +175,69 @@
     - purple team
     - red team
     - vulnerability scanning
-  practices:
-    - id: PR.DORA.Art24.1
-      name: "Execute continuous DAST and SAST scanning"
-      min_maturity: 3
-      gate_relevant: true
-- id: DORA.Art25
-  name: "Threat-Led Penetration Testing (TLPT) — Mandatory threat-intelligence-guided testing"
-  domain: "technological"
+- id: DORA.Art26
+  name: Advanced testing based on threat-led penetration testing
+  domain: technological
   base_score: 7.0
   keywords:
     - tlap
     - threat-led pentest
     - tlpt
     - advanced testing
-- id: DORA.Art26
-  name: "ICT Incident Response Testing — Regular testing of IR capabilities"
-  domain: "process"
+- id: DORA.Art27
+  name: Requirements for testers carrying out TLPT
+  domain: process
   base_score: 7.5
   keywords:
     - ir testing
     - tabletop
     - simulation
-- id: DORA.Art27
-  name: "ICT Risk Management Review and Audit — Independent review cycle"
-  domain: "organizational"
+- id: DORA.Art28
+  name: General principles of the concentration risk chapter
+  domain: organizational
   base_score: 8.0
   keywords:
     - audit
     - independent review
     - internal audit
-- id: DORA.Art28
-  name: "Learning and Evolution — Lessons learned from incidents and testing"
-  domain: "process"
+- id: DORA.Art29
+  name: Preliminary assessment of ICT concentration risk at entity level
+  domain: process
   base_score: 6.0
   keywords:
     - lessons learned
     - improvement
     - corrective action
-- id: DORA.Art29
-  name: "ICT Incident Response Plan and Post-Incident Review"
-  domain: "process"
+- id: DORA.Art30
+  name: Key contractual provisions
+  domain: organizational
   base_score: 8.5
   keywords:
-    - post-incident review
-    - corrective action
-    - ir plan
-- id: DORA.Art30
-  name: "Financial Impact Reporting — Reporting of incident financial impact"
-  domain: "process"
-  base_score: 7.0
+    - contractual
+    - audit rights
+    - sla
+    - data location
+- id: DORA.Art30.2
+  name: Subcontracting arrangements under the key contractual provisions
+  domain: organizational
+  base_score: 7.5
   keywords:
-    - financial impact
-    - cost
-    - incident cost
+    - subcontractor
+    - sub-contracting
+    - supply chain visibility
+- id: DORA.Art31
+  name: Designation of critical ICT third-party service providers
+  domain: process
+  base_score: 8.5
+  keywords:
+    - ongoing monitoring
+    - reassessment
+    - tprm
+- id: DORA.Art45
+  name: Information-sharing arrangements on cyber threat information
+  domain: process
+  base_score: 6.0
+  keywords:
+    - threat intelligence
+    - information sharing
+    - tisp
