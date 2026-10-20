@@ -43,13 +43,16 @@ Before running `git push`, the Agent MUST:
 
 ## 4. Documentation Standards
 
-- **Language**: Primary documentation in Portuguese, with English versions available in `README-en.md`.
+- **Language**: UK English is the project language. All active prose, comments,
+  user-facing messages and documentation are UK English; legacy specifications
+  are archived as `legacy-pt` with English abstracts. The repository-wide
+  migration runs in parallel with the M0 baseline.
 - **Tone**: Professional, technical, and executive-oriented.
 - **Formatting**: Use GitHub-flavored Markdown. Use LaTeX syntax (`$$`) for mathematical formulas in `TECHNICAL_VIEW.md`.
 
 ---
 
-## 5. Artifact Exclusion List
+## 5. Artefact Exclusion List
 
 The following patterns MUST NOT be committed to the repository (ensure they are in `.gitignore`):
 - `research/` (Datasets, raw analysis)

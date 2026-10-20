@@ -1,4 +1,4 @@
-.PHONY: all build test lint security reproducible clean
+.PHONY: all build test lint security specs reproducible clean
 
 BINARY := wardex
 PKG    := ./...
@@ -14,6 +14,10 @@ test:
 
 lint:
 	golangci-lint run $(PKG)
+
+# Verify the canonical structure, inventory and vocabulary of the specs.
+specs:
+	go run ./tools/check-specs
 
 security:
 	govulncheck $(PKG)

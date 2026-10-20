@@ -1,0 +1,91 @@
+version: 1
+language: en-GB
+
+# Inventory of the specifications. The repository is the source of truth.
+# status: active | legacy-pt
+# legacy-pt specs keep their Portuguese text and require an English abstract.
+specs:
+  - file: SPEC-M0-baseline.md
+    id: M0
+    title: "Baseline: repository safety net and hygiene"
+    status: active
+    owner: had-nu
+    base: "main @ a75500b"
+
+  - file: "SPEC — Módulo 0 rede de segurança e higiene do repositório.md"
+    id: M0-pt
+    title: "Portuguese working draft, superseded"
+    status: legacy-pt
+    owner: had-nu
+    superseded_by: SPEC-M0-baseline.md
+    abstract: "Portuguese working draft of the M0 baseline spec. Superseded by the UK English SPEC-M0-baseline.md; kept for reference only."
+
+  - file: CBOR_MIGRATION_v2.3.0.md
+    id: v2.3.0
+    title: "CBOR deterministic encoding migration"
+    status: legacy-pt
+    frozen_at: v2.3.0
+    abstract: "Replaces ad-hoc canonicalisation with CBOR deterministic encoding across CPL hashing, state signing and tool provenance."
+
+  - file: SPEC_v1.9.1_schema_cleanup.md
+    id: v1.9.1
+    title: "v1.9.1 schema cleanup"
+    status: legacy-pt
+    frozen_at: v1.9.1
+    abstract: "Removes schema fields with no active consumer and adds a regression test over published examples."
+
+  - file: SPEC_v1.9.2_incomplete_behaviours.md
+    id: v1.9.2
+    title: "v1.9.2 incomplete behaviours"
+    status: legacy-pt
+    frozen_at: v1.9.2
+    abstract: "Implements three behaviours that the architecture already promised: canonical evidence, decision and report."
+
+  - file: SPEC-WARDEX-HARDEN-CORDYCPS-BASED-v2.2.2.md
+    id: v2.2.2-hardening
+    title: "CI/CD hardening after the Cordyceps review"
+    status: legacy-pt
+    frozen_at: v2.2.2
+    abstract: "Hardens the CI/CD supply chain after the Cordyceps review: pinned actions, signed images and path traversal protection."
+
+  - file: SPEC_wardex_trust_.md
+    id: trust
+    title: "Wardex trust store and sealed configuration"
+    status: legacy-pt
+    frozen_at: v2.6.0
+    abstract: "Defines the trust store, key lifecycle, sealed configuration and role-based signing."
+
+  - file: SPEC_wardex_v2.0.1_sdlc_hardening.md
+    id: v2.0.1
+    title: "v2.0.1 SDLC hardening"
+    status: legacy-pt
+    frozen_at: v2.0.1
+    abstract: "Patch release that hardens the pipeline, linter configuration and security documentation."
+
+  - file: SPEC_wardex_v2.0_CRA_Art14.md
+    id: v2.0.0
+    title: "CRA Article 14 enablement"
+    status: legacy-pt
+    frozen_at: v2.0.0
+    abstract: "Enables CRA Article 14 notification artefacts without dispatching them."
+
+  - file: SPEC_wardex_v2.5.0_go127_hardening.md
+    id: v2.5.0
+    title: "Go 1.27 migration and codebase hardening"
+    status: legacy-pt
+    frozen_at: v2.5.0
+    abstract: "Migrates to Go 1.27 and hardens the CLI, I/O and logging architecture."
+
+  - file: SPEC_wardex_v2.6.0_nym_patterns.md
+    id: v2.6.0
+    title: "Nym patterns: chain, migration, gate and keys"
+    status: legacy-pt
+    frozen_at: v2.6.0
+    abstract: "Adopts seven Nym patterns for chain verification, migration, gate classes and keys."
+
+  - file: v2.2.2-SPEC.md
+    id: v2.2.2
+    title: "v2.2.2 specification"
+    status: legacy-pt
+    frozen_at: v2.2.2
+    abstract: "Specification for v2.2.2: Cordyceps hardening and usability improvements."

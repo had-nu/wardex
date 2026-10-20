@@ -68,23 +68,30 @@ until this consolidation moved it.
 
 ## Specifications
 
-Ten specifications, all of them committed. Three of these were silently
-untracked until this consolidation, because an unanchored `specs/` rule in
+Ten historical specifications, archived as `legacy-pt` with English abstracts,
+plus the active M0 baseline. Three of the historical specs were silently
+untracked until the 2026 consolidation, because an unanchored `specs/` rule in
 `.gitignore` matched `doc/specs/`; a fourth sat at the repository root behind an
-unanchored `SPEC-*.md` rule.
+unanchored `SPEC-*.md` rule. The inventory is
+[`specs/specs.yaml`](specs/specs.yaml).
 
-| Document | Scope |
-| --- | --- |
-| [Trust](specs/SPEC_wardex_trust_.md) | Trust system, certificates, key envelopes |
-| [v1.9.1 schema cleanup](specs/SPEC_v1.9.1_schema_cleanup.md) | Schema decisions |
-| [v1.9.2 incomplete behaviours](specs/SPEC_v1.9.2_incomplete_behaviours.md) | What was left undone, and why |
-| [v2.0 CRA Article 14](specs/SPEC_wardex_v2.0_CRA_Art14.md) | Active exploit notification. Section 8 holds the deferred roadmap |
-| [v2.0.1 SDLC hardening](specs/SPEC_wardex_v2.0.1_sdlc_hardening.md) | Build chain. Section 3 holds deferred provenance work |
-| [v2.2.2](specs/v2.2.2-SPEC.md) | Version 2.2.2 |
-| [CI/CD hardening](specs/SPEC-WARDEX-HARDEN-CORDYCPS-BASED-v2.2.2.md) | Pipeline hardening |
-| [v2.5.0 Go 1.27](specs/SPEC_wardex_v2.5.0_go127_hardening.md) | Toolchain move |
-| [v2.6.0 Nym patterns](specs/SPEC_wardex_v2.6.0_nym_patterns.md) | Chain unification, key envelopes, gate classes |
-| [CBOR migration v2.3.0](specs/CBOR_MIGRATION_v2.3.0.md) | Migration to canonical CBOR |
+| Document | Status | Scope |
+| --- | --- | --- |
+| [M0 baseline](specs/SPEC-M0-baseline.md) | active | Repository safety net, golden baseline and spec normalisation |
+| [Trust](specs/SPEC_wardex_trust_.md) | legacy-pt | Trust system, certificates, key envelopes |
+| [v1.9.1 schema cleanup](specs/SPEC_v1.9.1_schema_cleanup.md) | legacy-pt | Schema decisions |
+| [v1.9.2 incomplete behaviours](specs/SPEC_v1.9.2_incomplete_behaviours.md) | legacy-pt | What was left undone, and why |
+| [v2.0 CRA Article 14](specs/SPEC_wardex_v2.0_CRA_Art14.md) | legacy-pt | Active exploit notification. Section 8 holds the deferred roadmap |
+| [v2.0.1 SDLC hardening](specs/SPEC_wardex_v2.0.1_sdlc_hardening.md) | legacy-pt | Build chain. Section 3 holds deferred provenance work |
+| [v2.2.2](specs/v2.2.2-SPEC.md) | legacy-pt | Version 2.2.2 |
+| [CI/CD hardening](specs/SPEC-WARDEX-HARDEN-CORDYCPS-BASED-v2.2.2.md) | legacy-pt | Pipeline hardening |
+| [v2.5.0 Go 1.27](specs/SPEC_wardex_v2.5.0_go127_hardening.md) | legacy-pt | Toolchain move |
+| [v2.6.0 Nym patterns](specs/SPEC_wardex_v2.6.0_nym_patterns.md) | legacy-pt | Chain unification, key envelopes, gate classes |
+| [CBOR migration v2.3.0](specs/CBOR_MIGRATION_v2.3.0.md) | legacy-pt | Migration to canonical CBOR |
+
+The Portuguese working draft of M0 is kept as `legacy-pt` for reference only and
+is not linked from this table; [`specs/specs.yaml`](specs/specs.yaml) records
+it.
 
 ## Releases
 
@@ -106,6 +113,9 @@ narrative is in [CHANGELOG](../CHANGELOG.md); the upload procedure is in
 - Prose is English (UK). Identifiers are frozen: exported Go names, JSON tags,
   CSV headers, environment variables, flag names and exit-code names do not
   change spelling with the prose around them.
+- Legacy specifications are the exception to the language rule: they keep their
+  Portuguese text and carry an English abstract in
+  [`specs/specs.yaml`](specs/specs.yaml).
 - A path written inside a document must resolve. Link checking is part of CI.
 - A statement about where something used to live is history and stays. A
   reference to where something lives now is updated when it moves.
