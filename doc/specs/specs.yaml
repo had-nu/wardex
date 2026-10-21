@@ -12,6 +12,13 @@ specs:
     owner: had-nu
     base: "main @ a75500b"
 
+  - file: SPEC-M1-contracts-and-kit.md
+    id: M1
+    title: "Contracts and kit: the shared base"
+    status: active
+    owner: had-nu
+    base: "baseline/modular-0 (measurements at main @ a75500b)"
+
   - file: "SPEC — Módulo 0 rede de segurança e higiene do repositório.md"
     id: M0-pt
     title: "Portuguese working draft, superseded"
@@ -19,6 +26,14 @@ specs:
     owner: had-nu
     superseded_by: SPEC-M0-baseline.md
     abstract: "Portuguese working draft of the M0 baseline spec. Superseded by the UK English SPEC-M0-baseline.md; kept for reference only."
+
+  - file: "SPEC-M1 — Contracts e kit a base partilhada.md"
+    id: M1-pt
+    title: "Portuguese working draft, superseded"
+    status: legacy-pt
+    owner: had-nu
+    superseded_by: SPEC-M1-contracts-and-kit.md
+    abstract: "Portuguese working draft of the contracts-and-kit spec. Superseded by the UK English SPEC-M1-contracts-and-kit.md; kept for reference only."
 
   - file: CBOR_MIGRATION_v2.3.0.md
     id: v2.3.0
