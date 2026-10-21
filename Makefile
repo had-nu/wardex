@@ -1,4 +1,4 @@
-.PHONY: all build test lint security specs reproducible clean golden golden-update boundaries
+.PHONY: all build test lint security specs reproducible clean golden golden-update boundaries coverage-table
 
 BINARY := wardex
 PKG    := ./...
@@ -36,6 +36,12 @@ golden:
 # trailer naming the ADR or issue that justifies the new expectation.
 golden-update:
 	GOLDEN_UPDATE=1 go test -tags golden -count=1 ./test/golden/...
+
+# Measure coverage per package. coverage.json is the input to the ratchet in
+# P5; coverage.md is the human-readable table published by CI.
+coverage-table:
+	go test -coverprofile=coverage.out ./...
+	go run ./tools/coverage-report -profile coverage.out -out coverage.md -json coverage.json
 
 security:
 	govulncheck $(PKG)

@@ -300,6 +300,7 @@ The tools share one error model. Common exit codes: `0` no violations; `1` new v
 make golden            # go test -tags golden ./test/golden/...
 make golden-update     # rewrites want/ (requires Golden-Change trailer)
 make boundaries        # go run ./tools/check-boundaries
+make coverage-table    # go test -coverprofile + per-package table
 make ratchet           # coverage per package, nosec and lint against the baselines
 make ratchet-update    # accepts increases only
 make specs             # go run ./tools/check-specs

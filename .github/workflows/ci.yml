@@ -41,6 +41,9 @@ jobs:
       - name: Generate coverage HTML report
         run: go tool cover -html=coverage.out -o coverage.html
 
+      - name: Generate per-package coverage table
+        run: go run ./tools/coverage-report -profile coverage.out -out coverage.md -json coverage.json
+
       - name: Upload coverage artefacts
         uses: actions/upload-artifact@v4
         with:
@@ -48,6 +51,8 @@ jobs:
           path: |
             coverage.out
             coverage.html
+            coverage.md
+            coverage.json
 
       - name: Verify documentation links resolve
         run: go run ./tools/check-doclinks
