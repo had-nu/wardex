@@ -1,0 +1,6 @@
+id: convert-sbom-openvex
+flow: G4
+args: [convert, sbom, vex.json, --output, wardex-vulns.yaml]
+outputs: [wardex-vulns.yaml]
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

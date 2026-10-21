@@ -1,0 +1,7 @@
+converted_by: wardex-convert/cyclonedx
+vulnerabilities:
+    - cve_id: CVE-2025-2001
+      cvss_base: 9.1
+      epss_score: 0.05
+      component: pkg:npm/lodash@4.17.21
+      reachable: true

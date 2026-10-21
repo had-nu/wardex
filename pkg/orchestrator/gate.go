@@ -159,6 +159,15 @@ func RunGate(ctx context.Context, opts GateOptions) (exitCode int, runErr error)
 		fmt.Fprintf(opts.Stderr, "Warning: release_gate.enabled is false in config — gate will always ALLOW.\n")
 	}
 
+	// Article 13(8) is a manufacturer obligation, so the soft check runs only
+	// when a CRA product is declared; otherwise every gate run would warn about
+	// a support period its operator has no reason to set.
+	if cfg.CRA.Art14.ProductName != "" {
+		for _, warning := range cfg.CRA.ValidateSupportPeriod() {
+			fmt.Fprintf(opts.Stderr, "Warning: %s\n", warning)
+		}
+	}
+
 	if opts.Strict {
 		if _, err := accept.ConfigHash(opts.ConfigPath); err != nil {
 			msg := fmt.Sprintf("[STRICT ENFORCEMENT] config hash computation failed: %v\n", err)

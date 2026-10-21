@@ -1,0 +1,5 @@
+| ID | DOMAIN | EXPIRY | REASON |
+| ------------ | -------------------- | -------------- | -------------------------------------------------- |
+| A.8.1        | technological_controls | 2020-12-31     | Legacy shared admin account pending migration      |
+
+[FAIL] Found 1 expired exception(s) in "policies"

@@ -17,27 +17,27 @@ const (
 	StatusGap CoverageStatus = "gap"
 )
 
-// GatePracticeStatus resume o estado da prática de release gate para um controle.
+// GatePracticeStatus summarises the release-gate practice status for a control.
 type GatePracticeStatus struct {
 	PracticeID    string
-	MaturityLevel int    // nível inferido do AssetContext declarado
-	MaturityLabel string // descrição humana do nível
+	MaturityLevel int    // level inferred from the declared AssetContext
+	MaturityLabel string // human-readable description of the level
 	IsConfigured  bool
 }
 
-// Finding representa o resultado da análise de um controle da Annex A.
+// Finding represents the analysis result for an Annex A control.
 type Finding struct {
 	Control           CatalogControl
 	Status            CoverageStatus
 	FinalScore        float64
-	EffectiveMaturity float64 // Média aritmética dos controlos cobertos (v1.8.0 fix)
+	EffectiveMaturity float64 // Arithmetic mean of the covered controls (v1.8.0 fix)
 	CoveredBy         []Mapping
 	GapReasons        []string
 	Recommendation    string
-	GatePractice      *GatePracticeStatus // não-nil se o controle tem práticas de gate
+	GatePractice      *GatePracticeStatus // non-nil when the control has gate practices
 }
 
-// DomainSummary resume a cobertura e maturidade de um domínio.
+// DomainSummary summarises the coverage and maturity of a domain.
 type DomainSummary struct {
 	Domain          string
 	TotalControls   int
@@ -48,7 +48,7 @@ type DomainSummary struct {
 	CoveragePercent float64
 }
 
-// ExecutiveSummary é desenhado para management reviews.
+// ExecutiveSummary is designed for management reviews.
 type ExecutiveSummary struct {
 	// Framework is the catalogue the run evaluated against, for example
 	// "iso27001" or "nis2". Report generators use it for the document title.
@@ -68,24 +68,24 @@ type ExecutiveSummary struct {
 	GlobalCoverage  float64
 	DomainSummaries []DomainSummary
 	TopCriticalGaps []Finding
-	GateSummary     *GateReport // nil se --gate não foi ativado
+	GateSummary     *GateReport // nil when --gate was not enabled
 }
 
-// Delta representa a variação entre a execução atual e o snapshot anterior.
+// Delta represents the change between the current run and the previous snapshot.
 type Delta struct {
 	SnapshotDate       time.Time
 	CoverageChange     float64
 	NewlyCovered       []string
 	NewGaps            []string
 	Unchanged          int
-	GateMaturityChange int // variação do nível de maturidade do gate
+	GateMaturityChange int // change in the gate maturity level
 }
 
-// GapReport é o relatório completo.
+// GapReport is the complete report.
 type GapReport struct {
 	Summary         ExecutiveSummary
 	Findings        []Finding
-	Roadmap         []Finding // Subset de gaps/partials, ordenado por FinalScore desc
+	Roadmap         []Finding // Subset of gaps/partials, ordered by FinalScore descending
 	Gate            *GateReport
 	Delta           *Delta
 	LayerDelta      *LayerDelta       `json:"layer_delta,omitempty"`

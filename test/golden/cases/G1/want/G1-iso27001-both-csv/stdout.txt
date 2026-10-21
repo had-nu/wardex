@@ -1,0 +1,102 @@
+Control ID,Name,Domain,Status,Score,Maturity,Gap Reasons
+A.5.1,Policies for information security,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.2,Information security roles and responsibilities,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.3,Segregation of duties,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.4,Management responsibilities,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.5,Contact with authorities,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.6,Contact with special interest groups,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.7,Threat intelligence,organizational,partial,3.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.8,Information security in project management,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.9,Inventory of information and other associated assets,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.10,Acceptable use of information and other associated assets,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.11,Return of assets,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.12,Classification of information,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.13,Labelling of information,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.14,Information transfer,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.15,Access control,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.16,Identity management,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.17,Authentication information,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.18,Access rights,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.19,Information security in supplier relationships,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.20,Addressing information security within supplier agreements,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.21,Managing information security in the ICT supply chain,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.22,"Monitoring, review and change management of supplier services",organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.23,Information security for use of cloud services,organizational,partial,3.75,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.24,Information security incident management planning and preparation,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.25,Assessment and decision on information security events,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.26,Response to information security incidents,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.27,Learning from information security incidents,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.28,Collection of evidence,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.29,Information security during disruption,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.30,ICT readiness for business continuity,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.31,"Legal, statutory, regulatory and contractual requirements",organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.32,Intellectual property rights,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.33,Protection of records,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.34,Privacy and protection of PII,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.35,Independent review of information security,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.36,"Compliance with policies, rules and standards for information security",organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.5.37,Documented operating procedures,organizational,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.6.1,Screening,people,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.6.2,Terms and conditions of employment,people,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.6.3,"Information security awareness, education and training",people,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.6.4,Disciplinary process,people,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.6.5,Responsibilities after termination or change of employment,people,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.6.6,Confidentiality or non-disclosure agreements,people,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.6.7,Remote working,people,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.6.8,Information security event reporting,people,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.1,Physical security perimeters,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.2,Physical entry,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.3,"Securing offices, rooms and facilities",physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.4,Physical security monitoring,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.5,Protecting against physical and environmental threats,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.6,Working in secure areas,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.7,Clear desk and clear screen,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.8,Equipment siting and protection,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.9,Security of assets off-premises,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.10,Storage media,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.11,Supporting utilities,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.12,Cabling security,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.13,Equipment maintenance,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.7.14,Secure disposal or re-use of equipment,physical,partial,2.50,3.5,Control 'DOC-001' is documented only (Paper Security)
+A.8.1,User endpoint devices,technological,covered,0.00,3.3,
+A.8.2,Privileged access rights,technological,covered,0.00,3.3,
+A.8.3,Information access restriction,technological,covered,0.00,3.3,
+A.8.4,Access to source code,technological,covered,0.00,3.3,
+A.8.5,Secure authentication,technological,covered,0.00,3.3,
+A.8.6,Capacity management,technological,covered,0.00,3.3,
+A.8.7,Protection against malware,technological,covered,0.00,3.3,
+A.8.8,Management of technical vulnerabilities,technological,covered,0.00,3.3,
+A.8.9,Configuration management,technological,covered,0.00,3.3,
+A.8.10,Information deletion,technological,covered,0.00,3.3,
+A.8.11,Data masking,technological,covered,0.00,3.3,
+A.8.12,Data leakage prevention,technological,covered,0.00,3.3,
+A.8.13,Information backup,technological,covered,0.00,3.3,
+A.8.14,Redundancy of information processing facilities,technological,covered,0.00,3.3,
+A.8.15,Logging,technological,covered,0.00,3.3,
+A.8.16,Monitoring activities,technological,covered,0.00,3.3,
+A.8.17,Clock synchronization,technological,covered,0.00,3.3,
+A.8.18,Use of privileged utility programs,technological,covered,0.00,3.3,
+A.8.19,Installation of software on operational systems,technological,covered,0.00,3.3,
+A.8.20,Networks security,technological,covered,0.00,3.3,
+A.8.21,Security of network services,technological,covered,0.00,3.3,
+A.8.22,Segregation of networks,technological,covered,0.00,3.3,
+A.8.23,Web filtering,technological,covered,0.00,3.3,
+A.8.24,Use of cryptography,technological,covered,0.00,3.3,
+A.8.25,Secure development life cycle,technological,covered,0.00,3.3,
+A.8.26,Application security requirements,technological,covered,0.00,3.3,
+A.8.27,Secure system architecture and engineering principles,technological,covered,0.00,3.3,
+A.8.28,Secure coding,technological,covered,0.00,3.3,
+A.8.29,Security testing in development and acceptance,technological,covered,0.00,3.3,
+A.8.30,Outsourced development,technological,covered,0.00,3.3,
+A.8.31,"Separation of development, test and production environments",technological,covered,0.00,3.3,
+A.8.32,Change management,technological,covered,0.00,3.3,
+A.8.33,Test information,technological,covered,0.00,3.3,
+A.8.34,Protection of information systems during audit testing,technological,covered,0.00,3.3,
+
+## Layer Delta
+Metric,Value
+Documented Count,2
+Implemented Count,1
+Active Coverage,0
+Policy Gap,2
+Shadow Security,1

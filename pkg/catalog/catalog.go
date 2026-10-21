@@ -83,5 +83,17 @@ func Load(framework string) ([]model.CatalogControl, error) {
 		return nil, fmt.Errorf("parse catalogue %s: %w", found.file, err)
 	}
 
+	// Only annex_a.yaml declares `domains`; the other six catalogues declare a
+	// single `domain`. The correlator compares an existing control's declared
+	// domains with this field, so a control with an empty list can never match
+	// declaratively (high confidence) and falls back to keywords (low
+	// confidence). Derive the list from the single domain so every catalogue is
+	// matched on the same terms, without duplicating `domain` in the YAML.
+	for i := range controls {
+		if len(controls[i].Domains) == 0 && controls[i].Domain != "" {
+			controls[i].Domains = []string{controls[i].Domain}
+		}
+	}
+
 	return controls, nil
 }

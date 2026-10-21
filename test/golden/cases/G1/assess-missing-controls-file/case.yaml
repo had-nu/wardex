@@ -1,0 +1,6 @@
+id: assess-missing-controls-file
+flow: G1
+args: [assess, documented.yaml, missing.yaml, --framework, iso27001, --output, json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

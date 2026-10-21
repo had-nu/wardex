@@ -1,0 +1,10 @@
+release_gate:
+  enabled: true
+  mode: any
+  risk_appetite: 0.6
+  warn_above: 0.3
+  asset_context:
+    criticality: 0.9
+    internet_facing: true
+    requires_auth: true
+    environment: production

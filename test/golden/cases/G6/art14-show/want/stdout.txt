@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "capabilities": 3,
+  "artefact_id": "1cf0d599-c082-4e8c-a024-fd8d7296bce2",
+  "generated_at": "<TS>",
+  "generated_by": "wardex/v2.0.0",
+  "wardex_actor": "golden.actor",
+  "status": "draft",
+  "early_warning": {
+    "awareness_timestamp": "<TS>",
+    "deadline": "<TS>"
+  },
+  "notification": {
+    "deadline": "<TS>",
+    "product_name": "Golden Product",
+    "product_version": "1.0.0",
+    "cve_ids": [
+      "CVE-2025-9003"
+    ],
+    "exploitation_nature": "[OPERATOR: complete before dispatch]",
+    "vulnerability_nature": "[OPERATOR: complete before dispatch]",
+    "sensitivity_flag": false
+  },
+  "final_report": {
+    "deadline": "<TS>",
+    "patch_available_at": "<TS>"
+  },
+  "hmac": "335784905d8fc8d1a5793d98570a8fdd99b23580bdba4a636c40d5cd7ae57916"
+}

@@ -46,7 +46,7 @@ func TestChainVerifyValid(t *testing.T) {
 				t.Fatalf("verify chain: %v", err)
 			}
 			if !ok {
-				t.Error("cadeia valida reportada como invalida")
+				t.Error("valid chain reported as invalid")
 			}
 		})
 	}
@@ -68,7 +68,7 @@ func TestChainVerifyTampered(t *testing.T) {
 				t.Fatalf("verify chain: %v", err)
 			}
 			if ok {
-				t.Error("cadeia adulterada reportada como valida")
+				t.Error("tampered chain reported as valid")
 			}
 		})
 	}
@@ -78,19 +78,19 @@ func TestChainGenesisEntry(t *testing.T) {
 	singleValid := entryLine("genesis")
 	ok, err := cpl.VerifyChain(singleValid)
 	if err != nil || !ok {
-		t.Errorf("entrada genesis valida rejeitada: err=%v ok=%v", err, ok)
+		t.Errorf("valid genesis entry rejected: err=%v ok=%v", err, ok)
 	}
 
 	runtimeGen := []byte(`{"ts":"2026-06-20T10:00:00Z","event":"gate.evaluated"}` + "\n")
 	ok, err = cpl.VerifyChain(runtimeGen)
 	if err != nil || !ok {
-		t.Errorf("entrada genesis runtime rejeitada: err=%v ok=%v", err, ok)
+		t.Errorf("runtime genesis entry rejected: err=%v ok=%v", err, ok)
 	}
 
 	singleBad := entryLine("sha256:00000000")
 	ok, err = cpl.VerifyChain(singleBad)
 	if err != nil || ok {
-		t.Errorf("entrada genesis invalida aceite: err=%v ok=%v", err, ok)
+		t.Errorf("invalid genesis entry accepted: err=%v ok=%v", err, ok)
 	}
 }
 
@@ -132,6 +132,6 @@ func TestChainLargeCorpus(t *testing.T) {
 	chain := generateValidChain(t, 500)
 	ok, err := cpl.VerifyChain(chain)
 	if err != nil || !ok {
-		t.Errorf("corpus de 500 eventos falhou: err=%v ok=%v", err, ok)
+		t.Errorf("corpus of 500 events failed: err=%v ok=%v", err, ok)
 	}
 }

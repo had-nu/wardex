@@ -1,0 +1,6 @@
+id: audit-verify-chain-ok
+flow: G8
+args: [audit, verify-chain, --audit-log, audit_log_ok.jsonl]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

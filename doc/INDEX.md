@@ -6,8 +6,8 @@ the repository.
 
 ## Where things live
 
-There are four directories with documentation in them, and they do different
-jobs. Confusing them was the reason this file exists.
+There are five directories with documentation or verification inputs in them,
+and they do different jobs. Confusing them was the reason this file exists.
 
 | Path | Holds | Markdown? |
 | --- | --- | --- |
@@ -15,6 +15,7 @@ jobs. Confusing them was the reason this file exists.
 | `docs/` | The published website, served by GitHub Pages from the `dev` branch. | no |
 | `spec/` | CDDL schemas. Machine-readable, referenced from Go comments. | no |
 | `internal/` | Go packages only. No documents. | no |
+| `test/` | Black-box golden cases, security tests and fixtures. No prose. | no |
 
 `docs/` and `doc/` differ by one letter and have nothing in common beyond that.
 A markdown file in `docs/` is misplaced: `doc/regulatory-context.md` sat there
@@ -43,6 +44,7 @@ until this consolidation moved it.
 | --- | --- |
 | [Technical view](architecture/TECHNICAL_VIEW.md) | How the system is put together |
 | [Business view](architecture/BUSINESS_VIEW.md) | Why it is put together that way |
+| [Architecture decision records](architecture/adr/README.md) | Why the order, layout, JSON policy, errors, floors, `/v3` path and language are what they are |
 | [Engineering blueprint](architecture/ENGINEERING_BLUEPRINT.md) | Build, test and release expectations |
 | [Crypto architecture](architecture/CRYPTO_ARCHITECTURE.md) | Trust chain, key envelopes, the 3CP protocol |
 | [Provenance enhancement](architecture/REC_PROVENANCE_ENHANCEMENT.md) | Anchoring and timestamping |
@@ -68,23 +70,31 @@ until this consolidation moved it.
 
 ## Specifications
 
-Ten specifications, all of them committed. Three of these were silently
-untracked until this consolidation, because an unanchored `specs/` rule in
+Ten historical specifications, archived as `legacy-pt` with English abstracts,
+plus the active M0 and M1 specs. Three of the historical specs were silently
+untracked until the 2026 consolidation, because an unanchored `specs/` rule in
 `.gitignore` matched `doc/specs/`; a fourth sat at the repository root behind an
-unanchored `SPEC-*.md` rule.
+unanchored `SPEC-*.md` rule. The inventory is
+[`specs/specs.yaml`](specs/specs.yaml).
 
-| Document | Scope |
-| --- | --- |
-| [Trust](specs/SPEC_wardex_trust_.md) | Trust system, certificates, key envelopes |
-| [v1.9.1 schema cleanup](specs/SPEC_v1.9.1_schema_cleanup.md) | Schema decisions |
-| [v1.9.2 incomplete behaviours](specs/SPEC_v1.9.2_incomplete_behaviours.md) | What was left undone, and why |
-| [v2.0 CRA Article 14](specs/SPEC_wardex_v2.0_CRA_Art14.md) | Active exploit notification. Section 8 holds the deferred roadmap |
-| [v2.0.1 SDLC hardening](specs/SPEC_wardex_v2.0.1_sdlc_hardening.md) | Build chain. Section 3 holds deferred provenance work |
-| [v2.2.2](specs/v2.2.2-SPEC.md) | Version 2.2.2 |
-| [CI/CD hardening](specs/SPEC-WARDEX-HARDEN-CORDYCPS-BASED-v2.2.2.md) | Pipeline hardening |
-| [v2.5.0 Go 1.27](specs/SPEC_wardex_v2.5.0_go127_hardening.md) | Toolchain move |
-| [v2.6.0 Nym patterns](specs/SPEC_wardex_v2.6.0_nym_patterns.md) | Chain unification, key envelopes, gate classes |
-| [CBOR migration v2.3.0](specs/CBOR_MIGRATION_v2.3.0.md) | Migration to canonical CBOR |
+| Document | Status | Scope |
+| --- | --- | --- |
+| [M0 baseline](specs/SPEC-M0-baseline.md) | active | Repository safety net, golden baseline and spec normalisation |
+| [M1 contracts and kit](specs/SPEC-M1-contracts-and-kit.md) | active | Shared types and primitives, output contract and error model |
+| [Trust](specs/SPEC_wardex_trust_.md) | legacy-pt | Trust system, certificates, key envelopes |
+| [v1.9.1 schema cleanup](specs/SPEC_v1.9.1_schema_cleanup.md) | legacy-pt | Schema decisions |
+| [v1.9.2 incomplete behaviours](specs/SPEC_v1.9.2_incomplete_behaviours.md) | legacy-pt | What was left undone, and why |
+| [v2.0 CRA Article 14](specs/SPEC_wardex_v2.0_CRA_Art14.md) | legacy-pt | Active exploit notification. Section 8 holds the deferred roadmap |
+| [v2.0.1 SDLC hardening](specs/SPEC_wardex_v2.0.1_sdlc_hardening.md) | legacy-pt | Build chain. Section 3 holds deferred provenance work |
+| [v2.2.2](specs/v2.2.2-SPEC.md) | legacy-pt | Version 2.2.2 |
+| [CI/CD hardening](specs/SPEC-WARDEX-HARDEN-CORDYCPS-BASED-v2.2.2.md) | legacy-pt | Pipeline hardening |
+| [v2.5.0 Go 1.27](specs/SPEC_wardex_v2.5.0_go127_hardening.md) | legacy-pt | Toolchain move |
+| [v2.6.0 Nym patterns](specs/SPEC_wardex_v2.6.0_nym_patterns.md) | legacy-pt | Chain unification, key envelopes, gate classes |
+| [CBOR migration v2.3.0](specs/CBOR_MIGRATION_v2.3.0.md) | legacy-pt | Migration to canonical CBOR |
+
+The Portuguese working drafts of M0 and M1 are kept as `legacy-pt` for reference
+only and are not linked from this table; [`specs/specs.yaml`](specs/specs.yaml)
+records them.
 
 ## Releases
 
@@ -106,6 +116,9 @@ narrative is in [CHANGELOG](../CHANGELOG.md); the upload procedure is in
 - Prose is English (UK). Identifiers are frozen: exported Go names, JSON tags,
   CSV headers, environment variables, flag names and exit-code names do not
   change spelling with the prose around them.
+- Legacy specifications are the exception to the language rule: they keep their
+  Portuguese text and carry an English abstract in
+  [`specs/specs.yaml`](specs/specs.yaml).
 - A path written inside a document must resolve. Link checking is part of CI.
 - A statement about where something used to live is history and stays. A
   reference to where something lives now is updated when it moves.

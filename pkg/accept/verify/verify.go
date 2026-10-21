@@ -17,8 +17,8 @@ type Result struct {
 	Valid          bool
 	Expired        bool
 	Tampered       bool
-	Stale          bool // config mudou desde a aceitação
-	ReportMismatch bool // GateReport actual diverge do original
+	Stale          bool // config changed since the acceptance
+	ReportMismatch bool // GateReport differs from the original
 	ExpiresIn      time.Duration
 	Errors         []string
 }

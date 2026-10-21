@@ -1,0 +1,6 @@
+id: audit-verify-chain-tampered
+flow: G8
+args: [audit, verify-chain, --audit-log, audit_log_tampered.jsonl]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

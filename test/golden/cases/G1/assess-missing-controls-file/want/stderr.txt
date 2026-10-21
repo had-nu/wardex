@@ -1,0 +1,14 @@
+Error: assess: load controls: failed to load missing.yaml: reading file: open <TMP>/work/missing.yaml: no such file or directory
+Usage:
+  wardex assess [flags] <controls-file(s)>
+
+Flags:
+      --assets string      Path to assets definition file
+      --config string      Path to wardex-config.yaml (default "./wardex-config.yaml")
+      --framework string   Target framework name (default "iso27001")
+  -h, --help               help for assess
+      --out-file string    Output file destination (default "stdout")
+      --output string      Output format: markdown|json|csv|html (default "markdown")
+      --snapshot string    Path to previous report for delta analysis
+
+assess: load controls: failed to load missing.yaml: reading file: open <TMP>/work/missing.yaml: no such file or directory

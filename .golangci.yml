@@ -10,6 +10,8 @@ linters:
     - gosec
     - gomodguard_v2
     - exhaustive
+    - funlen
+    - forbidigo
   settings:
     errcheck:
       check-type-assertions: true
@@ -19,6 +21,13 @@ linters:
       confidence: medium
     exhaustive:
       default-signifies-exhaustive: true
+    funlen:
+      lines: 100
+      statements: 60
+    forbidigo:
+      forbid:
+        - pattern: '^fmt\.Print.*$'
+        - pattern: '^os\.Exit$'
   exclusions:
     rules:
       - path: _test\.go
@@ -26,12 +35,21 @@ linters:
           - errcheck
           - gosec
           - unused
+          - forbidigo
+      # A command's main is the one place that must turn a result into a
+      # process exit status. Library code and run functions stay covered.
+      - path: (^|/)main\.go$
+        linters:
+          - forbidigo
       # pkg/accept is a deliberate v2.5 deprecation facade (removed in v3.0).
       # Consumers intentionally keep importing it for backward compatibility.
       - path: pkg/gate/pipeline\.go|pkg/enrich/cli/cli\.go|cmd/art14/art14\.go|pkg/accept/cli/cli_handlers\.go|pkg/orchestrator/gate\.go|cmd/evaluate/evaluate_active_exploit_test\.go|test/security/crypto_audit_test\.go
         linters:
           - staticcheck
         text: "is deprecated"
+      # research/ is local, git-ignored scratch space, not a repository
+      # directory. The exclusion stays so a developer's experiments do not
+      # fail the repository lint; it is not masking tracked code.
       - path: research/
         linters:
           - errcheck
@@ -39,24 +57,15 @@ linters:
           - unused
           - staticcheck
       - linters:
-          - errcheck
-        text: "Error return value of `fmt\\.Fprint` is not checked"
-      - linters:
-          - errcheck
-        text: "Error return value of `fmt\\.Fprintf` is not checked"
-      - linters:
-          - errcheck
-        text: "Error return value of `fmt\\.Fprintln` is not checked"
-      - linters:
           - staticcheck
         text: "QF1003"
       - linters:
           - errcheck
-        source: "\\s+_\\s+:="
-      - linters:
-          - errcheck
-        source: "\\s+_\\s+="
-      - linters:
-          - errcheck
         text: "Error return value is not checked"
         source: "\\.\\(ed25519\\.PublicKey\\)"
+
+issues:
+  # The repository-wide baseline for the lint ratchet: existing issues are
+  # tolerated, issues introduced after the last pre-modularisation release are
+  # not. When baseline/modular-0 exists, this is the revision it records.
+  new-from-rev: v2.7.0-rc.1

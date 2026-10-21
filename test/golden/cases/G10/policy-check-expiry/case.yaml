@@ -1,0 +1,6 @@
+id: policy-check-expiry
+flow: G10
+args: [policy, check-expiry, policies]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ga-admin-01",
+    "actor": "admin@example.com",
+    "name": "Golden Admin",
+    "role": "admin",
+    "status": "active",
+    "added_at": "<TS>",
+    "added_by": "bootstrap"
+  }
+]

@@ -1,0 +1,6 @@
+id: assess-invalid-controls
+flow: G2
+args: [assess, bad.yaml, --framework, iso27001, --output, json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

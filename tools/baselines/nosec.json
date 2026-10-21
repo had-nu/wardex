@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "occurrences": {
+    "cmd/convert/grype.go|G304": 1,
+    "cmd/convert/grype_test.go|G304": 1,
+    "cmd/convert/kev.go|G304": 1,
+    "pkg/accept/audit/audit.go|G304": 2,
+    "pkg/accept/audit/chain.go|G304": 3,
+    "pkg/accept/forward/forward.go|G304": 1,
+    "pkg/cli/safefile.go|G304": 2,
+    "pkg/ingestion/csv_reader.go|G304": 1,
+    "pkg/orchestrator/gate.go|G304": 1,
+    "pkg/report/csv.go|G304": 1,
+    "pkg/report/markdown.go|G304": 1,
+    "pkg/statestore/worm_linux.go|G304": 3,
+    "pkg/utils/path.go|G304": 1
+  }
+}

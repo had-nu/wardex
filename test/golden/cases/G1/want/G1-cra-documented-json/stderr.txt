@@ -1,0 +1,2 @@
+[INFO] Loaded 2 controls from input files.
+[INFO] Using framework: cra (41 controls in catalog).

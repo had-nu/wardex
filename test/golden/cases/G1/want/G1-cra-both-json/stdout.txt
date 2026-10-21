@@ -1,0 +1,2978 @@
+{
+  "Summary": {
+    "Framework": "cra",
+    "FrameworkName": "Cyber Resilience Act",
+    "GeneratedAt": "<TS>",
+    "TotalControls": 41,
+    "CoveredCount": 7,
+    "PartialCount": 2,
+    "GapCount": 32,
+    "GlobalCoverage": 17.073170731707318,
+    "DomainSummaries": [
+      {
+        "Domain": "organizational",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 1,
+        "GapCount": 0,
+        "MaturityScore": 4,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "people",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "physical",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "technological",
+        "TotalControls": 7,
+        "CoveredCount": 7,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 3,
+        "CoveragePercent": 100
+      },
+      {
+        "Domain": "governance",
+        "TotalControls": 17,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 17,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "process",
+        "TotalControls": 16,
+        "CoveredCount": 0,
+        "PartialCount": 1,
+        "GapCount": 15,
+        "MaturityScore": 0.20833333333333334,
+        "CoveragePercent": 0
+      }
+    ],
+    "TopCriticalGaps": null,
+    "GateSummary": null
+  },
+  "Findings": [
+    {
+      "Control": {
+        "ID": "CRA.Art13.1",
+        "Name": "Art. 13(1) — Design, development and production in accordance with Annex I Part I",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "essential requirements",
+          "annex i",
+          "secure by design"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.1.1",
+            "Name": "Trace each product to the Annex I Part I requirements it claims and to the evidence for each",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.Art13.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.Art13.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.2",
+        "Name": "Art. 13(2) and (3) — Cybersecurity risk assessment, documented and kept current",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "risk assessment",
+          "threat model",
+          "documented"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.2.1",
+            "Name": "Assess risk on the intended purpose and reasonably foreseeable use, including the operational environment and the assets to protect",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.2.2",
+            "Name": "State whether the Annex I Part I point (2) requirements apply and how each is implemented",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.2.3",
+            "Name": "Take the assessment into account during planning, design, development, production, delivery and maintenance",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.2.4",
+            "Name": "Update the assessment during the support period, not only at release",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.4",
+        "Name": "Art. 13(4) — Risk assessment in the technical documentation, with justification for what does not apply",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "annex vii",
+          "technical documentation",
+          "justification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.4.1",
+            "Name": "Include the risk assessment in the Article 31 and Annex VII technical documentation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.4.2",
+            "Name": "Where a requirement does not apply, record a clear justification rather than omitting it",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.5",
+        "Name": "Art. 13(5) — Due diligence on third-party components",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "third party",
+          "component",
+          "open source",
+          "due diligence"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.5.1",
+            "Name": "Assess integrated components, including open-source components not placed on the market commercially",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "CRA.Art13.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.6",
+        "Name": "Art. 13(6) — Report a component vulnerability upstream and remediate in accordance with Annex I Part II",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "component vulnerability",
+          "upstream",
+          "remediation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.6.1",
+            "Name": "Report a vulnerability found in a component to whoever manufactures or maintains it",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.6.2",
+            "Name": "Where a fix was written locally, share the code or documentation upstream in a machine-readable format where appropriate",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.7",
+        "Name": "Art. 13(7) — Systematically document relevant cybersecurity aspects, proportionately",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "documentation",
+          "proportionality",
+          "third party information"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.7.1",
+            "Name": "Record vulnerabilities the manufacturer becomes aware of and relevant information from third parties",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.8",
+        "Name": "Art. 13(8) — Support period: at least five years, or the expected use time where shorter",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "support period",
+          "lifetime",
+          "five years"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.8.1",
+            "Name": "Determine the support period to reflect expected use, taking account of reasonable user expectations, the nature of the product and Union law on product lifetime",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.8.2",
+            "Name": "Set the support period to at least five years, except where the product is expected to be in use for less than five years",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.8.3",
+            "Name": "Consider support periods of comparable products, availability of the operating environment, component support periods and ADCO or Commission guidance",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.8.4",
+            "Name": "Keep the support period under review; delegated acts may raise the minimum for specific product categories",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.8.5",
+            "Name": "Ensure vulnerabilities are handled effectively for the whole support period, not only until launch",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art14.1",
+        "Name": "Art. 14(1) and (2) — Report actively exploited vulnerabilities and severe incidents",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "actively exploited",
+          "early warning",
+          "single reporting platform",
+          "24 hours"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art14.1.1",
+            "Name": "Send an early warning within 24 hours of becoming aware, through the single reporting platform",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art14.1.2",
+            "Name": "Follow with an incident notification and, unless already provided, a final report",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art28.1",
+        "Name": "Art. 28(1) — EU declaration of conformity",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "declaration of conformity",
+          "art 28",
+          "ce marking"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art28.1.1",
+            "Name": "State that fulfilment of the applicable Annex I essential requirements has been demonstrated",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art28.1.2",
+            "Name": "Keep the declaration and the technical documentation consistent with what is actually shipped",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art28.2",
+        "Name": "Art. 28(2) — Structure per Annex V, in the languages the Member State requires",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "annex v",
+          "model structure",
+          "translation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art28.2.1",
+            "Name": "Follow the Annex V model structure rather than a house format",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art28.2.2",
+            "Name": "Update the declaration as appropriate, and make it available in the language the Member State requires",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.1",
+        "Name": "Annex V (1) — Name, type and any information allowing unique identification of the product",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "identification",
+          "type designation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.1.1",
+            "Name": "Identify the product uniquely enough that it can be told apart from every other product of the same type",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.2",
+        "Name": "Annex V (2) — Name and address of the manufacturer or its authorised representative",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "manufacturer",
+          "authorised representative"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.2.1",
+            "Name": "Name the party legally responsible, which is the authorised representative where one is used",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.3",
+        "Name": "Annex V (3) — Statement that the declaration is issued under the sole responsibility of the provider",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "sole responsibility",
+          "provider"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.3.1",
+            "Name": "Carry the sole-responsibility statement verbatim, since its wording is prescribed",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.4",
+        "Name": "Annex V (4) — Object of the declaration, identified for traceability",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "traceability",
+          "identification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.4.1",
+            "Name": "Identify the declared product so that it can be traced to a serial, a version or an equivalent",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.5",
+        "Name": "Annex V (5) — Statement of conformity with the relevant Union harmonisation legislation",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "conformity statement",
+          "harmonisation legislation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.5.1",
+            "Name": "Reference this Regulation as the harmonisation legislation the declaration is made under",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.6",
+        "Name": "Annex V (6) — Harmonised standards, common specifications or certification relied on",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "harmonised standards",
+          "common specification",
+          "certification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.6.1",
+            "Name": "List what conformity is declared against, so a verifier knows which claims rest on a presumption and which do not",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.7",
+        "Name": "Annex V (7) — Where applicable, the notified body, the procedure performed and the certificate",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "notified body",
+          "eu-type examination",
+          "certificate"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.7.1",
+            "Name": "Where a notified body was involved, name it, describe the procedure and identify the certificate; where none was, say so explicitly",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.8",
+        "Name": "Annex V (8) — Additional information, and signature with place and date of issue",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "additional information",
+          "signature",
+          "date of issue"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.8.1",
+            "Name": "Sign for and on behalf of a named party, and record place and date of issue",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.1.1",
+        "Name": "Annex I Part I (1) — An appropriate level of cybersecurity based on the risks",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "risk based",
+          "appropriate level"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.1.1.1",
+            "Name": "Justify the level of security chosen by reference to the documented risk assessment rather than to a fixed baseline",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.AnnexI.1.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.AnnexI.1.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.1.2a",
+        "Name": "Annex I Part I (2)(a) — Placed on the market without known exploitable vulnerabilities",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "exploitable",
+          "known vulnerable",
+          "release gate"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.1.2a.1",
+            "Name": "Hold the release when a known exploitable vulnerability is present, and record the decision either way",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.AnnexI.1.2a",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.AnnexI.1.2a",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.1.2b",
+        "Name": "Annex I Part I (2)(b) — Secure by default configuration, resettable",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "secure by default",
+          "configuration",
+          "reset"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.1.2b.1",
+            "Name": "Ship with a secure configuration as the default, and allow the product to be reset to its original state",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.AnnexI.1.2b.2",
+            "Name": "Where a tailor-made product departs from the default, record the agreement with the business user",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.AnnexI.1.2b",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.AnnexI.1.2b",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.1.2c",
+        "Name": "Annex I Part I (2)(c) — Vulnerabilities addressable through security updates, including automatic updates by default",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "security update",
+          "automatic update",
+          "opt-out"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.1.2c.1",
+            "Name": "Enable automatic security updates by default, with a clear and easy-to-use opt-out",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          },
+          {
+            "ID": "PR.CRA.AnnexI.1.2c.2",
+            "Name": "Notify users of available updates and let them postpone them temporarily",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.AnnexI.1.2c",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.AnnexI.1.2c",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.1.2d",
+        "Name": "Annex I Part I (2)(d) — Protection from unauthorised access, and reporting of such access",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "authentication",
+          "access management",
+          "unauthorised access"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.1.2d.1",
+            "Name": "Apply authentication and identity or access management appropriate to the assessed risk",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.AnnexI.1.2d",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.AnnexI.1.2d",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.1",
+        "Name": "Annex I Part II (1) — Identify and document vulnerabilities and the components contained",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "vulnerability identification",
+          "components",
+          "sbom"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.1.1",
+            "Name": "Keep a component inventory that can be produced on demand",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.2",
+        "Name": "Annex I Part II (2) — Address and remediate vulnerabilities without delay, proportionate to risk",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "remediation",
+          "severity",
+          "patch"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.2.1",
+            "Name": "Set remediation deadlines by severity and follow them, recording an accepted risk where one is missed",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.3",
+        "Name": "Annex I Part II (3) — Effective and regular tests and reviews of product security",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "security testing",
+          "review"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.3.1",
+            "Name": "Test and review product security on a cycle defined by the risk assessment",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 3.3333333333333335,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "CRA.AnnexI.2.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "review"
+          ]
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.AnnexI.2.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "review"
+          ]
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.AnnexI.2.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "review"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)",
+        "Control 'IMP-001' (implemented) has an inferred match only (low confidence)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.4",
+        "Name": "Annex I Part II (4) — Publicly disclose information about fixed vulnerabilities once fixed",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "disclosure",
+          "advisory",
+          "fixed"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.4.1",
+            "Name": "Publish an advisory for a fixed vulnerability, not only distribute the update privately",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.5",
+        "Name": "Annex I Part II (5) — Policy on coordinated vulnerability disclosure, in place and enforced",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "coordinated vulnerability disclosure",
+          "cvd",
+          "contact point"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.5.1",
+            "Name": "Publish and enforce a coordinated vulnerability disclosure policy with a working contact point",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.6",
+        "Name": "Annex I Part II (6) — Facilitate the sharing of information about potential vulnerabilities",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "information sharing",
+          "reporter"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.6.1",
+            "Name": "Make it straightforward for a third party to report a potential vulnerability and to receive an answer",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.7",
+        "Name": "Annex I Part II (7) — Secure mechanisms to distribute updates",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "update distribution",
+          "signing",
+          "transport security"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.7.1",
+            "Name": "Authenticate and integrity-protect updates so a tampered update cannot be delivered",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.AnnexI.2.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.AnnexI.2.7",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.8",
+        "Name": "Annex I Part II (8) — Disseminate security updates without delay",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "dissemination",
+          "availability"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.8.1",
+            "Name": "Deliver updates without delay to users who are entitled to them, and reach users who do not auto-update",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.1",
+        "Name": "Annex VII (1) — General description of the product with digital elements",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "product description",
+          "intended purpose"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.1.1",
+            "Name": "State the intended purpose and the reasonably foreseeable use, since the risk assessment depends on both",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.2",
+        "Name": "Annex VII (2) — Design, development, production and vulnerability handling",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "secure development",
+          "vulnerability handling"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.2.1",
+            "Name": "Describe the design, development, production and vulnerability handling processes relied on",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.3",
+        "Name": "Annex VII (3) — Assessment of the cybersecurity risks",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "risk assessment",
+          "annex vii"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.3.1",
+            "Name": "Include the Article 13(3) assessment, which is the same artefact, and keep them in step",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.4",
+        "Name": "Annex VII (4) — Information taken into account to determine the support period under Article 13(8)",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "support period",
+          "justification",
+          "art 13 8"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.4.1",
+            "Name": "Record what was considered in setting the support period: expected use, user expectations, product nature, comparable products, component support and any guidance",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.AnnexVII.4.2",
+            "Name": "Record the resulting period and why it is not shorter than five years, or why expected use is shorter",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.5",
+        "Name": "Annex VII (5) — Harmonised standards applied in full or in part",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "harmonised standards",
+          "presumption of conformity"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.5.1",
+            "Name": "List each standard applied in full or in part, with the Official Journal reference where one exists",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.6",
+        "Name": "Annex VII (6) — Reports of tests verifying conformity and vulnerability handling",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "test report",
+          "verification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.6.1",
+            "Name": "Attach the test reports and make them reproducible, so a verifier can obtain the same result",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.7",
+        "Name": "Annex VII (7) — Copy of the EU declaration of conformity",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "declaration of conformity",
+          "art 28"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.7.1",
+            "Name": "Attach the declaration and check it names the product and version actually placed on the market",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.8",
+        "Name": "Annex VII (8) — Software bill of materials, on a reasoned request from market surveillance",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "sbom",
+          "market surveillance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.8.1",
+            "Name": "Be able to produce an SBOM on request, which means generating it during the build rather than reconstructing it later",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.SUP.a",
+        "Name": "Dates that decide applicability (Article 71 and Annex III), supports scoping",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "application date",
+          "timeline",
+          "scoping"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.SUP.a.1",
+            "Name": "Article 14 reporting obligations apply from 11 September 2026; the remainder of the Regulation from 11 December 2027",
+            "MinMaturity": 1,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.SUP.b",
+        "Name": "Conformity assessment procedure (Article 32 and Annex VIII), supports Art. 27 and Art. 28",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "internal control",
+          "eu-type examination",
+          "annex viii"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.SUP.b.1",
+            "Name": "Identify which procedure applies to the product class, and where a notified body is required, keep its current identification",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Roadmap": [
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.2",
+        "Name": "Annex I Part II (2) — Address and remediate vulnerabilities without delay, proportionate to risk",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "remediation",
+          "severity",
+          "patch"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.2.1",
+            "Name": "Set remediation deadlines by severity and follow them, recording an accepted risk where one is missed",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art28.1",
+        "Name": "Art. 28(1) — EU declaration of conformity",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "declaration of conformity",
+          "art 28",
+          "ce marking"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art28.1.1",
+            "Name": "State that fulfilment of the applicable Annex I essential requirements has been demonstrated",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art28.1.2",
+            "Name": "Keep the declaration and the technical documentation consistent with what is actually shipped",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.4",
+        "Name": "Annex VII (4) — Information taken into account to determine the support period under Article 13(8)",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "support period",
+          "justification",
+          "art 13 8"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.4.1",
+            "Name": "Record what was considered in setting the support period: expected use, user expectations, product nature, comparable products, component support and any guidance",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.AnnexVII.4.2",
+            "Name": "Record the resulting period and why it is not shorter than five years, or why expected use is shorter",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.1",
+        "Name": "Annex I Part II (1) — Identify and document vulnerabilities and the components contained",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "vulnerability identification",
+          "components",
+          "sbom"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.1.1",
+            "Name": "Keep a component inventory that can be produced on demand",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.2",
+        "Name": "Art. 13(2) and (3) — Cybersecurity risk assessment, documented and kept current",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "risk assessment",
+          "threat model",
+          "documented"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.2.1",
+            "Name": "Assess risk on the intended purpose and reasonably foreseeable use, including the operational environment and the assets to protect",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.2.2",
+            "Name": "State whether the Annex I Part I point (2) requirements apply and how each is implemented",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.2.3",
+            "Name": "Take the assessment into account during planning, design, development, production, delivery and maintenance",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.2.4",
+            "Name": "Update the assessment during the support period, not only at release",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.8",
+        "Name": "Art. 13(8) — Support period: at least five years, or the expected use time where shorter",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "support period",
+          "lifetime",
+          "five years"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.8.1",
+            "Name": "Determine the support period to reflect expected use, taking account of reasonable user expectations, the nature of the product and Union law on product lifetime",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.8.2",
+            "Name": "Set the support period to at least five years, except where the product is expected to be in use for less than five years",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.8.3",
+            "Name": "Consider support periods of comparable products, availability of the operating environment, component support periods and ADCO or Commission guidance",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.8.4",
+            "Name": "Keep the support period under review; delegated acts may raise the minimum for specific product categories",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.8.5",
+            "Name": "Ensure vulnerabilities are handled effectively for the whole support period, not only until launch",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art14.1",
+        "Name": "Art. 14(1) and (2) — Report actively exploited vulnerabilities and severe incidents",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "actively exploited",
+          "early warning",
+          "single reporting platform",
+          "24 hours"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art14.1.1",
+            "Name": "Send an early warning within 24 hours of becoming aware, through the single reporting platform",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art14.1.2",
+            "Name": "Follow with an incident notification and, unless already provided, a final report",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.5",
+        "Name": "Annex I Part II (5) — Policy on coordinated vulnerability disclosure, in place and enforced",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "coordinated vulnerability disclosure",
+          "cvd",
+          "contact point"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.5.1",
+            "Name": "Publish and enforce a coordinated vulnerability disclosure policy with a working contact point",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.SUP.b",
+        "Name": "Conformity assessment procedure (Article 32 and Annex VIII), supports Art. 27 and Art. 28",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "internal control",
+          "eu-type examination",
+          "annex viii"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.SUP.b.1",
+            "Name": "Identify which procedure applies to the product class, and where a notified body is required, keep its current identification",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.4",
+        "Name": "Art. 13(4) — Risk assessment in the technical documentation, with justification for what does not apply",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "annex vii",
+          "technical documentation",
+          "justification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.4.1",
+            "Name": "Include the risk assessment in the Article 31 and Annex VII technical documentation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.4.2",
+            "Name": "Where a requirement does not apply, record a clear justification rather than omitting it",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.3",
+        "Name": "Annex VII (3) — Assessment of the cybersecurity risks",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "risk assessment",
+          "annex vii"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.3.1",
+            "Name": "Include the Article 13(3) assessment, which is the same artefact, and keep them in step",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.2",
+        "Name": "Annex VII (2) — Design, development, production and vulnerability handling",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "secure development",
+          "vulnerability handling"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.2.1",
+            "Name": "Describe the design, development, production and vulnerability handling processes relied on",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.7",
+        "Name": "Annex VII (7) — Copy of the EU declaration of conformity",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "declaration of conformity",
+          "art 28"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.7.1",
+            "Name": "Attach the declaration and check it names the product and version actually placed on the market",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.5",
+        "Name": "Annex V (5) — Statement of conformity with the relevant Union harmonisation legislation",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "conformity statement",
+          "harmonisation legislation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.5.1",
+            "Name": "Reference this Regulation as the harmonisation legislation the declaration is made under",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.8",
+        "Name": "Annex I Part II (8) — Disseminate security updates without delay",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "dissemination",
+          "availability"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.8.1",
+            "Name": "Deliver updates without delay to users who are entitled to them, and reach users who do not auto-update",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.7",
+        "Name": "Annex V (7) — Where applicable, the notified body, the procedure performed and the certificate",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "notified body",
+          "eu-type examination",
+          "certificate"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.7.1",
+            "Name": "Where a notified body was involved, name it, describe the procedure and identify the certificate; where none was, say so explicitly",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.8",
+        "Name": "Annex VII (8) — Software bill of materials, on a reasoned request from market surveillance",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "sbom",
+          "market surveillance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.8.1",
+            "Name": "Be able to produce an SBOM on request, which means generating it during the build rather than reconstructing it later",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.6",
+        "Name": "Art. 13(6) — Report a component vulnerability upstream and remediate in accordance with Annex I Part II",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "component vulnerability",
+          "upstream",
+          "remediation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.6.1",
+            "Name": "Report a vulnerability found in a component to whoever manufactures or maintains it",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art13.6.2",
+            "Name": "Where a fix was written locally, share the code or documentation upstream in a machine-readable format where appropriate",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art28.2",
+        "Name": "Art. 28(2) — Structure per Annex V, in the languages the Member State requires",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "annex v",
+          "model structure",
+          "translation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art28.2.1",
+            "Name": "Follow the Annex V model structure rather than a house format",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.CRA.Art28.2.2",
+            "Name": "Update the declaration as appropriate, and make it available in the language the Member State requires",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.SUP.a",
+        "Name": "Dates that decide applicability (Article 71 and Annex III), supports scoping",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "application date",
+          "timeline",
+          "scoping"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.SUP.a.1",
+            "Name": "Article 14 reporting obligations apply from 11 September 2026; the remainder of the Regulation from 11 December 2027",
+            "MinMaturity": 1,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.4",
+        "Name": "Annex I Part II (4) — Publicly disclose information about fixed vulnerabilities once fixed",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "disclosure",
+          "advisory",
+          "fixed"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.4.1",
+            "Name": "Publish an advisory for a fixed vulnerability, not only distribute the update privately",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.6",
+        "Name": "Annex VII (6) — Reports of tests verifying conformity and vulnerability handling",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "test report",
+          "verification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.6.1",
+            "Name": "Attach the test reports and make them reproducible, so a verifier can obtain the same result",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.7",
+        "Name": "Art. 13(7) — Systematically document relevant cybersecurity aspects, proportionately",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "documentation",
+          "proportionality",
+          "third party information"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.7.1",
+            "Name": "Record vulnerabilities the manufacturer becomes aware of and relevant information from third parties",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.6",
+        "Name": "Annex V (6) — Harmonised standards, common specifications or certification relied on",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "harmonised standards",
+          "common specification",
+          "certification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.6.1",
+            "Name": "List what conformity is declared against, so a verifier knows which claims rest on a presumption and which do not",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.4",
+        "Name": "Annex V (4) — Object of the declaration, identified for traceability",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "traceability",
+          "identification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.4.1",
+            "Name": "Identify the declared product so that it can be traced to a serial, a version or an equivalent",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.3",
+        "Name": "Annex V (3) — Statement that the declaration is issued under the sole responsibility of the provider",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "sole responsibility",
+          "provider"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.3.1",
+            "Name": "Carry the sole-responsibility statement verbatim, since its wording is prescribed",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.2",
+        "Name": "Annex V (2) — Name and address of the manufacturer or its authorised representative",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "manufacturer",
+          "authorised representative"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.2.1",
+            "Name": "Name the party legally responsible, which is the authorised representative where one is used",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.1",
+        "Name": "Annex V (1) — Name, type and any information allowing unique identification of the product",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "identification",
+          "type designation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.1.1",
+            "Name": "Identify the product uniquely enough that it can be told apart from every other product of the same type",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexV.8",
+        "Name": "Annex V (8) — Additional information, and signature with place and date of issue",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "additional information",
+          "signature",
+          "date of issue"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexV.8.1",
+            "Name": "Sign for and on behalf of a named party, and record place and date of issue",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.5",
+        "Name": "Annex VII (5) — Harmonised standards applied in full or in part",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "harmonised standards",
+          "presumption of conformity"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.5.1",
+            "Name": "List each standard applied in full or in part, with the Official Journal reference where one exists",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexVII.1",
+        "Name": "Annex VII (1) — General description of the product with digital elements",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "product description",
+          "intended purpose"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexVII.1.1",
+            "Name": "State the intended purpose and the reasonably foreseeable use, since the risk assessment depends on both",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.6",
+        "Name": "Annex I Part II (6) — Facilitate the sharing of information about potential vulnerabilities",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "information sharing",
+          "reporter"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.6.1",
+            "Name": "Make it straightforward for a third party to report a potential vulnerability and to receive an answer",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.Art13.5",
+        "Name": "Art. 13(5) — Due diligence on third-party components",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "third party",
+          "component",
+          "open source",
+          "due diligence"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.CRA.Art13.5.1",
+            "Name": "Assess integrated components, including open-source components not placed on the market commercially",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "CRA.Art13.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "CRA.AnnexI.2.3",
+        "Name": "Annex I Part II (3) — Effective and regular tests and reviews of product security",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "security testing",
+          "review"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.CRA.AnnexI.2.3.1",
+            "Name": "Test and review product security on a cycle defined by the risk assessment",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 3.3333333333333335,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "CRA.AnnexI.2.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "review"
+          ]
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "CRA.AnnexI.2.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "review"
+          ]
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "CRA.AnnexI.2.3",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "review"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)",
+        "Control 'IMP-001' (implemented) has an inferred match only (low confidence)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Gate": null,
+  "Delta": null,
+  "layer_delta": {
+    "documented_count": 2,
+    "implemented_count": 1,
+    "policy_gap": [
+      "DOC-001",
+      "DOC-002"
+    ],
+    "implemented_only": [
+      "IMP-001"
+    ],
+    "active_coverage": null
+  }
+}

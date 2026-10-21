@@ -47,7 +47,6 @@
 | **Criptografia** | Ed25519 (stdlib crypto/ed25519) | Trust store, keypairs Admin/CISO/Analyst |
 | **Assinatura** | HMAC-SHA256 (stdlib crypto/hmac) | Acceptances, Art14 artefacts, EPSS enrichment |
 | **Embebimento** | Go embed | Catálogos de frameworks YAML compilados no binário |
-| **Container** | Docker multi-stage | golang:1.27-alpine → distroless/static:nonroot |
 | **Orquestração** | Helm v0.1.0 | Kubernetes Job, CronJob, PVC, ConfigMap |
 | **CI/CD** | GitHub Actions | ci.yml (test+lint+security), release.yml (GoReleaser) |
 | **Release** | GoReleaser | linux/darwin/windows × amd64/arm64, Cosign, CycloneDX SBOM |
@@ -475,19 +474,7 @@ notifications:
 
 ## 10. Arquitectura de Deployment
 
-### 10.1 Docker
-
-```dockerfile
-# Builder
-FROM golang:1.27-alpine AS builder
-# CGO disabled, static binary
-
-# Runtime
-FROM gcr.io/distroless/static:nonroot
-USER 65532:65532
-```
-
-### 10.2 Helm Chart (v0.1.0)
+### 10.1 Helm Chart (v0.1.0)
 
 Templates:
 - `ServiceAccount`, `Secret`, `PVC`
@@ -495,27 +482,28 @@ Templates:
 - `CronJob` (scheduled assessments)
 - `ConfigMap` (wardex-config.yaml)
 
-### 10.3 CI/CD Pipeline
+### 10.2 CI/CD Pipeline
 
 ```
-┌──────────┐     ┌──────────┐     ┌───────────────┐     ┌──────────┐
-│  ci.yml  │────▶│docker.yml│────▶│ release.yml   │────▶│action.yml│
-│test/lint │     │build/push│     │GoReleaser     │     │ composite│
-│security  │     │ghcr.io   │     │Cosign+SBOM    │     │  action  │
-│          │     │dev-* ns  │     │Syft SHA-pinned│     │pathguard │
-└──────────┘     └──────────┘     └───────────────┘     └──────────┘
+┌──────────┐     ┌───────────────┐     ┌──────────────────┐
+│  ci.yml  │────▶│  release.yml  │────▶│ Artefacts        │
+│test/lint │     │GoReleaser     │     │binaries linux,   │
+│security  │     │Cosign + SBOM  │     │darwin, windows   │
+│          │     │               │     │CycloneDX SBOM    │
+└──────────┘     └───────────────┘     └──────────────────┘
 ```
+
+> Container distribution (`Dockerfile`, `docker.yml`, `action.yml`, images) is removed until v3 (2026-10-21).
 
 **Hardening (v2.2.2):**
 - Syft installed via SHA-256 checksum verification (not `curl | bash`)
-- Dev branch images namespaced (`dev-`) and signed immediately with cosign
 - Path validation via `pkg/cli/pathguard.go` — `ValidateInputPath`/`ValidateOutputPath` with symlink resolution
 
-### 10.4 GoReleaser Targets
+### 10.3 GoReleaser Targets
 
 | OS | Arch | Notas |
 |---|---|---|
-| linux | amd64, arm64 | Primary (Docker + Helm) |
+| linux | amd64, arm64 | Primary (Helm) |
 | darwin | amd64, arm64 | macOS (Homebrew) |
 | windows | amd64, arm64 | Windows (scoop) |
 
@@ -701,9 +689,7 @@ state_store:
 | Crypto Arch | `doc/architecture/CRYPTO_ARCHITECTURE.md` |
 | Helm chart | `deploy/helm/wardex/Chart.yaml` |
 | CI workflow | `.github/workflows/ci.yml` |
-| Dockerfile | `Dockerfile` |
 | GoReleaser | `.goreleaser.yaml` |
-| GitHub Action | `action.yml` |
 
 ---
 

@@ -1,0 +1,6 @@
+provenance:
+  enabled: gleipnir-embedded
+  options:
+    node_id: wardex-golden
+    simulated: "true"
+    cycle_interval: 24h

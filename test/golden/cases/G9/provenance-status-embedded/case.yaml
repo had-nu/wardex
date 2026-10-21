@@ -1,0 +1,6 @@
+id: provenance-status-embedded
+flow: G9
+args: [provenance, status, --config, wardex-config.yaml]
+outputs: []
+normalise: [timestamps, logtimestamps, tmpdir, version]
+known_defect: ''

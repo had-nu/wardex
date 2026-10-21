@@ -1,0 +1,3 @@
+[INFO] Gate class: deploy
+[WARN] Cannot load acceptances — WARDEX_ACCEPT_SECRET not set. All CVEs will be evaluated without acceptance filtering.
+[INFO] Gate decision logged (chained) -> wardex-gate-audit.log

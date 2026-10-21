@@ -1,0 +1,1 @@
+[INFO] Ignoring CVE-2025-2002 due to VEX analysis state: not_affected

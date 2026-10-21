@@ -4,6 +4,7 @@
 package catalog_test
 
 import (
+	"slices"
 	"strings"
 	"testing"
 
@@ -166,5 +167,30 @@ func TestEveryRegisteredFrameworkIsInEuropeanScope(t *testing.T) {
 		if _, ok := inScope[key]; !ok {
 			t.Errorf("framework %q is registered but has no recorded European basis; add it to inScope with the reason, or retire it", key)
 		}
+	}
+}
+
+// TestEveryCatalogueControlCarriesItsDomainInDomains is the data-level half of
+// M0-P0.2. The correlator's declarative path reads CatalogControl.Domains, and
+// only annex_a.yaml used to declare that list; the other six catalogues
+// declared `domain` alone, so their controls could never match declaratively.
+// Load now derives the list, and this test holds every catalogue to it.
+func TestEveryCatalogueControlCarriesItsDomainInDomains(t *testing.T) {
+	for _, key := range catalog.Keys() {
+		t.Run(key, func(t *testing.T) {
+			controls, err := catalog.Load(key)
+			if err != nil {
+				t.Fatalf("Load(%q): %v", key, err)
+			}
+			for _, c := range controls {
+				if len(c.Domains) == 0 {
+					t.Errorf("%s: control %s has no domains", key, c.ID)
+					continue
+				}
+				if c.Domain != "" && !slices.Contains(c.Domains, c.Domain) {
+					t.Errorf("%s: control %s domain %q is not in domains %v", key, c.ID, c.Domain, c.Domains)
+				}
+			}
+		})
 	}
 }

@@ -1,0 +1,4 @@
+[DUPLICATE RELEASE] version 2.7.0-rc.1 was already sealed
+  policy_ref: iso27001
+  sealed_at:  <TS>
+  entry_hash: cfd1b33c63d7d3304b7970879495f3e4259f539e8e29f0a5478e00b3b510f109

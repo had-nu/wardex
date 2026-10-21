@@ -1,0 +1,6 @@
+id: provenance-status-noop
+flow: G9
+args: [provenance, status]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

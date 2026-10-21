@@ -1,0 +1,2 @@
+[INFO] Loaded 2 controls from input files.
+[INFO] Using framework: nist_csf (22 controls in catalog).

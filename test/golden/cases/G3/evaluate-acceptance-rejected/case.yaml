@@ -1,0 +1,8 @@
+id: evaluate-acceptance-rejected
+flow: G3
+args: [evaluate, --config, config.yaml, --evidence, block.yaml, documented.yaml, --output, json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+env:
+  WARDEX_ACCEPT_SECRET: golden-test-secret-0123456789abcdef
+known_defect: 'accept request does not record config_hash, so evaluate rejects the acceptance it just created; fix changes this want'

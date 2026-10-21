@@ -71,17 +71,17 @@ func TestCanonicalConfigEnvVarsNotExpanded(t *testing.T) {
 	t.Setenv("RISK_THRESHOLD", "high")
 	hashWithEnv, err := cpl.ComputeConfigHash(withVar, cpl.AlgoSHA256)
 	if err != nil {
-		t.Fatalf("hash com env: %v", err)
+		t.Fatalf("hash with env: %v", err)
 	}
 
 	t.Setenv("RISK_THRESHOLD", "critical")
 	hashChangedEnv, err := cpl.ComputeConfigHash(withVar, cpl.AlgoSHA256)
 	if err != nil {
-		t.Fatalf("hash env alterada: %v", err)
+		t.Fatalf("hash with changed env: %v", err)
 	}
 
 	if hashWithEnv != hashChangedEnv {
-		t.Error("hash mudou quando env var foi alterada: env vars estao a ser expandidas")
+		t.Error("hash changed when the env var changed: env vars are being expanded")
 	}
 }
 
@@ -95,7 +95,7 @@ func TestCanonicalConfigKnownVector(t *testing.T) {
 		t.Fatalf("compute: %v", err)
 	}
 	if got != expected {
-		t.Errorf("vector falhou:\n  got:  %s\n  want: %s", got, expected)
+		t.Errorf("vector failed:\n  got:  %s\n  want: %s", got, expected)
 	}
 }
 
@@ -103,7 +103,7 @@ func TestCanonicalConfigInvalidYAML(t *testing.T) {
 	invalid := []byte("key: : invalid\n  badly: [nested")
 	_, err := cpl.ComputeConfigHash(invalid, cpl.AlgoSHA256)
 	if err == nil {
-		t.Error("esperava erro em YAML malformado, obteve nil")
+		t.Error("expected an error for malformed YAML, got nil")
 	}
 }
 
@@ -123,10 +123,10 @@ func TestAlgorithmPrefixParsing(t *testing.T) {
 	for _, tc := range cases {
 		alg, err := cpl.ParseAlgorithmPrefix(tc.input)
 		if tc.wantErr && err == nil {
-			t.Errorf("%q: esperava erro, obteve nil", tc.input)
+			t.Errorf("%q: expected an error, got nil", tc.input)
 		}
 		if !tc.wantErr && alg != tc.wantAlg {
-			t.Errorf("%q: algoritmo errado: got %v want %v", tc.input, alg, tc.wantAlg)
+			t.Errorf("%q: wrong algorithm: got %v want %v", tc.input, alg, tc.wantAlg)
 		}
 	}
 }
@@ -148,7 +148,7 @@ func TestMixedAlgorithmLog(t *testing.T) {
 	}
 	for _, r := range results {
 		if r.Status != cpl.StatusOK {
-			t.Errorf("entrada %s: status inesperado %v", r.EntryTimestamp, r.Status)
+			t.Errorf("entry %s: unexpected status %v", r.EntryTimestamp, r.Status)
 		}
 	}
 }

@@ -1,0 +1,6 @@
+id: convert-grype-invalid
+flow: G4
+args: [convert, grype, grype.json, --output, wardex-vulns.yaml]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

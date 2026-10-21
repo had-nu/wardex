@@ -13,6 +13,9 @@ Os padrões abaixo cobrem os pontos de integração mais comuns, começando pelo
 > symlinks. Para workflows manuais, garante que os paths são relativos ao
 > workspace ou absolutos dentro dele.
 
+> **Note (2026-10-21):** the Marketplace Action is withdrawn until v3 (see
+> `CHANGELOG.md`); the manual patterns in this document are unaffected.
+
 ---
 
 ## Mapa de Comandos (v2.6.0)

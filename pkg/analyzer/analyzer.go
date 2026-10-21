@@ -50,7 +50,7 @@ func (a *Analyzer) Analyze() ([]model.Finding, error) {
 
 		if len(maps) == 0 {
 			status = model.StatusGap
-			reasons = append(reasons, "Nenhuma correlação encontrada")
+			reasons = append(reasons, "No correlation found")
 		} else {
 			status, reasons = EvaluateCoverage(maps, a.Controls)
 

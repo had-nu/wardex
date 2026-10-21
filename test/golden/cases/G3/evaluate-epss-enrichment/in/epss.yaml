@@ -1,0 +1,7 @@
+enrichments:
+    - cve: CVE-2025-9004
+      score: 0.01
+provenance:
+    source: golden fixture
+signature: sha256:109ed3319aeacfc5e651e5c2199f7643268dcb5cebf260467069236ca4df3e3b
+generated_at: "2026-01-01T00:00:00Z"

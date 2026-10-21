@@ -1,0 +1,33 @@
+[INFO] Gate class: deploy
+Error: evaluate: read evidence file: open <TMP>/work/missing.yaml: no such file or directory
+Usage:
+  wardex evaluate [flags] <controls-file(s)>
+  wardex evaluate [command]
+
+Available Commands:
+  accept      Manage risk acceptances for vulnerabilities blocking the release gate
+
+Flags:
+      --art14-output-dir string       Directory where Article 14 notification artefacts are written (overrides config)
+      --config string                 Path to wardex-config.yaml or wardex.wexstate (default "./wardex-config.yaml")
+      --dry-run                       Validate inputs and show what would happen without writing any files or exiting with error codes
+      --epss-enrichment string        Path to a signed EPSS enrichment file
+      --evidence string               Vulnerabilities file for release gate evaluation (required)
+      --fail-above float              Exit 11 if any gap score exceeds this value
+      --forced-upgrade                Arm the forced_upgrade regulatory-deadline gate (L7) even if not enabled in config
+      --forced-upgrade-state string   Tripwire counter file path (default: <state_store.dir>/forced_upgrade.json)
+      --gate-class string             Risk class: pr|deploy|nightly (deploy is the default, current behaviour) (default "deploy")
+      --gate-log string               Path to gate decision audit log (overrides config)
+      --gate-mode string              Gate mode: any|aggregate (default "any")
+  -h, --help                          help for evaluate
+      --out-file string               Output file destination (default "stdout")
+      --output string                 Output format: markdown|json|csv|html (default "markdown")
+      --policy-ref string             Policy reference authorising the release (required with --release-version)
+      --profile string                RBAC threshold override profile
+      --release-version string        Release version to seal (release-seal mode; requires --policy-ref)
+      --strict                        Exit 3 if an unsealed config (.yaml) is used or if evidence is not canonical
+      --trend                         Show risk trend analysis from state store (requires state_store.enabled)
+
+Use "wardex evaluate [command] --help" for more information about a command.
+
+evaluate: read evidence file: open <TMP>/work/missing.yaml: no such file or directory

@@ -1,0 +1,6 @@
+id: state-verify-empty
+flow: G8
+args: [state, verify, --state-dir, empty]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

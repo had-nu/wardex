@@ -1,0 +1,5 @@
+Trust store: wardex-trust.yaml
+Status:      VALID
+Admin key:   ga-admin-01
+Active keys: 1
+Revoked:     0

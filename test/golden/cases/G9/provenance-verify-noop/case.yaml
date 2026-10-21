@@ -1,0 +1,6 @@
+id: provenance-verify-noop
+flow: G9
+args: [provenance, verify, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

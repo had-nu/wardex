@@ -16,7 +16,7 @@ const (
 	LayerImplemented ControlLayer = "implemented"
 )
 
-// ExistingControl representa um controle já implementado na organização.
+// ExistingControl represents a control already implemented in the organisation.
 type ExistingControl struct {
 	ID                  string       `yaml:"id"`
 	Name                string       `yaml:"name"`
@@ -32,7 +32,7 @@ type ExistingControl struct {
 	WeightJustification string       `yaml:"weight_justification,omitempty"`
 }
 
-// CatalogControl representa um controle da ISO 27001:2022 Annex A.
+// CatalogControl represents a control from ISO/IEC 27001:2022 Annex A.
 type CatalogControl struct {
 	ID            string     `yaml:"id"`
 	Name          string     `yaml:"name"`
@@ -44,22 +44,22 @@ type CatalogControl struct {
 	Practices     []Practice `yaml:"practices,omitempty"`
 }
 
-// Practice representa uma prática concreta associada a um controle Annex A.
-// Para A.8.8: SCA scanner, release gate policy, SBOM generation.
+// Practice represents a concrete practice associated with an Annex A control.
+// For A.8.8: SCA scanner, release gate policy, SBOM generation.
 type Practice struct {
 	ID           string `yaml:"id"`
 	Name         string `yaml:"name"`
-	MinMaturity  int    `yaml:"min_maturity"`  // Maturidade mínima para cobertura válida
-	GateRelevant bool   `yaml:"gate_relevant"` // true se esta prática corresponde a um release gate
+	MinMaturity  int    `yaml:"min_maturity"`  // Minimum maturity for valid coverage
+	GateRelevant bool   `yaml:"gate_relevant"` // true when this practice corresponds to a release gate
 }
 
-// Evidence representa uma evidência declarada.
+// Evidence represents declared evidence.
 type Evidence struct {
 	Type string `yaml:"type"`
 	Ref  string `yaml:"ref"`
 }
 
-// Mapping representa a correlação entre um controle existente e um controle da Annex A.
+// Mapping represents the correlation between an existing control and an Annex A control.
 type Mapping struct {
 	ExistingControlID string   `yaml:"existing_control_id"`
 	CatalogControlID  string   `yaml:"catalog_control_id"`

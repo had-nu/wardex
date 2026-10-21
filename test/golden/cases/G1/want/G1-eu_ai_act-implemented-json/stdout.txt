@@ -1,0 +1,2565 @@
+{
+  "Summary": {
+    "Framework": "eu_ai_act",
+    "FrameworkName": "EU AI Act",
+    "GeneratedAt": "<TS>",
+    "TotalControls": 37,
+    "CoveredCount": 1,
+    "PartialCount": 0,
+    "GapCount": 36,
+    "GlobalCoverage": 2.7027027027027026,
+    "DomainSummaries": [
+      {
+        "Domain": "organizational",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "people",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "physical",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "technological",
+        "TotalControls": 1,
+        "CoveredCount": 1,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 3,
+        "CoveragePercent": 100
+      },
+      {
+        "Domain": "conformity",
+        "TotalControls": 2,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 2,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "data",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "deployer",
+        "TotalControls": 2,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 2,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "documentation",
+        "TotalControls": 2,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 2,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "governance",
+        "TotalControls": 7,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 7,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "gpai",
+        "TotalControls": 2,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 2,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "human_oversight",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "post_market",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "process",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "prohibited",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "provider",
+        "TotalControls": 2,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 2,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "quality",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "reporting",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "risk_management",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "technical",
+        "TotalControls": 3,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 3,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "transparency",
+        "TotalControls": 2,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 2,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "value_chain",
+        "TotalControls": 4,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 4,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      }
+    ],
+    "TopCriticalGaps": null,
+    "GateSummary": null
+  },
+  "Findings": [
+    {
+      "Control": {
+        "ID": "EUAIA.Art4",
+        "Name": "AI Literacy — Ensure AI literacy among staff and deployers",
+        "Domain": "people",
+        "Domains": [
+          "people"
+        ],
+        "Keywords": [
+          "literacia",
+          "training",
+          "awareness",
+          "competence",
+          "literacy"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art5",
+        "Name": "Prohibited AI Practices — Identification, governance and prevention of unacceptable risk AI",
+        "Domain": "prohibited",
+        "Domains": [
+          "prohibited"
+        ],
+        "Keywords": [
+          "prohibited",
+          "unacceptable risk",
+          "social scoring",
+          "biometric categorisation",
+          "prohibited practices"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art5.1",
+            "Name": "Inventory screening against prohibited AI use cases",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art6",
+        "Name": "High-Risk AI Classification — Rules for classifying AI systems as high-risk",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "classification",
+          "high-risk",
+          "risk classification",
+          "annex iii"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art8",
+        "Name": "Compliance with the requirements",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "compliance",
+          "requirements",
+          "state of the art"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art8.1",
+            "Name": "Ensure the system complies with the Chapter III requirements, taking account of its intended purpose and the acknowledged state of the art",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art8.2",
+            "Name": "Take the Article 9 risk management system into account when demonstrating compliance, rather than treating it as a separate exercise",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art9",
+        "Name": "Risk Management System — Continuous iterative risk management throughout AI system lifecycle",
+        "Domain": "risk_management",
+        "Domains": [
+          "risk_management"
+        ],
+        "Keywords": [
+          "risk management",
+          "risk identification",
+          "risk analysis",
+          "residual risk",
+          "testing"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art9.1",
+            "Name": "Document and maintain continuous risk management process",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art10",
+        "Name": "Data and Data Governance — Training, validation and test data quality, bias detection, representativeness",
+        "Domain": "data",
+        "Domains": [
+          "data"
+        ],
+        "Keywords": [
+          "data governance",
+          "data quality",
+          "bias",
+          "training data",
+          "representativeness",
+          "data provenance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art11",
+        "Name": "Technical Documentation — Comprehensive technical documentation per Annex IV",
+        "Domain": "documentation",
+        "Domains": [
+          "documentation"
+        ],
+        "Keywords": [
+          "technical documentation",
+          "design specification",
+          "system description",
+          "annex iv"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art12",
+        "Name": "Record-Keeping — Automatic event logging for traceability throughout system lifetime",
+        "Domain": "technical",
+        "Domains": [
+          "technical"
+        ],
+        "Keywords": [
+          "logging",
+          "record keeping",
+          "traceability",
+          "automatic log",
+          "event logging"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art13",
+        "Name": "Transparency and Information to Deployers — Instructions for use, performance characteristics, limitations",
+        "Domain": "transparency",
+        "Domains": [
+          "transparency"
+        ],
+        "Keywords": [
+          "transparency",
+          "instructions for use",
+          "performance",
+          "accuracy",
+          "limitations",
+          "deployer information"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art14",
+        "Name": "Human Oversight — Design and development for effective human supervision, intervention and override",
+        "Domain": "human_oversight",
+        "Domains": [
+          "human_oversight"
+        ],
+        "Keywords": [
+          "human oversight",
+          "supervision",
+          "human-in-the-loop",
+          "override",
+          "automation bias",
+          "stop button"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art15",
+        "Name": "Accuracy, Robustness and Cybersecurity — Appropriate levels of accuracy, robustness, and security against adversarial attacks",
+        "Domain": "technical",
+        "Domains": [
+          "technical"
+        ],
+        "Keywords": [
+          "accuracy",
+          "robustness",
+          "cybersecurity",
+          "adversarial",
+          "data poisoning",
+          "model evasion"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art16",
+        "Name": "Provider Obligations — Overall compliance responsibilities for high-risk AI system providers",
+        "Domain": "provider",
+        "Domains": [
+          "provider"
+        ],
+        "Keywords": [
+          "provider",
+          "obligations",
+          "conformity",
+          "ce marking",
+          "registration"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art17",
+        "Name": "Quality Management System — Documented QMS with policies, procedures, risk management, post-market monitoring",
+        "Domain": "quality",
+        "Domains": [
+          "quality"
+        ],
+        "Keywords": [
+          "quality management",
+          "qms",
+          "procedures",
+          "regulatory compliance",
+          "change management"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art17.1",
+            "Name": "Establish and maintain documented QMS for AI systems",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art18",
+        "Name": "Documentation Keeping — Retention of technical documentation and QMS records for 10 years",
+        "Domain": "documentation",
+        "Domains": [
+          "documentation"
+        ],
+        "Keywords": [
+          "documentation retention",
+          "record keeping",
+          "10 years",
+          "technical documentation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art19",
+        "Name": "Automatically Generated Logs — Retention of logs under provider control, minimum 6 months",
+        "Domain": "technical",
+        "Domains": [
+          "technical"
+        ],
+        "Keywords": [
+          "logs",
+          "automatic logs",
+          "retention",
+          "6 months",
+          "audit trail"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art20",
+        "Name": "Corrective Actions and Duty of Information — Immediate corrective measures and notification of non-compliance",
+        "Domain": "provider",
+        "Domains": [
+          "provider"
+        ],
+        "Keywords": [
+          "corrective action",
+          "duty to inform",
+          "recall",
+          "decommission",
+          "non-compliance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art21",
+        "Name": "Cooperation with Competent Authorities — Information provision, documentation access and cooperation",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "cooperation",
+          "competent authority",
+          "information",
+          "documentation access",
+          "market surveillance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art22",
+        "Name": "Authorised Representative — Third-country providers must appoint an EU-established authorised representative",
+        "Domain": "value_chain",
+        "Domains": [
+          "value_chain"
+        ],
+        "Keywords": [
+          "authorised representative",
+          "third country",
+          "EU representative",
+          "mandate"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art23",
+        "Name": "Importer Obligations — Verification of conformity assessment, technical documentation, CE marking before placing on market",
+        "Domain": "value_chain",
+        "Domains": [
+          "value_chain"
+        ],
+        "Keywords": [
+          "importer",
+          "conformity verification",
+          "ce marking",
+          "declaration",
+          "documentation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art24",
+        "Name": "Distributor Obligations — Verification of CE marking, declaration, instructions; corrective actions",
+        "Domain": "value_chain",
+        "Domains": [
+          "value_chain"
+        ],
+        "Keywords": [
+          "distributor",
+          "availability",
+          "ce marking",
+          "declaration",
+          "corrective action"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art25",
+        "Name": "Responsibilities Along the AI Value Chain — Substantial modification, change of intended purpose, downstream obligations",
+        "Domain": "value_chain",
+        "Domains": [
+          "value_chain"
+        ],
+        "Keywords": [
+          "value chain",
+          "substantial modification",
+          "downstream",
+          "third party",
+          "integration"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art26",
+        "Name": "Deployer Obligations — Technical/organisational measures, human oversight assignment, input data control, monitoring",
+        "Domain": "deployer",
+        "Domains": [
+          "deployer"
+        ],
+        "Keywords": [
+          "deployer",
+          "user",
+          "instructions for use",
+          "human oversight",
+          "input data",
+          "monitoring",
+          "workers information"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art27",
+        "Name": "Fundamental Rights Impact Assessment — FRIA before deployment for public bodies and specified deployers",
+        "Domain": "deployer",
+        "Domains": [
+          "deployer"
+        ],
+        "Keywords": [
+          "fundamental rights",
+          "impact assessment",
+          "fria",
+          "rights protection",
+          "deployer"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art43",
+        "Name": "Conformity Assessment — Conformity assessment procedures based on internal control or notified body",
+        "Domain": "conformity",
+        "Domains": [
+          "conformity"
+        ],
+        "Keywords": [
+          "conformity assessment",
+          "notified body",
+          "internal control",
+          "annex vi",
+          "assessment procedure"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art47",
+        "Name": "EU Declaration of Conformity and CE Marking — Draft declaration per Annex V and affix CE marking",
+        "Domain": "conformity",
+        "Domains": [
+          "conformity"
+        ],
+        "Keywords": [
+          "declaration of conformity",
+          "ce marking",
+          "annex v",
+          "conformity marking"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art48",
+        "Name": "CE marking",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "ce marking",
+          "affixing",
+          "notified body number"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art48.1",
+            "Name": "Affix the CE marking visibly, legibly and indelibly, or on the packaging or accompanying documentation where the nature of the system warrants it",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art48.2",
+            "Name": "Follow the marking with the notified body identification number where a notified body was involved, and repeat that number in promotional material claiming CE compliance",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art48.3",
+            "Name": "Use a digital CE marking for a digitally provided system where it can easily be seen by the person accessing it",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art49",
+        "Name": "Registration in EU Database — Register high-risk AI systems in EU-wide database per Annex VIII",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "registration",
+          "eu database",
+          "annex viii",
+          "provider",
+          "deployer"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art50",
+        "Name": "Transparency Obligations for Certain AI Systems — Information about AI interaction, synthetic content marking, emotion recognition",
+        "Domain": "transparency",
+        "Domains": [
+          "transparency"
+        ],
+        "Keywords": [
+          "transparency",
+          "synthetic content",
+          "deepfake",
+          "emotion recognition",
+          "biometric categorisation",
+          "watermarking"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art51",
+        "Name": "Classification of general-purpose AI models with systemic risk",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "systemic risk",
+          "high impact capabilities",
+          "classification",
+          "compute threshold"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art51.1",
+            "Name": "Evaluate high impact capabilities against technical tools, indicators and benchmarks, and on a Commission designation having regard to Annex XI",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art51.2",
+            "Name": "Treat the training compute threshold in Article 51(2) as a presumption, not as the only test",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art52",
+        "Name": "Procedure: notification to the Commission of a model meeting the systemic risk threshold",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "notification",
+          "two weeks",
+          "commission",
+          "substantiated arguments"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art52.1",
+            "Name": "Notify the Commission without delay and in any event within two weeks of meeting, or coming to know it will be met, the Article 51(1)(a) condition",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art52.2",
+            "Name": "Where arguing that the model does not present systemic risk, present sufficiently substantiated arguments with the notification rather than later",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art54",
+        "Name": "Authorised representatives of providers of general-purpose AI models",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "authorised representative",
+          "third country",
+          "mandate"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art54.1",
+            "Name": "Appoint an authorised representative established in the Union before placing a general-purpose AI model on the Union market",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art54.2",
+            "Name": "Give the representative a written mandate and enable it to perform the tasks that mandate specifies",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art59",
+        "Name": "Further processing of personal data in the AI regulatory sandbox",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "sandbox",
+          "personal data",
+          "public interest",
+          "data protection"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art59.1",
+            "Name": "Use further-processed personal data in a sandbox only where the system serves a substantial public interest in one of the Article 59(1)(a) areas",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art59.2",
+            "Name": "Meet every condition in Article 59(1) at once, and record how each is met",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "EUAIA.Art59",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art53",
+        "Name": "General-Purpose AI Model Provider Obligations — Technical documentation, downstream information, copyright policy, training data summary",
+        "Domain": "gpai",
+        "Domains": [
+          "gpai"
+        ],
+        "Keywords": [
+          "general purpose ai",
+          "gpai",
+          "foundation model",
+          "technical documentation",
+          "copyright",
+          "training data",
+          "downstream"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art55",
+        "Name": "Systemic Risk GPAI Obligations — Model evaluation, adversarial testing, incident reporting, cybersecurity for systemic-risk models",
+        "Domain": "gpai",
+        "Domains": [
+          "gpai"
+        ],
+        "Keywords": [
+          "systemic risk",
+          "gpai",
+          "model evaluation",
+          "red teaming",
+          "incident reporting",
+          "cybersecurity"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art55.1",
+            "Name": "Conduct adversarial testing (red teaming) for systemic-risk models",
+            "MinMaturity": 4,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art72",
+        "Name": "Post-Market Monitoring — Active and systematic collection and analysis of performance data post-deployment",
+        "Domain": "post_market",
+        "Domains": [
+          "post_market"
+        ],
+        "Keywords": [
+          "post-market monitoring",
+          "pms",
+          "performance monitoring",
+          "lifecycle",
+          "data collection"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art73",
+        "Name": "Serious Incident Reporting — Report serious incidents to market surveillance authorities, investigation and corrective measures",
+        "Domain": "reporting",
+        "Domains": [
+          "reporting"
+        ],
+        "Keywords": [
+          "incident reporting",
+          "serious incident",
+          "market surveillance",
+          "notification",
+          "investigation",
+          "corrective measures"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art73.1",
+            "Name": "Establish serious incident reporting process with 15-day/2-day escalation",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art99",
+        "Name": "Penalties and Enforcement — Sanctions framework, fines up to 7% global annual turnover or 35M EUR",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "penalties",
+          "fines",
+          "sanctions",
+          "enforcement",
+          "non-compliance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 6,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Roadmap": [
+    {
+      "Control": {
+        "ID": "EUAIA.Art9",
+        "Name": "Risk Management System — Continuous iterative risk management throughout AI system lifecycle",
+        "Domain": "risk_management",
+        "Domains": [
+          "risk_management"
+        ],
+        "Keywords": [
+          "risk management",
+          "risk identification",
+          "risk analysis",
+          "residual risk",
+          "testing"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art9.1",
+            "Name": "Document and maintain continuous risk management process",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art5",
+        "Name": "Prohibited AI Practices — Identification, governance and prevention of unacceptable risk AI",
+        "Domain": "prohibited",
+        "Domains": [
+          "prohibited"
+        ],
+        "Keywords": [
+          "prohibited",
+          "unacceptable risk",
+          "social scoring",
+          "biometric categorisation",
+          "prohibited practices"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art5.1",
+            "Name": "Inventory screening against prohibited AI use cases",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art55",
+        "Name": "Systemic Risk GPAI Obligations — Model evaluation, adversarial testing, incident reporting, cybersecurity for systemic-risk models",
+        "Domain": "gpai",
+        "Domains": [
+          "gpai"
+        ],
+        "Keywords": [
+          "systemic risk",
+          "gpai",
+          "model evaluation",
+          "red teaming",
+          "incident reporting",
+          "cybersecurity"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art55.1",
+            "Name": "Conduct adversarial testing (red teaming) for systemic-risk models",
+            "MinMaturity": 4,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art8",
+        "Name": "Compliance with the requirements",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "compliance",
+          "requirements",
+          "state of the art"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art8.1",
+            "Name": "Ensure the system complies with the Chapter III requirements, taking account of its intended purpose and the acknowledged state of the art",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art8.2",
+            "Name": "Take the Article 9 risk management system into account when demonstrating compliance, rather than treating it as a separate exercise",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art73",
+        "Name": "Serious Incident Reporting — Report serious incidents to market surveillance authorities, investigation and corrective measures",
+        "Domain": "reporting",
+        "Domains": [
+          "reporting"
+        ],
+        "Keywords": [
+          "incident reporting",
+          "serious incident",
+          "market surveillance",
+          "notification",
+          "investigation",
+          "corrective measures"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art73.1",
+            "Name": "Establish serious incident reporting process with 15-day/2-day escalation",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art10",
+        "Name": "Data and Data Governance — Training, validation and test data quality, bias detection, representativeness",
+        "Domain": "data",
+        "Domains": [
+          "data"
+        ],
+        "Keywords": [
+          "data governance",
+          "data quality",
+          "bias",
+          "training data",
+          "representativeness",
+          "data provenance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art48",
+        "Name": "CE marking",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "ce marking",
+          "affixing",
+          "notified body number"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art48.1",
+            "Name": "Affix the CE marking visibly, legibly and indelibly, or on the packaging or accompanying documentation where the nature of the system warrants it",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art48.2",
+            "Name": "Follow the marking with the notified body identification number where a notified body was involved, and repeat that number in promotional material claiming CE compliance",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art48.3",
+            "Name": "Use a digital CE marking for a digitally provided system where it can easily be seen by the person accessing it",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art53",
+        "Name": "General-Purpose AI Model Provider Obligations — Technical documentation, downstream information, copyright policy, training data summary",
+        "Domain": "gpai",
+        "Domains": [
+          "gpai"
+        ],
+        "Keywords": [
+          "general purpose ai",
+          "gpai",
+          "foundation model",
+          "technical documentation",
+          "copyright",
+          "training data",
+          "downstream"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art52",
+        "Name": "Procedure: notification to the Commission of a model meeting the systemic risk threshold",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "notification",
+          "two weeks",
+          "commission",
+          "substantiated arguments"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art52.1",
+            "Name": "Notify the Commission without delay and in any event within two weeks of meeting, or coming to know it will be met, the Article 51(1)(a) condition",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art52.2",
+            "Name": "Where arguing that the model does not present systemic risk, present sufficiently substantiated arguments with the notification rather than later",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art14",
+        "Name": "Human Oversight — Design and development for effective human supervision, intervention and override",
+        "Domain": "human_oversight",
+        "Domains": [
+          "human_oversight"
+        ],
+        "Keywords": [
+          "human oversight",
+          "supervision",
+          "human-in-the-loop",
+          "override",
+          "automation bias",
+          "stop button"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art15",
+        "Name": "Accuracy, Robustness and Cybersecurity — Appropriate levels of accuracy, robustness, and security against adversarial attacks",
+        "Domain": "technical",
+        "Domains": [
+          "technical"
+        ],
+        "Keywords": [
+          "accuracy",
+          "robustness",
+          "cybersecurity",
+          "adversarial",
+          "data poisoning",
+          "model evasion"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art16",
+        "Name": "Provider Obligations — Overall compliance responsibilities for high-risk AI system providers",
+        "Domain": "provider",
+        "Domains": [
+          "provider"
+        ],
+        "Keywords": [
+          "provider",
+          "obligations",
+          "conformity",
+          "ce marking",
+          "registration"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art17",
+        "Name": "Quality Management System — Documented QMS with policies, procedures, risk management, post-market monitoring",
+        "Domain": "quality",
+        "Domains": [
+          "quality"
+        ],
+        "Keywords": [
+          "quality management",
+          "qms",
+          "procedures",
+          "regulatory compliance",
+          "change management"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art17.1",
+            "Name": "Establish and maintain documented QMS for AI systems",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art51",
+        "Name": "Classification of general-purpose AI models with systemic risk",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "systemic risk",
+          "high impact capabilities",
+          "classification",
+          "compute threshold"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art51.1",
+            "Name": "Evaluate high impact capabilities against technical tools, indicators and benchmarks, and on a Commission designation having regard to Annex XI",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art51.2",
+            "Name": "Treat the training compute threshold in Article 51(2) as a presumption, not as the only test",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art50",
+        "Name": "Transparency Obligations for Certain AI Systems — Information about AI interaction, synthetic content marking, emotion recognition",
+        "Domain": "transparency",
+        "Domains": [
+          "transparency"
+        ],
+        "Keywords": [
+          "transparency",
+          "synthetic content",
+          "deepfake",
+          "emotion recognition",
+          "biometric categorisation",
+          "watermarking"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art26",
+        "Name": "Deployer Obligations — Technical/organisational measures, human oversight assignment, input data control, monitoring",
+        "Domain": "deployer",
+        "Domains": [
+          "deployer"
+        ],
+        "Keywords": [
+          "deployer",
+          "user",
+          "instructions for use",
+          "human oversight",
+          "input data",
+          "monitoring",
+          "workers information"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art11",
+        "Name": "Technical Documentation — Comprehensive technical documentation per Annex IV",
+        "Domain": "documentation",
+        "Domains": [
+          "documentation"
+        ],
+        "Keywords": [
+          "technical documentation",
+          "design specification",
+          "system description",
+          "annex iv"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art13",
+        "Name": "Transparency and Information to Deployers — Instructions for use, performance characteristics, limitations",
+        "Domain": "transparency",
+        "Domains": [
+          "transparency"
+        ],
+        "Keywords": [
+          "transparency",
+          "instructions for use",
+          "performance",
+          "accuracy",
+          "limitations",
+          "deployer information"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art43",
+        "Name": "Conformity Assessment — Conformity assessment procedures based on internal control or notified body",
+        "Domain": "conformity",
+        "Domains": [
+          "conformity"
+        ],
+        "Keywords": [
+          "conformity assessment",
+          "notified body",
+          "internal control",
+          "annex vi",
+          "assessment procedure"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art54",
+        "Name": "Authorised representatives of providers of general-purpose AI models",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "authorised representative",
+          "third country",
+          "mandate"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.EUAIA.Art54.1",
+            "Name": "Appoint an authorised representative established in the Union before placing a general-purpose AI model on the Union market",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.EUAIA.Art54.2",
+            "Name": "Give the representative a written mandate and enable it to perform the tasks that mandate specifies",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art25",
+        "Name": "Responsibilities Along the AI Value Chain — Substantial modification, change of intended purpose, downstream obligations",
+        "Domain": "value_chain",
+        "Domains": [
+          "value_chain"
+        ],
+        "Keywords": [
+          "value chain",
+          "substantial modification",
+          "downstream",
+          "third party",
+          "integration"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art72",
+        "Name": "Post-Market Monitoring — Active and systematic collection and analysis of performance data post-deployment",
+        "Domain": "post_market",
+        "Domains": [
+          "post_market"
+        ],
+        "Keywords": [
+          "post-market monitoring",
+          "pms",
+          "performance monitoring",
+          "lifecycle",
+          "data collection"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art27",
+        "Name": "Fundamental Rights Impact Assessment — FRIA before deployment for public bodies and specified deployers",
+        "Domain": "deployer",
+        "Domains": [
+          "deployer"
+        ],
+        "Keywords": [
+          "fundamental rights",
+          "impact assessment",
+          "fria",
+          "rights protection",
+          "deployer"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art12",
+        "Name": "Record-Keeping — Automatic event logging for traceability throughout system lifetime",
+        "Domain": "technical",
+        "Domains": [
+          "technical"
+        ],
+        "Keywords": [
+          "logging",
+          "record keeping",
+          "traceability",
+          "automatic log",
+          "event logging"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art47",
+        "Name": "EU Declaration of Conformity and CE Marking — Draft declaration per Annex V and affix CE marking",
+        "Domain": "conformity",
+        "Domains": [
+          "conformity"
+        ],
+        "Keywords": [
+          "declaration of conformity",
+          "ce marking",
+          "annex v",
+          "conformity marking"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art20",
+        "Name": "Corrective Actions and Duty of Information — Immediate corrective measures and notification of non-compliance",
+        "Domain": "provider",
+        "Domains": [
+          "provider"
+        ],
+        "Keywords": [
+          "corrective action",
+          "duty to inform",
+          "recall",
+          "decommission",
+          "non-compliance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art49",
+        "Name": "Registration in EU Database — Register high-risk AI systems in EU-wide database per Annex VIII",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "registration",
+          "eu database",
+          "annex viii",
+          "provider",
+          "deployer"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art18",
+        "Name": "Documentation Keeping — Retention of technical documentation and QMS records for 10 years",
+        "Domain": "documentation",
+        "Domains": [
+          "documentation"
+        ],
+        "Keywords": [
+          "documentation retention",
+          "record keeping",
+          "10 years",
+          "technical documentation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art19",
+        "Name": "Automatically Generated Logs — Retention of logs under provider control, minimum 6 months",
+        "Domain": "technical",
+        "Domains": [
+          "technical"
+        ],
+        "Keywords": [
+          "logs",
+          "automatic logs",
+          "retention",
+          "6 months",
+          "audit trail"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art23",
+        "Name": "Importer Obligations — Verification of conformity assessment, technical documentation, CE marking before placing on market",
+        "Domain": "value_chain",
+        "Domains": [
+          "value_chain"
+        ],
+        "Keywords": [
+          "importer",
+          "conformity verification",
+          "ce marking",
+          "declaration",
+          "documentation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art24",
+        "Name": "Distributor Obligations — Verification of CE marking, declaration, instructions; corrective actions",
+        "Domain": "value_chain",
+        "Domains": [
+          "value_chain"
+        ],
+        "Keywords": [
+          "distributor",
+          "availability",
+          "ce marking",
+          "declaration",
+          "corrective action"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art6",
+        "Name": "High-Risk AI Classification — Rules for classifying AI systems as high-risk",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "classification",
+          "high-risk",
+          "risk classification",
+          "annex iii"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art22",
+        "Name": "Authorised Representative — Third-country providers must appoint an EU-established authorised representative",
+        "Domain": "value_chain",
+        "Domains": [
+          "value_chain"
+        ],
+        "Keywords": [
+          "authorised representative",
+          "third country",
+          "EU representative",
+          "mandate"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art21",
+        "Name": "Cooperation with Competent Authorities — Information provision, documentation access and cooperation",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "cooperation",
+          "competent authority",
+          "information",
+          "documentation access",
+          "market surveillance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art4",
+        "Name": "AI Literacy — Ensure AI literacy among staff and deployers",
+        "Domain": "people",
+        "Domains": [
+          "people"
+        ],
+        "Keywords": [
+          "literacia",
+          "training",
+          "awareness",
+          "competence",
+          "literacy"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "EUAIA.Art99",
+        "Name": "Penalties and Enforcement — Sanctions framework, fines up to 7% global annual turnover or 35M EUR",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "penalties",
+          "fines",
+          "sanctions",
+          "enforcement",
+          "non-compliance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 6,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Gate": null,
+  "Delta": null,
+  "layer_delta": {
+    "documented_count": 0,
+    "implemented_count": 1,
+    "policy_gap": null,
+    "implemented_only": [
+      "IMP-001"
+    ],
+    "active_coverage": null
+  }
+}

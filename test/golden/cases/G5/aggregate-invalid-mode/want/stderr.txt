@@ -1,0 +1,12 @@
+Error: aggregate: --fail-on must be 'any-block' or 'all-block', got "sometimes"
+Usage:
+  wardex aggregate <result1.json> [result2.json ...] [flags]
+
+Flags:
+      --fail-on string   When to block: any-block (default) | all-block (default "any-block")
+  -h, --help             help for aggregate
+
+Global Flags:
+      --config string   Path to wardex-config.yaml (default "./wardex-config.yaml")
+
+aggregate: --fail-on must be 'any-block' or 'all-block', got "sometimes"

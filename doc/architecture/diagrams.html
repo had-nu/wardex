@@ -656,14 +656,8 @@ graph TB
     subgraph CI["GitHub Actions CI"]
         direction LR
         CI_TEST["ci.yml<br/>test + lint + security"]
-        CI_DOCKER["docker.yml<br/>build + push"]
         CI_RELEASE["release.yml<br/>GoReleaser + Cosign"]
-        CI_ACTION["action.yml<br/>composite action"]
-        CI_TEST --> CI_DOCKER --> CI_RELEASE
-    end
-
-    subgraph REGISTRY["Container Registry"]
-        GHCR["ghcr.io/had-nu/wardex"]
+        CI_TEST --> CI_RELEASE
     end
 
     subgraph TARGETS["Targets Multi-plataforma"]
@@ -691,27 +685,17 @@ graph TB
         SECRET["Secret<br/>WARDEX_ACCEPT_SECRET"]
     end
 
-    subgraph DOCKER_RUNTIME["Docker Runtime"]
-        BUILDER["golang:1.27-alpine<br/>(builder)"]
-        RUNTIME["distroless/static:nonroot<br/>(runtime)"]
-        BUILDER --> RUNTIME
-    end
-
-    CI_DOCKER --> GHCR
     CI_RELEASE --> TARGETS
-    GHCR --> K8S
     K8S --> PVC
 
     style CI fill:#1a2332,stroke:#58a6ff,color:#c9d1d9
-    style REGISTRY fill:#1a2332,stroke:#3fb950,color:#c9d1d9
     style TARGETS fill:#1a2332,stroke:#d29922,color:#c9d1d9
     style K8S fill:#1a2332,stroke:#bc8cff,color:#c9d1d9
-    style DOCKER_RUNTIME fill:#1a2332,stroke:#f85149,color:#c9d1d9
 </div>
 <div class="legend">
-  <strong>Legenda:</strong> Azul = CI/CD | Verde = Registry | Amarelo = Targets | Roxo = Kubernetes | Vermelho = Docker build stages.<br/>
-  <strong>Fluxo:</strong> Push → ci.yml (test+lint+security) → docker.yml (build+push ghcr.io) → release.yml (GoReleaser cross-platform + Cosign signing + CycloneDX SBOM).<br/>
-  <strong>K8s:</strong> Helm chart com Job (one-shot), CronJob (agendado), PVC (para state store proposto), ConfigMap, Secret.
+  <strong>Legenda:</strong> Azul = CI/CD | Amarelo = Targets | Roxo = Kubernetes.<br/>
+  <strong>Fluxo:</strong> Push → ci.yml (test+lint+security) → release.yml (GoReleaser cross-platform + Cosign signing + CycloneDX SBOM).<br/>
+  <strong>K8s:</strong> Helm chart com Job (one-shot), CronJob (agendado), PVC (para state store proposto), ConfigMap, Secret. Container distribution (docker.yml, image publishing, action.yml) is removed until v3.
 </div>
 </div>
 

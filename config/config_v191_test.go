@@ -6,9 +6,9 @@ import (
 	"testing"
 )
 
-// TestLoadConfigWithRemovedFields verifica que YAMLs com campos desconhecidos
-// são agora rejeitados devido a KnownFields(true). Antes da v2.3.0, campos
-// removidos eram silenciosamente ignorados.
+// TestLoadConfigWithRemovedFields checks that YAMLs with unknown fields are
+// now rejected because of KnownFields(true). Before v2.3.0, removed fields
+// were silently ignored.
 func TestLoadConfigWithRemovedFields(t *testing.T) {
 	legacyYAML := `
 organization:

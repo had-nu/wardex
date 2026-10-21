@@ -26,10 +26,10 @@ func TestRegistryAddHasRoundtrip(t *testing.T) {
 		EntryHash: "abc",
 	}, "abc")
 	if !reg.Has("2.6.0") {
-		t.Fatal("versão adicionada deveria existir")
+		t.Fatal("added version should exist")
 	}
 	if reg.Has("2.6.1") {
-		t.Fatal("versão não adicionada não deveria existir")
+		t.Fatal("version that was not added should not exist")
 	}
 
 	if err := reg.Save(logPath); err != nil {
@@ -40,7 +40,7 @@ func TestRegistryAddHasRoundtrip(t *testing.T) {
 		t.Fatalf("load: %v", err)
 	}
 	if !loaded.Has("2.6.0") {
-		t.Error("roundtrip perdeu versão")
+		t.Error("roundtrip lost the version")
 	}
 	info := loaded.Releases["2.6.0"]
 	if info.PolicyRef != "iso27001:a.8.1@2026-09" {
@@ -54,7 +54,7 @@ func TestLoadMissingIndexYieldsEmpty(t *testing.T) {
 		t.Fatalf("load: %v", err)
 	}
 	if len(reg.Releases) != 0 {
-		t.Error("índice ausente devia ser vazio")
+		t.Error("missing index should be empty")
 	}
 }
 
@@ -70,7 +70,7 @@ func TestLoadCorruptOrFutureSchema(t *testing.T) {
 				t.Fatal(err)
 			}
 			if _, err := versionregistry.Load(logPath); err == nil {
-				t.Fatal("índice inválido devia dar erro")
+				t.Fatal("invalid index should return an error")
 			}
 		})
 	}
@@ -107,16 +107,16 @@ func TestRebuildFromChain(t *testing.T) {
 		t.Fatalf("rebuild: %v", err)
 	}
 	if !reg.Has("2.5.0") || !reg.Has("2.5.1") {
-		t.Errorf("rebuild não recolheu versões: %v", reg.Releases)
+		t.Errorf("rebuild did not collect versions: %v", reg.Releases)
 	}
 	if len(reg.Releases) != 2 {
-		t.Errorf("len(releases) = %d, esperado 2", len(reg.Releases))
+		t.Errorf("len(releases) = %d, want 2", len(reg.Releases))
 	}
 	expectedLast, err := acceptaudit.LastEntryHash(logPath)
 	if err != nil {
 		t.Fatalf("last entry hash: %v", err)
 	}
 	if lastHash != expectedLast {
-		t.Errorf("lastHash = %s, esperado %s", lastHash, expectedLast)
+		t.Errorf("lastHash = %s, want %s", lastHash, expectedLast)
 	}
 }

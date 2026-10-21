@@ -1,0 +1,102 @@
+version: 1
+language: en-GB
+
+# Go keywords and predeclared terms. They are never translated and are never
+# used as names for product concepts.
+reserved:
+  - break
+  - case
+  - chan
+  - const
+  - continue
+  - default
+  - defer
+  - else
+  - fallthrough
+  - for
+  - func
+  - go
+  - goto
+  - if
+  - import
+  - interface
+  - map
+  - package
+  - range
+  - return
+  - select
+  - struct
+  - switch
+  - type
+  - var
+
+terms:
+  - term: module
+    definition: An architectural unit that aggregates Go packages (M0 to M7).
+    note: Do not use package or component when the intended meaning is module.
+    avoid:
+      - módulo
+  - term: component
+    definition: A deliverable within a module, such as the golden harness.
+    note: Do not use module when the intended meaning is component.
+    avoid:
+      - componente
+  - term: package
+    definition: A Go package.
+    reserved: true
+    avoid:
+      - pacote
+  - term: Go module
+    definition: The unit declared by go.mod.
+    note: Qualify as Go module when module alone would be ambiguous.
+    avoid:
+      - módulo Go
+  - term: baseline
+    definition: The frozen reference state used for comparison.
+    avoid:
+      - linha de base
+  - term: golden test
+    definition: A characterisation test that freezes observable behaviour.
+    avoid:
+      - teste de caracterização
+    allow_first_definition: true
+  - term: floor
+    definition: The minimum coverage or quality level, which can only rise.
+    note: ratchet is allowed only in the names check-ratchet and ratchet-update.
+    avoid:
+      - ratchet
+    allow_in:
+      - check-ratchet
+      - ratchet-update
+  - term: boundary guard
+    definition: The tool that enforces the module import rules.
+    avoid:
+      - boundary check
+  - term: definition of done
+    definition: The verifiable checklist that closes a module.
+    note: Acceptance criterion is used only for migration steps.
+    avoid:
+      - critérios de fecho
+  - term: file
+    definition: A file in the repository.
+    avoid:
+      - arquivo
+  - term: catalogue
+    definition: A collection of normative controls or records.
+    note: The Go package path pkg/catalog keeps its existing spelling.
+    avoid:
+      - catalog
+    exempt:
+      - pkg/catalog
+
+# Portuguese terms that are never allowed in English prose, comments or
+# user-facing messages. Code spans and fenced code blocks are ignored.
+forbidden:
+  - pacote
+  - módulo
+  - componente
+  - arquivo
+  - linha de base
+  - teste de caracterização
+  - critérios de fecho
+  - boundary check

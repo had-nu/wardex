@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/had-nu/wardex/v2/pkg/cli"
 	"github.com/had-nu/wardex/v2/pkg/model"
@@ -205,6 +206,97 @@ type Art14Config struct {
 // CRAConfig groups all Cyber Resilience Act compliance settings.
 type CRAConfig struct {
 	Art14 Art14Config `yaml:"art14"`
+
+	// SupportPeriod is the number of years for which the manufacturer supports
+	// vulnerabilities in the product, per Article 13(8).
+	//
+	// The Regulation sets a floor rather than a single figure: at least five
+	// years, and where the product is expected to be in use for less than five
+	// years, the support period corresponds to that expected use time. A value
+	// below five years is therefore not automatically a defect, which is why the
+	// reason field exists and why the check below warns rather than blocks.
+	SupportPeriod SupportPeriodConfig `yaml:"support_period"`
+}
+
+// SupportPeriodConfig records the Article 13(8) support period and its rationale.
+type SupportPeriodConfig struct {
+	// Years is the support period. Zero means it has not been set.
+	Years int `yaml:"years"`
+
+	// Justification records what was taken into account when the period was set.
+	// Article 13(8) lists the factors: reasonable user expectations, the nature
+	// of the product including its intended purpose, Union law determining the
+	// lifetime of the product, the support periods of comparable products, the
+	// availability of the operating environment, the support periods of
+	// integrated components, and any guidance from ADCO or the Commission.
+	// Annex VII point 4 requires this to be in the technical documentation, so a
+	// support period without a reason is not a complete record.
+	Justification string `yaml:"justification"`
+
+	// VDPReference is the vulnerability disclosure policy the manufacturer
+	// publishes. Annex I Part II point (5) requires a policy on coordinated
+	// vulnerability disclosure to be in place and enforced.
+	VDPReference string `yaml:"vdp_reference"`
+
+	// ExpectedUseIsShorterThanFiveYears records that the product is expected to
+	// be in use for less than five years. It is set rather than inferred from
+	// Years, because a short period below the floor is only correct when this is
+	// true, and the two facts should not have to be derived from each other.
+	ExpectedUseIsShorterThanFiveYears bool `yaml:"expected_use_shorter_than_five_years"`
+
+	// SBOMPath is where a software bill of materials is expected. Annex VII
+	// point 8 makes the SBOM producible on a reasoned request from a market
+	// surveillance authority, so its absence is a warning rather than a stop.
+	SBOMPath string `yaml:"sbom_path"`
+}
+
+// MinimumSupportPeriodYears is the floor Article 13(8) sets.
+const MinimumSupportPeriodYears = 5
+
+// ValidateSupportPeriod applies the Article 13(8) rule and returns warnings
+// rather than errors.
+//
+// The rule has an exception, and enforcing the floor without it would report a
+// short-lived product as non-compliant when the Regulation expressly allows the
+// shorter period. The alternative — enforcing nothing — would let a five-year
+// product ship with no support period recorded at all.
+func (c CRAConfig) ValidateSupportPeriod() []string {
+	var warnings []string
+
+	if c.SupportPeriod.Years == 0 {
+		warnings = append(warnings,
+			"cra.support_period.years is not set; Article 13(8) requires a support period and "+
+				"Annex VII point 4 requires the information behind it to be in the technical documentation")
+		return warnings
+	}
+
+	if c.SupportPeriod.Years < 0 {
+		warnings = append(warnings,
+			fmt.Sprintf("cra.support_period.years is %d, which is not a duration", c.SupportPeriod.Years))
+		return warnings
+	}
+
+	if c.SupportPeriod.Years < MinimumSupportPeriodYears && !c.SupportPeriod.ExpectedUseIsShorterThanFiveYears {
+		warnings = append(warnings,
+			fmt.Sprintf("cra.support_period.years is %d; Article 13(8) requires at least %d years "+
+				"unless the product is expected to be in use for less than that, which is recorded "+
+				"by setting cra.support_period.expected_use_shorter_than_five_years",
+				c.SupportPeriod.Years, MinimumSupportPeriodYears))
+	}
+
+	if strings.TrimSpace(c.SupportPeriod.Justification) == "" {
+		warnings = append(warnings,
+			"cra.support_period.justification is empty; Annex VII point 4 requires the information "+
+				"taken into account to determine the support period")
+	}
+
+	if strings.TrimSpace(c.SupportPeriod.VDPReference) == "" {
+		warnings = append(warnings,
+			"cra.support_period.vdp_reference is empty; Annex I Part II point (5) requires a policy "+
+				"on coordinated vulnerability disclosure to be in place and enforced")
+	}
+
+	return warnings
 }
 
 // NotificationConfig configures external notifications for CPL divergence events.

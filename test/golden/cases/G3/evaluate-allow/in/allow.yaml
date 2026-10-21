@@ -1,0 +1,7 @@
+converted_by: golden-fixture
+vulnerabilities:
+  - cve_id: CVE-2025-9002
+    cvss_base: 2.0
+    epss_score: 0.01
+    component: openssl
+    reachable: false

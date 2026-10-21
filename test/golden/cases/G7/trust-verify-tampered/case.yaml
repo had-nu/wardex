@@ -1,0 +1,6 @@
+id: trust-verify-tampered
+flow: G7
+args: [trust, verify, --trust, tampered-trust.yaml]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

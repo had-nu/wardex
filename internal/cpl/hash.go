@@ -77,7 +77,7 @@ func ConfigHash(configPath string) (string, error) {
 	data, err := cli.SafeReadFile(configPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return "", nil // Sem config file, hash vazio
+			return "", nil // No config file, empty hash
 		}
 		return "", fmt.Errorf("reading config file for audit: %w", err)
 	}

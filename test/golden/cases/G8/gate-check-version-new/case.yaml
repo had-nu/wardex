@@ -1,0 +1,6 @@
+id: gate-check-version-new
+flow: G8
+args: [gate, check-version, --audit-log, release.log, --version, 9.9.9]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

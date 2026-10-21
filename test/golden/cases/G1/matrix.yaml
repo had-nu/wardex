@@ -1,0 +1,54 @@
+# The complete G1 matrix. The list is explicit: the axes are recorded on each
+# entry, and a missing combination is a missing line in review, not a silent
+# omission in a nested loop.
+#
+# layers: documented (documented only), implemented (implemented only), both
+# assets: true adds --assets assets.yaml
+# format: json | markdown | csv | html
+#
+# Every framework gets the same three layer modes and one with-assets run in
+# JSON; ISO/IEC 27001 and GDPR add the three remaining report formats. HTML is
+# compared in full: its timestamp is normalised and the document carries no
+# other volatile content.
+
+entries:
+  - { framework: cra,      layers: documented,  assets: false, format: json }
+  - { framework: cra,      layers: implemented, assets: false, format: json }
+  - { framework: cra,      layers: both,        assets: false, format: json }
+  - { framework: cra,      layers: both,        assets: true,  format: json }
+
+  - { framework: dora,     layers: documented,  assets: false, format: json }
+  - { framework: dora,     layers: implemented, assets: false, format: json }
+  - { framework: dora,     layers: both,        assets: false, format: json }
+  - { framework: dora,     layers: both,        assets: true,  format: json }
+
+  - { framework: eu_ai_act, layers: documented,  assets: false, format: json }
+  - { framework: eu_ai_act, layers: implemented, assets: false, format: json }
+  - { framework: eu_ai_act, layers: both,        assets: false, format: json }
+  - { framework: eu_ai_act, layers: both,        assets: true,  format: json }
+
+  - { framework: gdpr,     layers: documented,  assets: false, format: json }
+  - { framework: gdpr,     layers: implemented, assets: false, format: json }
+  - { framework: gdpr,     layers: both,        assets: false, format: json }
+  - { framework: gdpr,     layers: both,        assets: true,  format: json }
+  - { framework: gdpr,     layers: both,        assets: false, format: markdown }
+  - { framework: gdpr,     layers: both,        assets: false, format: csv }
+  - { framework: gdpr,     layers: both,        assets: false, format: html }
+
+  - { framework: iso27001, layers: documented,  assets: false, format: json }
+  - { framework: iso27001, layers: implemented, assets: false, format: json }
+  - { framework: iso27001, layers: both,        assets: false, format: json }
+  - { framework: iso27001, layers: both,        assets: true,  format: json }
+  - { framework: iso27001, layers: both,        assets: false, format: markdown }
+  - { framework: iso27001, layers: both,        assets: false, format: csv }
+  - { framework: iso27001, layers: both,        assets: false, format: html }
+
+  - { framework: nis2,     layers: documented,  assets: false, format: json }
+  - { framework: nis2,     layers: implemented, assets: false, format: json }
+  - { framework: nis2,     layers: both,        assets: false, format: json }
+  - { framework: nis2,     layers: both,        assets: true,  format: json }
+
+  - { framework: nist_csf, layers: documented,  assets: false, format: json }
+  - { framework: nist_csf, layers: implemented, assets: false, format: json }
+  - { framework: nist_csf, layers: both,        assets: false, format: json }
+  - { framework: nist_csf, layers: both,        assets: true,  format: json }

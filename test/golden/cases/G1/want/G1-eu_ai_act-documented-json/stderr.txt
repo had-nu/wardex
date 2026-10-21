@@ -1,0 +1,2 @@
+[INFO] Loaded 2 controls from input files.
+[INFO] Using framework: eu_ai_act (37 controls in catalog).

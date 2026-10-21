@@ -1,0 +1,6 @@
+id: convert-sbom-spdx
+flow: G4
+args: [convert, sbom, bom.json, --output, wardex-vulns.yaml]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

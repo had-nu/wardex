@@ -1,0 +1,6 @@
+id: policy-add
+flow: G10
+args: [policy, add, --file, policies/access_control.yml, --id, A.5.15, --title, Access control, --status, partial, --owner, Security Team, --note, MFA enforced]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: 'policy-add relative --file is rejected by pathguard (base "." is not resolved); fix changes this want'

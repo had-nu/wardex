@@ -15,7 +15,7 @@ func TestRiskBasedGateVsBinaryThreshold(t *testing.T) {
 		CVEID: "CVE-2024-1234", CVSSBase: 9.1, EPSSScore: 0.84, Reachable: true,
 	}
 
-	// Contexto de baixo risco: ferramenta interna, air-gapped, controls fortes
+	// Low-risk context: internal tool, air-gapped, strong controls
 	lowRiskGate := releasegate.Gate{
 		AssetContext: model.AssetContext{
 			Criticality: 0.2, InternetFacing: false, RequiresAuth: true, Environment: "development",
@@ -24,26 +24,26 @@ func TestRiskBasedGateVsBinaryThreshold(t *testing.T) {
 			{Type: "network_segmentation", Effectiveness: 0.7},
 			{Type: "runtime_protection", Effectiveness: 0.5},
 		},
-		RiskAppetite: 0.6, // escala normalizada [0, 1.5] — v4
+		RiskAppetite: 0.6, // normalised scale [0, 1.5] — v4
 	}
 
-	// Contexto de alto risco: sistema financeiro exposto, sem compensação
+	// High-risk context: exposed financial system, no compensating controls
 	highRiskGate := releasegate.Gate{
 		AssetContext: model.AssetContext{
 			Criticality: 1.5, InternetFacing: true, RequiresAuth: false,
 		},
 		CompensatingControls: []model.CompensatingControl{},
-		RiskAppetite:         0.6, // escala normalizada [0, 1.5] — v4
+		RiskAppetite:         0.6, // normalised scale [0, 1.5] — v4
 	}
 
 	lowReport := lowRiskGate.Evaluate([]model.Vulnerability{vuln})
 	highReport := highRiskGate.Evaluate([]model.Vulnerability{vuln})
 
 	if lowReport.OverallDecision != model.DecisionAllow {
-		t.Errorf("esperado allow em contexto de baixo risco, got: %s (risk score: %f)", lowReport.OverallDecision, lowReport.Decisions[0].ReleaseRisk)
+		t.Errorf("expected allow in a low-risk context, got: %s (risk score: %f)", lowReport.OverallDecision, lowReport.Decisions[0].ReleaseRisk)
 	}
 	if highReport.OverallDecision != model.DecisionBlock {
-		t.Errorf("esperado block em contexto de alto risco, got: %s (risk score: %f)", highReport.OverallDecision, highReport.Decisions[0].ReleaseRisk)
+		t.Errorf("expected block in a high-risk context, got: %s (risk score: %f)", highReport.OverallDecision, highReport.Decisions[0].ReleaseRisk)
 	}
 }
 
@@ -65,7 +65,7 @@ func TestGateMaturityInference(t *testing.T) {
 	for _, tc := range cases {
 		level := releasegate.InferMaturityLevel(tc.ctx, tc.controls)
 		if level < tc.minLevel {
-			t.Errorf("esperado nível >= %d, got %d", tc.minLevel, level)
+			t.Errorf("expected level >= %d, got %d", tc.minLevel, level)
 		}
 	}
 }

@@ -1,0 +1,2 @@
+[INFO] Loaded 1 controls from input files.
+[INFO] Using framework: nis2 (27 controls in catalog).

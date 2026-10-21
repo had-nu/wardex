@@ -29,13 +29,13 @@ func TestMigrateLegacyConfigUpgradesToCurrent(t *testing.T) {
 		t.Fatalf("load: %v", err)
 	}
 	if cfg.ConfigSchemaVersion != config.CurrentConfigSchemaVersion {
-		t.Errorf("schema version = %d, esperado %d", cfg.ConfigSchemaVersion, config.CurrentConfigSchemaVersion)
+		t.Errorf("schema version = %d, want %d", cfg.ConfigSchemaVersion, config.CurrentConfigSchemaVersion)
 	}
 	if cfg.ReleaseGate.Mode != "any" {
-		t.Errorf("mode = %q, esperado default any", cfg.ReleaseGate.Mode)
+		t.Errorf("mode = %q, want default any", cfg.ReleaseGate.Mode)
 	}
 	if cfg.Reporting.GateLog.Path != "wardex-gate-audit.log" {
-		t.Errorf("gate_log.path = %q, esperado default", cfg.Reporting.GateLog.Path)
+		t.Errorf("gate_log.path = %q, want default", cfg.Reporting.GateLog.Path)
 	}
 }
 
@@ -51,10 +51,10 @@ release_gate:
 		t.Fatalf("load: %v", err)
 	}
 	if cfg.ConfigSchemaVersion != 2 {
-		t.Errorf("schema version = %d, esperado 2", cfg.ConfigSchemaVersion)
+		t.Errorf("schema version = %d, want 2", cfg.ConfigSchemaVersion)
 	}
 	if cfg.ReleaseGate.Mode != "aggregate" {
-		t.Errorf("mode = %q, nao deveria ser sobrescrito", cfg.ReleaseGate.Mode)
+		t.Errorf("mode = %q, should not be overwritten", cfg.ReleaseGate.Mode)
 	}
 }
 
@@ -65,6 +65,6 @@ release_gate:
 `)
 	_, err := config.Load(path)
 	if err == nil {
-		t.Fatal("config future deveria ser rejeitada")
+		t.Fatal("future config should be rejected")
 	}
 }

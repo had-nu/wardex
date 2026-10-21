@@ -3,6 +3,7 @@ package policy
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"gopkg.in/yaml.v3"
@@ -90,6 +91,12 @@ func LoadFramework(dir string) ([]*DomainFile, error) {
 		paths = append(paths, matched...)
 	}
 	if len(paths) == 0 {
+		// A missing directory and an empty one are different problems with
+		// different remedies, and a caller that removed a framework directory
+		// needs to be told which happened.
+		if info, err := os.Stat(dir); err != nil || !info.IsDir() {
+			return nil, fmt.Errorf("policy: framework directory %q does not exist", dir)
+		}
 		return nil, fmt.Errorf("policy: no .yml or .yaml files found in %q", dir)
 	}
 

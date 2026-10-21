@@ -1,0 +1,12 @@
+id: config-seal
+flow: G7
+args: [config, seal, --input, draft.yaml, --keyring, admin, --trust, wardex-trust.yaml, --out, sealed.wexstate]
+# The sealed file carries an Ed25519 signature over sealed_at, which is
+# truncated to the second but taken from the wall clock. Two runs a second
+# apart produce different signatures, so the file is not compared; the exit
+# code, stdout and the command's own verification path are.
+outputs: []
+modes:
+  admin: '0600'
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

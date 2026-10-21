@@ -1,0 +1,10 @@
+# documented layer: controls declared in policy.
+- id: DOC-001
+  name: Information security policy set
+  description: Approved policy set, reviewed at least annually.
+  layer: documented
+  domains: [organizational]
+  maturity: 4
+  evidences:
+    - type: policy
+      ref: isp-2026-01

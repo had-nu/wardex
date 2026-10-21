@@ -1,0 +1,37 @@
+{
+  "Gate": {
+    "OverallDecision": "allow",
+    "GateMaturityLevel": 3,
+    "Decisions": [
+      {
+        "Vulnerability": {
+          "CVEID": "CVE-2025-9004",
+          "CVSSBase": 9.8,
+          "EPSSScore": 0.01,
+          "Component": "openssl",
+          "Reachable": true,
+          "ActivelyExploited": false,
+          "ActivelyExploitedSince": "<TS>",
+          "ExploitedSource": ""
+        },
+        "ReleaseRisk": 0.0070560000000000015,
+        "RiskAppetite": 0.6,
+        "Decision": "allow",
+        "Breakdown": {
+          "CVSSBase": 9.8,
+          "EPSSFactor": 0.01,
+          "AdjustedScore": 0.009800000000000001,
+          "AssetCriticality": 0.9,
+          "ExposureFactor": 0.8,
+          "CompensatingEffect": 0,
+          "FinalReleaseRisk": 0.0070560000000000015
+        },
+        "AuditTrail": "[allow] CVE-2025-9004 — release_risk: 0.0, cvss_adjusted: 0.0, exposure: 0.80"
+      }
+    ],
+    "BlockedCount": 0,
+    "AllowedCount": 1,
+    "WarnCount": 0,
+    "HighestRisk": 0.0070560000000000015
+  }
+}

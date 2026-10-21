@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "timestamp": "",
+  "total_files": 2,
+  "chain_hash": "037c247f889e21d92e2c718b76a6de779655e0411c71ae8ab12b9fc5adce0d70",
+  "artifacts": {
+    "one.txt": "2c8b08da5ce60398e1f19af0e5dccc744df274b826abe585eaba68c525434806",
+    "two.txt": "27dd8ed44a83ff94d557f9fd0412ed5a8cbca69ea04922d88c01184a07300a5a"
+  }
+}

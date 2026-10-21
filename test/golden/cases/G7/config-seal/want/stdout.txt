@@ -1,0 +1,9 @@
+Config sealed successfully.
+  Input: draft.yaml
+  Output: sealed.wexstate
+  Trust: wardex-trust.yaml
+
+The sealed config can now be used with:
+  wardex evaluate --config sealed.wexstate --evidence vulns.yaml controls.yaml
+
+Commit the .wexstate file (not the draft yaml) to your repository.
