@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDPR — Compliance &amp; Release Gate Report</title>
+<style>
+  :root {
+    --accent: #6f42c1; --accent-light: #8b5cf6;
+    --bg: #ffffff; --card: #f8f9fa;
+    --text: #1a1a2e; --muted: #6c757d;
+    --border: #dee2e6;
+    --green: #00c4a7; --amber: #f5a623; --red: #e74c3c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --card: #161b22;
+      --text: #f0f6fc; --muted: #8b949e;
+      --border: #30363d;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; padding: 2rem 1rem;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 0.875rem; margin-bottom: 2rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.25rem;
+  }
+  .card h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+              color: var(--muted); margin-bottom: 0.5rem; }
+  .value { font-size: 2rem; font-weight: 700; }
+  .value.green { color: var(--green); }
+  .value.amber { color: var(--amber); }
+  .value.red { color: var(--red); }
+  .section { margin-bottom: 2rem; }
+  .section h2 { font-size: 1.125rem; margin-bottom: 1rem; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th { text-align: left; padding: 0.5rem; border-bottom: 2px solid var(--border);
+       color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+  td { padding: 0.5rem; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: rgba(111, 66, 193, 0.05); }
+  .badge {
+    display: inline-block; padding: 0.125rem 0.5rem; border-radius: 4px;
+    font-size: 0.75rem; font-weight: 600;
+  }
+  .badge.allow { background: rgba(0,196,167,0.15); color: var(--green); }
+  .badge.warn  { background: rgba(245,166,35,0.15);  color: var(--amber); }
+  .badge.block { background: rgba(231,76,60,0.15);   color: var(--red); }
+  .badge.compliant { background: rgba(0,196,167,0.15); color: var(--green); }
+  .badge.partial { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .badge.non-compliant { background: rgba(231,76,60,0.15); color: var(--red); }
+  .domain-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+  .domain-name { width: 140px; font-weight: 500; font-size: 0.875rem; flex-shrink: 0; }
+  .bar { height: 20px; width: 100%; max-width: 400px; }
+  .domain-pct { font-size: 0.875rem; color: var(--muted); white-space: nowrap; }
+  .delta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .delta-item { text-align: center; }
+  .delta-value { font-size: 1.5rem; font-weight: 700; }
+  .delta-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; }
+  .delta-item.green .delta-value { color: var(--green); }
+  .delta-item.amber .delta-value { color: var(--amber); }
+  .delta-item.red .delta-value { color: var(--red); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+  .empty { color: var(--muted); font-style: italic; padding: 1rem 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Wardex — Compliance &amp; Release Gate Report</h1>
+<p class="subtitle">GDPR · Generated <TS> · v2.0.0</p>
+
+<div class="grid">
+  <div class="card">
+    <h2>Coverage</h2>
+    <div class="value green">13.6%</div>
+    <div style="margin-top:0.25rem;font-size:0.875rem;color:var(--muted);">
+      3 covered · 6 partial · 13 gap
+      <span style="margin-left:0.5rem;">of 22 controls</span>
+    </div>
+    
+  </div>
+  
+</div>
+
+
+<div class="section">
+<h2>Coverage by Domain</h2>
+
+<div class="domain-row">
+  <div class="domain-name">organizational</div>
+  &lt;svg class=&#34;bar&#34; viewBox=&#34;0 0 400 20&#34; aria-label=&#34;0 of 6&#34;&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;0&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e74c3c&#34;/&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;400&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e0e0e0&#34;/&gt;
+		&lt;/svg&gt;
+  <div class="domain-pct">0/6 (4.0)</div>
+</div>
+
+<div class="domain-row">
+  <div class="domain-name">people</div>
+  
+  <div class="domain-pct">0/0 (0.0)</div>
+</div>
+
+<div class="domain-row">
+  <div class="domain-name">physical</div>
+  
+  <div class="domain-pct">0/0 (0.0)</div>
+</div>
+
+<div class="domain-row">
+  <div class="domain-name">technological</div>
+  &lt;svg class=&#34;bar&#34; viewBox=&#34;0 0 400 20&#34; aria-label=&#34;3 of 3&#34;&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;400&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#00c4a7&#34;/&gt;
+			&lt;rect x=&#34;400&#34; y=&#34;0&#34; width=&#34;0&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e0e0e0&#34;/&gt;
+		&lt;/svg&gt;
+  <div class="domain-pct">3/3 (3.0)</div>
+</div>
+
+<div class="domain-row">
+  <div class="domain-name">governance</div>
+  &lt;svg class=&#34;bar&#34; viewBox=&#34;0 0 400 20&#34; aria-label=&#34;0 of 5&#34;&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;0&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e74c3c&#34;/&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;400&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e0e0e0&#34;/&gt;
+		&lt;/svg&gt;
+  <div class="domain-pct">0/5 (0.0)</div>
+</div>
+
+<div class="domain-row">
+  <div class="domain-name">process</div>
+  &lt;svg class=&#34;bar&#34; viewBox=&#34;0 0 400 20&#34; aria-label=&#34;0 of 8&#34;&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;0&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e74c3c&#34;/&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;400&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e0e0e0&#34;/&gt;
+		&lt;/svg&gt;
+  <div class="domain-pct">0/8 (0.0)</div>
+</div>
+
+</div>
+
+
+
+
+
+<div class="section">
+<h2>Layer Delta</h2>
+<div class="delta-grid">
+  <div class="delta-item green">
+    <div class="delta-value">0</div>
+    <div class="delta-label">Active Coverage</div>
+    <div style="font-size:0.75rem;color:var(--muted);">0% of total</div>
+  </div>
+  <div class="delta-item amber">
+    <div class="delta-value">2</div>
+    <div class="delta-label">Paper Security</div>
+    <div style="font-size:0.75rem;color:var(--muted);">67% documented only</div>
+  </div>
+  <div class="delta-item red">
+    <div class="delta-value">1</div>
+    <div class="delta-label">Shadow Security</div>
+    <div style="font-size:0.75rem;color:var(--muted);">33% undocumented</div>
+  </div>
+</div>
+</div>
+
+
+
+
+
+<div class="section">
+<h2>Roadmap</h2>
+<table>
+<thead>
+  <tr><th>Control</th><th>Name</th><th>Score</th><th>Gap</th></tr>
+</thead>
+<tbody>
+
+  <tr>
+    <td><code>GDPR.33</code></td>
+    <td>Art. 33 — Notification of a personal data breach to the supervisory authority</td>
+    <td>9.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.46</code></td>
+    <td>Art. 46 — Transfers subject to appropriate safeguards</td>
+    <td>9.0</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.35</code></td>
+    <td>Art. 35 — Data protection impact assessment</td>
+    <td>9.0</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.28.2</code></td>
+    <td>Art. 28(2) — Processor notification to the controller of a personal data breach (Article 33(2))</td>
+    <td>9.0</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.22</code></td>
+    <td>Art. 22 — Automated individual decision-making, including profiling</td>
+    <td>8.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.34</code></td>
+    <td>Art. 34 — Communication of a personal data breach to the data subject</td>
+    <td>8.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.15</code></td>
+    <td>Art. 15 — Right of access by the data subject</td>
+    <td>8.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.28</code></td>
+    <td>Art. 28 — Processor obligations and processor contracts</td>
+    <td>8.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.17</code></td>
+    <td>Art. 17 — Right to erasure (right to be forgotten)</td>
+    <td>8.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.13</code></td>
+    <td>Art. 13 — Information to be provided to data subjects on collection</td>
+    <td>8.0</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.21</code></td>
+    <td>Art. 21 — Right to object to processing</td>
+    <td>7.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.16</code></td>
+    <td>Art. 16 — Right to rectification of inaccurate personal data</td>
+    <td>7.0</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.18</code></td>
+    <td>Art. 18 — Right to restriction of processing</td>
+    <td>6.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">No correlation found</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.30</code></td>
+    <td>Art. 30 — Records of processing activities</td>
+    <td>4.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.24</code></td>
+    <td>Art. 24 — Responsibility of the controller</td>
+    <td>4.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.5</code></td>
+    <td>Art. 5 — Principles relating to processing of personal data</td>
+    <td>4.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.6</code></td>
+    <td>Art. 6 — Lawfulness of processing</td>
+    <td>4.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.30.2</code></td>
+    <td>Art. 30(2) — Records of processors processing on behalf of a controller</td>
+    <td>3.8</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>GDPR.37</code></td>
+    <td>Art. 37 — Designation of the data protection officer</td>
+    <td>3.8</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+</tbody>
+</table>
+</div>
+
+
+</div>
+</body>
+</html>

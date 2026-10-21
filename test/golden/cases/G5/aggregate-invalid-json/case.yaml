@@ -1,0 +1,6 @@
+id: aggregate-invalid-json
+flow: G5
+args: [aggregate, iso.json, broken.json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

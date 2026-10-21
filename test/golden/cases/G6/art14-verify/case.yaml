@@ -1,0 +1,8 @@
+id: art14-verify
+flow: G6
+args: [art14, verify, 1cf0d599-c082-4e8c-a024-fd8d7296bce2, --dir, art14]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+env:
+  WARDEX_ACCEPT_SECRET: golden-test-secret-0123456789abcdef
+known_defect: ''

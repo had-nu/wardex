@@ -1,0 +1,6 @@
+id: evaluate-missing-evidence
+flow: G3
+args: [evaluate, --config, config.yaml, --evidence, missing.yaml, documented.yaml, --output, json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

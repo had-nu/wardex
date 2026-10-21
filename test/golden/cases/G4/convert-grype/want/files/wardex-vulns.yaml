@@ -1,0 +1,12 @@
+converted_by: wardex-convert/grype
+vulnerabilities:
+    - cve_id: CVE-2025-1001
+      cvss_base: 8.1
+      epss_score: 0
+      component: openssl
+      reachable: true
+    - cve_id: CVE-2025-1002
+      cvss_base: 9.5
+      epss_score: 0
+      component: libxml2
+      reachable: true

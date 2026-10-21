@@ -1,0 +1,6 @@
+id: trust-list-json
+flow: G7
+args: [trust, list, --trust, wardex-trust.yaml, -o, json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

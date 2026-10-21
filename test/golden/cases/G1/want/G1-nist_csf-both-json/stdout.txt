@@ -1,0 +1,1423 @@
+{
+  "Summary": {
+    "Framework": "nist_csf",
+    "FrameworkName": "NIST CSF",
+    "GeneratedAt": "<TS>",
+    "TotalControls": 22,
+    "CoveredCount": 7,
+    "PartialCount": 9,
+    "GapCount": 6,
+    "GlobalCoverage": 31.818181818181817,
+    "DomainSummaries": [
+      {
+        "Domain": "organizational",
+        "TotalControls": 9,
+        "CoveredCount": 0,
+        "PartialCount": 9,
+        "GapCount": 0,
+        "MaturityScore": 3.9444444444444446,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "people",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "physical",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "technological",
+        "TotalControls": 7,
+        "CoveredCount": 7,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 3,
+        "CoveragePercent": 100
+      },
+      {
+        "Domain": "process",
+        "TotalControls": 6,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 6,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      }
+    ],
+    "TopCriticalGaps": null,
+    "GateSummary": null
+  },
+  "Findings": [
+    {
+      "Control": {
+        "ID": "GV.OC",
+        "Name": "Organizational Context",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "organizational context",
+          "mission",
+          "legal obligations",
+          "regulatory"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.OC",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.RM",
+        "Name": "Risk Management Strategy",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "risk appetite",
+          "risk tolerance",
+          "enterprise risk management"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.RM",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.RR",
+        "Name": "Roles, Responsibilities, and Authorities",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "roles",
+          "responsibilities",
+          "raci",
+          "governance structure"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.RR",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.PO",
+        "Name": "Policy",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "policy",
+          "oversight",
+          "board reporting"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3.5,
+      "EffectiveMaturity": 3.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.PO",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "GV.PO",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "policy"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.OV",
+        "Name": "Oversight",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "audit",
+          "independent review",
+          "assurance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6.5,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3.25,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.OV",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.SC",
+        "Name": "Cybersecurity Supply Chain Risk Management",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "supply chain",
+          "vendor risk",
+          "third party"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.SC",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "ID.AM",
+        "Name": "Asset Management",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "asset inventory",
+          "asset management",
+          "cmdb",
+          "hardware inventory",
+          "software inventory"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "ID.AM",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "ID.RA",
+        "Name": "Risk Assessment",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "risk assessment",
+          "threat modeling",
+          "vulnerability assessment",
+          "risk analysis"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "ID.RA",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "ID.IM",
+        "Name": "Improvement",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "lessons learned",
+          "post-incident review",
+          "continuous improvement"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "ID.IM",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "PR.AA",
+        "Name": "Identity Management, Authentication, and Access Control",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "iam",
+          "authentication",
+          "mfa",
+          "access control",
+          "identity"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "PR.AA",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "PR.AA",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "PR.AT",
+        "Name": "Awareness and Training",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "redundancy",
+          "high availability",
+          "capacity planning",
+          "sla"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "PR.AT",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "PR.AT",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "PR.DS",
+        "Name": "Data Security",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "encryption",
+          "data protection",
+          "dlp",
+          "data classification",
+          "crypto"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "PR.DS",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "PR.DS",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "PR.PS",
+        "Name": "Platform Security",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "hardening",
+          "secure configuration",
+          "os hardening",
+          "container security"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "PR.PS",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "PR.PS",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "PR.IR",
+        "Name": "Technology Infrastructure Resilience",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "technology infrastructure resilience",
+          "pr ir"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "PR.IR",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "PR.IR",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DE.CM",
+        "Name": "Continuous Monitoring",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "monitoring",
+          "siem",
+          "edr",
+          "network monitoring",
+          "soc"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "DE.CM",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "DE.CM",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DE.AE",
+        "Name": "Adverse Event Analysis",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "threat intelligence",
+          "attack surface",
+          "adversary",
+          "cti"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "DE.AE",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "DE.AE",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RS.MA",
+        "Name": "Incident Management",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "incident response",
+          "ir plan",
+          "csirt",
+          "soc",
+          "incident handling"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RS.AN",
+        "Name": "Incident Analysis",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "forensics",
+          "root cause",
+          "containment",
+          "analysis"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RS.CO",
+        "Name": "Incident Response Reporting and Communication",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "communication",
+          "stakeholder",
+          "notification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RS.MI",
+        "Name": "Incident Mitigation",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "containment",
+          "eradication",
+          "mitigation",
+          "recovery"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RC.RP",
+        "Name": "Incident Recovery Plan Execution",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "bcp",
+          "drp",
+          "business continuity",
+          "disaster recovery"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RC.CO",
+        "Name": "Incident Recovery Communication",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "recovery communication",
+          "stakeholder update"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 6.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Roadmap": [
+    {
+      "Control": {
+        "ID": "RS.MA",
+        "Name": "Incident Management",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "incident response",
+          "ir plan",
+          "csirt",
+          "soc",
+          "incident handling"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RC.RP",
+        "Name": "Incident Recovery Plan Execution",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "bcp",
+          "drp",
+          "business continuity",
+          "disaster recovery"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RS.MI",
+        "Name": "Incident Mitigation",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "containment",
+          "eradication",
+          "mitigation",
+          "recovery"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RS.AN",
+        "Name": "Incident Analysis",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "forensics",
+          "root cause",
+          "containment",
+          "analysis"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RS.CO",
+        "Name": "Incident Response Reporting and Communication",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "communication",
+          "stakeholder",
+          "notification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "RC.CO",
+        "Name": "Incident Recovery Communication",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "recovery communication",
+          "stakeholder update"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 6.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "ID.RA",
+        "Name": "Risk Assessment",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "risk assessment",
+          "threat modeling",
+          "vulnerability assessment",
+          "risk analysis"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "ID.RA",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.SC",
+        "Name": "Cybersecurity Supply Chain Risk Management",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "supply chain",
+          "vendor risk",
+          "third party"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.SC",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "ID.AM",
+        "Name": "Asset Management",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "asset inventory",
+          "asset management",
+          "cmdb",
+          "hardware inventory",
+          "software inventory"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "ID.AM",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.RM",
+        "Name": "Risk Management Strategy",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "risk appetite",
+          "risk tolerance",
+          "enterprise risk management"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.RM",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.RR",
+        "Name": "Roles, Responsibilities, and Authorities",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "roles",
+          "responsibilities",
+          "raci",
+          "governance structure"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.RR",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.OC",
+        "Name": "Organizational Context",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "organizational context",
+          "mission",
+          "legal obligations",
+          "regulatory"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.OC",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.PO",
+        "Name": "Policy",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "policy",
+          "oversight",
+          "board reporting"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3.5,
+      "EffectiveMaturity": 3.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.PO",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "GV.PO",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "policy"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GV.OV",
+        "Name": "Oversight",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "audit",
+          "independent review",
+          "assurance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6.5,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3.25,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GV.OV",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "ID.IM",
+        "Name": "Improvement",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "lessons learned",
+          "post-incident review",
+          "continuous improvement"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": null
+      },
+      "Status": "partial",
+      "FinalScore": 3,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "ID.IM",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Gate": null,
+  "Delta": null,
+  "layer_delta": {
+    "documented_count": 2,
+    "implemented_count": 1,
+    "policy_gap": [
+      "DOC-001",
+      "DOC-002"
+    ],
+    "implemented_only": [
+      "IMP-001"
+    ],
+    "active_coverage": null
+  }
+}

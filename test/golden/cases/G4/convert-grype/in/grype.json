@@ -1,0 +1,19 @@
+{
+  "matches": [
+    {
+      "vulnerability": {
+        "id": "CVE-2025-1001",
+        "severity": "High",
+        "cvss": [{"metrics": {"baseScore": 8.1}}]
+      },
+      "artifact": {"name": "openssl"}
+    },
+    {
+      "vulnerability": {
+        "id": "CVE-2025-1002",
+        "severity": "Critical"
+      },
+      "artifact": {"name": "libxml2"}
+    }
+  ]
+}

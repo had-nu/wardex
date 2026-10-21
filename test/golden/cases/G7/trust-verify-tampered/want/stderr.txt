@@ -1,0 +1,12 @@
+Error: trust verify: root signature invalid: trust store: key "ga-admin-01" AddedSig invalid: verify: signature invalid — data may have been tampered with
+Usage:
+  wardex trust verify [flags]
+
+Flags:
+  -h, --help           help for verify
+      --trust string   Path to wardex-trust.yaml (default "./wardex-trust.yaml")
+
+Global Flags:
+      --config string   Path to wardex-config.yaml (default "./wardex-config.yaml")
+
+trust verify: root signature invalid: trust store: key "ga-admin-01" AddedSig invalid: verify: signature invalid — data may have been tampered with

@@ -1,0 +1,4 @@
+HMAC-SHA256 signature written to: <TMP>/work/artifact.txt.hmac
+  Algorithm:  HMAC-SHA256
+  Payload:    artifact.txt (24 bytes)
+  Signature:  c02f6bdae32d218e...

@@ -1,0 +1,2 @@
+[INFO] Loaded 3 controls from input files.
+[INFO] Using framework: gdpr (22 controls in catalog).

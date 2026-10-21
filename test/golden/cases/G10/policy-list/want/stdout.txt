@@ -1,0 +1,4 @@
+| ID | TITLE | STATUS | OWNER | LAST ASSESSED |
+| ------------ | -------------------------------------------------- | ---------------- | ---------------- | ---------------- |
+| A.8.1        | User endpoint devices                              | compliant        | IT Operations    | 2025-02-15       |
+| A.8.2        | Privileged access rights                           | partial          | Security Team    | 2025-01-10       |

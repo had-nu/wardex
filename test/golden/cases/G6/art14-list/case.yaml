@@ -1,0 +1,6 @@
+id: art14-list
+flow: G6
+args: [art14, list, --dir, art14]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

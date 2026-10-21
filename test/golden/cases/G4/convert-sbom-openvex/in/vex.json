@@ -1,0 +1,19 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://example.invalid/vex/2026-01",
+  "author": "Wardex golden tests",
+  "timestamp": "2026-01-01T00:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": "CVE-2025-3001",
+      "products": ["pkg:golang/example.invalid/app@1.0.0"],
+      "status": "affected"
+    },
+    {
+      "vulnerability": "CVE-2025-3002",
+      "products": ["pkg:golang/example.invalid/lib@2.0.0"],
+      "status": "not_affected"
+    }
+  ]
+}

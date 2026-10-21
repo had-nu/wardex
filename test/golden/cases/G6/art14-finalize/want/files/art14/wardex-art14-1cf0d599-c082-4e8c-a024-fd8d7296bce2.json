@@ -1,0 +1,34 @@
+{
+  "format_version": 1,
+  "capabilities": 3,
+  "artefact_id": "1cf0d599-c082-4e8c-a024-fd8d7296bce2",
+  "generated_at": "<TS>",
+  "generated_by": "wardex/v2.0.0",
+  "wardex_actor": "golden.actor",
+  "status": "draft",
+  "early_warning": {
+    "awareness_timestamp": "<TS>",
+    "deadline": "<TS>"
+  },
+  "notification": {
+    "deadline": "<TS>",
+    "product_name": "Golden Product",
+    "product_version": "1.0.0",
+    "cve_ids": [
+      "CVE-2025-9003"
+    ],
+    "exploitation_nature": "[OPERATOR: complete before dispatch]",
+    "vulnerability_nature": "[OPERATOR: complete before dispatch]",
+    "sensitivity_flag": false
+  },
+  "final_report": {
+    "deadline": "<TS>",
+    "patch_available_at": "<TS>",
+    "vulnerability_description": "Remote code execution in the TLS parser.",
+    "severity": "high",
+    "impact": "A remote attacker can execute code with the privileges of the service.",
+    "threat_actor_info": "No known campaign attribution.",
+    "security_update_details": "Upgrade to version 1.0.1 or apply the vendor patch."
+  },
+  "hmac": "99746a790ce307ead34258aa62d36a18af30d231a81e02550e3d94f8cde7a1e0"
+}

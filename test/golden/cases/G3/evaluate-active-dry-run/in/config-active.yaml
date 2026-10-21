@@ -1,0 +1,10 @@
+release_gate:
+  enabled: true
+  mode: any
+  risk_appetite: 0.6
+cra:
+  art14:
+    output_dir: art14
+    awareness_source: detection
+    product_name: Golden Product
+    product_version: 1.0.0

@@ -1,0 +1,6 @@
+id: aggregate-allow
+flow: G5
+args: [aggregate, iso.json, nis2.json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

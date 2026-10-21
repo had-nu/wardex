@@ -1,0 +1,6 @@
+id: convert-sbom-cyclonedx
+flow: G4
+args: [convert, sbom, bom.json, --output, wardex-vulns.yaml]
+outputs: [wardex-vulns.yaml]
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

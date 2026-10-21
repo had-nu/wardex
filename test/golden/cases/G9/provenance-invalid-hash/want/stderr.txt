@@ -1,0 +1,12 @@
+Error: invalid hex hash: encoding/hex: invalid byte: U+006E 'n'
+Usage:
+  wardex provenance submit <hex-hash> [flags]
+
+Flags:
+  -h, --help           help for submit
+      --label string   Artifact label (optional)
+
+Global Flags:
+      --config string   Path to wardex-config.yaml (default "./wardex-config.yaml")
+
+invalid hex hash: encoding/hex: invalid byte: U+006E 'n'

@@ -83,6 +83,11 @@ type caseFile struct {
 	// Env extends the fixed environment. Use it for deterministic fixture
 	// secrets, never for machine-specific values.
 	Env map[string]string `yaml:"env"`
+	// Modes sets file modes after the inputs are copied, relative to in/.
+	// Git records only the executable bit, so a private-key fixture that the
+	// product refuses to read at 0644 would otherwise pass locally and fail
+	// on a fresh clone.
+	Modes map[string]string `yaml:"modes"`
 }
 
 // result is the normalised outcome of one execution.
@@ -98,30 +103,136 @@ func TestGolden(t *testing.T) {
 
 	for _, path := range discoverCases(t) {
 		spec := readCaseFile(t, path)
+		caseDir := filepath.Dir(path)
+		srcDir := filepath.Join(caseDir, "in")
+		if info, err := os.Stat(srcDir); err != nil || !info.IsDir() {
+			t.Fatalf("case %s has no in/ directory", spec.ID)
+		}
 		t.Run(spec.Flow+"/"+spec.ID, func(t *testing.T) {
-			caseDir := filepath.Dir(path)
-			srcDir := filepath.Join(caseDir, "in")
-			if info, err := os.Stat(srcDir); err != nil || !info.IsDir() {
-				t.Fatalf("case %s has no in/ directory", spec.ID)
-			}
-
-			first := runOnce(t, spec, srcDir)
-			second := runOnce(t, spec, srcDir)
-			if diff := compareResults(first, second); diff != "" {
-				t.Fatalf("case %s is not deterministic (two runs differ):\n%s", spec.ID, diff)
-			}
-
-			if spec.KnownDefect != "" {
-				t.Logf("known defect: %s", spec.KnownDefect)
-			}
-
-			if update {
-				writeWant(t, caseDir, first)
-				return
-			}
-			checkWant(t, caseDir, first)
+			assertCase(t, spec, srcDir, filepath.Join(caseDir, "want"), update)
 		})
 	}
+}
+
+// matrixEntry is one explicit combination of the G1 matrix.
+type matrixEntry struct {
+	Framework string `yaml:"framework"`
+	Layers    string `yaml:"layers"`
+	Assets    bool   `yaml:"assets"`
+	Format    string `yaml:"format"`
+}
+
+// matrixFile is cases/G1/matrix.yaml. The combinations are an explicit list,
+// not a Cartesian product: 7 frameworks x 3 layer modes x 2 asset modes x 4
+// formats would be about 168 cases.
+type matrixFile struct {
+	Entries []matrixEntry `yaml:"entries"`
+}
+
+// caseFile expands the entry into the same case the runner already accepts.
+func (entry matrixEntry) caseFile() (caseFile, error) {
+	if entry.Framework == "" {
+		return caseFile{}, fmt.Errorf("framework is required")
+	}
+	var inputs []string
+	switch entry.Layers {
+	case "documented":
+		inputs = []string{"documented.yaml"}
+	case "implemented":
+		inputs = []string{"implemented.yaml"}
+	case "both":
+		inputs = []string{"documented.yaml", "implemented.yaml"}
+	default:
+		return caseFile{}, fmt.Errorf("unknown layers %q", entry.Layers)
+	}
+	switch entry.Format {
+	case "json", "markdown", "csv", "html":
+	default:
+		return caseFile{}, fmt.Errorf("unknown format %q", entry.Format)
+	}
+
+	args := append([]string{"assess"}, inputs...)
+	args = append(args, "--framework", entry.Framework, "--output", entry.Format)
+	if entry.Assets {
+		args = append(args, "--assets", "assets.yaml")
+	}
+
+	id := "G1-" + entry.Framework + "-" + entry.Layers + "-" + entry.Format
+	if entry.Assets {
+		id += "-assets"
+	}
+	return caseFile{
+		ID:        id,
+		Flow:      "G1",
+		Args:      args,
+		Normalise: []string{RuleTimestamps, RuleTmpDir, RuleVersion},
+	}, nil
+}
+
+// TestGoldenMatrix expands cases/G1/matrix.yaml. Its want/ lives beside the
+// matrix because the inputs are shared, not under one case directory.
+func TestGoldenMatrix(t *testing.T) {
+	update := os.Getenv(updateEnv) == "1"
+
+	matrixPath := filepath.Join("cases", "G1", "matrix.yaml")
+	data, err := os.ReadFile(matrixPath)
+	if os.IsNotExist(err) {
+		t.Skip("no G1 matrix")
+	}
+	if err != nil {
+		t.Fatalf("read %s: %v", matrixPath, err)
+	}
+	var matrix matrixFile
+	if err := yaml.Unmarshal(data, &matrix); err != nil {
+		t.Fatalf("parse %s: %v", matrixPath, err)
+	}
+	if len(matrix.Entries) == 0 {
+		t.Fatalf("%s has no entries", matrixPath)
+	}
+
+	srcDir := filepath.Join("cases", "G1", "in")
+	if info, err := os.Stat(srcDir); err != nil || !info.IsDir() {
+		t.Fatalf("the G1 matrix has no in/ directory")
+	}
+
+	seen := make(map[string]bool, len(matrix.Entries))
+	for _, entry := range matrix.Entries {
+		spec, err := entry.caseFile()
+		if err != nil {
+			t.Fatalf("%s: %v", matrixPath, err)
+		}
+		if seen[spec.ID] {
+			t.Fatalf("%s: duplicate id %s", matrixPath, spec.ID)
+		}
+		seen[spec.ID] = true
+
+		t.Run("G1/"+spec.ID, func(t *testing.T) {
+			wantDir := filepath.Join("cases", "G1", "want", spec.ID)
+			assertCase(t, spec, srcDir, wantDir, update)
+		})
+	}
+}
+
+// assertCase runs a case twice, rejects non-determinism and then either
+// rewrites or compares its want/.
+func assertCase(t *testing.T, spec caseFile, srcDir, wantDir string, update bool) {
+	t.Helper()
+
+	first := runOnce(t, spec, srcDir)
+	second := runOnce(t, spec, srcDir)
+	if diff := compareResults(first, second); diff != "" {
+		t.Fatalf("case %s is not deterministic (two runs differ):\n%s", spec.ID, diff)
+	}
+
+	if spec.KnownDefect != "" {
+		t.Logf("known defect: %s", spec.KnownDefect)
+	}
+
+	if update {
+		writeWant(t, wantDir, first)
+		return
+	}
+	checkWant(t, wantDir, first)
 }
 
 // discoverCases returns every case.yaml under cases/, in lexical order, and
@@ -192,6 +303,18 @@ func runOnce(t *testing.T, spec caseFile, srcDir string) result {
 			t.Fatalf("prepare %s: %v", name, err)
 		}
 	}
+	for name, mode := range spec.Modes {
+		if !filepath.IsLocal(name) {
+			t.Fatalf("mode target %q is not local to in/", name)
+		}
+		parsed, err := strconv.ParseUint(mode, 8, 32)
+		if err != nil {
+			t.Fatalf("mode for %q: %v", name, err)
+		}
+		if err := os.Chmod(filepath.Join(work, name), fs.FileMode(parsed)); err != nil {
+			t.Fatalf("chmod %q: %v", name, err)
+		}
+	}
 
 	cmd := exec.Command(binaryPath, spec.Args...)
 	cmd.Dir = work
@@ -226,7 +349,7 @@ func runOnce(t *testing.T, spec caseFile, srcDir string) result {
 	for _, name := range spec.Outputs {
 		data, err := os.ReadFile(filepath.Join(work, name))
 		if err != nil {
-			t.Fatalf("declared output %q: %v", name, err)
+			t.Fatalf("declared output %q: %v (exit %d, stderr: %s)", name, err, exit, clipForError(stderr.String()))
 		}
 		out.Files[name] = mustNormalise(t, normaliser, string(data))
 	}
@@ -267,11 +390,10 @@ func copyTree(src, dst string) error {
 	})
 }
 
-// writeWant replaces want/ with the captured result.
-func writeWant(t *testing.T, caseDir string, captured result) {
+// writeWant replaces wantDir with the captured result.
+func writeWant(t *testing.T, wantDir string, captured result) {
 	t.Helper()
 
-	wantDir := filepath.Join(caseDir, "want")
 	if err := os.RemoveAll(wantDir); err != nil {
 		t.Fatalf("clear %s: %v", wantDir, err)
 	}
@@ -301,11 +423,10 @@ func writeWant(t *testing.T, caseDir string, captured result) {
 	}
 }
 
-// checkWant compares the captured result with the committed want/.
-func checkWant(t *testing.T, caseDir string, captured result) {
+// checkWant compares the captured result with the committed wantDir.
+func checkWant(t *testing.T, wantDir string, captured result) {
 	t.Helper()
 
-	wantDir := filepath.Join(caseDir, "want")
 	readWant := func(name string) string {
 		data, err := os.ReadFile(filepath.Join(wantDir, name))
 		if err != nil {
@@ -385,6 +506,15 @@ func compareResults(first, second result) string {
 		}
 	}
 	return ""
+}
+
+// clipForError shortens captured output for a failure message.
+func clipForError(s string) string {
+	s = strings.TrimSpace(s)
+	if len(s) > 600 {
+		return s[:600] + "…"
+	}
+	return s
 }
 
 // diffSummary describes the first differing line of two strings. Golden files

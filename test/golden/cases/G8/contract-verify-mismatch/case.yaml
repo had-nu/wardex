@@ -1,0 +1,6 @@
+id: contract-verify-mismatch
+flow: G8
+args: [contract, verify, --file, contract.txt, --hash, deadbeef]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

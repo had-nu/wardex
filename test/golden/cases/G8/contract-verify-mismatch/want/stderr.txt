@@ -1,0 +1,13 @@
+Error: contract hash mismatch: got sha256:0f89e42fec3661b85d1c85bed4c441a8c303d2e7eb1abbe50587974870936780, expected deadbeef
+Usage:
+  wardex contract verify [flags]
+
+Flags:
+      --file string   Path to contract file (required)
+      --hash string   Expected SHA-256 hash (optional - if provided, verifies match)
+  -h, --help          help for verify
+
+Global Flags:
+      --config string   Path to wardex-config.yaml (default "./wardex-config.yaml")
+
+contract hash mismatch: got sha256:0f89e42fec3661b85d1c85bed4c441a8c303d2e7eb1abbe50587974870936780, expected deadbeef

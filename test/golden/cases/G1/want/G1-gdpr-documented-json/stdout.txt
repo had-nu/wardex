@@ -1,0 +1,1970 @@
+{
+  "Summary": {
+    "Framework": "gdpr",
+    "FrameworkName": "GDPR",
+    "GeneratedAt": "<TS>",
+    "TotalControls": 22,
+    "CoveredCount": 0,
+    "PartialCount": 9,
+    "GapCount": 13,
+    "GlobalCoverage": 0,
+    "DomainSummaries": [
+      {
+        "Domain": "organizational",
+        "TotalControls": 6,
+        "CoveredCount": 0,
+        "PartialCount": 6,
+        "GapCount": 0,
+        "MaturityScore": 4,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "people",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "physical",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "technological",
+        "TotalControls": 3,
+        "CoveredCount": 0,
+        "PartialCount": 3,
+        "GapCount": 0,
+        "MaturityScore": 3,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "governance",
+        "TotalControls": 5,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 5,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "process",
+        "TotalControls": 8,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 8,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      }
+    ],
+    "TopCriticalGaps": null,
+    "GateSummary": null
+  },
+  "Findings": [
+    {
+      "Control": {
+        "ID": "GDPR.5",
+        "Name": "Art. 5 — Principles relating to processing of personal data",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "accountability",
+          "data minimisation",
+          "storage limitation",
+          "lawfulness"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.5.1",
+            "Name": "Record which principle each processing activity relies on, and the reason",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.6",
+        "Name": "Art. 6 — Lawfulness of processing",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "legal basis",
+          "consent",
+          "legitimate interest",
+          "special category"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.6.1",
+            "Name": "Bind every processing activity to one documented Article 6 basis",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.6.2",
+            "Name": "Record Article 9 conditions where special category data is processed",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.13",
+        "Name": "Art. 13 — Information to be provided to data subjects on collection",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "privacy notice",
+          "transparency",
+          "data subject"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.13.1",
+            "Name": "Publish a privacy notice at or before the point of collection",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.15",
+        "Name": "Art. 15 — Right of access by the data subject",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "subject access request",
+          "sar",
+          "right of access"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.15.1",
+            "Name": "Operate a subject access request process",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.15.2",
+            "Name": "Meet the Article 12(3) deadline: without undue delay and within one month of receipt",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.16",
+        "Name": "Art. 16 — Right to rectification of inaccurate personal data",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "rectification",
+          "accuracy",
+          "correction"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.16.1",
+            "Name": "Route correction requests to the system of record",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.17",
+        "Name": "Art. 17 — Right to erasure (right to be forgotten)",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "erasure",
+          "deletion",
+          "right to be forgotten"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.17.1",
+            "Name": "Define deletion across replicas, backups and derived datasets",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.18",
+        "Name": "Art. 18 — Right to restriction of processing",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "restriction",
+          "suppression"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.18.1",
+            "Name": "Apply a processing restriction flag that downstream jobs honour",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 6.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.20",
+        "Name": "Art. 20 — Right to data portability",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "portability",
+          "machine-readable",
+          "export"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.20.1",
+            "Name": "Export subject data in a structured, commonly used, machine-readable format",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "GDPR.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.21",
+        "Name": "Art. 21 — Right to object to processing",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "objection",
+          "direct marketing",
+          "legitimate interest"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.21.1",
+            "Name": "Stop processing on objection, except where Article 21(1) grounds it",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.22",
+        "Name": "Art. 22 — Automated individual decision-making, including profiling",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "profiling",
+          "automated decision",
+          "significant effects"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.22.1",
+            "Name": "Identify decisions producing legal effects concerning the natural person or similarly significantly affecting them",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.22.2",
+            "Name": "Treat exclusion from or discrimination against individuals as significant effects, and processing with little or no effect on individuals as outside this control",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.22.3",
+            "Name": "Provide human intervention and a route to contest such decisions",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.24",
+        "Name": "Art. 24 — Responsibility of the controller",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "accountability",
+          "controller",
+          "demonstrable compliance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.24.1",
+            "Name": "Maintain evidence that each measure actually operates, not only that it exists",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.25",
+        "Name": "Art. 25 — Data protection by design and by default",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "privacy by design",
+          "privacy by default",
+          "minimisation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.25.1",
+            "Name": "Apply minimisation and pseudonymisation at collection",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.25.2",
+            "Name": "Make the privacy-protective option the default in configuration",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "GDPR.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.28",
+        "Name": "Art. 28 — Processor obligations and processor contracts",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "processor",
+          "sub-processor",
+          "contract"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.28.1",
+            "Name": "Bind each processor by Article 28(3) terms before data is shared",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.28.2",
+            "Name": "Track sub-processors and authorise each one",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.30",
+        "Name": "Art. 30 — Records of processing activities",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "ropa",
+          "records of processing",
+          "register"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.30.1",
+            "Name": "Keep a record of processing activities covering all Article 30(1) fields",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.30.2",
+            "Name": "Keep the record current as processing changes",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.32",
+        "Name": "Art. 32 — Security of processing",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "security of processing",
+          "pseudonymisation",
+          "encryption",
+          "resilience"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.32.1",
+            "Name": "Encrypt personal data at rest and in transit",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          },
+          {
+            "ID": "PR.GDPR.32.2",
+            "Name": "Maintain ongoing confidentiality, integrity, availability and resilience",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          },
+          {
+            "ID": "PR.GDPR.32.3",
+            "Name": "Restore availability of personal data on request within the stated recovery objectives",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.32.4",
+            "Name": "Test the effectiveness of security measures on a defined cycle",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.75,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "GDPR.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.33",
+        "Name": "Art. 33 — Notification of a personal data breach to the supervisory authority",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "breach notification",
+          "supervisory authority",
+          "72 hours",
+          "pdp"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.33.1",
+            "Name": "Notify without undue delay and, where feasible, not later than 72 hours after becoming aware",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.33.2",
+            "Name": "Record the reason any notification was late, or why none was required",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.33.3",
+            "Name": "Document the breach assessment even when the threshold for notification is not met",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.34",
+        "Name": "Art. 34 — Communication of a personal data breach to the data subject",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "breach communication",
+          "high risk",
+          "notification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.34.1",
+            "Name": "Communicate a high-risk breach to the affected data subjects without undue delay",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.30.2",
+        "Name": "Art. 30(2) — Records of processors processing on behalf of a controller",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "processor records",
+          "sub-processor",
+          "register"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.30.2.1",
+            "Name": "Maintain the Article 30(2) record for each processor acting on the controller's behalf",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.30.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.28.2",
+        "Name": "Art. 28(2) — Processor notification to the controller of a personal data breach (Article 33(2))",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "processor notification",
+          "breach",
+          "sub-processor"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.28.2.1",
+            "Name": "Notify the controller without undue delay after becoming aware of a breach",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.35",
+        "Name": "Art. 35 — Data protection impact assessment",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "dpia",
+          "impact assessment",
+          "high risk"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.35.1",
+            "Name": "Screen processing against the nine WP248 criteria before it starts: evaluation or scoring; automated decisions with significant effect; systematic monitoring; sensitive or highly personal data; large scale; matching or combining datasets; vulnerable data subjects; innovative technological or organisational solutions; processing that prevents a data subject exercising a right or using a service",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.35.2",
+            "Name": "Treat two or more criteria as requiring a DPIA in most cases, and record a reasoned decision where one criterion alone is treated as sufficient",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.35.3",
+            "Name": "Seek the advice of the DPO and record it in the assessment",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.35.4",
+            "Name": "Review the DPIA when the processing or the risk changes materially",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.35.5",
+            "Name": "Apply a DPIA methodology that satisfies the criteria in WP248 Annex 2",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.37",
+        "Name": "Art. 37 — Designation of the data protection officer",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "dpo",
+          "data protection officer"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.37.1",
+            "Name": "Designate the DPO where Article 37(1) applies and publish the contact details",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.37",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.46",
+        "Name": "Art. 46 — Transfers subject to appropriate safeguards",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "international transfer",
+          "standard contractual clauses",
+          "third country"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.46.1",
+            "Name": "Put an Article 46 safeguard in place for every transfer outside the EEA",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.46.2",
+            "Name": "Assess whether a transfer impact assessment is required",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Roadmap": [
+    {
+      "Control": {
+        "ID": "GDPR.33",
+        "Name": "Art. 33 — Notification of a personal data breach to the supervisory authority",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "breach notification",
+          "supervisory authority",
+          "72 hours",
+          "pdp"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.33.1",
+            "Name": "Notify without undue delay and, where feasible, not later than 72 hours after becoming aware",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.33.2",
+            "Name": "Record the reason any notification was late, or why none was required",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.33.3",
+            "Name": "Document the breach assessment even when the threshold for notification is not met",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.46",
+        "Name": "Art. 46 — Transfers subject to appropriate safeguards",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "international transfer",
+          "standard contractual clauses",
+          "third country"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.46.1",
+            "Name": "Put an Article 46 safeguard in place for every transfer outside the EEA",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.46.2",
+            "Name": "Assess whether a transfer impact assessment is required",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.35",
+        "Name": "Art. 35 — Data protection impact assessment",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "dpia",
+          "impact assessment",
+          "high risk"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.35.1",
+            "Name": "Screen processing against the nine WP248 criteria before it starts: evaluation or scoring; automated decisions with significant effect; systematic monitoring; sensitive or highly personal data; large scale; matching or combining datasets; vulnerable data subjects; innovative technological or organisational solutions; processing that prevents a data subject exercising a right or using a service",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.35.2",
+            "Name": "Treat two or more criteria as requiring a DPIA in most cases, and record a reasoned decision where one criterion alone is treated as sufficient",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.35.3",
+            "Name": "Seek the advice of the DPO and record it in the assessment",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.35.4",
+            "Name": "Review the DPIA when the processing or the risk changes materially",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.35.5",
+            "Name": "Apply a DPIA methodology that satisfies the criteria in WP248 Annex 2",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.28.2",
+        "Name": "Art. 28(2) — Processor notification to the controller of a personal data breach (Article 33(2))",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "processor notification",
+          "breach",
+          "sub-processor"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.28.2.1",
+            "Name": "Notify the controller without undue delay after becoming aware of a breach",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.17",
+        "Name": "Art. 17 — Right to erasure (right to be forgotten)",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "erasure",
+          "deletion",
+          "right to be forgotten"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.17.1",
+            "Name": "Define deletion across replicas, backups and derived datasets",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.22",
+        "Name": "Art. 22 — Automated individual decision-making, including profiling",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "profiling",
+          "automated decision",
+          "significant effects"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.22.1",
+            "Name": "Identify decisions producing legal effects concerning the natural person or similarly significantly affecting them",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.22.2",
+            "Name": "Treat exclusion from or discrimination against individuals as significant effects, and processing with little or no effect on individuals as outside this control",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.22.3",
+            "Name": "Provide human intervention and a route to contest such decisions",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.15",
+        "Name": "Art. 15 — Right of access by the data subject",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "subject access request",
+          "sar",
+          "right of access"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.15.1",
+            "Name": "Operate a subject access request process",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.15.2",
+            "Name": "Meet the Article 12(3) deadline: without undue delay and within one month of receipt",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.34",
+        "Name": "Art. 34 — Communication of a personal data breach to the data subject",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "breach communication",
+          "high risk",
+          "notification"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.34.1",
+            "Name": "Communicate a high-risk breach to the affected data subjects without undue delay",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.28",
+        "Name": "Art. 28 — Processor obligations and processor contracts",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "processor",
+          "sub-processor",
+          "contract"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.28.1",
+            "Name": "Bind each processor by Article 28(3) terms before data is shared",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.28.2",
+            "Name": "Track sub-processors and authorise each one",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.13",
+        "Name": "Art. 13 — Information to be provided to data subjects on collection",
+        "Domain": "governance",
+        "Domains": [
+          "governance"
+        ],
+        "Keywords": [
+          "privacy notice",
+          "transparency",
+          "data subject"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.13.1",
+            "Name": "Publish a privacy notice at or before the point of collection",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.21",
+        "Name": "Art. 21 — Right to object to processing",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "objection",
+          "direct marketing",
+          "legitimate interest"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.21.1",
+            "Name": "Stop processing on objection, except where Article 21(1) grounds it",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.16",
+        "Name": "Art. 16 — Right to rectification of inaccurate personal data",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "rectification",
+          "accuracy",
+          "correction"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.16.1",
+            "Name": "Route correction requests to the system of record",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.18",
+        "Name": "Art. 18 — Right to restriction of processing",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "restriction",
+          "suppression"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.18.1",
+            "Name": "Apply a processing restriction flag that downstream jobs honour",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 6.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.32",
+        "Name": "Art. 32 — Security of processing",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "security of processing",
+          "pseudonymisation",
+          "encryption",
+          "resilience"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.32.1",
+            "Name": "Encrypt personal data at rest and in transit",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          },
+          {
+            "ID": "PR.GDPR.32.2",
+            "Name": "Maintain ongoing confidentiality, integrity, availability and resilience",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          },
+          {
+            "ID": "PR.GDPR.32.3",
+            "Name": "Restore availability of personal data on request within the stated recovery objectives",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.32.4",
+            "Name": "Test the effectiveness of security measures on a defined cycle",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.75,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "GDPR.32",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.30",
+        "Name": "Art. 30 — Records of processing activities",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "ropa",
+          "records of processing",
+          "register"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.30.1",
+            "Name": "Keep a record of processing activities covering all Article 30(1) fields",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.30.2",
+            "Name": "Keep the record current as processing changes",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.30",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.5",
+        "Name": "Art. 5 — Principles relating to processing of personal data",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "accountability",
+          "data minimisation",
+          "storage limitation",
+          "lawfulness"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.5.1",
+            "Name": "Record which principle each processing activity relies on, and the reason",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.5",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.25",
+        "Name": "Art. 25 — Data protection by design and by default",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "privacy by design",
+          "privacy by default",
+          "minimisation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.25.1",
+            "Name": "Apply minimisation and pseudonymisation at collection",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.25.2",
+            "Name": "Make the privacy-protective option the default in configuration",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "GDPR.25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.24",
+        "Name": "Art. 24 — Responsibility of the controller",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "accountability",
+          "controller",
+          "demonstrable compliance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.24.1",
+            "Name": "Maintain evidence that each measure actually operates, not only that it exists",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.24",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.6",
+        "Name": "Art. 6 — Lawfulness of processing",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "legal basis",
+          "consent",
+          "legitimate interest",
+          "special category"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.6.1",
+            "Name": "Bind every processing activity to one documented Article 6 basis",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.GDPR.6.2",
+            "Name": "Record Article 9 conditions where special category data is processed",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.6",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.30.2",
+        "Name": "Art. 30(2) — Records of processors processing on behalf of a controller",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "processor records",
+          "sub-processor",
+          "register"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.30.2.1",
+            "Name": "Maintain the Article 30(2) record for each processor acting on the controller's behalf",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.30.2",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.20",
+        "Name": "Art. 20 — Right to data portability",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "portability",
+          "machine-readable",
+          "export"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.20.1",
+            "Name": "Export subject data in a structured, commonly used, machine-readable format",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "GDPR.20",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "GDPR.37",
+        "Name": "Art. 37 — Designation of the data protection officer",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "dpo",
+          "data protection officer"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.GDPR.37.1",
+            "Name": "Designate the DPO where Article 37(1) applies and publish the contact details",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "GDPR.37",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Gate": null,
+  "Delta": null,
+  "layer_delta": {
+    "documented_count": 2,
+    "implemented_count": 0,
+    "policy_gap": [
+      "DOC-001",
+      "DOC-002"
+    ],
+    "implemented_only": null,
+    "active_coverage": null
+  }
+}

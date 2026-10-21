@@ -1,0 +1,1 @@
+Error parsing SBOM: SPDX formats track inventory but do not natively embed vulnerabilities. Use CycloneDX or wait for VEX support (G-17)

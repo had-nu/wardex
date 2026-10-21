@@ -19,14 +19,16 @@ lint:
 specs:
 	go run ./tools/check-specs
 
-# Run the black-box golden harness (flows G1 to G10).
+# Run the black-box golden harness (flows G1 to G10). -count=1 disables the
+# test cache: a case can embed the current date in its output, so a cached
+# pass would hide a failure that appears later.
 golden:
-	go test -tags golden ./test/golden/...
+	go test -tags golden -count=1 ./test/golden/...
 
 # Rewrite want/ from the current binary. The change needs a Golden-Change
 # trailer naming the ADR or issue that justifies the new expectation.
 golden-update:
-	GOLDEN_UPDATE=1 go test -tags golden ./test/golden/...
+	GOLDEN_UPDATE=1 go test -tags golden -count=1 ./test/golden/...
 
 security:
 	govulncheck $(PKG)

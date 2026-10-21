@@ -1,0 +1,6 @@
+id: provenance-submit-noop
+flow: G9
+args: [provenance, submit, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, --label, release-golden]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

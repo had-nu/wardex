@@ -1,0 +1,31 @@
+Control ID,Name,Domain,Status,Score,Maturity,Gap Reasons
+GDPR.5,Art. 5 — Principles relating to processing of personal data,organizational,partial,4.50,4.0,Control 'DOC-001' is documented only (Paper Security)
+GDPR.6,Art. 6 — Lawfulness of processing,organizational,partial,4.50,4.0,Control 'DOC-001' is documented only (Paper Security)
+GDPR.13,Art. 13 — Information to be provided to data subjects on collection,governance,gap,8.00,0.0,No correlation found
+GDPR.15,Art. 15 — Right of access by the data subject,process,gap,8.50,0.0,No correlation found
+GDPR.16,Art. 16 — Right to rectification of inaccurate personal data,process,gap,7.00,0.0,No correlation found
+GDPR.17,Art. 17 — Right to erasure (right to be forgotten),process,gap,8.50,0.0,No correlation found
+GDPR.18,Art. 18 — Right to restriction of processing,process,gap,6.50,0.0,No correlation found
+GDPR.20,Art. 20 — Right to data portability,technological,covered,0.00,3.0,
+GDPR.21,Art. 21 — Right to object to processing,process,gap,7.50,0.0,No correlation found
+GDPR.22,"Art. 22 — Automated individual decision-making, including profiling",governance,gap,8.50,0.0,No correlation found
+GDPR.24,Art. 24 — Responsibility of the controller,organizational,partial,4.50,4.0,Control 'DOC-001' is documented only (Paper Security)
+GDPR.25,Art. 25 — Data protection by design and by default,technological,covered,0.00,3.0,
+GDPR.28,Art. 28 — Processor obligations and processor contracts,governance,gap,8.50,0.0,No correlation found
+GDPR.30,Art. 30 — Records of processing activities,organizational,partial,4.50,4.0,Control 'DOC-001' is documented only (Paper Security)
+GDPR.32,Art. 32 — Security of processing,technological,covered,0.00,3.0,
+GDPR.33,Art. 33 — Notification of a personal data breach to the supervisory authority,process,gap,9.50,0.0,No correlation found
+GDPR.34,Art. 34 — Communication of a personal data breach to the data subject,process,gap,8.50,0.0,No correlation found
+GDPR.30.2,Art. 30(2) — Records of processors processing on behalf of a controller,organizational,partial,3.75,4.0,Control 'DOC-001' is documented only (Paper Security)
+GDPR.28.2,Art. 28(2) — Processor notification to the controller of a personal data breach (Article 33(2)),process,gap,9.00,0.0,No correlation found
+GDPR.35,Art. 35 — Data protection impact assessment,governance,gap,9.00,0.0,No correlation found
+GDPR.37,Art. 37 — Designation of the data protection officer,organizational,partial,3.75,4.0,Control 'DOC-001' is documented only (Paper Security)
+GDPR.46,Art. 46 — Transfers subject to appropriate safeguards,governance,gap,9.00,0.0,No correlation found
+
+## Layer Delta
+Metric,Value
+Documented Count,2
+Implemented Count,1
+Active Coverage,0
+Policy Gap,2
+Shadow Security,1

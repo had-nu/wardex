@@ -1,0 +1,6 @@
+id: config-seal-missing-trust
+flow: G7
+args: [config, seal, --input, draft.yaml, --keyring, admin, --trust, missing.yaml, --out, sealed.wexstate]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

@@ -1,0 +1,2483 @@
+{
+  "Summary": {
+    "Framework": "nis2",
+    "FrameworkName": "NIS2",
+    "GeneratedAt": "<TS>",
+    "TotalControls": 27,
+    "CoveredCount": 0,
+    "PartialCount": 18,
+    "GapCount": 9,
+    "GlobalCoverage": 0,
+    "DomainSummaries": [
+      {
+        "Domain": "organizational",
+        "TotalControls": 11,
+        "CoveredCount": 0,
+        "PartialCount": 11,
+        "GapCount": 0,
+        "MaturityScore": 3.8636363636363638,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "people",
+        "TotalControls": 2,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 2,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "physical",
+        "TotalControls": 1,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 1,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "technological",
+        "TotalControls": 7,
+        "CoveredCount": 0,
+        "PartialCount": 7,
+        "GapCount": 0,
+        "MaturityScore": 3,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "process",
+        "TotalControls": 6,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 6,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      }
+    ],
+    "TopCriticalGaps": null,
+    "GateSummary": null
+  },
+  "Findings": [
+    {
+      "Control": {
+        "ID": "NIS2.20.1",
+        "Name": "Art. 20(1) — Management body approves and supervises risk-management measures",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "governance",
+          "accountability",
+          "management body"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.20.1.1",
+            "Name": "Record the approval of the risk-management measures by the management body, not only their existence",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.20.1.2",
+            "Name": "Track which duties the management body may delegate and which it may not; execution may be delegated, responsibility may not",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.20.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.20.2",
+        "Name": "Art. 20(2) — Training of the management body",
+        "Domain": "people",
+        "Domains": [
+          "people"
+        ],
+        "Keywords": [
+          "training",
+          "management body"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.20.2.1",
+            "Name": "Train the management body on its obligations and on the risks specific to the entity",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.a",
+        "Name": "Art. 21(2)(a) — Policies on risk analysis and information system security",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "risk analysis",
+          "policy",
+          "isms"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.a.1",
+            "Name": "Maintain a written information security policy derived from a current risk analysis",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 3.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.21.2.a",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.a",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "policy"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.b",
+        "Name": "Art. 21(2)(b) — Incident handling",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "incident handling",
+          "incident response",
+          "cert",
+          "csirt"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.b.1",
+            "Name": "Operate an incident handling capability that detects, responds to and mitigates significant incidents",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.c",
+        "Name": "Art. 21(2)(c) — Business continuity: backup management, disaster recovery and crisis management",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "business continuity",
+          "backup",
+          "disaster recovery",
+          "crisis management"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.c.1",
+            "Name": "Keep backups isolated from the systems they protect, and restore from them on a tested cycle",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.21.2.c",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.d",
+        "Name": "Art. 21(2)(d) — Supply chain security, including relationships with direct suppliers and service providers",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "supply chain",
+          "third party",
+          "supplier security"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.d.1",
+            "Name": "Assess the security of direct suppliers and service providers before they are given access",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.d.2",
+            "Name": "Require a software bill of materials from suppliers of software the entity depends on",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.21.2.d",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.e",
+        "Name": "Art. 21(2)(e) — Security in acquisition, development and maintenance, including vulnerability handling and disclosure",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "secure sdlc",
+          "vulnerability handling",
+          "vulnerability disclosure",
+          "patching"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.e.1",
+            "Name": "Run a coordinated vulnerability disclosure process with a published contact point",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.e.2",
+            "Name": "Remediate a vulnerability within a deadline set by severity, and record an accepted risk where it is missed",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.e",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.f",
+        "Name": "Art. 21(2)(f) — Policies and procedures to assess the effectiveness of the risk-management measures",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "effectiveness",
+          "metrics",
+          "measurement",
+          "continuous improvement"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.f.1",
+            "Name": "Measure whether the measures work, rather than asserting that they exist",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.f.2",
+            "Name": "Compare effectiveness between runs so a regression is visible rather than inferred",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.f.3",
+            "Name": "Feed the measurement back into the risk analysis the measures came from",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.g",
+        "Name": "Art. 21(2)(g) — Basic cyber hygiene practices and cybersecurity training",
+        "Domain": "people",
+        "Domains": [
+          "people"
+        ],
+        "Keywords": [
+          "cyber hygiene",
+          "training",
+          "awareness"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.g.1",
+            "Name": "Deliver role-appropriate cybersecurity training and keep a record of who attended",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.h",
+        "Name": "Art. 21(2)(h) — Policies and procedures on the use of cryptography and, where appropriate, encryption",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "cryptography",
+          "encryption",
+          "key management"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.h.1",
+            "Name": "Define which data is encrypted, in transit and at rest, and manage keys separately from the data",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.h",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.i",
+        "Name": "Art. 21(2)(i) — Human resources security, access control policies and asset management",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "hr security",
+          "access control",
+          "asset management",
+          "offboarding"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.i.1",
+            "Name": "Remove access on the day employment or a contract ends, and keep the record that it happened",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.i.2",
+            "Name": "Maintain an asset inventory with an owner for each entry",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 3.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.21.2.i",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.i",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "access control"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.j",
+        "Name": "Art. 21(2)(j) — Multi-factor or continuous authentication, and secured voice, video, text and emergency communications",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "mfa",
+          "multi-factor authentication",
+          "continuous authentication",
+          "emergency communication"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.j.1",
+            "Name": "Require multi-factor authentication for remote access and for administrative access",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          },
+          {
+            "ID": "PR.NIS2.21.2.j.2",
+            "Name": "Keep an emergency communication channel usable when ordinary channels are compromised",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.j",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.23.1",
+        "Name": "Art. 23(1) — Notify a significant incident to the CSIRT without undue delay, and the recipients where appropriate",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "significant incident",
+          "notification",
+          "csirt",
+          "reportable"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.23.1.1",
+            "Name": "Define which incidents are significant and record the decision either way",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.23.1.2",
+            "Name": "Report anything enabling a cross-border impact to be determined",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.23.4",
+        "Name": "Art. 23(4) — Staged notification: 24 hours, 72 hours and one month",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "early warning",
+          "24 hours",
+          "72 hours",
+          "final report"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.23.4.1",
+            "Name": "Send an early warning within 24 hours of awareness, stating suspicion of unlawful or malicious acts and any cross-border impact",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.23.4.2",
+            "Name": "Send the incident notification within 72 hours with an initial severity and impact assessment",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.23.4.3",
+            "Name": "Submit the final report within one month of the incident notification, or on request after the incident",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.24.1",
+        "Name": "Art. 24 — Use of European cybersecurity certification schemes",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "certification",
+          "scheme",
+          "conformity"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.24.1.1",
+            "Name": "Where certification is claimed, hold it for the products and versions actually in service",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.24.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.29.1",
+        "Name": "Art. 29 — Cybersecurity information-sharing arrangements",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "information sharing",
+          "isac",
+          "csirt"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.29.1.1",
+            "Name": "Use a mechanism for exchanging information with other entities and with the CSIRT, subject to confidentiality",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.29.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.a",
+        "Name": "Logging and log management (supports Art. 21(2)(a))",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "logging",
+          "log management",
+          "retention"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.a.1",
+            "Name": "Keep logs with a retention period set by policy, and protect them from alteration",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.a",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.b",
+        "Name": "Security testing: vulnerability scanning and penetration testing (supports Art. 21(2)(e))",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "security testing",
+          "vulnerability scanning",
+          "penetration testing",
+          "red team"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.b.1",
+            "Name": "Run vulnerability scanning on a defined cycle and track findings to remediation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.SUP.b.2",
+            "Name": "Run penetration testing proportionate to the risk, and track the results",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.b",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.c",
+        "Name": "Physical and environmental security (supports Art. 21(2)(a), Annex A clause 7)",
+        "Domain": "physical",
+        "Domains": [
+          "physical"
+        ],
+        "Keywords": [
+          "physical security",
+          "environmental",
+          "data centre"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.c.1",
+            "Name": "Control physical access to premises that hold systems in scope",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 6.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.d",
+        "Name": "Network security (supports Art. 21(2)(i), Annex A clauses 8.20 to 8.22)",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "segmentation",
+          "firewall",
+          "ids",
+          "zero trust"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.d.1",
+            "Name": "Segment networks so that a compromise of one zone does not reach every zone",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.d",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.e",
+        "Name": "Identity and access governance (supports Art. 21(2)(i), Annex A clauses 5.15 to 5.18 and 8.2 to 8.5)",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "privileged access",
+          "recertification",
+          "least privilege"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.e.1",
+            "Name": "Recertify privileged accounts on a cycle and remove access that no longer has a business need",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 3.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.SUP.e",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.e",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "least privilege"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.f",
+        "Name": "Change management (supports Art. 21(2)(e), Annex A clause 8.32)",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "change management",
+          "authorisation",
+          "rollback"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.f.1",
+            "Name": "Authorise, test and record changes to systems in scope, and keep a way back",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.g",
+        "Name": "Service provider oversight beyond initial selection (supports Art. 21(2)(d), Annex A clauses 5.19 to 5.23)",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "sla",
+          "service level",
+          "termination",
+          "monitoring"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.g.1",
+            "Name": "Monitor a provider's security performance after selection, and define how access ends",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.SUP.g",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.h",
+        "Name": "Incident response exercises (supports Art. 21(2)(b), Annex A clauses 5.24 to 5.28)",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "tabletop",
+          "simulation",
+          "lessons learned"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.h.1",
+            "Name": "Exercise the incident response plan and record what the exercise found",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.i",
+        "Name": "Cybersecurity insurance and risk transfer (supports Art. 21(2)(c))",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "insurance",
+          "risk transfer"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.i.1",
+            "Name": "Review insurance against the incident response obligations it would leave unmet",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.SUP.i",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.j",
+        "Name": "Records and audit evidence (supports Art. 20(1) and Art. 21(2)(f), Annex A clauses 5.31 and 5.33)",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "record keeping",
+          "audit evidence",
+          "accountability"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.j.1",
+            "Name": "Keep records that evidence the measures, and protect them from alteration",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.SUP.j",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.k",
+        "Name": "Security architecture review (supports Art. 21(2)(e), Annex A clause 8.9)",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "architecture",
+          "configuration",
+          "hardening"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.k.1",
+            "Name": "Review the architecture and configuration of systems in scope against current threats",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.5,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.k",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Roadmap": [
+    {
+      "Control": {
+        "ID": "NIS2.21.2.b",
+        "Name": "Art. 21(2)(b) — Incident handling",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "incident handling",
+          "incident response",
+          "cert",
+          "csirt"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.b.1",
+            "Name": "Operate an incident handling capability that detects, responds to and mitigates significant incidents",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.23.4",
+        "Name": "Art. 23(4) — Staged notification: 24 hours, 72 hours and one month",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "early warning",
+          "24 hours",
+          "72 hours",
+          "final report"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.23.4.1",
+            "Name": "Send an early warning within 24 hours of awareness, stating suspicion of unlawful or malicious acts and any cross-border impact",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.23.4.2",
+            "Name": "Send the incident notification within 72 hours with an initial severity and impact assessment",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.23.4.3",
+            "Name": "Submit the final report within one month of the incident notification, or on request after the incident",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.23.1",
+        "Name": "Art. 23(1) — Notify a significant incident to the CSIRT without undue delay, and the recipients where appropriate",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "significant incident",
+          "notification",
+          "csirt",
+          "reportable"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.23.1.1",
+            "Name": "Define which incidents are significant and record the decision either way",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.23.1.2",
+            "Name": "Report anything enabling a cross-border impact to be determined",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.f",
+        "Name": "Art. 21(2)(f) — Policies and procedures to assess the effectiveness of the risk-management measures",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "effectiveness",
+          "metrics",
+          "measurement",
+          "continuous improvement"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.f.1",
+            "Name": "Measure whether the measures work, rather than asserting that they exist",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.f.2",
+            "Name": "Compare effectiveness between runs so a regression is visible rather than inferred",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.f.3",
+            "Name": "Feed the measurement back into the risk analysis the measures came from",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.g",
+        "Name": "Art. 21(2)(g) — Basic cyber hygiene practices and cybersecurity training",
+        "Domain": "people",
+        "Domains": [
+          "people"
+        ],
+        "Keywords": [
+          "cyber hygiene",
+          "training",
+          "awareness"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.g.1",
+            "Name": "Deliver role-appropriate cybersecurity training and keep a record of who attended",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.20.2",
+        "Name": "Art. 20(2) — Training of the management body",
+        "Domain": "people",
+        "Domains": [
+          "people"
+        ],
+        "Keywords": [
+          "training",
+          "management body"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.20.2.1",
+            "Name": "Train the management body on its obligations and on the risks specific to the entity",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.h",
+        "Name": "Incident response exercises (supports Art. 21(2)(b), Annex A clauses 5.24 to 5.28)",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "tabletop",
+          "simulation",
+          "lessons learned"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.h.1",
+            "Name": "Exercise the incident response plan and record what the exercise found",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.f",
+        "Name": "Change management (supports Art. 21(2)(e), Annex A clause 8.32)",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "change management",
+          "authorisation",
+          "rollback"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.f.1",
+            "Name": "Authorise, test and record changes to systems in scope, and keep a way back",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.c",
+        "Name": "Physical and environmental security (supports Art. 21(2)(a), Annex A clause 7)",
+        "Domain": "physical",
+        "Domains": [
+          "physical"
+        ],
+        "Keywords": [
+          "physical security",
+          "environmental",
+          "data centre"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.c.1",
+            "Name": "Control physical access to premises that hold systems in scope",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "gap",
+      "FinalScore": 6.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.20.1",
+        "Name": "Art. 20(1) — Management body approves and supervises risk-management measures",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "governance",
+          "accountability",
+          "management body"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.20.1.1",
+            "Name": "Record the approval of the risk-management measures by the management body, not only their existence",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.20.1.2",
+            "Name": "Track which duties the management body may delegate and which it may not; execution may be delegated, responsibility may not",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.20.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.a",
+        "Name": "Art. 21(2)(a) — Policies on risk analysis and information system security",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "risk analysis",
+          "policy",
+          "isms"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.a.1",
+            "Name": "Maintain a written information security policy derived from a current risk analysis",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 3.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.21.2.a",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.a",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "policy"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.j",
+        "Name": "Art. 21(2)(j) — Multi-factor or continuous authentication, and secured voice, video, text and emergency communications",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "mfa",
+          "multi-factor authentication",
+          "continuous authentication",
+          "emergency communication"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.j.1",
+            "Name": "Require multi-factor authentication for remote access and for administrative access",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          },
+          {
+            "ID": "PR.NIS2.21.2.j.2",
+            "Name": "Keep an emergency communication channel usable when ordinary channels are compromised",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.j",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.e",
+        "Name": "Art. 21(2)(e) — Security in acquisition, development and maintenance, including vulnerability handling and disclosure",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "secure sdlc",
+          "vulnerability handling",
+          "vulnerability disclosure",
+          "patching"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.e.1",
+            "Name": "Run a coordinated vulnerability disclosure process with a published contact point",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.e.2",
+            "Name": "Remediate a vulnerability within a deadline set by severity, and record an accepted risk where it is missed",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.5,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.e",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.b",
+        "Name": "Security testing: vulnerability scanning and penetration testing (supports Art. 21(2)(e))",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "security testing",
+          "vulnerability scanning",
+          "penetration testing",
+          "red team"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.b.1",
+            "Name": "Run vulnerability scanning on a defined cycle and track findings to remediation",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.SUP.b.2",
+            "Name": "Run penetration testing proportionate to the risk, and track the results",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.b",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.i",
+        "Name": "Art. 21(2)(i) — Human resources security, access control policies and asset management",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "hr security",
+          "access control",
+          "asset management",
+          "offboarding"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.i.1",
+            "Name": "Remove access on the day employment or a contract ends, and keep the record that it happened",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.i.2",
+            "Name": "Maintain an asset inventory with an owner for each entry",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 3.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.21.2.i",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.i",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "access control"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.c",
+        "Name": "Art. 21(2)(c) — Business continuity: backup management, disaster recovery and crisis management",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "business continuity",
+          "backup",
+          "disaster recovery",
+          "crisis management"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.c.1",
+            "Name": "Keep backups isolated from the systems they protect, and restore from them on a tested cycle",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.21.2.c",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.d",
+        "Name": "Art. 21(2)(d) — Supply chain security, including relationships with direct suppliers and service providers",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "supply chain",
+          "third party",
+          "supplier security"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.d.1",
+            "Name": "Assess the security of direct suppliers and service providers before they are given access",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          },
+          {
+            "ID": "PR.NIS2.21.2.d.2",
+            "Name": "Require a software bill of materials from suppliers of software the entity depends on",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.21.2.d",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.21.2.h",
+        "Name": "Art. 21(2)(h) — Policies and procedures on the use of cryptography and, where appropriate, encryption",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "cryptography",
+          "encryption",
+          "key management"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.21.2.h.1",
+            "Name": "Define which data is encrypted, in transit and at rest, and manage keys separately from the data",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4.25,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.21.2.h",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.a",
+        "Name": "Logging and log management (supports Art. 21(2)(a))",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "logging",
+          "log management",
+          "retention"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.a.1",
+            "Name": "Keep logs with a retention period set by policy, and protect them from alteration",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.a",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.d",
+        "Name": "Network security (supports Art. 21(2)(i), Annex A clauses 8.20 to 8.22)",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "segmentation",
+          "firewall",
+          "ids",
+          "zero trust"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.d.1",
+            "Name": "Segment networks so that a compromise of one zone does not reach every zone",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.d",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.e",
+        "Name": "Identity and access governance (supports Art. 21(2)(i), Annex A clauses 5.15 to 5.18 and 8.2 to 8.5)",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "privileged access",
+          "recertification",
+          "least privilege"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.e.1",
+            "Name": "Recertify privileged accounts on a cycle and remove access that no longer has a business need",
+            "MinMaturity": 3,
+            "GateRelevant": true
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 3.5,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.SUP.e",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        },
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.e",
+          "Confidence": "low",
+          "MatchedDomains": null,
+          "MatchedKeywords": [
+            "least privilege"
+          ]
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)",
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.29.1",
+        "Name": "Art. 29 — Cybersecurity information-sharing arrangements",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "information sharing",
+          "isac",
+          "csirt"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.29.1.1",
+            "Name": "Use a mechanism for exchanging information with other entities and with the CSIRT, subject to confidentiality",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.29.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.j",
+        "Name": "Records and audit evidence (supports Art. 20(1) and Art. 21(2)(f), Annex A clauses 5.31 and 5.33)",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "record keeping",
+          "audit evidence",
+          "accountability"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.j.1",
+            "Name": "Keep records that evidence the measures, and protect them from alteration",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 4,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.SUP.j",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.g",
+        "Name": "Service provider oversight beyond initial selection (supports Art. 21(2)(d), Annex A clauses 5.19 to 5.23)",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "sla",
+          "service level",
+          "termination",
+          "monitoring"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.g.1",
+            "Name": "Monitor a provider's security performance after selection, and define how access ends",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.SUP.g",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.24.1",
+        "Name": "Art. 24 — Use of European cybersecurity certification schemes",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "certification",
+          "scheme",
+          "conformity"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.24.1.1",
+            "Name": "Where certification is claimed, hold it for the products and versions actually in service",
+            "MinMaturity": 3,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.75,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.24.1",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.k",
+        "Name": "Security architecture review (supports Art. 21(2)(e), Annex A clause 8.9)",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "architecture",
+          "configuration",
+          "hardening"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.k.1",
+            "Name": "Review the architecture and configuration of systems in scope against current threats",
+            "MinMaturity": 4,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3.5,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-002",
+          "CatalogControlID": "NIS2.SUP.k",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-002' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "NIS2.SUP.i",
+        "Name": "Cybersecurity insurance and risk transfer (supports Art. 21(2)(c))",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "insurance",
+          "risk transfer"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": [
+          {
+            "ID": "PR.NIS2.SUP.i.1",
+            "Name": "Review insurance against the incident response obligations it would leave unmet",
+            "MinMaturity": 2,
+            "GateRelevant": false
+          }
+        ]
+      },
+      "Status": "partial",
+      "FinalScore": 3,
+      "EffectiveMaturity": 4,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "DOC-001",
+          "CatalogControlID": "NIS2.SUP.i",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "organizational"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": [
+        "Control 'DOC-001' is documented only (Paper Security)"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Gate": null,
+  "Delta": null,
+  "layer_delta": {
+    "documented_count": 2,
+    "implemented_count": 0,
+    "policy_gap": [
+      "DOC-001",
+      "DOC-002"
+    ],
+    "implemented_only": null,
+    "active_coverage": null
+  }
+}

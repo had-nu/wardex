@@ -1,0 +1,6 @@
+id: evaluate-allow
+flow: G3
+args: [evaluate, --config, config.yaml, --evidence, allow.yaml, documented.yaml, --output, json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

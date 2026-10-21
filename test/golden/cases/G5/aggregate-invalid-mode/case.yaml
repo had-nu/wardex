@@ -1,0 +1,6 @@
+id: aggregate-invalid-mode
+flow: G5
+args: [aggregate, iso.json, --fail-on, sometimes]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

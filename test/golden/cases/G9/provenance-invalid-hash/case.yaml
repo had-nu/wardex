@@ -1,0 +1,6 @@
+id: provenance-invalid-hash
+flow: G9
+args: [provenance, submit, not-a-hex-hash, --label, release-golden]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

@@ -1,0 +1,16 @@
+Error: config seal: trust store: read local "missing.yaml": open missing.yaml: no such file or directory
+Usage:
+  wardex config seal [flags]
+
+Flags:
+  -h, --help             help for seal
+      --input string     Path to wardex-config.yaml draft (required)
+      --keyring string   Path to private key (required) (default "<TMP>/home/.crypto/trust/root.key")
+      --out string       Output path for sealed config (default "./wardex.wexstate")
+      --trust string     Path or URL to wardex-trust.yaml
+                         Overrides WARDEX_TRUST_STORE if set (default: ./wardex-trust.yaml)
+
+Global Flags:
+      --config string   Path to wardex-config.yaml (default "./wardex-config.yaml")
+
+config seal: trust store: read local "missing.yaml": open missing.yaml: no such file or directory

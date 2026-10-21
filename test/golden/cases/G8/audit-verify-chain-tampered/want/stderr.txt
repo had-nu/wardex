@@ -1,0 +1,3 @@
+  Segment 1: TAMPERED
+
+Audit log hash chain: TAMPERED (1 segments, 2 entries)

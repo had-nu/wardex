@@ -1,0 +1,1 @@
+Successfully converted 1 vulnerabilities to wardex-vulns.yaml

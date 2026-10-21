@@ -1,0 +1,12 @@
+converted_by: wardex-convert/openvex
+vulnerabilities:
+    - cve_id: CVE-2025-3001
+      cvss_base: 0
+      epss_score: 0.05
+      component: pkg:golang/example.invalid/app@1.0.0
+      reachable: true
+    - cve_id: CVE-2025-3002
+      cvss_base: 0
+      epss_score: 0.05
+      component: pkg:golang/example.invalid/lib@2.0.0
+      reachable: false

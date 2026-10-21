@@ -1,0 +1,11 @@
+Error: policy: validate "policies/technological_controls.yml": control "A.8.1": invalid status "done" (must be one of: compliant, partial, non_compliant, not_applicable)
+Usage:
+  wardex policy validate <framework-dir> [flags]
+
+Flags:
+  -h, --help   help for validate
+
+Global Flags:
+      --config string   Path to wardex-config.yaml (default "./wardex-config.yaml")
+
+policy: validate "policies/technological_controls.yml": control "A.8.1": invalid status "done" (must be one of: compliant, partial, non_compliant, not_applicable)

@@ -1,0 +1,9 @@
+
+## Wardex - Aggregate Gate Decision
+
+| File | Decision | Blocked | Allowed | Warned |
+| ---------------------------------------- | ---------- | -------- | -------- | -------- |
+| iso.json                                 | ALLOW      | 0        | 2        | 0        |
+| nis2.json                                | ALLOW      | 0        | 1        | 1        |
+
+**Combined Decision:** [OK] ALLOW

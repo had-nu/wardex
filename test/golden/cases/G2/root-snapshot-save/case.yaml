@@ -1,0 +1,6 @@
+id: root-snapshot-save
+flow: G2
+args: [documented.yaml, --framework, iso27001, --output, json, --snapshot-file, snapshot.json]
+outputs: [snapshot.json]
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

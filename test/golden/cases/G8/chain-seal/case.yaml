@@ -1,0 +1,6 @@
+id: chain-seal
+flow: G8
+args: [chain, seal, --dir, artifacts, --output, chain-seal.json]
+outputs: [chain-seal.json]
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

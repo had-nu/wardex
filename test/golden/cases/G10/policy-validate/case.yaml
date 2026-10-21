@@ -1,0 +1,6 @@
+id: policy-validate
+flow: G10
+args: [policy, validate, policies]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

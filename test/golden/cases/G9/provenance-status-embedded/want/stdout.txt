@@ -1,0 +1,6 @@
+PROVENANCE ANCHOR STATUS
+========================
+
+Block Height:  0
+Active Peers:  1
+Pending:       0

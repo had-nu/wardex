@@ -1,0 +1,6 @@
+id: assess-snapshot-delta
+flow: G2
+args: [assess, documented.yaml, implemented.yaml, --framework, iso27001, --output, json, --snapshot, previous.json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

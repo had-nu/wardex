@@ -1,0 +1,5 @@
+Contract: contract.txt
+  SHA-256:         sha256:0f89e42fec3661b85d1c85bed4c441a8c303d2e7eb1abbe50587974870936780
+  Size:            14 bytes
+  Last modified:   <TS>
+  Status:          VERIFIED

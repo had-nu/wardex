@@ -1,0 +1,6 @@
+id: convert-kev
+flow: G4
+args: [convert, kev, kev.json, --output, wardex-kev.yaml]
+outputs: [wardex-kev.yaml]
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

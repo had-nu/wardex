@@ -1,0 +1,6 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "example",
+  "packages": [{"SPDXID": "SPDXRef-Package", "name": "openssl", "versionInfo": "3.0.0"}]
+}

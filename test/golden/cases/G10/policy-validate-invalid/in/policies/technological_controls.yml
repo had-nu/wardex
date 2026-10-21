@@ -1,0 +1,9 @@
+format_version: 2
+framework: iso27001
+version: "2022"
+domain: technological_controls
+controls:
+  - id: A.8.1
+    title: User endpoint devices
+    status: done
+    owner: IT Operations

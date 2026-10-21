@@ -1,0 +1,67 @@
+# GDPR — Compliance & Release Gate Report
+**Framework:** GDPR
+**Generated:** <TS>
+
+---
+
+## Executive Summary
+
+| Metric | Value |
+|---|---|
+| Global Compliance Coverage | 13.6% |
+| Controls Covered | 3 / 22 |
+| Controls Partial | 6 / 22 |
+| Controls Gap | 13 / 22 |
+
+---
+
+## Coverage by Domain
+
+| Domain | Covered | Partial | Gap | Maturity Avg |
+|---|---|---|---|---|
+| organizational | 0/6 | 6 | 0 | 4.0 |
+| people | 0/0 | 0 | 0 | 0.0 |
+| physical | 0/0 | 0 | 0 | 0.0 |
+| technological | 3/3 | 0 | 0 | 3.0 |
+| governance | 0/5 | 0 | 5 | 0.0 |
+| process | 0/8 | 0 | 8 | 0.0 |
+
+---
+
+## Layer Delta
+
+| Metric | Value |
+|---|---|
+| Documented Controls | 2 |
+| Implemented Controls | 1 |
+| Active Coverage (Paper ∩ Code) | 0 |
+| Policy Gap (Paper Security) | 2 |
+| Shadow Security (Implemented only) | 1 |
+
+**Top Policy Gaps (Paper only):** [DOC-001 DOC-002]
+
+---
+
+## Roadmap (prioritized)
+
+| Control | Name | Score | Reason |
+|---|---|---|---|
+| GDPR.33 | Art. 33 — Notification of a personal data breach to the supervisory authority | 9.5 | No correlation found |
+| GDPR.46 | Art. 46 — Transfers subject to appropriate safeguards | 9.0 | No correlation found |
+| GDPR.35 | Art. 35 — Data protection impact assessment | 9.0 | No correlation found |
+| GDPR.28.2 | Art. 28(2) — Processor notification to the controller of a personal data breach (Article 33(2)) | 9.0 | No correlation found |
+| GDPR.22 | Art. 22 — Automated individual decision-making, including profiling | 8.5 | No correlation found |
+| GDPR.34 | Art. 34 — Communication of a personal data breach to the data subject | 8.5 | No correlation found |
+| GDPR.15 | Art. 15 — Right of access by the data subject | 8.5 | No correlation found |
+| GDPR.28 | Art. 28 — Processor obligations and processor contracts | 8.5 | No correlation found |
+| GDPR.17 | Art. 17 — Right to erasure (right to be forgotten) | 8.5 | No correlation found |
+| GDPR.13 | Art. 13 — Information to be provided to data subjects on collection | 8.0 | No correlation found |
+| GDPR.21 | Art. 21 — Right to object to processing | 7.5 | No correlation found |
+| GDPR.16 | Art. 16 — Right to rectification of inaccurate personal data | 7.0 | No correlation found |
+| GDPR.18 | Art. 18 — Right to restriction of processing | 6.5 | No correlation found |
+| GDPR.30 | Art. 30 — Records of processing activities | 4.5 | Control 'DOC-001' is documented only (Paper Security) |
+| GDPR.24 | Art. 24 — Responsibility of the controller | 4.5 | Control 'DOC-001' is documented only (Paper Security) |
+| GDPR.5 | Art. 5 — Principles relating to processing of personal data | 4.5 | Control 'DOC-001' is documented only (Paper Security) |
+| GDPR.6 | Art. 6 — Lawfulness of processing | 4.5 | Control 'DOC-001' is documented only (Paper Security) |
+| GDPR.30.2 | Art. 30(2) — Records of processors processing on behalf of a controller | 3.8 | Control 'DOC-001' is documented only (Paper Security) |
+| GDPR.37 | Art. 37 — Designation of the data protection officer | 3.8 | Control 'DOC-001' is documented only (Paper Security) |

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO/IEC 27001:2022 — Compliance &amp; Release Gate Report</title>
+<style>
+  :root {
+    --accent: #6f42c1; --accent-light: #8b5cf6;
+    --bg: #ffffff; --card: #f8f9fa;
+    --text: #1a1a2e; --muted: #6c757d;
+    --border: #dee2e6;
+    --green: #00c4a7; --amber: #f5a623; --red: #e74c3c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --card: #161b22;
+      --text: #f0f6fc; --muted: #8b949e;
+      --border: #30363d;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; padding: 2rem 1rem;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 0.875rem; margin-bottom: 2rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.25rem;
+  }
+  .card h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+              color: var(--muted); margin-bottom: 0.5rem; }
+  .value { font-size: 2rem; font-weight: 700; }
+  .value.green { color: var(--green); }
+  .value.amber { color: var(--amber); }
+  .value.red { color: var(--red); }
+  .section { margin-bottom: 2rem; }
+  .section h2 { font-size: 1.125rem; margin-bottom: 1rem; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th { text-align: left; padding: 0.5rem; border-bottom: 2px solid var(--border);
+       color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+  td { padding: 0.5rem; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: rgba(111, 66, 193, 0.05); }
+  .badge {
+    display: inline-block; padding: 0.125rem 0.5rem; border-radius: 4px;
+    font-size: 0.75rem; font-weight: 600;
+  }
+  .badge.allow { background: rgba(0,196,167,0.15); color: var(--green); }
+  .badge.warn  { background: rgba(245,166,35,0.15);  color: var(--amber); }
+  .badge.block { background: rgba(231,76,60,0.15);   color: var(--red); }
+  .badge.compliant { background: rgba(0,196,167,0.15); color: var(--green); }
+  .badge.partial { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .badge.non-compliant { background: rgba(231,76,60,0.15); color: var(--red); }
+  .domain-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+  .domain-name { width: 140px; font-weight: 500; font-size: 0.875rem; flex-shrink: 0; }
+  .bar { height: 20px; width: 100%; max-width: 400px; }
+  .domain-pct { font-size: 0.875rem; color: var(--muted); white-space: nowrap; }
+  .delta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .delta-item { text-align: center; }
+  .delta-value { font-size: 1.5rem; font-weight: 700; }
+  .delta-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; }
+  .delta-item.green .delta-value { color: var(--green); }
+  .delta-item.amber .delta-value { color: var(--amber); }
+  .delta-item.red .delta-value { color: var(--red); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+  .empty { color: var(--muted); font-style: italic; padding: 1rem 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Wardex — Compliance &amp; Release Gate Report</h1>
+<p class="subtitle">ISO/IEC 27001:2022 · Generated <TS> · v2.0.0</p>
+
+<div class="grid">
+  <div class="card">
+    <h2>Coverage</h2>
+    <div class="value green">36.6%</div>
+    <div style="margin-top:0.25rem;font-size:0.875rem;color:var(--muted);">
+      34 covered · 59 partial · 0 gap
+      <span style="margin-left:0.5rem;">of 93 controls</span>
+    </div>
+    
+  </div>
+  
+</div>
+
+
+<div class="section">
+<h2>Coverage by Domain</h2>
+
+<div class="domain-row">
+  <div class="domain-name">organizational</div>
+  &lt;svg class=&#34;bar&#34; viewBox=&#34;0 0 400 20&#34; aria-label=&#34;0 of 37&#34;&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;0&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e74c3c&#34;/&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;400&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e0e0e0&#34;/&gt;
+		&lt;/svg&gt;
+  <div class="domain-pct">0/37 (3.5)</div>
+</div>
+
+<div class="domain-row">
+  <div class="domain-name">people</div>
+  &lt;svg class=&#34;bar&#34; viewBox=&#34;0 0 400 20&#34; aria-label=&#34;0 of 8&#34;&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;0&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e74c3c&#34;/&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;400&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e0e0e0&#34;/&gt;
+		&lt;/svg&gt;
+  <div class="domain-pct">0/8 (3.5)</div>
+</div>
+
+<div class="domain-row">
+  <div class="domain-name">physical</div>
+  &lt;svg class=&#34;bar&#34; viewBox=&#34;0 0 400 20&#34; aria-label=&#34;0 of 14&#34;&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;0&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e74c3c&#34;/&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;400&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e0e0e0&#34;/&gt;
+		&lt;/svg&gt;
+  <div class="domain-pct">0/14 (3.5)</div>
+</div>
+
+<div class="domain-row">
+  <div class="domain-name">technological</div>
+  &lt;svg class=&#34;bar&#34; viewBox=&#34;0 0 400 20&#34; aria-label=&#34;34 of 34&#34;&gt;
+			&lt;rect x=&#34;0&#34; y=&#34;0&#34; width=&#34;400&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#00c4a7&#34;/&gt;
+			&lt;rect x=&#34;400&#34; y=&#34;0&#34; width=&#34;0&#34; height=&#34;20&#34; rx=&#34;3&#34; fill=&#34;#e0e0e0&#34;/&gt;
+		&lt;/svg&gt;
+  <div class="domain-pct">34/34 (3.3)</div>
+</div>
+
+</div>
+
+
+
+
+
+<div class="section">
+<h2>Layer Delta</h2>
+<div class="delta-grid">
+  <div class="delta-item green">
+    <div class="delta-value">0</div>
+    <div class="delta-label">Active Coverage</div>
+    <div style="font-size:0.75rem;color:var(--muted);">0% of total</div>
+  </div>
+  <div class="delta-item amber">
+    <div class="delta-value">2</div>
+    <div class="delta-label">Paper Security</div>
+    <div style="font-size:0.75rem;color:var(--muted);">67% documented only</div>
+  </div>
+  <div class="delta-item red">
+    <div class="delta-value">1</div>
+    <div class="delta-label">Shadow Security</div>
+    <div style="font-size:0.75rem;color:var(--muted);">33% undocumented</div>
+  </div>
+</div>
+</div>
+
+
+
+
+
+<div class="section">
+<h2>Roadmap</h2>
+<table>
+<thead>
+  <tr><th>Control</th><th>Name</th><th>Score</th><th>Gap</th></tr>
+</thead>
+<tbody>
+
+  <tr>
+    <td><code>A.5.23</code></td>
+    <td>Information security for use of cloud services</td>
+    <td>3.8</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.7</code></td>
+    <td>Threat intelligence</td>
+    <td>3.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.1</code></td>
+    <td>Policies for information security</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.2</code></td>
+    <td>Information security roles and responsibilities</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.3</code></td>
+    <td>Segregation of duties</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.4</code></td>
+    <td>Management responsibilities</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.5</code></td>
+    <td>Contact with authorities</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.6</code></td>
+    <td>Contact with special interest groups</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.8</code></td>
+    <td>Information security in project management</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.9</code></td>
+    <td>Inventory of information and other associated assets</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.10</code></td>
+    <td>Acceptable use of information and other associated assets</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.11</code></td>
+    <td>Return of assets</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.12</code></td>
+    <td>Classification of information</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.13</code></td>
+    <td>Labelling of information</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.14</code></td>
+    <td>Information transfer</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.15</code></td>
+    <td>Access control</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.16</code></td>
+    <td>Identity management</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.17</code></td>
+    <td>Authentication information</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.18</code></td>
+    <td>Access rights</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.19</code></td>
+    <td>Information security in supplier relationships</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.20</code></td>
+    <td>Addressing information security within supplier agreements</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.21</code></td>
+    <td>Managing information security in the ICT supply chain</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.22</code></td>
+    <td>Monitoring, review and change management of supplier services</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.24</code></td>
+    <td>Information security incident management planning and preparation</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.25</code></td>
+    <td>Assessment and decision on information security events</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.26</code></td>
+    <td>Response to information security incidents</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.27</code></td>
+    <td>Learning from information security incidents</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.28</code></td>
+    <td>Collection of evidence</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.29</code></td>
+    <td>Information security during disruption</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.30</code></td>
+    <td>ICT readiness for business continuity</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.31</code></td>
+    <td>Legal, statutory, regulatory and contractual requirements</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.32</code></td>
+    <td>Intellectual property rights</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.33</code></td>
+    <td>Protection of records</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.34</code></td>
+    <td>Privacy and protection of PII</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.35</code></td>
+    <td>Independent review of information security</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.36</code></td>
+    <td>Compliance with policies, rules and standards for information security</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.5.37</code></td>
+    <td>Documented operating procedures</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.6.1</code></td>
+    <td>Screening</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.6.2</code></td>
+    <td>Terms and conditions of employment</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.6.3</code></td>
+    <td>Information security awareness, education and training</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.6.4</code></td>
+    <td>Disciplinary process</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.6.5</code></td>
+    <td>Responsibilities after termination or change of employment</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.6.6</code></td>
+    <td>Confidentiality or non-disclosure agreements</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.6.7</code></td>
+    <td>Remote working</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.6.8</code></td>
+    <td>Information security event reporting</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.1</code></td>
+    <td>Physical security perimeters</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.2</code></td>
+    <td>Physical entry</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.3</code></td>
+    <td>Securing offices, rooms and facilities</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.4</code></td>
+    <td>Physical security monitoring</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.5</code></td>
+    <td>Protecting against physical and environmental threats</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.6</code></td>
+    <td>Working in secure areas</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.7</code></td>
+    <td>Clear desk and clear screen</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.8</code></td>
+    <td>Equipment siting and protection</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.9</code></td>
+    <td>Security of assets off-premises</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.10</code></td>
+    <td>Storage media</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.11</code></td>
+    <td>Supporting utilities</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.12</code></td>
+    <td>Cabling security</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.13</code></td>
+    <td>Equipment maintenance</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+  <tr>
+    <td><code>A.7.14</code></td>
+    <td>Secure disposal or re-use of equipment</td>
+    <td>2.5</td>
+    <td style="color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;">Control &#39;DOC-001&#39; is documented only (Paper Security)</td>
+  </tr>
+
+</tbody>
+</table>
+</div>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,2 @@
+[INFO] Loaded 1 controls from input files.
+[INFO] Using framework: iso27001 (93 controls in catalog).

@@ -1,0 +1,13 @@
+converted_by: wardex-convert/kev
+catalog_version: 2026.01.01
+date_released: "2026-01-01"
+count: 1
+vulnerabilities:
+    - cve_id: CVE-2025-1001
+      cvss_base: 0
+      epss_score: 0
+      component: Widget
+      reachable: false
+      actively_exploited: true
+      actively_exploited_since: <TS>
+      exploited_source: cisa-kev

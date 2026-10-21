@@ -1,0 +1,6 @@
+id: auth-verify
+flow: G7
+args: [auth, verify, --trust, wardex-trust.yaml, --actor, admin@example.com]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''

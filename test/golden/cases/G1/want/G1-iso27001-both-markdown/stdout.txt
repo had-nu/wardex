@@ -1,0 +1,105 @@
+# ISO/IEC 27001:2022 — Compliance & Release Gate Report
+**Framework:** ISO/IEC 27001:2022
+**Generated:** <TS>
+
+---
+
+## Executive Summary
+
+| Metric | Value |
+|---|---|
+| Global Compliance Coverage | 36.6% |
+| Controls Covered | 34 / 93 |
+| Controls Partial | 59 / 93 |
+| Controls Gap | 0 / 93 |
+
+---
+
+## Coverage by Domain
+
+| Domain | Covered | Partial | Gap | Maturity Avg |
+|---|---|---|---|---|
+| organizational | 0/37 | 37 | 0 | 3.5 |
+| people | 0/8 | 8 | 0 | 3.5 |
+| physical | 0/14 | 14 | 0 | 3.5 |
+| technological | 34/34 | 0 | 0 | 3.3 |
+
+---
+
+## Layer Delta
+
+| Metric | Value |
+|---|---|
+| Documented Controls | 2 |
+| Implemented Controls | 1 |
+| Active Coverage (Paper ∩ Code) | 0 |
+| Policy Gap (Paper Security) | 2 |
+| Shadow Security (Implemented only) | 1 |
+
+**Top Policy Gaps (Paper only):** [DOC-001 DOC-002]
+
+---
+
+## Roadmap (prioritized)
+
+| Control | Name | Score | Reason |
+|---|---|---|---|
+| A.5.23 | Information security for use of cloud services | 3.8 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.7 | Threat intelligence | 3.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.1 | Policies for information security | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.2 | Information security roles and responsibilities | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.3 | Segregation of duties | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.4 | Management responsibilities | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.5 | Contact with authorities | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.6 | Contact with special interest groups | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.8 | Information security in project management | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.9 | Inventory of information and other associated assets | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.10 | Acceptable use of information and other associated assets | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.11 | Return of assets | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.12 | Classification of information | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.13 | Labelling of information | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.14 | Information transfer | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.15 | Access control | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.16 | Identity management | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.17 | Authentication information | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.18 | Access rights | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.19 | Information security in supplier relationships | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.20 | Addressing information security within supplier agreements | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.21 | Managing information security in the ICT supply chain | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.22 | Monitoring, review and change management of supplier services | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.24 | Information security incident management planning and preparation | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.25 | Assessment and decision on information security events | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.26 | Response to information security incidents | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.27 | Learning from information security incidents | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.28 | Collection of evidence | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.29 | Information security during disruption | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.30 | ICT readiness for business continuity | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.31 | Legal, statutory, regulatory and contractual requirements | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.32 | Intellectual property rights | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.33 | Protection of records | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.34 | Privacy and protection of PII | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.35 | Independent review of information security | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.36 | Compliance with policies, rules and standards for information security | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.5.37 | Documented operating procedures | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.6.1 | Screening | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.6.2 | Terms and conditions of employment | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.6.3 | Information security awareness, education and training | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.6.4 | Disciplinary process | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.6.5 | Responsibilities after termination or change of employment | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.6.6 | Confidentiality or non-disclosure agreements | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.6.7 | Remote working | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.6.8 | Information security event reporting | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.1 | Physical security perimeters | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.2 | Physical entry | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.3 | Securing offices, rooms and facilities | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.4 | Physical security monitoring | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.5 | Protecting against physical and environmental threats | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.6 | Working in secure areas | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.7 | Clear desk and clear screen | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.8 | Equipment siting and protection | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.9 | Security of assets off-premises | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.10 | Storage media | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.11 | Supporting utilities | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.12 | Cabling security | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.13 | Equipment maintenance | 2.5 | Control 'DOC-001' is documented only (Paper Security) |
+| A.7.14 | Secure disposal or re-use of equipment | 2.5 | Control 'DOC-001' is documented only (Paper Security) |

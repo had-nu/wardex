@@ -1,0 +1,1409 @@
+{
+  "Summary": {
+    "Framework": "dora",
+    "FrameworkName": "DORA",
+    "GeneratedAt": "<TS>",
+    "TotalControls": 26,
+    "CoveredCount": 5,
+    "PartialCount": 0,
+    "GapCount": 21,
+    "GlobalCoverage": 19.230769230769234,
+    "DomainSummaries": [
+      {
+        "Domain": "organizational",
+        "TotalControls": 9,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 9,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "people",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "physical",
+        "TotalControls": 0,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      },
+      {
+        "Domain": "technological",
+        "TotalControls": 5,
+        "CoveredCount": 5,
+        "PartialCount": 0,
+        "GapCount": 0,
+        "MaturityScore": 3,
+        "CoveragePercent": 100
+      },
+      {
+        "Domain": "process",
+        "TotalControls": 12,
+        "CoveredCount": 0,
+        "PartialCount": 0,
+        "GapCount": 12,
+        "MaturityScore": 0,
+        "CoveragePercent": 0
+      }
+    ],
+    "TopCriticalGaps": null,
+    "GateSummary": null
+  },
+  "Findings": [
+    {
+      "Control": {
+        "ID": "DORA.Art5",
+        "Name": "Governance and organisation",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "board accountability",
+          "structure",
+          "strategy",
+          "governance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art6",
+        "Name": "ICT risk management framework",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "risk management framework",
+          "policy",
+          "control environment",
+          "icrf"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art8",
+        "Name": "Identification: asset inventory and classification",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "asset inventory",
+          "critical function",
+          "dependency mapping",
+          "business process"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "DORA.Art8",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art8.2",
+        "Name": "Identification: risk classification and risk assessment scenarios",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "risk assessment",
+          "threat scenario",
+          "impact analysis",
+          "residual risk"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art9",
+        "Name": "Protection and prevention",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "encryption",
+          "crypto",
+          "access control",
+          "segmentation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "DORA.Art9",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art10",
+        "Name": "Detection",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "anomaly detection",
+          "siem",
+          "monitoring",
+          "alerting"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "DORA.Art10",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art11",
+        "Name": "Response and recovery",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "incident",
+          "recovery",
+          "bcp",
+          "drp"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art12",
+        "Name": "Backup policies and procedures, restoration and recovery",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "backup",
+          "restoration",
+          "off-site",
+          "integrity test"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art12.2",
+        "Name": "Recovery procedures, including restoration and recovery testing",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "financial impact",
+          "cost",
+          "incident cost"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art13",
+        "Name": "Learning and evolving",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "crisis communication",
+          "stakeholder notification",
+          "press"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art14",
+        "Name": "Communication: incident communication plan and crisis communication",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "incident reporting",
+          "classification",
+          "notification",
+          "competent authority",
+          "esc"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art16",
+        "Name": "Simplified ICT risk management framework",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "third party",
+          "vendor due diligence",
+          "contractual",
+          "ict outsourcing"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art17",
+        "Name": "ICT-related incident management process",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "post-incident review",
+          "corrective action",
+          "ir plan"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art18",
+        "Name": "Classification of ICT-related incidents and cyber threats",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "third-party register",
+          "vendor inventory",
+          "register"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art19",
+        "Name": "Reporting content and templates",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "reporting",
+          "board report",
+          "management",
+          "dashboards"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art19.2",
+        "Name": "Reporting of major ICT-related incidents",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "concentration risk",
+          "single point of failure",
+          "dependency"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art19.3",
+        "Name": "Voluntary notification of significant cyber threats",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "voluntary notification",
+          "early warning"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art25",
+        "Name": "Testing of ICT tools and systems",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "pentest",
+          "tlap",
+          "purple team",
+          "red team",
+          "vulnerability scanning"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "DORA.Art25",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art26",
+        "Name": "Advanced testing based on threat-led penetration testing",
+        "Domain": "technological",
+        "Domains": [
+          "technological"
+        ],
+        "Keywords": [
+          "tlap",
+          "threat-led pentest",
+          "tlpt",
+          "advanced testing"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "covered",
+      "FinalScore": 0,
+      "EffectiveMaturity": 3,
+      "CoveredBy": [
+        {
+          "ExistingControlID": "IMP-001",
+          "CatalogControlID": "DORA.Art26",
+          "Confidence": "high",
+          "MatchedDomains": [
+            "technological"
+          ],
+          "MatchedKeywords": null
+        }
+      ],
+      "GapReasons": null,
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art27",
+        "Name": "Requirements for testers carrying out TLPT",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "ir testing",
+          "tabletop",
+          "simulation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art28",
+        "Name": "General principles of the concentration risk chapter",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "audit",
+          "independent review",
+          "internal audit"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art29",
+        "Name": "Preliminary assessment of ICT concentration risk at entity level",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "lessons learned",
+          "improvement",
+          "corrective action"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 6,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art30",
+        "Name": "Key contractual provisions",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "contractual",
+          "audit rights",
+          "sla",
+          "data location"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art30.2",
+        "Name": "Subcontracting arrangements under the key contractual provisions",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "subcontractor",
+          "sub-contracting",
+          "supply chain visibility"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art31",
+        "Name": "Designation of critical ICT third-party service providers",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "ongoing monitoring",
+          "reassessment",
+          "tprm"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art45",
+        "Name": "Information-sharing arrangements on cyber threat information",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "threat intelligence",
+          "information sharing",
+          "tisp"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 6,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Roadmap": [
+    {
+      "Control": {
+        "ID": "DORA.Art5",
+        "Name": "Governance and organisation",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "board accountability",
+          "structure",
+          "strategy",
+          "governance"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art14",
+        "Name": "Communication: incident communication plan and crisis communication",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "incident reporting",
+          "classification",
+          "notification",
+          "competent authority",
+          "esc"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 10,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 10,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art6",
+        "Name": "ICT risk management framework",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "risk management framework",
+          "policy",
+          "control environment",
+          "icrf"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art8.2",
+        "Name": "Identification: risk classification and risk assessment scenarios",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "risk assessment",
+          "threat scenario",
+          "impact analysis",
+          "residual risk"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art11",
+        "Name": "Response and recovery",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "incident",
+          "recovery",
+          "bcp",
+          "drp"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art16",
+        "Name": "Simplified ICT risk management framework",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "third party",
+          "vendor due diligence",
+          "contractual",
+          "ict outsourcing"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 9,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 9,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art17",
+        "Name": "ICT-related incident management process",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "post-incident review",
+          "corrective action",
+          "ir plan"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art31",
+        "Name": "Designation of critical ICT third-party service providers",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "ongoing monitoring",
+          "reassessment",
+          "tprm"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art30",
+        "Name": "Key contractual provisions",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "contractual",
+          "audit rights",
+          "sla",
+          "data location"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art28",
+        "Name": "General principles of the concentration risk chapter",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "audit",
+          "independent review",
+          "internal audit"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art18",
+        "Name": "Classification of ICT-related incidents and cyber threats",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "third-party register",
+          "vendor inventory",
+          "register"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art19",
+        "Name": "Reporting content and templates",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "reporting",
+          "board report",
+          "management",
+          "dashboards"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art19.2",
+        "Name": "Reporting of major ICT-related incidents",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "concentration risk",
+          "single point of failure",
+          "dependency"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art12",
+        "Name": "Backup policies and procedures, restoration and recovery",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "backup",
+          "restoration",
+          "off-site",
+          "integrity test"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 8,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 8,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art27",
+        "Name": "Requirements for testers carrying out TLPT",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "ir testing",
+          "tabletop",
+          "simulation"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art30.2",
+        "Name": "Subcontracting arrangements under the key contractual provisions",
+        "Domain": "organizational",
+        "Domains": [
+          "organizational"
+        ],
+        "Keywords": [
+          "subcontractor",
+          "sub-contracting",
+          "supply chain visibility"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7.5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7.5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art13",
+        "Name": "Learning and evolving",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "crisis communication",
+          "stakeholder notification",
+          "press"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art12.2",
+        "Name": "Recovery procedures, including restoration and recovery testing",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "financial impact",
+          "cost",
+          "incident cost"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 7,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 7,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art29",
+        "Name": "Preliminary assessment of ICT concentration risk at entity level",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "lessons learned",
+          "improvement",
+          "corrective action"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 6,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art45",
+        "Name": "Information-sharing arrangements on cyber threat information",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "threat intelligence",
+          "information sharing",
+          "tisp"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 6,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 6,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    },
+    {
+      "Control": {
+        "ID": "DORA.Art19.3",
+        "Name": "Voluntary notification of significant cyber threats",
+        "Domain": "process",
+        "Domains": [
+          "process"
+        ],
+        "Keywords": [
+          "voluntary notification",
+          "early warning"
+        ],
+        "EvidenceTypes": null,
+        "BaseScore": 5,
+        "Practices": null
+      },
+      "Status": "gap",
+      "FinalScore": 5,
+      "EffectiveMaturity": 0,
+      "CoveredBy": null,
+      "GapReasons": [
+        "No correlation found"
+      ],
+      "Recommendation": "",
+      "GatePractice": null
+    }
+  ],
+  "Gate": null,
+  "Delta": null,
+  "layer_delta": {
+    "documented_count": 0,
+    "implemented_count": 1,
+    "policy_gap": null,
+    "implemented_only": [
+      "IMP-001"
+    ],
+    "active_coverage": null
+  }
+}

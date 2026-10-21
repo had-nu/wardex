@@ -1,0 +1,3 @@
+[INFO] Gate class: deploy
+[INFO] Applied EPSS enrichment for CVE-2025-9004: 0.010000
+[INFO] Gate decision logged (chained) -> wardex-gate-audit.log

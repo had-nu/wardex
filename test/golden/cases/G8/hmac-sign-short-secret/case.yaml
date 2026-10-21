@@ -1,0 +1,8 @@
+id: hmac-sign-short-secret
+flow: G8
+args: [hmac, sign, --file, artifact.txt]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+env:
+  WARDEX_ACCEPT_SECRET: short
+known_defect: ''

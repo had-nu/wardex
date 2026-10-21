@@ -1,0 +1,19 @@
+{
+  "title": "CISA Known Exploited Vulnerabilities",
+  "catalogVersion": "2026.01.01",
+  "dateReleased": "2026-01-01",
+  "count": 1,
+  "vulnerabilities": [
+    {
+      "cveID": "CVE-2025-1001",
+      "vendorProject": "Acme",
+      "product": "Widget",
+      "vulnerabilityName": "Widget command injection",
+      "dateAdded": "2026-01-01",
+      "shortDescription": "A command injection flaw in Widget.",
+      "requiredAction": "Apply the vendor update.",
+      "dueDate": "2026-01-21",
+      "knownRansomwareCampaignUse": "Unknown"
+    }
+  ]
+}

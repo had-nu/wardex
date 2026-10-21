@@ -1,0 +1,13 @@
+Actor:   admin@example.com
+Key:     ga-admin-01
+Name:    Golden Admin
+Role:    admin
+Status:  ACTIVE
+Can perform:
+  - trust.init
+  - trust.add
+  - trust.revoke
+  - config.seal
+  - evaluate
+  - report
+  - accept.request

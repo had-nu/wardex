@@ -14,7 +14,7 @@ func TestNormaliseRules(t *testing.T) {
 	normaliser := Normaliser{
 		TempDir: "/tmp/wardex-golden-42",
 		Version: "0.0.0-golden",
-		Rules:   []string{RuleTimestamps, RuleTmpDir, RuleVersion},
+		Rules:   []string{RuleTimestamps, RuleLogTimestamps, RuleTmpDir, RuleVersion},
 	}
 
 	tests := []struct {
@@ -36,6 +36,16 @@ func TestNormaliseRules(t *testing.T) {
 			name:  "several timestamps",
 			input: "from 2026-10-21T14:58:42Z to 2026-10-21T15:58:42+01:00",
 			want:  "from <TS> to <TS>\n",
+		},
+		{
+			name:  "space-separated report timestamp",
+			input: "Generated 2026-10-21 18:05:47 by wardex",
+			want:  "Generated <TS> by wardex\n",
+		},
+		{
+			name:  "Go log timestamp prefix",
+			input: "2026/10/21 17:53:24 IPC engine started\nnext line",
+			want:  "<TS> IPC engine started\nnext line\n",
 		},
 		{
 			name:  "temporary directory",

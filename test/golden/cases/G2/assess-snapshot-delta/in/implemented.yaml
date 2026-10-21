@@ -1,0 +1,10 @@
+# implemented layer: mechanisms in place.
+- id: IMP-001
+  name: Access review workflow
+  description: Quarterly access reviews executed in the identity platform.
+  layer: implemented
+  domains: [technological]
+  maturity: 3
+  evidences:
+    - type: procedure
+      ref: access-review-q3-2026

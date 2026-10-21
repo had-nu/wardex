@@ -1,0 +1,14 @@
+Error: HMAC secret must be at least 32 characters (got 5)
+Usage:
+  wardex hmac sign [flags]
+
+Flags:
+      --file string         Path to file to sign (required)
+  -h, --help                help for sign
+      --output string       Output file path (default: <file>.hmac)
+      --secret-env string   Environment variable containing the HMAC secret (default "WARDEX_ACCEPT_SECRET")
+
+Global Flags:
+      --config string   Path to wardex-config.yaml (default "./wardex-config.yaml")
+
+HMAC secret must be at least 32 characters (got 5)

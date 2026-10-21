@@ -1,0 +1,3 @@
+Trust store: tampered-trust.yaml
+Root signature: INVALID
+Error: trust store: key "ga-admin-01" AddedSig invalid: verify: signature invalid — data may have been tampered with

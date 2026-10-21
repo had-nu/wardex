@@ -1,0 +1,8 @@
+id: evaluate-active-dry-run
+flow: G3
+args: [evaluate, --config, config-active.yaml, --evidence, active.yaml, documented.yaml, --output, json, --dry-run]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+env:
+  WARDEX_ACCEPT_SECRET: golden-test-secret-0123456789abcdef
+known_defect: ''

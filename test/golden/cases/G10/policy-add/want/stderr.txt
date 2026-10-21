@@ -1,0 +1,17 @@
+Error: policy add: resolve path: path traversal detected: "policies/access_control.yml" resolves outside workspace
+Usage:
+  wardex policy add [flags]
+
+Flags:
+      --file string     path to domain YAML file (required)
+  -h, --help            help for add
+      --id string       control ID, e.g. A.8.1 (required)
+      --note string     short implementation note
+      --owner string    team or role responsible for this control
+      --status string   compliance status: compliant | partial | non_compliant | not_applicable (default "non_compliant")
+      --title string    human-readable control title (required)
+
+Global Flags:
+      --config string   Path to wardex-config.yaml (default "./wardex-config.yaml")
+
+policy add: resolve path: path traversal detected: "policies/access_control.yml" resolves outside workspace

@@ -1,0 +1,24 @@
+format_version: 2
+framework: iso27001
+version: "2022"
+domain: technological_controls
+annex: "A.8"
+last_reviewed: "2025-03-01"
+reviewed_by: "hadnu"
+controls:
+  - id: A.8.1
+    title: User endpoint devices
+    status: compliant
+    owner: IT Operations
+    implementation_note: MDM policy enforced via Intune.
+    evidence_refs: []
+    last_assessed: "2025-02-15"
+    exceptions: []
+  - id: A.8.2
+    title: Privileged access rights
+    status: partial
+    owner: Security Team
+    implementation_note: PAM deployed; legacy review pending.
+    evidence_refs: []
+    last_assessed: "2025-01-10"
+    exceptions: []

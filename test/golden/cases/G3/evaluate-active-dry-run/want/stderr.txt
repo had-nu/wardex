@@ -1,0 +1,5 @@
+[INFO] Gate class: deploy
+Warning: cra.support_period.years is not set; Article 13(8) requires a support period and Annex VII point 4 requires the information behind it to be in the technical documentation
+[DRY-RUN] Active exploitation detected for CVE(s): CVE-2025-9003
+[DRY-RUN] Article 14 notification artefact would be written to: art14
+[DRY-RUN] Gate would BLOCK with exit code 12 (ActivelyExploited)

@@ -1,0 +1,6 @@
+id: auth-status
+flow: G7
+args: [auth, status, --trust, wardex-trust.yaml]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''
