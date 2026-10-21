@@ -87,10 +87,23 @@ flow: G1
 args: [assess, documented.yaml, implemented.yaml, --framework, iso27001, --output, json]
 outputs: []                      # produced files to compare
 normalise: [timestamps, tmpdir, version]
-known_defect: ''                 # issue id, if the current result is a known defect
+known_defect: ''                 # issue id or short description, if the current result is a known defect
+env: {}                          # optional: deterministic fixture secrets
+modes: {}                        # optional: file modes to apply after copying in/, e.g. {admin: "0600"}
 ```
 
-**Normalisation.** RFC 3339 timestamps → `<TS>`; temporary directory path → `<TMP>`; version → `<VERSION>`; LF line endings; JSON re-encoded with fixed indentation before comparison. Any other instability (map order, randomness, network) is a defect in the case and is not solved by widening the normalisation.
+`env` and `modes` are harness extensions, not product inputs. `env` exists so a
+case that needs `WARDEX_ACCEPT_SECRET` uses a fixture secret instead of the
+developer's shell. `modes` exists because git records only the executable bit:
+a private-key fixture that the product refuses to read at 0644 would pass
+locally and fail on a fresh clone.
+
+**Normalisation.** RFC 3339 timestamps, the space-separated form reports use in
+HTML (`YYYY-MM-DD HH:MM:SS`), and the standard logger's prefix
+(`YYYY/MM/DD HH:MM:SS`) → `<TS>`; temporary directory path → `<TMP>`; version →
+`<VERSION>`; LF line endings; JSON re-encoded with fixed indentation before
+comparison. Any other instability (map order, randomness, network) is a defect
+in the case and is not solved by widening the normalisation.
 
 **Determinism.** Each case runs twice; if the normalised results differ, the case is rejected.
 
@@ -108,12 +121,26 @@ known_defect: ''                 # issue id, if the current result is a known de
 | G4 | `convert` | Grype and KEV → YAML; read CycloneDX, SPDX and OpenVEX |
 | G5 | `aggregate` | several results → one decision |
 | G6 | `art14` | complete artefact lifecycle |
-| G7 | `trust`, `auth`, `configseal` | with fixture keys |
+| G7 | `trust`, `auth`, `config seal` | with fixture keys |
 | G8 | `chain`, `state`, `gate`, `audit`, `hmac`, `contract` | including the version seal (exit 13) |
 | G9 | `provenance` | noop and embedded drivers |
 | G10 | `policy` | files from `frameworks/` |
 
-**G1 matrix.** The matrix is defined as data in `cases/G1/matrix.yaml`, with axes `framework`, `layers`, `assets` and `format`. The harness expands it into IDs (`G1-<framework>-<layers>-<format>`) and stores each `want/` in `cases/G1/want/<id>/`. `G1-min` is at least three cases per flow for P2 and P3; `G1-matrix` is the complete matrix and the M0 exit criterion. D11's "three cases per flow" condition refers to `G1-min`; the M2 decision uses the cost of `G1-matrix`. Define `matrix.yaml` as an explicit list of combinations, not a Cartesian product: 7 frameworks × 3 layer modes × 2 asset modes × 4 formats would be about 168 cases and would not fit the M0 estimate. If normalisation is not enough for HTML, compare invariants (headings and counts).
+**G1 matrix.** The matrix is defined as data in `cases/G1/matrix.yaml`, with axes `framework`, `layers`, `assets` and `format`. The harness expands it into IDs (`G1-<framework>-<layers>-<format>`, with an `-assets` suffix when the assets axis is set) and stores each `want/` in `cases/G1/want/<id>/`. All matrix entries share `cases/G1/in/`. `G1-min` is at least three cases per flow for P2 and P3; `G1-matrix` is the complete matrix and the M0 exit criterion. D11's "three cases per flow" condition refers to `G1-min`; the M2 decision uses the cost of `G1-matrix`. Define `matrix.yaml` as an explicit list of combinations, not a Cartesian product: 7 frameworks × 3 layer modes × 2 asset modes × 4 formats would be about 168 cases and would not fit the M0 estimate. HTML is compared in full: its timestamp is normalised and the document carries no other volatile content.
+
+**Frozen defects.** P3 found two current behaviours that the goldens record
+rather than fix, because M0 changes no product code:
+
+- `policy add` rejects a relative `--file` with "path traversal detected",
+  because `ValidateInputPath` compares a relative joined path with an absolute
+  base. The `policy-add` case captures the rejection.
+- `accept request` computes the config hash and then omits it from the stored
+  acceptance, so `evaluate` rejects every acceptance it created with "config
+  changed since acceptance". The `evaluate-acceptance-rejected` case captures
+  the rejection.
+
+Both cases carry `known_defect` with the description. A change to either
+behaviour requires a `Golden-Change` trailer and the fix's PR.
 
 `simulate` keeps only a start and end test, with no content golden. The flags of each command are discovered with `--help` in the implementation.
 
