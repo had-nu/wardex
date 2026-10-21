@@ -323,6 +323,8 @@ The test plan covers the module itself, not the product flows. It includes:
 - **Language checker:** a fixture with legitimate `package` uses passes; `pacote` fails; the M0 spec and the template pass; the baseline ratchets down.
 - **Sensitivity (manual, before closing the module):** apply five mutants to `main`; the golden run must fail for at least four. (m1) the fixed maturity threshold in `EvaluateCoverage`; (m2) a gate exit code; (m3) remove `layer_delta` from the `assess` JSON; (m4) reverse the roadmap order; (m5) the confidence returned by `matchDomains`.
 
+  **Result (2026-10-21).** All five mutants were detected by `make golden`: m1 failed G1 and G2; m2 failed the duplicate `gate check-version` case in G8; m3, m4 and m5 failed G1 and G2. Each mutant was applied to a clean tree, the golden run failed, and the file was restored; the final `git diff --stat v2.7.0-rc.1 -- pkg cmd` is empty.
+
 ## 9. Migration plan
 
 | Step | Work | Acceptance criterion |
