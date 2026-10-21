@@ -121,7 +121,7 @@ O grafo de conhecimento identifica 10 camadas. As principais:
 ├─────────────────────────────────────────────────────────────┤
 │  DADOS E ESQUEMAS — spec/cddl, data/, testdata              │
 ├─────────────────────────────────────────────────────────────┤
-│  INFRAESTRUTURA — Dockerfile, Helm, .github/, action.yml    │
+│  INFRAESTRUTURA — Helm, .goreleaser.yaml, .github/          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -132,7 +132,7 @@ O grafo de conhecimento identifica 10 camadas. As principais:
 3. **Internos (`internal/`)** — `internal/cpl` é crítico: o **Config Provenance Link** que faz hash canónico da configuração. `internal/policy` carrega políticas.
 4. **Config & Estado** — `config/` carrega `wardex-config.yaml`; `pkg/statestore` gere o estado persistente com hash-chaining BLAKE3; `pkg/trust` gere a trust store e config selada (WexState).
 5. **Frameworks** — Os catálogos de controlos em YAML, lidos por `pkg/catalog`.
-6. **Infra** — Build/release via Dockerfile, `.goreleaser.yaml`, Helm chart, GitHub Action.
+6. **Infra** — Build/release via `.goreleaser.yaml`, Helm chart. Container images and the Marketplace Action are removed until v3.
 
 ---
 

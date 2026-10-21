@@ -10,9 +10,7 @@
 
 [![Go](https://img.shields.io/badge/Go-1.27-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/had-nu/wardex?style=flat-square)](https://goreportcard.com/report/github.com/had-nu/wardex)
-[![Docker](https://img.shields.io/badge/Docker-ghcr.io/had--nu/wardex-2496ED?style=flat-square&logo=docker&logoColor=white)](https://github.com/had-nu/wardex/pkgs/container/wardex)
 [![Helm](https://img.shields.io/badge/Helm-v0.1.0-0F1689?style=flat-square&logo=helm&logoColor=white)](deploy/helm/wardex/)
-[![GitHub Action](https://img.shields.io/badge/GitHub_Action-Wardex_Release_Gate-4A154B?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/wardex-release-gate)
 [![License: AGPL v3 / Commercial](https://img.shields.io/badge/License-AGPL_v3_|_Commercial-8A2BE2.svg?style=flat-square)](#licenciamento)
 
 <br>
@@ -193,12 +191,6 @@ git clone https://github.com/had-nu/wardex.git
 cd wardex && make build
 ```
 
-### Docker
-
-```bash
-docker pull ghcr.io/had-nu/wardex:2.6.0
-```
-
 ### Helm (Kubernetes)
 
 ```bash
@@ -207,6 +199,8 @@ helm upgrade --install wardex deploy/helm/wardex/ \
 ```
 
 Consulta [deploy/helm/wardex/](deploy/helm/wardex/) para a referência completa do chart. O chart `0.1.0` usa a aplicação `v2.6.0`.
+
+> **Note (2026-10-21):** container image publishing is suspended until v3; the chart keeps its existing image default in `ghcr.io`.
 
 ---
 
@@ -638,7 +632,6 @@ fmt.Println(report.OverallDecision) // ALLOW | WARN | BLOCK
 - [Exit codes](doc/operations/EXIT_CODES.md)
 - [Migração CBOR v2.3.0](doc/specs/CBOR_MIGRATION_v2.3.0.md)
 - [Esquemas CDDL](spec/cddl/)
-- [Ambiente de desenvolvimento (docker-compose)](docker-compose.yml)
 - [CHANGELOG](CHANGELOG.md)
 - [Release notes v2.6.1](doc/releases/v2.6.1-notes.md)
 - [Release notes v2.6.0](doc/releases/v2.6.0-notes.md)

@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- **Docker.** Container distribution is suspended until v3. The `Dockerfile`,
+  `.dockerignore`, `docker-compose.yml`, the `Docker` workflow and the
+  repository's Docker Action (`action.yml`) are removed, and `docker_signs` is
+  dropped from GoReleaser. Images are no longer published to `ghcr.io`; the
+  Helm chart keeps its existing image default. The Marketplace Action remains
+  installable from existing tags, which carry their own `Dockerfile`; its
+  rework returns with v3.
+
 ## [2.7.0-rc.1] — 2026-10-21
 
 > Pre-release of the v2.7.0 line, cut as the modularisation baseline (M0). It
