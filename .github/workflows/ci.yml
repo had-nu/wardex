@@ -31,6 +31,10 @@ jobs:
       - name: Run vet (includes stdversion)
         run: go vet ./...
 
+      - name: Verify module boundaries
+        # Runs with and without the grpc build tag; the tool checks both.
+        run: make boundaries
+
       - name: Run tests & Generate Coverage
         run: go test -v -race -coverprofile=coverage.out ./...
 

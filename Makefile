@@ -1,4 +1,4 @@
-.PHONY: all build test lint security specs reproducible clean golden golden-update
+.PHONY: all build test lint security specs reproducible clean golden golden-update boundaries
 
 BINARY := wardex
 PKG    := ./...
@@ -18,6 +18,13 @@ lint:
 # Verify the canonical structure, inventory and vocabulary of the specs.
 specs:
 	go run ./tools/check-specs
+
+# Check the import graph against doc/architecture/modules.yaml. Both build
+# configurations run: without tags, and with grpc, which adds files the default
+# build never sees.
+boundaries:
+	go run ./tools/check-boundaries
+	go run ./tools/check-boundaries -tags grpc
 
 # Run the black-box golden harness (flows G1 to G10). -count=1 disables the
 # test cache: a case can embed the current date in its output, so a cached
