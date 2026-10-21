@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
 )
 
 // unknownFrameworkTitle keeps the report truthful when a run carries no

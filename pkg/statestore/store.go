@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/atomicwrite"
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/atomicwrite"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 // Store manages the persistent state directory.

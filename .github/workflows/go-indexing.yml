@@ -45,7 +45,9 @@ jobs:
             echo "---"
             major="${tag%%.*}"; major="${major#v}"
 
-            if [ "$major" -ge 2 ] 2>/dev/null; then
+            if [ "$major" -ge 3 ] 2>/dev/null; then
+              MODULE_PATH="github.com/had-nu/wardex/v3"
+            elif [ "$major" -ge 2 ] 2>/dev/null; then
               MODULE_PATH="github.com/had-nu/wardex/v2"
             else
               MODULE_PATH="github.com/had-nu/wardex"

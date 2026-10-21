@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/scorer"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/scorer"
 )
 
 // Analyzer performs compliance gap analysis against a framework catalog.

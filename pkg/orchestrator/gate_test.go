@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
-	"github.com/had-nu/wardex/v2/pkg/trust"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/pkg/trust"
 )
 
 func writeGateFixture(t *testing.T, dir, name, content string) {

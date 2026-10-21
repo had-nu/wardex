@@ -13,9 +13,9 @@ import (
 func TestParseProfileAggregatesBlocks(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "coverage.out")
 	content := `mode: set
-github.com/had-nu/wardex/v2/pkg/alpha/a.go:1.1,2.2 4 1
-github.com/had-nu/wardex/v2/pkg/alpha/b.go:1.1,2.2 6 0
-github.com/had-nu/wardex/v2/pkg/beta/c.go:1.1,2.2 3 2
+github.com/had-nu/wardex/v3/pkg/alpha/a.go:1.1,2.2 4 1
+github.com/had-nu/wardex/v3/pkg/alpha/b.go:1.1,2.2 6 0
+github.com/had-nu/wardex/v3/pkg/beta/c.go:1.1,2.2 3 2
 `
 	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
 		t.Fatal(err)
@@ -24,11 +24,11 @@ github.com/had-nu/wardex/v2/pkg/beta/c.go:1.1,2.2 3 2
 	if err != nil {
 		t.Fatalf("parseProfile: %v", err)
 	}
-	alpha := counts["github.com/had-nu/wardex/v2/pkg/alpha"]
+	alpha := counts["github.com/had-nu/wardex/v3/pkg/alpha"]
 	if alpha != [2]int{10, 4} {
 		t.Errorf("alpha = %v, want {10 4}", alpha)
 	}
-	beta := counts["github.com/had-nu/wardex/v2/pkg/beta"]
+	beta := counts["github.com/had-nu/wardex/v3/pkg/beta"]
 	if beta != [2]int{3, 3} {
 		t.Errorf("beta = %v, want {3 3}", beta)
 	}

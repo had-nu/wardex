@@ -12,8 +12,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 var (

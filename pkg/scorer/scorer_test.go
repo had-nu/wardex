@@ -6,8 +6,8 @@ package scorer_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/scorer"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/scorer"
 )
 
 func TestScoreFormula(t *testing.T) {

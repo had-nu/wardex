@@ -3,7 +3,7 @@ package configseal_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/v2/cmd/configseal"
+	"github.com/had-nu/wardex/v3/cmd/configseal"
 )
 
 func TestConfigCmdHasSubcommands(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/had-nu/wardex/v2/pkg/atomicwrite"
+	"github.com/had-nu/wardex/v3/pkg/atomicwrite"
 )
 
 // SafeReadFile reads a file after validating its path with SafePath.

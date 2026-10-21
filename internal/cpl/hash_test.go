@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/internal/cpl"
+	"github.com/had-nu/wardex/v3/internal/cpl"
 )
 
 func mustReadFile(t *testing.T, path string) []byte {

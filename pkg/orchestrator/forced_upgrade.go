@@ -9,12 +9,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/internal/cpl"
-	acceptaudit "github.com/had-nu/wardex/v2/pkg/accept/audit"
-	"github.com/had-nu/wardex/v2/pkg/enrich"
-	"github.com/had-nu/wardex/v2/pkg/gate"
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/internal/cpl"
+	acceptaudit "github.com/had-nu/wardex/v3/pkg/accept/audit"
+	"github.com/had-nu/wardex/v3/pkg/enrich"
+	"github.com/had-nu/wardex/v3/pkg/gate"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // Audit event names for the forced_upgrade tripwire (L7, spec §11.2).

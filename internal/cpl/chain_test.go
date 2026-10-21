@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/internal/cpl"
+	"github.com/had-nu/wardex/v3/internal/cpl"
 )
 
 func entryLine(prevHash string) []byte {

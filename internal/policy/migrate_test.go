@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/internal/policy"
+	"github.com/had-nu/wardex/v3/internal/policy"
 )
 
 const minValidDomain = `framework: iso27001

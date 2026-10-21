@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v3/config"
 )
 
 func writeConfig(t *testing.T, content string) string {

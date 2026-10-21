@@ -3,7 +3,7 @@ package auth_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/v2/cmd/auth"
+	"github.com/had-nu/wardex/v3/cmd/auth"
 )
 
 func TestAuthCmdHasSubcommands(t *testing.T) {

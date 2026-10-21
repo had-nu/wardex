@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/keys"
+	"github.com/had-nu/wardex/v3/pkg/keys"
 )
 
 func testKey(t *testing.T) ed25519.PrivateKey {

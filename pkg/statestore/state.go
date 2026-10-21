@@ -6,7 +6,7 @@ package statestore
 import (
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // StateVersion is the current state format version.

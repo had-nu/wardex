@@ -8,9 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/ui"
-	"github.com/had-nu/wardex/v2/test"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/ui"
+	"github.com/had-nu/wardex/v3/test"
 	"github.com/spf13/cobra"
 )
 

@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/fxamacker/cbor/v2"
-	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/cli"
 )
 
 // FileHash computes the SHA-256 hash of a file.

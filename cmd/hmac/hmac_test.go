@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/cmd/hmac"
+	"github.com/had-nu/wardex/v3/cmd/hmac"
 )
 
 func TestHMACCmdHasSubcommands(t *testing.T) {

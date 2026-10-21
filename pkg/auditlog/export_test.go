@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/auditlog"
+	"github.com/had-nu/wardex/v3/pkg/auditlog"
 )
 
 func chainLine(i int, prev string) string {

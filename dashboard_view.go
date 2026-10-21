@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/orchestrator"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/orchestrator"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 const maxDashboardFindings = 5

@@ -18,15 +18,15 @@ import (
 	"io"
 	"time"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/internal/cpl"
-	"github.com/had-nu/wardex/v2/pkg/accept/audit"
-	"github.com/had-nu/wardex/v2/pkg/accept/forward"
-	"github.com/had-nu/wardex/v2/pkg/accept/rules"
-	"github.com/had-nu/wardex/v2/pkg/accept/store"
-	"github.com/had-nu/wardex/v2/pkg/accept/verify"
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/report"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/internal/cpl"
+	"github.com/had-nu/wardex/v3/pkg/accept/audit"
+	"github.com/had-nu/wardex/v3/pkg/accept/forward"
+	"github.com/had-nu/wardex/v3/pkg/accept/rules"
+	"github.com/had-nu/wardex/v3/pkg/accept/store"
+	"github.com/had-nu/wardex/v3/pkg/accept/verify"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/report"
 )
 
 // ErrInvalidEmail is re-exported from pkg/accept/rules.

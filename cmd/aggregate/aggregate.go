@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 	"github.com/spf13/cobra"
 )
 

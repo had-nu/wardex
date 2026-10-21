@@ -6,7 +6,7 @@ package releasegate
 import (
 	"fmt"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // Gate evaluates vulnerabilities and orchestrates release decisions.

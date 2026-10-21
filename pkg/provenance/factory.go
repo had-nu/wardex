@@ -9,8 +9,8 @@ import (
 	"crypto/x509"
 	"fmt"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/pkg/cli"
 )
 
 // tlsConfigFromOptions builds a *tls.Config from provenance options.

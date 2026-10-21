@@ -7,7 +7,7 @@ import (
 	"slices"
 	"sort"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // annexADomains are the four Annex A domains. They are always reported, even

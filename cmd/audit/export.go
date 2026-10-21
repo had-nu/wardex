@@ -12,9 +12,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/had-nu/wardex/v2/pkg/auditlog"
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/pkg/auditlog"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
 	"github.com/spf13/cobra"
 )
 

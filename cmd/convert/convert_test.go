@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/cmd/convert"
+	"github.com/had-nu/wardex/v3/cmd/convert"
 	"github.com/spf13/cobra"
 )
 

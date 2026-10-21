@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v3/config"
 )
 
 func TestNewNoop(t *testing.T) {

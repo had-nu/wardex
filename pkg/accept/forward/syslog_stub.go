@@ -9,7 +9,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // SyslogBackend is not available on Windows.

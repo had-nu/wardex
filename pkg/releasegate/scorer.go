@@ -6,7 +6,7 @@ package releasegate
 import (
 	"math"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // scoreNorm normalises the output to the [0, 1.5] scale of paper v4 (§IV.A — Proposition 2).

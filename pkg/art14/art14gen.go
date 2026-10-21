@@ -19,9 +19,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 // newUUID generates a random UUID v4 using crypto/rand.

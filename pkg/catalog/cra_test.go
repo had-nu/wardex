@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
 )
 
 // craControls loads the Cyber Resilience Act catalogue.

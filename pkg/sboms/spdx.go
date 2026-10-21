@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"io/fs"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // SPDXDocument represents the minimal structure of an SPDX 2.3 JSON SBOM.

@@ -6,8 +6,8 @@ package provenance
 import (
 	"context"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/pkg/provenance"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/pkg/provenance"
 	"github.com/spf13/cobra"
 )
 

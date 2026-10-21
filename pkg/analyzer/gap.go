@@ -6,8 +6,8 @@ package analyzer
 import (
 	"fmt"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 // EvaluateCoverage determines if the set of mapped controls fully covers the AnnexA control.

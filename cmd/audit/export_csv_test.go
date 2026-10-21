@@ -8,7 +8,7 @@ import (
 	"encoding/csv"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/auditlog"
+	"github.com/had-nu/wardex/v3/pkg/auditlog"
 )
 
 func TestWriteCSVDecodesJSONValuesBeforeWriting(t *testing.T) {

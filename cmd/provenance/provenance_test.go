@@ -13,8 +13,8 @@ import (
 	"testing"
 
 	"github.com/fxamacker/cbor/v2"
-	"github.com/had-nu/wardex/v2/pkg/attest"
-	"github.com/had-nu/wardex/v2/pkg/provenance"
+	"github.com/had-nu/wardex/v3/pkg/attest"
+	"github.com/had-nu/wardex/v3/pkg/provenance"
 )
 
 // testAnchorer implements provenance.Anchorer for testing.

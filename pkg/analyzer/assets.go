@@ -7,7 +7,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // AssessAssets performs context-aware compliance assessment for a list of assets.

@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/trust"
+	"github.com/had-nu/wardex/v3/pkg/trust"
 )
 
 func assertKeyMatches(t *testing.T, priv ed25519.PrivateKey, pub ed25519.PublicKey) {

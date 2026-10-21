@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 func httpTestClient(t *testing.T, srv *httptest.Server) {

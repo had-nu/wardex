@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/trust"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/trust"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 func testTrustStore() *trust.TrustStore {

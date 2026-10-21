@@ -15,14 +15,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/pkg/accept"
-	"github.com/had-nu/wardex/v2/pkg/art14"
-	filecli "github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/duration"
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/pkg/accept"
+	"github.com/had-nu/wardex/v3/pkg/art14"
+	filecli "github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/duration"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 	"github.com/spf13/cobra"
 )
 

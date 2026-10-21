@@ -6,8 +6,8 @@ package assess
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 func TestBuildAssessDashboardMapsReport(t *testing.T) {

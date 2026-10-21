@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/statestore"
+	"github.com/had-nu/wardex/v3/pkg/statestore"
 	"github.com/spf13/cobra"
 )
 

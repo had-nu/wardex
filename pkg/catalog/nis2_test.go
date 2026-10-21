@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
 )
 
 // article212Letters are the ten lettered items of Article 21(2) of Directive

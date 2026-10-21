@@ -7,7 +7,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // These lists are built by ranging over a map. Go randomises map iteration, so

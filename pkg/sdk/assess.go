@@ -9,7 +9,7 @@
 //
 // # Usage
 //
-//	import "github.com/had-nu/wardex/v2/pkg/sdk"
+//	import "github.com/had-nu/wardex/v3/pkg/sdk"
 //
 //	func main() {
 //	    // Load controls from files or other sources
@@ -34,13 +34,13 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/had-nu/wardex/v2/pkg/analyzer"
-	"github.com/had-nu/wardex/v2/pkg/catalog"
-	"github.com/had-nu/wardex/v2/pkg/correlator"
-	"github.com/had-nu/wardex/v2/pkg/ingestion"
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/report"
-	"github.com/had-nu/wardex/v2/pkg/snapshot"
+	"github.com/had-nu/wardex/v3/pkg/analyzer"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/correlator"
+	"github.com/had-nu/wardex/v3/pkg/ingestion"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/report"
+	"github.com/had-nu/wardex/v3/pkg/snapshot"
 )
 
 // AssessmentResult contains the complete results of a compliance assessment.

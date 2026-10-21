@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/attest"
+	"github.com/had-nu/wardex/v3/pkg/attest"
 )
 
 func TestNewAttestation(t *testing.T) {

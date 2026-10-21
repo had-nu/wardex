@@ -12,10 +12,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/accept/audit"
-	"github.com/had-nu/wardex/v2/pkg/accept/verify"
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/accept/audit"
+	"github.com/had-nu/wardex/v3/pkg/accept/verify"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/model"
 	"gopkg.in/yaml.v3"
 )
 

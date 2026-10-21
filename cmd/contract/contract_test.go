@@ -3,7 +3,7 @@ package contract_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/v2/cmd/contract"
+	"github.com/had-nu/wardex/v3/cmd/contract"
 )
 
 func TestContractCmdHasSubcommands(t *testing.T) {
