@@ -5,7 +5,7 @@ package model
 
 import "time"
 
-// Vulnerability representa uma vulnerabilidade a ser avaliada pelo release gate.
+// Vulnerability represents a vulnerability to be evaluated by the release gate.
 type Vulnerability struct {
 	CVEID     string  `yaml:"cve_id"`
 	CVSSBase  float64 `yaml:"cvss_base"`
@@ -26,30 +26,30 @@ type VulnerabilityEnvelope struct {
 	EvaluatedAt time.Time `yaml:"evaluated_at,omitempty"`
 }
 
-// AssetContext descreve o contexto do asset.
-// Cada campo preenchido aumenta o nível de maturidade do gate inferido.
+// AssetContext describes the asset context.
+// Each populated field raises the inferred gate maturity level.
 type AssetContext struct {
-	Criticality    float64 `yaml:"criticality"` // 0.0–1.0: impacto de negócio se comprometido
+	Criticality    float64 `yaml:"criticality"` // 0.0–1.0: business impact if compromised
 	InternetFacing bool    `yaml:"internet_facing"`
-	RequiresAuth   bool    `yaml:"requires_auth"` // Reduz exposure em 0.2 quando true
+	RequiresAuth   bool    `yaml:"requires_auth"` // Reduces exposure by 0.2 when true
 	Environment    string  `yaml:"environment"`   // "production" | "staging" | "development"
 }
 
-// CompensatingControl representa um controle que reduz exploitabilidade.
+// CompensatingControl represents a control that reduces exploitability.
 type CompensatingControl struct {
 	Type          string  `yaml:"type"`          // "waf" | "network_segmentation" | "runtime_protection" | "ids"
-	Effectiveness float64 `yaml:"effectiveness"` // 0.0–0.8: fração de redução de risco aplicada
+	Effectiveness float64 `yaml:"effectiveness"` // 0.0–0.8: risk reduction fraction applied
 	Justification string  `yaml:"justification"`
 }
 
-// RiskBreakdown expõe cada componente do cálculo para rastreabilidade.
+// RiskBreakdown exposes each component of the calculation for traceability.
 type RiskBreakdown struct {
 	CVSSBase           float64
 	EPSSFactor         float64
 	AdjustedScore      float64
 	AssetCriticality   float64
 	ExposureFactor     float64
-	CompensatingEffect float64 // Efetividade combinada, clamped em 0.8
+	CompensatingEffect float64 // Combined effectiveness, clamped at 0.8
 	FinalReleaseRisk   float64
 }
 
@@ -62,20 +62,20 @@ const (
 	DecisionWarn  Decision = "warn"
 )
 
-// ReleaseDecision representa o resultado da avaliação de uma vulnerabilidade.
+// ReleaseDecision represents the result of a vulnerability evaluation.
 type ReleaseDecision struct {
 	Vulnerability Vulnerability
 	ReleaseRisk   float64
 	RiskAppetite  float64
 	Decision      Decision
 	Breakdown     RiskBreakdown
-	AuditTrail    string // Texto legível para auditoria
+	AuditTrail    string // Human-readable text for auditing
 }
 
-// GateReport agrega todas as decisões para um conjunto de vulnerabilidades.
+// GateReport aggregates all decisions for a set of vulnerabilities.
 type GateReport struct {
 	OverallDecision   Decision
-	GateMaturityLevel int // 1–5, inferido dos campos preenchidos
+	GateMaturityLevel int // 1–5, inferred from the populated fields
 	Decisions         []ReleaseDecision
 	BlockedCount      int
 	AllowedCount      int

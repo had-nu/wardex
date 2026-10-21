@@ -9,14 +9,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// TestPublishedExamplesMatchSchema verifica que os ficheiros publicados como
-// exemplo carregam contra o schema vivo sem campos desconhecidos. É a guard-rail
-// que impede repetição da regressão de v1.9.1: schema documentado divergir do
-// schema do código sem detecção em CI.
+// TestPublishedExamplesMatchSchema checks that the files published as
+// examples load against the live schema without unknown fields. It is the
+// guard-rail that prevents a repeat of the v1.9.1 regression: the documented
+// schema diverging from the code schema without detection in CI.
 //
-// `KnownFields(true)` força o decoder a falhar em qualquer chave que não
-// corresponda a um yaml tag de Config, AssetContext, CompensatingControl ou
-// outras structs nested.
+// `KnownFields(true)` makes the decoder fail on any key that does not match a
+// YAML tag of Config, AssetContext, CompensatingControl or other nested
+// structs.
 func TestPublishedExamplesMatchSchema(t *testing.T) {
 	targets := []struct {
 		name string

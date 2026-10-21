@@ -34,19 +34,19 @@ func TestExportJSONLCommand(t *testing.T) {
 
 	lines := strings.Split(strings.TrimSpace(out.String()), "\n")
 	if len(lines) != 3 {
-		t.Errorf("foram entregues %d linhas, esperado 3", len(lines))
+		t.Errorf("delivered %d lines, want 3", len(lines))
 	}
 	for _, l := range lines {
 		if l == "" || !strings.HasPrefix(l, "{") {
-			t.Errorf("linha não-JSONL: %q", l)
+			t.Errorf("line is not JSONL: %q", l)
 		}
 	}
 	meta := errBuf.String()
 	if !strings.Contains(meta, "x-wardex-has-more=true") {
-		t.Errorf("metadata devia ter has-more true:\n%s", meta)
+		t.Errorf("metadata should have has-more true:\n%s", meta)
 	}
 	if !strings.Contains(meta, "x-wardex-next-cursor=") {
-		t.Errorf("metadata devia ter next-cursor:\n%s", meta)
+		t.Errorf("metadata should have next-cursor:\n%s", meta)
 	}
 }
 
@@ -68,16 +68,16 @@ func TestExportCSVCommand(t *testing.T) {
 
 	rows := strings.Split(strings.TrimSpace(out.String()), "\n")
 	if len(rows) != 3 { // header + 2 rows
-		t.Fatalf("csv rows = %d, esperado 3 (header+2)", len(rows))
+		t.Fatalf("csv rows = %d, want 3 (header+2)", len(rows))
 	}
 	header := rows[0]
 	for _, col := range []string{"ts", "event", "previous_entry_hash", "release_version"} {
 		if !strings.Contains(header, col) {
-			t.Errorf("header sem coluna %q: %s", col, header)
+			t.Errorf("header without column %q: %s", col, header)
 		}
 	}
 	if !strings.Contains(errBuf.String(), "x-wardex-has-more=false") {
-		t.Errorf("metadata devia ter has-more false:\n%s", errBuf.String())
+		t.Errorf("metadata should have has-more false:\n%s", errBuf.String())
 	}
 }
 
@@ -98,10 +98,10 @@ func TestExportTailCommand(t *testing.T) {
 	}
 	lines := strings.Split(strings.TrimSpace(out.String()), "\n")
 	if len(lines) != 2 {
-		t.Errorf("tail entregou %d linhas, esperado 2", len(lines))
+		t.Errorf("tail delivered %d lines, want 2", len(lines))
 	}
 	if !strings.Contains(out.String(), "cfg-004") {
-		t.Errorf("tail devia incluir a entrada mais recente (cfg-004):\n%s", out.String())
+		t.Errorf("tail should include the most recent entry (cfg-004):\n%s", out.String())
 	}
 }
 
@@ -121,7 +121,7 @@ func genExportLog(t *testing.T, dir string, n int) {
 		prev = h
 	}
 	if err := os.WriteFile(logPath, b.Bytes(), 0o600); err != nil {
-		t.Fatalf("escrever log: %v", err)
+		t.Fatalf("write log: %v", err)
 	}
 }
 

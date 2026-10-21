@@ -9,10 +9,10 @@ import (
 	"github.com/had-nu/wardex/v2/pkg/model"
 )
 
-// scoreNorm normaliza o output para a escala [0, 1.5] do paper v4 (§IV.A — Proposição 2).
-// R_normalizado = R_absoluto / scoreNorm, com CVSS_max/10 = 1.
-// Absorvido internamente: os YAML de configuração expressam os thresholds directamente
-// em [0, 1.5] sem necessitar de ajustamento.
+// scoreNorm normalises the output to the [0, 1.5] scale of paper v4 (§IV.A — Proposition 2).
+// R_normalised = R_absolute / scoreNorm, with CVSS_max/10 = 1.
+// Absorbed internally: the configuration YAML expresses the thresholds directly
+// in [0, 1.5] without needing adjustment.
 const scoreNorm = 10.0
 
 // CalculateRisk generates a risk breakdown for a single vulnerability in context.
@@ -45,7 +45,7 @@ func CalculateRisk(vuln model.Vulnerability, ctx model.AssetContext, comps []mod
 	if epss == 0.0 {
 		epss = 1.0
 	}
-	// Normalização v4: CVSS/10 → score base ∈ [0, 1]
+	// v4 normalisation: CVSS/10 → base score ∈ [0, 1]
 	adjusted := (vuln.CVSSBase / scoreNorm) * epss
 
 	internetWeight := 0.6

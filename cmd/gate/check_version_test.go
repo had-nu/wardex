@@ -57,7 +57,7 @@ func TestCheckVersionDuplicateExit13(t *testing.T) {
 
 	code, stderr := runCheck(logPath, "9.9.9")
 	if code != exitcodes.DuplicateRelease {
-		t.Errorf("exit = %d, esperado %d (stderr: %s)", code, exitcodes.DuplicateRelease, stderr)
+		t.Errorf("exit = %d, want %d (stderr: %s)", code, exitcodes.DuplicateRelease, stderr)
 	}
 }
 
@@ -68,7 +68,7 @@ func TestCheckVersionNonInteractiveKeepsMachineOutput(t *testing.T) {
 
 	code, stdout, _ := runCheckWithOutput(logPath, "9.9.9")
 	if code != exitcodes.DuplicateRelease {
-		t.Fatalf("exit = %d, esperado %d", code, exitcodes.DuplicateRelease)
+		t.Fatalf("exit = %d, want %d", code, exitcodes.DuplicateRelease)
 	}
 	if !strings.Contains(stdout, "[DUPLICATE RELEASE]") {
 		t.Fatalf("expected legacy result on configured stdout, got %q", stdout)
@@ -82,7 +82,7 @@ func TestCheckVersionNotSealedExit0(t *testing.T) {
 
 	code, _ := runCheck(logPath, "9.9.8")
 	if code != 0 {
-		t.Errorf("exit = %d, esperado 0", code)
+		t.Errorf("exit = %d, want 0", code)
 	}
 }
 
@@ -98,7 +98,7 @@ func TestCheckVersionRebuildsStaleIndex(t *testing.T) {
 
 	code, stderr := runCheck(logPath, "9.9.9")
 	if code != exitcodes.DuplicateRelease {
-		t.Errorf("exit = %d, esperado %d (stderr: %s)", code, exitcodes.DuplicateRelease, stderr)
+		t.Errorf("exit = %d, want %d (stderr: %s)", code, exitcodes.DuplicateRelease, stderr)
 	}
 
 	// The rebuilt index should now be fresh and valid.
@@ -107,7 +107,7 @@ func TestCheckVersionRebuildsStaleIndex(t *testing.T) {
 		t.Fatalf("load rebuilt index: %v", err)
 	}
 	if !reg.Has("9.9.9") {
-		t.Error("índice reconstruído deveria conter a versão")
+		t.Error("rebuilt index should contain the version")
 	}
 }
 
@@ -125,16 +125,16 @@ func TestCheckVersionSealedAfterIndex(t *testing.T) {
 	// A stale index would miss 2.0.0; check-version must notice and rebuild.
 	code, stderr := runCheck(logPath, "2.0.0")
 	if code != exitcodes.DuplicateRelease {
-		t.Errorf("exit = %d, esperado %d (stderr: %s)", code, exitcodes.DuplicateRelease, stderr)
+		t.Errorf("exit = %d, want %d (stderr: %s)", code, exitcodes.DuplicateRelease, stderr)
 	}
 }
 
 func TestCheckVersionMissingLogExit1(t *testing.T) {
 	code, stderr := runCheck(filepath.Join(t.TempDir(), "does-not-exist.log"), "1.0.0")
 	if code != exitcodes.GenericError {
-		t.Errorf("exit = %d, esperado %d", code, exitcodes.GenericError)
+		t.Errorf("exit = %d, want %d", code, exitcodes.GenericError)
 	}
 	if stderr == "" {
-		t.Error("erro deveria ser impresso")
+		t.Error("error should be printed")
 	}
 }

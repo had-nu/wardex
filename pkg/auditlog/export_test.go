@@ -47,17 +47,17 @@ func TestExportLimitPlusOneHasMore(t *testing.T) {
 		t.Fatalf("export: %v", err)
 	}
 	if len(res.Entries) != 3 {
-		t.Errorf("entries = %d, esperado 3", len(res.Entries))
+		t.Errorf("entries = %d, want 3", len(res.Entries))
 	}
 	if !res.HasMore {
-		t.Error("has_more devia ser true com 5 linhas e limit 3")
+		t.Error("has_more should be true with 5 lines and limit 3")
 	}
 	if res.NextCursor == "" {
-		t.Error("next_cursor não devia ser vazio")
+		t.Error("next_cursor should not be empty")
 	}
 	last := res.Entries[len(res.Entries)-1]
 	if last.Hash != res.NextCursor {
-		t.Errorf("next_cursor=%s != hash da última entrada %s", res.NextCursor, last.Hash)
+		t.Errorf("next_cursor=%s != hash of the last entry %s", res.NextCursor, last.Hash)
 	}
 }
 
@@ -68,10 +68,10 @@ func TestExportLimitEqualsSizeNoMore(t *testing.T) {
 		t.Fatalf("export: %v", err)
 	}
 	if len(res.Entries) != 3 {
-		t.Errorf("entries = %d, esperado 3", len(res.Entries))
+		t.Errorf("entries = %d, want 3", len(res.Entries))
 	}
 	if res.HasMore {
-		t.Error("has_more devia ser false quando o limite é exacto")
+		t.Error("has_more should be false when the limit is exact")
 	}
 }
 
@@ -90,10 +90,10 @@ func TestExportResumeByCursor(t *testing.T) {
 		t.Fatalf("page2 entries = %d", len(page2.Entries))
 	}
 	if page2.Entries[0].PrevHash != page1.NextCursor {
-		t.Errorf("retoma não encadeia: prev=%s cursor=%s", page2.Entries[0].PrevHash, page1.NextCursor)
+		t.Errorf("resume does not chain: prev=%s cursor=%s", page2.Entries[0].PrevHash, page1.NextCursor)
 	}
 	if !page2.HasMore {
-		t.Error("page2 devia ter mais entradas (6 total, 4 entregues)")
+		t.Error("page2 should have more entries (6 total, 4 delivered)")
 	}
 
 	page3, err := auditlog.Export(bytes.NewReader(chain), auditlog.ExportOptions{Limit: 5, Cursor: page2.NextCursor})
@@ -101,10 +101,10 @@ func TestExportResumeByCursor(t *testing.T) {
 		t.Fatalf("page3: %v", err)
 	}
 	if len(page3.Entries) != 2 {
-		t.Errorf("page3 entries = %d, esperado 2", len(page3.Entries))
+		t.Errorf("page3 entries = %d, want 2", len(page3.Entries))
 	}
 	if page3.HasMore {
-		t.Error("page3 devia ser a última página")
+		t.Error("page3 should be the last page")
 	}
 }
 
@@ -125,10 +125,10 @@ func TestExportCursorTamperedDetection(t *testing.T) {
 	}
 	_, err = auditlog.Export(bytes.NewReader(buf.Bytes()), auditlog.ExportOptions{Limit: 5, Cursor: page1.NextCursor})
 	if err == nil {
-		t.Fatal("retoma após tamper devia falhar")
+		t.Fatal("resume after tamper should fail")
 	}
 	if !errors.Is(err, auditlog.ErrChainTampered) {
-		t.Errorf("erro devia ser ErrChainTampered, veio %v", err)
+		t.Errorf("error should be ErrChainTampered, got %v", err)
 	}
 }
 
@@ -139,7 +139,7 @@ func TestExportCursorNotFound(t *testing.T) {
 		Cursor: "0000000000000000000000000000000000000000000000000000000000000000",
 	})
 	if err == nil {
-		t.Fatal("cursor não existente devia falhar")
+		t.Fatal("non-existent cursor should fail")
 	}
 }
 
@@ -150,12 +150,12 @@ func TestExportTailReturnsLastN(t *testing.T) {
 		t.Fatalf("export tail: %v", err)
 	}
 	if len(res.Entries) != 2 {
-		t.Fatalf("tail entries = %d, esperado 2", len(res.Entries))
+		t.Fatalf("tail entries = %d, want 2", len(res.Entries))
 	}
 	if res.HasMore {
-		t.Error("tail não devia reportar has_more")
+		t.Error("tail should not report has_more")
 	}
 	if res.NextCursor == "" {
-		t.Error("tail next_cursor não devia ser vazio")
+		t.Error("tail next_cursor should not be empty")
 	}
 }

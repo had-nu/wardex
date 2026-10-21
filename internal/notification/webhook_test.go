@@ -40,10 +40,10 @@ func TestWebhookCalledOnDivergence(t *testing.T) {
 		t.Fatalf("Send: %v", err)
 	}
 	if !called {
-		t.Error("webhook nao foi chamado")
+		t.Error("webhook was not called")
 	}
 	if received.EventType != "cpl.verify_link.mismatch" {
-		t.Errorf("event_type errado: %q", received.EventType)
+		t.Errorf("wrong event_type: %q", received.EventType)
 	}
 }
 
@@ -51,7 +51,7 @@ func TestWebhookNotCalledWhenURLEmpty(t *testing.T) {
 	cfg := notification.WebhookConfig{URL: ""}
 	err := notification.Send(context.Background(), cfg, notification.DivergencePayload{})
 	if err != nil {
-		t.Errorf("URL vazia deve retornar nil, obteve: %v", err)
+		t.Errorf("empty URL should return nil, got: %v", err)
 	}
 }
 
@@ -71,10 +71,10 @@ func TestWebhookTimeoutDoesNotBlock(t *testing.T) {
 	elapsed := time.Since(start)
 
 	if err == nil {
-		t.Error("esperava erro de timeout, obteve nil")
+		t.Error("expected a timeout error, got nil")
 	}
 	if elapsed > 3*time.Second {
-		t.Errorf("Send bloqueou alem do timeout: %v", elapsed)
+		t.Errorf("Send blocked beyond the timeout: %v", elapsed)
 	}
 }
 
@@ -95,7 +95,7 @@ func TestWebhookAuthHeaderPresent(t *testing.T) {
 	_ = notification.Send(context.Background(), cfg, notification.DivergencePayload{})
 
 	if gotAuth != "Bearer test-token-abc" {
-		t.Errorf("Authorization header errado: %q", gotAuth)
+		t.Errorf("wrong Authorization header: %q", gotAuth)
 	}
 }
 
@@ -108,6 +108,6 @@ func TestWebhookNonOKStatusReturnsError(t *testing.T) {
 	cfg := notification.WebhookConfig{URL: srv.URL, TimeoutSeconds: 5}
 	err := notification.Send(context.Background(), cfg, notification.DivergencePayload{})
 	if err == nil {
-		t.Error("status 500 deve retornar erro, obteve nil")
+		t.Error("status 500 should return an error, got nil")
 	}
 }

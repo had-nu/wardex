@@ -22,7 +22,7 @@ func TestVerifyLinkAllOK(t *testing.T) {
 	}
 	for _, r := range results {
 		if r.Status != cpl.StatusOK {
-			t.Errorf("entrada %s: %v (esperava OK)", r.EntryTimestamp, r.Status)
+			t.Errorf("entry %s: %v (want OK)", r.EntryTimestamp, r.Status)
 		}
 	}
 }
@@ -43,7 +43,7 @@ func TestVerifyLinkMismatch(t *testing.T) {
 		}
 	}
 	if mismatches == 0 {
-		t.Error("divergencia esperada nao detectada")
+		t.Error("expected divergence not detected")
 	}
 }
 
@@ -67,7 +67,7 @@ func TestVerifyLinkMissing(t *testing.T) {
 		}
 	}
 	if missing == 0 {
-		t.Error("entrada MISSING esperada nao detectada")
+		t.Error("expected MISSING entry not detected")
 	}
 }
 
@@ -84,10 +84,10 @@ func TestVerifyLinkSchemaVersionMatch(t *testing.T) {
 		t.Fatalf("verify-link: %v", err)
 	}
 	if len(results) != 1 || results[0].Status != cpl.StatusOK {
-		t.Errorf("schema v2 correspondente deveria ser OK: %+v", results)
+		t.Errorf("matching v2 schema should be OK: %+v", results)
 	}
 	if results[0].RecordedSchemaVersion != 2 {
-		t.Errorf("schema registado = %d, esperado 2", results[0].RecordedSchemaVersion)
+		t.Errorf("recorded schema = %d, want 2", results[0].RecordedSchemaVersion)
 	}
 }
 
@@ -104,7 +104,7 @@ func TestVerifyLinkSchemaVersionMismatch(t *testing.T) {
 		t.Fatalf("verify-link: %v", err)
 	}
 	if len(results) != 1 || results[0].Status != cpl.StatusSchemaVersion {
-		t.Errorf("schema v1 vs esperado v2 deveria reportar SCHEMA_VERSION: %+v", results)
+		t.Errorf("v1 vs expected v2 schema should report SCHEMA_VERSION: %+v", results)
 	}
 }
 
@@ -123,7 +123,7 @@ func TestVerifyLinkLegacyEntryCountsAsV1(t *testing.T) {
 		t.Fatalf("verify-link: %v", err)
 	}
 	if results[0].Status != cpl.StatusOK {
-		t.Errorf("entrada legacy vs esperado v1 deveria ser OK: %+v", results[0])
+		t.Errorf("legacy entry vs expected v1 should be OK: %+v", results[0])
 	}
 
 	results, err = cpl.VerifyLinkWithConfigAndSchemaVersion(matching, raw, 2)
@@ -131,7 +131,7 @@ func TestVerifyLinkLegacyEntryCountsAsV1(t *testing.T) {
 		t.Fatalf("verify-link: %v", err)
 	}
 	if results[0].Status != cpl.StatusSchemaVersion {
-		t.Errorf("entrada legacy vs esperado v2 deveria reportar SCHEMA_VERSION: %+v", results[0])
+		t.Errorf("legacy entry vs expected v2 should report SCHEMA_VERSION: %+v", results[0])
 	}
 }
 
@@ -167,9 +167,9 @@ func TestVerifyLinkNoSchemaCheckWhenExpectedZero(t *testing.T) {
 		t.Fatalf("verify-link: %v", err)
 	}
 	if results[0].Status != cpl.StatusOK {
-		t.Errorf("sem expectativa de schema, hash OK deveria ser OK: %+v", results[0])
+		t.Errorf("without a schema expectation, an OK hash should be OK: %+v", results[0])
 	}
 	if results[0].RecordedSchemaVersion != 0 {
-		t.Errorf("schema nao deveria ser reportado sem expectativa: %+v", results[0])
+		t.Errorf("schema should not be reported without an expectation: %+v", results[0])
 	}
 }

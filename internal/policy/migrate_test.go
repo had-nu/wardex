@@ -35,7 +35,7 @@ func TestLoadDomainLegacyV1MigratesInMemory(t *testing.T) {
 		t.Fatalf("load legacy domain: %v", err)
 	}
 	if d.FormatVersion != policy.CurrentFormatVersion {
-		t.Errorf("legacy v1 migrado para v%d, obtido v%d", policy.CurrentFormatVersion, d.FormatVersion)
+		t.Errorf("legacy v1 migrated to v%d, got v%d", policy.CurrentFormatVersion, d.FormatVersion)
 	}
 	// P4: origin must not be mutated.
 	raw, err := os.ReadFile(path)
@@ -43,7 +43,7 @@ func TestLoadDomainLegacyV1MigratesInMemory(t *testing.T) {
 		t.Fatalf("read origin: %v", err)
 	}
 	if strings.Contains(string(raw), "format_version") {
-		t.Error("origem foi mutada com format_version")
+		t.Error("source was mutated with format_version")
 	}
 }
 
@@ -55,7 +55,7 @@ func TestLoadDomainExplicitV1Migrates(t *testing.T) {
 		t.Fatalf("load explicit v1 domain: %v", err)
 	}
 	if d.FormatVersion != policy.CurrentFormatVersion {
-		t.Errorf("v1 explicito migrado para v%d, obtido v%d", policy.CurrentFormatVersion, d.FormatVersion)
+		t.Errorf("explicit v1 migrated to v%d, got v%d", policy.CurrentFormatVersion, d.FormatVersion)
 	}
 }
 
@@ -67,7 +67,7 @@ func TestLoadDomainCurrentV2(t *testing.T) {
 		t.Fatalf("load v2 domain: %v", err)
 	}
 	if d.FormatVersion != 2 {
-		t.Errorf("v2 esperado, obtido v%d", d.FormatVersion)
+		t.Errorf("want v2, got v%d", d.FormatVersion)
 	}
 }
 
@@ -76,7 +76,7 @@ func TestLoadDomainV2RejectsUnknownField(t *testing.T) {
 	path := writeDomain(t, content)
 	_, err := policy.LoadDomain(path)
 	if err == nil {
-		t.Fatal("v2 com campo desconhecido deveria falhar (discriminar typo)")
+		t.Fatal("v2 with an unknown field should fail (to catch typos)")
 	}
 }
 
@@ -85,18 +85,18 @@ func TestLoadDomainFutureVersionRejected(t *testing.T) {
 	path := writeDomain(t, content)
 	_, err := policy.LoadDomain(path)
 	if err == nil {
-		t.Fatal("formato futuro deveria ser rejeitado explicitamente")
+		t.Fatal("future format should be rejected explicitly")
 	}
 }
 
 func TestMigrateMissingStepErrors(t *testing.T) {
 	d := &policy.DomainFile{FormatVersion: 0}
 	if err := policy.Migrate(d, policy.CurrentFormatVersion); err == nil {
-		t.Fatal("migracao a partir de v0 invalida deveria falhar")
+		t.Fatal("migration from an invalid v0 should fail")
 	}
 	d = &policy.DomainFile{FormatVersion: 99}
 	if err := policy.Migrate(d, policy.CurrentFormatVersion); err == nil {
-		t.Fatal("migracao de versao futura deveria falhar")
+		t.Fatal("migration from a future version should fail")
 	}
 }
 
@@ -105,9 +105,9 @@ func TestTheCurrentVersionIsOneWeSupport(t *testing.T) {
 	path := writeDomain(t, content)
 	d, err := policy.LoadDomain(path)
 	if err != nil {
-		t.Fatalf("versao corrente deveria ser suportada: %v", err)
+		t.Fatalf("current version should be supported: %v", err)
 	}
 	if d.FormatVersion != policy.CurrentFormatVersion {
-		t.Errorf("versao corrente %d != suportada %d", d.FormatVersion, policy.CurrentFormatVersion)
+		t.Errorf("current version %d != supported %d", d.FormatVersion, policy.CurrentFormatVersion)
 	}
 }
