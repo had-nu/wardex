@@ -21,6 +21,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"unicode"
@@ -489,12 +490,7 @@ func hasTableRow(lines []string, start, end int, row string) bool {
 		return false
 	}
 	pattern := regexp.MustCompile(`^\|\s*` + regexp.QuoteMeta(row) + `\s*\|`)
-	for _, line := range lines[start:end] {
-		if pattern.MatchString(line) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(lines[start:end], pattern.MatchString)
 }
 
 func firstLineWithPrefix(lines []string, prefix string) int {
@@ -507,11 +503,8 @@ func firstLineWithPrefix(lines []string, prefix string) int {
 }
 
 func bylineLine(lines []string) int {
-	limit := 12
-	if len(lines) < limit {
-		limit = len(lines)
-	}
-	for i := 0; i < limit; i++ {
+	limit := min(len(lines), 12)
+	for i := range limit {
 		line := strings.TrimSpace(lines[i])
 		if strings.HasPrefix(line, "Wardex · ") && strings.Contains(line, "base:") {
 			return i + 1
