@@ -93,6 +93,60 @@ func TestRunGateAllow(t *testing.T) {
 	}
 }
 
+// TestRunGateSupportPeriodWarnings holds the Article 13(8) soft check to its
+// declared surface: the warnings exist only for configurations that declare a
+// CRA product, and a complete record stays silent.
+func TestRunGateSupportPeriodWarnings(t *testing.T) {
+	cases := []struct {
+		name     string
+		cra      string
+		wantWarn bool
+	}{
+		{
+			name:     "no CRA product declared, no warning",
+			wantWarn: false,
+		},
+		{
+			name:     "declared product without a support period warns",
+			cra:      "cra:\n  art14:\n    product_name: \"Test Product\"\n",
+			wantWarn: true,
+		},
+		{
+			name: "declared product with a complete support period stays quiet",
+			cra: "cra:\n  art14:\n    product_name: \"Test Product\"\n" +
+				"  support_period:\n    years: 7\n    justification: \"Contracts run for seven years.\"\n    vdp_reference: \"https://example.invalid/vdp\"\n",
+			wantWarn: false,
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := t.TempDir()
+			t.Chdir(dir)
+			setupGateEnv(t)
+			writeGateFixture(t, dir, "config.yaml",
+				"release_gate: {enabled: true, risk_appetite: 1.0}\n"+tc.cra)
+			writeGateFixture(t, dir, "controls.yaml", gateControlsYAML)
+			writeGateFixture(t, dir, "evidence.yaml", allowEvidence())
+
+			var stderr bytes.Buffer
+			opts := baseGateOptions(dir)
+			opts.Stderr = &stderr
+			opts.GateLogPath = "gate.log"
+			code, err := RunGate(context.Background(), opts)
+			if err != nil {
+				t.Fatalf("RunGate failed: %v", err)
+			}
+			if code != exitcodes.OK {
+				t.Fatalf("expected OK, got %d (stderr: %s)", code, stderr.String())
+			}
+			got := strings.Contains(stderr.String(), "cra.support_period.years is not set")
+			if got != tc.wantWarn {
+				t.Fatalf("support-period warning present = %v, want %v (stderr: %q)", got, tc.wantWarn, stderr.String())
+			}
+		})
+	}
+}
+
 func TestRunGateBlock(t *testing.T) {
 	dir := t.TempDir()
 	t.Chdir(dir)
