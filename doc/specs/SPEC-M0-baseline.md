@@ -320,7 +320,7 @@ The test plan covers the module itself, not the product flows. It includes:
 - **Floors:** increase accepted, decrease rejected, new package without a floor.
 - **Harness:** double run on every case.
 - **Spec normalisation:** synthetic specs, one violation per `check-specs` rule (name, byline, missing or out-of-order section, incomplete card, duplicate ID, broken cross-reference, forbidden Portuguese term such as `pacote`, missing glossary definition); the template complies with the same rules.
-- **Language checker:** a fixture with legitimate `package` uses passes; `pacote` fails; the M0 spec and the template pass; the baseline ratchets down.
+- **Spec language rules:** a fixture with legitimate `package` uses passes; `pacote` fails; the M0 spec and the template pass. The repository-wide `check-language` and its baseline belong to the parallel UK English workstream, not to M0.
 - **Sensitivity (manual, before closing the module):** apply five mutants to `main`; the golden run must fail for at least four. (m1) the fixed maturity threshold in `EvaluateCoverage`; (m2) a gate exit code; (m3) remove `layer_delta` from the `assess` JSON; (m4) reverse the roadmap order; (m5) the confidence returned by `matchDomains`.
 
   **Result (2026-10-21).** All five mutants were detected by `make golden`: m1 failed G1 and G2; m2 failed the duplicate `gate check-version` case in G8; m3, m4 and m5 failed G1 and G2. Each mutant was applied to a clean tree, the golden run failed, and the file was restored; the final `git diff --stat v2.7.0-rc.1 -- pkg cmd` is empty.
@@ -351,7 +351,7 @@ Dependencies: P1 before P5; P2 before P3; P7 before P8; P4, P6 and P7 are indepe
 - Hygiene A is complete and `check-doclinks` passes.
 - The 7 ADRs, the spec template and the glossary are in the repository.
 - `check-specs` runs in CI; all specs are compliant or `legacy-pt`, and this spec is converted.
-- All new and changed text owned by M0 is UK English; `check-language` passes for the M0 scope. The repository-wide documentation migration is a separate workstream and is not an M0 exit criterion.
+- All new and changed text owned by M0 is UK English. The M0-owned specs and template pass the language rules in `check-specs`; the ADRs and tool text were reviewed. `check-language` and its repository-wide baseline belong to the parallel UK English workstream (section 7) and are not an M0 exit criterion.
 - The help (`--help`) and manual (`README.md`/`docs/`) for new or changed commands are up to date; `check-doclinks` passes.
 - Sensitivity is ≥ 4 of 5.
 - No production file has changed since `v2.7.0-rc.1`, proven with `git diff --stat v2.7.0-rc.1..HEAD -- pkg cmd`.
