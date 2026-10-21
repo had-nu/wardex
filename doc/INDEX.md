@@ -6,8 +6,8 @@ the repository.
 
 ## Where things live
 
-There are four directories with documentation in them, and they do different
-jobs. Confusing them was the reason this file exists.
+There are five directories with documentation or verification inputs in them,
+and they do different jobs. Confusing them was the reason this file exists.
 
 | Path | Holds | Markdown? |
 | --- | --- | --- |
@@ -15,6 +15,7 @@ jobs. Confusing them was the reason this file exists.
 | `docs/` | The published website, served by GitHub Pages from the `dev` branch. | no |
 | `spec/` | CDDL schemas. Machine-readable, referenced from Go comments. | no |
 | `internal/` | Go packages only. No documents. | no |
+| `test/` | Black-box golden cases, security tests and fixtures. No prose. | no |
 
 `docs/` and `doc/` differ by one letter and have nothing in common beyond that.
 A markdown file in `docs/` is misplaced: `doc/regulatory-context.md` sat there

@@ -1,4 +1,4 @@
-.PHONY: all build test lint security specs reproducible clean golden golden-update boundaries coverage-table ratchet ratchet-update
+.PHONY: all build test lint security specs reproducible clean golden golden-update boundaries coverage-table ratchet ratchet-update baseline-check
 
 BINARY := wardex
 PKG    := ./...
@@ -56,6 +56,17 @@ ratchet-update:
 	go test -coverprofile=coverage.out ./...
 	go run ./tools/check-ratchet -coverage coverage.out -update
 	go run ./tools/check-ratchet -nosec -update
+
+# Reproduce the CI baseline locally. go fix must not leave changes; the other
+# targets run the same commands as the CI jobs.
+baseline-check:
+	go fix ./...
+	git diff --exit-code
+	go vet ./...
+	$(MAKE) boundaries
+	$(MAKE) golden
+	$(MAKE) ratchet
+	$(MAKE) specs
 
 security:
 	govulncheck $(PKG)

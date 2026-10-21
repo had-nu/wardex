@@ -419,7 +419,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   transparency, human oversight, GPAI, post-market monitoring). `wardex evaluate
   --framework eu_ai_act` enables EU AI Act compliance evaluation.
 - **Gleipnir-anchored chain seal**: Release artifacts (wardex binary, config, README)
-  are now sealed at block ~0 via Gleipnir-embedded anchoring. `chain-seal-v2.4.0.json`
+  are now sealed at block ~0 via Gleipnir-embedded anchoring. [chain-seal-v2.4.0.json](doc/releases/seals/chain-seal-v2.4.0.json)
   contains the chain hash and per-artifact SHA-256 digests.
 - **gRPC provenance driver** (isolated): New `pkg/provenance/grpc.go` behind build tag
   (`grpc`) to prevent protobuf init panic in non-gRPC builds.
