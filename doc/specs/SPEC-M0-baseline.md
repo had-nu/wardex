@@ -299,7 +299,7 @@ The test plan covers the module itself, not the product flows. It includes:
 
 | Step | Work | Acceptance criterion |
 | --- | --- | --- |
-| M0-P0 | Section 4 (M0-P0.1 done; M0-P0.2 to M0-P0.4 to do) | `v2.7.0-rc.1` published as a pre-release, with C1, B1, M0-P0.2, M0-P0.3 and CHANGELOG |
+| M0-P0 | Section 4 (M0-P0.1 to M0-P0.4 done) | `v2.7.0-rc.1` published as a pre-release, with C1, B1, M0-P0.2, M0-P0.3 and CHANGELOG |
 | M0-P1 | Measure real coverage per package in CI | table per package published as an artefact |
 | M0-P2 | Harness + normaliser + 3 G1 cases | double run stable; 3 cases green in CI |
 | M0-P3 | Cases G1 to G10, with the G1 matrix generated from data | ≥ 3 cases per flow green on rc.1; complete matrix green before closing M0 |

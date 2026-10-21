@@ -6,6 +6,109 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.0-rc.1] — 2026-10-21
+
+> Pre-release of the v2.7.0 line, cut as the modularisation baseline (M0). It
+> carries the catalogue corrections merged since v2.6.1, the incompatible
+> removal of SOC 2, and the M0 baseline changes: normalised specifications,
+> UK English user-facing output, the catalogue domain fix, and the CRA
+> Article 13(8) support-period soft check. `v2.7.0` follows this pre-release.
+
+### Removed — incompatible
+
+- **SOC 2.** The AICPA framework has no standing in EU law, and a catalogue
+  is the part of this product a regulator reads. The registry entry,
+  `pkg/catalog/soc2.yaml`, `frameworks/soc2/`, the Helm ConfigMap policy
+  block, the Action metadata and the `values.yaml` comment are removed
+  (eight references in fourteen files). `--framework soc2` now fails with an
+  error naming the frameworks that remain. Anyone pinning `soc2` must stay
+  on v2.6.1 or move to `nis2`, `iso27001` or `dora`. The release notes of
+  v1.5.0 to v2.1.0 still mention SOC 2, because those record that support
+  was added.
+
+### Added
+
+- **GDPR (Regulation (EU) 2016/679)** as the seventh framework: 22 controls
+  mapped to the article that imposes each obligation, with every article
+  number and title checked against the Official Journal, CELEX 32016R0679.
+- **CRA (Regulation (EU) 2024/2847)**: 41 controls and 56 practices read from
+  the Regulation, covering Article 13, Article 14, Article 28, Annex I Parts
+  I and II, Annex V and Annex VII.
+- **EU AI Act (Regulation (EU) 2024/1689): six missing obligations** that
+  bind a provider or a deployer — Articles 8, 48, 51, 52, 54 and 59.
+  Article 48 mattered most: the catalogue carried the Article 47 declaration
+  of conformity and not the CE marking that accompanies it.
+
+### Fixed — catalogues
+
+- **NIS2 identifiers.** Fifteen of twenty-five controls carried Article
+  21(2) letters the Directive does not have, and four more carried a letter
+  whose subject is different; the letter that means "assess whether the
+  measures work" pointed at cryptography instead. The ten lettered items now
+  carry the Directive's own subjects, Article 20 and Article 23 have their
+  own controls, and the supporting measures moved to `NIS2.SUP.*`.
+- **DORA mapping.** Every control now sits under the article whose subject it
+  describes: identification is Article 8 and not Article 7, the key
+  contractual provisions are Article 30, and subcontracting is inside
+  Article 30. Articles that bind the Lead Overseer and the supervisory
+  authorities are no longer scored as a financial entity's own.
+- **NIST CSF 2.0.** Nine Categories that the Framework does not contain
+  (DE.DP, DE.MI, ID.GV, ID.SC, PR.AW, PR.MA, PR.PM, RS.IM, RS.SC) are
+  replaced by the 22 Categories of Table 1, including PR.IR.
+- **ISO/IEC 27001 Annex A.** Eighty-eight of ninety-three control names were
+  the identifier repeated; every title is now the one ISO/IEC 27002:2022
+  gives.
+- **GDPR DPIA and automated decisions** are grounded in WP 248 rev.01: the
+  nine criteria for screening, and the reading of "similarly significantly
+  affects".
+- **Maturity averages no longer discard controls silently.**
+  `MaturityByDomain` reported only the four Annex A domains and dropped the
+  rest with a stderr warning; NIS2's `process` domain lost six controls from
+  the average. Extra domains are now reported, Annex A first and the rest
+  sorted.
+- **Catalogue domains (`M0-P0.2`).** Only `annex_a.yaml` declared `domains`;
+  the other six catalogues declare a single `domain`, and the correlator read
+  `Domains`. Controls in GDPR, NIS2, DORA, the EU AI Act and the CRA could
+  never match declaratively: every correlation fell back to keyword inference
+  (low confidence), and complete implementations stayed at Partial.
+  `catalog.Load` now derives `Domains` from `Domain`, so those mappings
+  become high confidence and a complete implementation reaches Covered.
+- **`--framework` help** and the `assess` error hint derive from the
+  registry; the hand-kept list had already gone stale, omitting `gdpr` and
+  `cra` while naming six frameworks of seven.
+
+### Changed — behaviour and output
+
+- **UK English user-facing output (`M0-P0.3`).** CLI help, errors, warnings,
+  gap reasons, test messages and internal comments are migrated. JSON v1
+  keys and enum values are unchanged; only text values change.
+- **`policy` loader message (`C1`).** A missing framework directory is now
+  reported as absent, instead of "no .yml or .yaml files found".
+- **CRA Article 13(8) support-period soft check (`B1`).** `cra.support_period`
+  records the period, the information behind it, the vulnerability
+  disclosure policy reference, the short-use exception and the SBOM path.
+  `wardex gate` warns, without blocking, when a declared CRA product has an
+  incomplete record.
+
+### Changed — documentation and tooling
+
+- **One documentation root.** Specifications were spread across `doc/`,
+  `docs/`, `internal/` and the repository root; two unanchored `.gitignore`
+  rules had left four specifications untracked, 1,872 lines for three
+  released versions. Both rules are anchored, the specifications moved to
+  `doc/specs/`, and `tools/check-doclinks` holds every relative link.
+- **M0 baseline spec normalised (draft 0.3)** with `tools/check-specs` in CI:
+  canonical structure, glossary and template; the Portuguese working draft
+  is archived as `legacy-pt`.
+
+### Fixed — release tooling
+
+- **Release attestation.** The `Attest Build Provenance` job fetched nothing
+  on its first execution (`Could not find subject at path dist/*.tar.gz`)
+  because each job gets a clean runner. It now fetches the artefacts from
+  the published release, which is also the stronger property: the
+  attestation describes the bytes a user downloads.
+
 ## [2.6.1] — 2026-10-18
 
 > This release is a patch in name. It carries the terminal UI work merged after
