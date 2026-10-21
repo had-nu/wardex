@@ -3,7 +3,11 @@
 
 package main
 
-import "testing"
+import (
+	"bytes"
+	"errors"
+	"testing"
+)
 
 func TestIsGoldenFile(t *testing.T) {
 	t.Parallel()
@@ -103,4 +107,19 @@ func TestCheckRevisionRejectsOptions(t *testing.T) {
 	if err := checkRevision("-tip", "main"); err != nil {
 		t.Fatalf("checkRevision rejected a valid revision: %v", err)
 	}
+}
+
+type failingWriter struct{}
+
+func (failingWriter) Write([]byte) (int, error) { return 0, errors.New("write failed") }
+
+func TestReportWriters(t *testing.T) {
+	var buf bytes.Buffer
+	writef(&buf, "%s", "hello")
+	writeln(&buf, "world")
+	if got := buf.String(); got != "helloworld\n" {
+		t.Errorf("writers wrote %q", got)
+	}
+	writef(failingWriter{}, "discarded")
+	writeln(failingWriter{}, "discarded")
 }

@@ -201,7 +201,7 @@ func gitLog(repoDir, base, tip string) ([]commit, error) {
 func run(repoDir, base, tip string, out io.Writer) int {
 	changed, err := goldenFilesInRange(repoDir, base, tip)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "check-golden: %v\n", err)
+		writef(os.Stderr, "check-golden: %v\n", err)
 		return 2
 	}
 	if len(changed) == 0 {
@@ -210,7 +210,7 @@ func run(repoDir, base, tip string, out io.Writer) int {
 
 	commits, err := gitLog(repoDir, base, tip)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "check-golden: %v\n", err)
+		writef(os.Stderr, "check-golden: %v\n", err)
 		return 2
 	}
 	for _, c := range commits {
@@ -219,15 +219,15 @@ func run(repoDir, base, tip string, out io.Writer) int {
 		}
 	}
 
-	fmt.Fprintln(out, "Golden files changed without a Golden-Change trailer:")
+	writeln(out, "Golden files changed without a Golden-Change trailer:")
 	for _, path := range changed {
-		fmt.Fprintf(out, "  %s\n", path)
+		writef(out, "  %s\n", path)
 	}
-	fmt.Fprintf(out, "\nAdd a trailer naming the ADR or issue that justifies the new expectation,\n"+
+	writef(out, "\nAdd a trailer naming the ADR or issue that justifies the new expectation,\n"+
 		"for example \"Golden-Change: ADR-0007\". A changed expectation without a\n"+
 		"recorded reason is a test that agreed to disagree.\n")
 	if os.Getenv("GITHUB_ACTIONS") == "true" {
-		fmt.Fprintf(out, "::error file=%s::Golden files changed without a Golden-Change trailer\n", changed[0])
+		writef(out, "::error file=%s::Golden files changed without a Golden-Change trailer\n", changed[0])
 	}
 	return 1
 }
@@ -239,4 +239,19 @@ func main() {
 	flag.Parse()
 
 	os.Exit(run(*repoDir, *base, *tip, os.Stdout))
+}
+
+// writef reports to a diagnostic or report writer. A failure to write
+// diagnostics cannot itself be reported, so the write ends without changing
+// the tool's exit code.
+func writef(w io.Writer, format string, args ...any) {
+	if _, err := fmt.Fprintf(w, format, args...); err != nil {
+		return
+	}
+}
+
+func writeln(w io.Writer, args ...any) {
+	if _, err := fmt.Fprintln(w, args...); err != nil {
+		return
+	}
 }

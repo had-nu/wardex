@@ -111,99 +111,101 @@ func run(args []string, stdout, stderr io.Writer) int {
 
 	m, err := loadManifest(*manifestPath)
 	if err != nil {
-		fmt.Fprintf(stderr, "check-boundaries: %v\n", err)
+		writef(stderr, "check-boundaries: %v\n", err)
 		return 2
 	}
-
-	var g graph
-	if *initFlag {
-		// The baseline must hold for every build configuration the CI checks.
-		// Default and grpc are merged so -init cannot produce a baseline that
-		// only passes without the tag.
-		plain, err := scanGraph(*repoDir, "")
-		if err != nil {
-			fmt.Fprintf(stderr, "check-boundaries: %v\n", err)
-			return 2
-		}
-		grpc, err := scanGraph(*repoDir, "grpc")
-		if err != nil {
-			fmt.Fprintf(stderr, "check-boundaries: %v\n", err)
-			return 2
-		}
-		g = mergeGraphs(plain, grpc)
-	} else {
-		g, err = scanGraph(*repoDir, *tags)
-		if err != nil {
-			fmt.Fprintf(stderr, "check-boundaries: %v\n", err)
-			return 2
-		}
+	g, err := graphForRun(*repoDir, *tags, *initFlag)
+	if err != nil {
+		writef(stderr, "check-boundaries: %v\n", err)
+		return 2
 	}
-
 	e, err := newEngine(m, g)
 	if err != nil {
-		fmt.Fprintf(stderr, "check-boundaries: %v\n", err)
+		writef(stderr, "check-boundaries: %v\n", err)
 		return 2
 	}
-
 	if *initFlag {
-		if len(e.unclassified) > 0 {
-			for _, p := range e.unclassified {
-				fmt.Fprintf(stderr, "check-boundaries: R6 %s has no destination; add {package: %s, target: <module>} to legacy\n", p, p)
-			}
-			return 3
-		}
-		e.computeFindings()
-		m.Legacy = e.initLegacy()
-		if err := writeManifest(*manifestPath, m); err != nil {
-			fmt.Fprintf(stderr, "check-boundaries: %v\n", err)
-			return 2
-		}
-		fmt.Fprintf(stdout, "check-boundaries: wrote %s (%d packages, %d legacy entries)\n", *manifestPath, len(g), len(m.Legacy))
-		return 0
+		return runInit(m, g, e, *manifestPath, stdout, stderr)
 	}
+	return runCheck(m, g, e, stdout, stderr)
+}
 
+// graphForRun scans one build configuration for a check, and both configured
+// configurations for -init. The baseline must hold for every configuration
+// the CI checks, so -init cannot produce a baseline that only passes without
+// the grpc tag.
+func graphForRun(repoDir, tags string, initFlag bool) (graph, error) {
+	if !initFlag {
+		return scanGraph(repoDir, tags)
+	}
+	plain, err := scanGraph(repoDir, "")
+	if err != nil {
+		return nil, err
+	}
+	grpc, err := scanGraph(repoDir, "grpc")
+	if err != nil {
+		return nil, err
+	}
+	return mergeGraphs(plain, grpc), nil
+}
+
+func runInit(m *manifest, g graph, e *engine, manifestPath string, stdout, stderr io.Writer) int {
 	if len(e.unclassified) > 0 {
 		for _, p := range e.unclassified {
-			rule := unclassifiedRule(p)
-			fmt.Fprintf(stdout, "%s %s: package has no module and no legacy destination\n", rule, p)
+			writef(stderr, "check-boundaries: R6 %s has no destination; add {package: %s, target: <module>} to legacy\n", p, p)
 		}
-		fmt.Fprintf(stderr, "check-boundaries: %d unclassified package(s)\n", len(e.unclassified))
+		return 3
+	}
+	e.computeFindings()
+	m.Legacy = e.initLegacy()
+	if err := writeManifest(manifestPath, m); err != nil {
+		writef(stderr, "check-boundaries: %v\n", err)
+		return 2
+	}
+	writef(stdout, "check-boundaries: wrote %s (%d packages, %d legacy entries)\n", manifestPath, len(g), len(m.Legacy))
+	return 0
+}
+
+func runCheck(m *manifest, g graph, e *engine, stdout, stderr io.Writer) int {
+	if len(e.unclassified) > 0 {
+		for _, p := range e.unclassified {
+			writef(stdout, "%s %s: package has no module and no legacy destination\n", unclassifiedRule(p), p)
+		}
+		writef(stderr, "check-boundaries: %d unclassified package(s)\n", len(e.unclassified))
 		return 3
 	}
 
 	e.computeFindings()
 	newFindings, stale := e.compareBaseline()
-
 	sortFindings(newFindings)
 	for _, f := range newFindings {
 		pos := f.Pos
 		if pos == "" {
 			pos = f.From
 		}
-		fmt.Fprintf(stdout, "%s %s %s -> %s: %s\n", pos, f.Rule, f.From, f.To, f.Message)
+		writef(stdout, "%s %s %s -> %s: %s\n", pos, f.Rule, f.From, f.To, f.Message)
 	}
 	sort.Strings(stale)
 	for _, s := range stale {
-		fmt.Fprintf(stdout, "baseline: %s\n", s)
+		writef(stdout, "baseline: %s\n", s)
 	}
 
 	if len(newFindings) > 0 {
-		fmt.Fprintf(stderr, "check-boundaries: %d new boundary violation(s); %d baseline entr(ies)\n", len(newFindings), len(m.Legacy))
+		writef(stderr, "check-boundaries: %d new boundary violation(s); %d baseline entr(ies)\n", len(newFindings), len(m.Legacy))
 		return 1
 	}
 	if len(stale) > 0 {
-		fmt.Fprintf(stderr, "check-boundaries: stale baseline; run 'go run ./tools/check-boundaries -init'\n")
+		writef(stderr, "check-boundaries: stale baseline; run 'go run ./tools/check-boundaries -init'\n")
 		return 2
 	}
-
-	fmt.Fprintf(stdout, "check-boundaries: %d packages, %d modules, %d baseline entries, 0 new violations\n", len(g), len(m.Modules), len(m.Legacy))
+	writef(stdout, "check-boundaries: %d packages, %d modules, %d baseline entries, 0 new violations\n", len(g), len(m.Modules), len(m.Legacy))
 	return 0
 }
 
 // loadManifest reads and validates the manifest. It fails on a malformed or
 // self-inconsistent file, never on a boundary violation.
 func loadManifest(path string) (*manifest, error) {
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304 — the manifest path is supplied on the command line
 	if err != nil {
 		return nil, fmt.Errorf("read manifest: %w", err)
 	}
@@ -334,6 +336,29 @@ func within(pkg, prefix string) bool {
 // the build configuration selects. Test files are not in GoFiles, so their
 // imports never enter the graph.
 func scanGraph(repoDir, tags string) (graph, error) {
+	listed, err := runGoList(repoDir, tags)
+	if err != nil {
+		return nil, err
+	}
+	modulePath, err := mainModulePath(listed)
+	if err != nil {
+		return nil, err
+	}
+	g := make(graph, len(listed))
+	for _, p := range listed {
+		info, err := packageInfo(modulePath, repoDir, p)
+		if err != nil {
+			return nil, err
+		}
+		if info != nil {
+			g[info.Path] = info
+		}
+	}
+	return g, nil
+}
+
+// runGoList returns the packages selected by one build configuration.
+func runGoList(repoDir, tags string) ([]goListPkg, error) {
 	args := []string{"list", "-json"}
 	if tags != "" {
 		args = append(args, "-tags", tags)
@@ -365,66 +390,65 @@ func scanGraph(repoDir, tags string) (graph, error) {
 		}
 		listed = append(listed, p)
 	}
+	return listed, nil
+}
 
-	modulePath := ""
+func mainModulePath(listed []goListPkg) (string, error) {
 	for _, p := range listed {
 		if p.Module != nil && p.Module.Main {
-			modulePath = p.Module.Path
-			break
+			return p.Module.Path, nil
 		}
 	}
-	if modulePath == "" {
-		return nil, errors.New("go list found no package in the main module")
-	}
+	return "", errors.New("go list found no package in the main module")
+}
 
-	g := make(graph, len(listed))
-	for _, p := range listed {
-		if !isRepoImport(modulePath, p.ImportPath) {
-			continue
-		}
-		rel := strings.TrimPrefix(p.ImportPath, modulePath+"/")
-		if rel == p.ImportPath {
-			rel = "."
-		}
-		info := &pkgInfo{Path: rel, Imports: make(map[string]string)}
-		files := append(append([]string{}, p.GoFiles...), p.CgoFiles...)
-		sort.Strings(files)
-		for _, name := range files {
-			full := filepath.Join(p.Dir, name)
-			fset := token.NewFileSet()
-			file, err := parser.ParseFile(fset, full, nil, parser.ImportsOnly)
-			if err != nil {
-				return nil, fmt.Errorf("parse %s: %w", full, err)
-			}
-			for _, imp := range file.Imports {
-				target, err := strconv.Unquote(imp.Path.Value)
-				if err != nil {
-					continue
-				}
-				if !isRepoImport(modulePath, target) {
-					continue
-				}
-				targetRel := strings.TrimPrefix(target, modulePath+"/")
-				if targetRel == target {
-					targetRel = "."
-				}
-				if targetRel == rel {
-					continue
-				}
-				if _, seen := info.Imports[targetRel]; seen {
-					continue
-				}
-				pos := fset.Position(imp.Pos())
-				fileRel, relErr := filepath.Rel(repoDir, pos.Filename)
-				if relErr != nil {
-					fileRel = pos.Filename
-				}
-				info.Imports[targetRel] = fmt.Sprintf("%s:%d", filepath.ToSlash(fileRel), pos.Line)
-			}
-		}
-		g[rel] = info
+// packageInfo parses the imports of one package. Test files are not in
+// GoFiles, so their imports never enter the graph.
+func packageInfo(modulePath, repoDir string, p goListPkg) (*pkgInfo, error) {
+	if !isRepoImport(modulePath, p.ImportPath) {
+		return nil, nil
 	}
-	return g, nil
+	rel := strings.TrimPrefix(p.ImportPath, modulePath+"/")
+	if rel == p.ImportPath {
+		rel = "."
+	}
+	info := &pkgInfo{Path: rel, Imports: make(map[string]string)}
+	files := append(append([]string{}, p.GoFiles...), p.CgoFiles...)
+	sort.Strings(files)
+	for _, name := range files {
+		full := filepath.Join(p.Dir, name)
+		fset := token.NewFileSet()
+		file, err := parser.ParseFile(fset, full, nil, parser.ImportsOnly)
+		if err != nil {
+			return nil, fmt.Errorf("parse %s: %w", full, err)
+		}
+		for _, imp := range file.Imports {
+			target, err := strconv.Unquote(imp.Path.Value)
+			if err != nil {
+				continue
+			}
+			if !isRepoImport(modulePath, target) {
+				continue
+			}
+			targetRel := strings.TrimPrefix(target, modulePath+"/")
+			if targetRel == target {
+				targetRel = "."
+			}
+			if targetRel == rel {
+				continue
+			}
+			if _, seen := info.Imports[targetRel]; seen {
+				continue
+			}
+			pos := fset.Position(imp.Pos())
+			fileRel, relErr := filepath.Rel(repoDir, pos.Filename)
+			if relErr != nil {
+				fileRel = pos.Filename
+			}
+			info.Imports[targetRel] = fmt.Sprintf("%s:%d", filepath.ToSlash(fileRel), pos.Line)
+		}
+	}
+	return info, nil
 }
 
 func isRepoImport(modulePath, importPath string) bool {
@@ -733,7 +757,7 @@ func writeManifest(path string, m *manifest) error {
 		"# be fixed or listed here with the module it is migrating to; an entry that\n" +
 		"# no longer matches the graph is an error. Edit modules by hand; regenerate\n" +
 		"# legacy with -init after a migration.\n"
-	if err := os.WriteFile(path, append([]byte(header), data...), 0o644); err != nil {
+	if err := os.WriteFile(path, append([]byte(header), data...), 0o600); err != nil {
 		return fmt.Errorf("write manifest: %w", err)
 	}
 	return nil
@@ -782,4 +806,12 @@ func unclassifiedRule(pkg string) string {
 
 func isInternalPath(pkg string) bool {
 	return pkg == "internal" || strings.HasPrefix(pkg, "internal/") || strings.Contains(pkg, "/internal/")
+}
+
+// writef reports to a diagnostic writer. A failure to write diagnostics cannot
+// itself be reported, so it ends the write without changing the exit code.
+func writef(w io.Writer, format string, args ...any) {
+	if _, err := fmt.Fprintf(w, format, args...); err != nil {
+		return
+	}
 }

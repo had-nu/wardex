@@ -60,12 +60,12 @@ func run(args []string, stdout, stderr io.Writer) int {
 
 	counts, err := parseProfile(*profilePath)
 	if err != nil {
-		fmt.Fprintf(stderr, "coverage-report: %v\n", err)
+		writef(stderr, "coverage-report: %v\n", err)
 		return 2
 	}
 	packages, err := listPackages(*repoDir)
 	if err != nil {
-		fmt.Fprintf(stderr, "coverage-report: %v\n", err)
+		writef(stderr, "coverage-report: %v\n", err)
 		return 2
 	}
 	rep := buildReport(packages, counts)
@@ -73,25 +73,25 @@ func run(args []string, stdout, stderr io.Writer) int {
 	if *jsonPath != "" {
 		data, err := json.MarshalIndent(rep, "", "  ")
 		if err != nil {
-			fmt.Fprintf(stderr, "coverage-report: %v\n", err)
+			writef(stderr, "coverage-report: %v\n", err)
 			return 2
 		}
-		if err := os.WriteFile(*jsonPath, append(data, '\n'), 0o644); err != nil {
-			fmt.Fprintf(stderr, "coverage-report: %v\n", err)
+		if err := os.WriteFile(*jsonPath, append(data, '\n'), 0o600); err != nil {
+			writef(stderr, "coverage-report: %v\n", err)
 			return 2
 		}
 	}
 
 	markdown := renderMarkdown(rep)
 	if *outPath != "" {
-		if err := os.WriteFile(*outPath, []byte(markdown), 0o644); err != nil {
-			fmt.Fprintf(stderr, "coverage-report: %v\n", err)
+		if err := os.WriteFile(*outPath, []byte(markdown), 0o600); err != nil {
+			writef(stderr, "coverage-report: %v\n", err)
 			return 2
 		}
 		return 0
 	}
 	if _, err := io.WriteString(stdout, markdown); err != nil {
-		fmt.Fprintf(stderr, "coverage-report: %v\n", err)
+		writef(stderr, "coverage-report: %v\n", err)
 		return 2
 	}
 	return 0
@@ -100,7 +100,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 // parseProfile aggregates statement counts per package. The coverprofile
 // format is one block per line: file:start,end statements count.
 func parseProfile(path string) (map[string][2]int, error) {
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304 — the coverprofile path is supplied on the command line
 	if err != nil {
 		return nil, fmt.Errorf("read profile: %w", err)
 	}
@@ -152,7 +152,7 @@ func listPackages(repoDir string) ([]string, error) {
 		return nil, fmt.Errorf("go list: %w: %s", err, strings.TrimSpace(stderr.String()))
 	}
 	var packages []string
-	for _, line := range strings.Split(strings.TrimSpace(stdout.String()), "\n") {
+	for line := range strings.SplitSeq(strings.TrimSpace(stdout.String()), "\n") {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
@@ -215,8 +215,17 @@ func renderMarkdown(rep report) string {
 		if row.Untested {
 			coverage = "untested"
 		}
-		fmt.Fprintf(&b, "| `%s` | %d | %d | %s |\n", row.Package, row.Statements, row.Covered, coverage)
+		writef(&b, "| `%s` | %d | %d | %s |\n", row.Package, row.Statements, row.Covered, coverage)
 	}
-	fmt.Fprintf(&b, "| **Total** | %d | %d | %.1f%% |\n", rep.Total.Statements, rep.Total.Covered, rep.Total.Percent)
+	writef(&b, "| **Total** | %d | %d | %.1f%% |\n", rep.Total.Statements, rep.Total.Covered, rep.Total.Percent)
 	return b.String()
+}
+
+// writef reports to a diagnostic or report writer. A failure to write
+// diagnostics cannot itself be reported, so the write ends without changing
+// the tool's exit code.
+func writef(w io.Writer, format string, args ...any) {
+	if _, err := fmt.Fprintf(w, format, args...); err != nil {
+		return
+	}
 }

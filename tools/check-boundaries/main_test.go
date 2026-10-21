@@ -5,6 +5,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -310,4 +311,38 @@ func TestManifestRejectsOverlappingModules(t *testing.T) {
 	if err := checkPrefixes(m.Modules); err == nil {
 		t.Fatal("overlapping module prefixes were accepted")
 	}
+}
+
+func TestScanGraphFindsRepositoryImports(t *testing.T) {
+	g, err := scanGraph("../..", "")
+	if err != nil {
+		t.Fatalf("scanGraph: %v", err)
+	}
+	gate := g["pkg/gate"]
+	if gate == nil {
+		t.Fatal("pkg/gate is missing from the graph")
+	}
+	if _, ok := gate.Imports["pkg/ui"]; !ok {
+		t.Errorf("pkg/gate imports = %v, want pkg/ui", gate.Imports)
+	}
+	model := g["pkg/model"]
+	if model == nil {
+		t.Fatal("pkg/model is missing from the graph")
+	}
+	if len(model.Imports) != 0 {
+		t.Errorf("pkg/model imports = %v, want none", model.Imports)
+	}
+}
+
+type failingWriter struct{}
+
+func (failingWriter) Write([]byte) (int, error) { return 0, errors.New("write failed") }
+
+func TestWritefSurvivesWriteError(t *testing.T) {
+	var buf bytes.Buffer
+	writef(&buf, "value=%d", 7)
+	if buf.String() != "value=7" {
+		t.Errorf("writef wrote %q", buf.String())
+	}
+	writef(failingWriter{}, "discarded")
 }

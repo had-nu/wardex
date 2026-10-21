@@ -1,4 +1,4 @@
-.PHONY: all build test lint security specs reproducible clean golden golden-update boundaries coverage-table
+.PHONY: all build test lint security specs reproducible clean golden golden-update boundaries coverage-table ratchet ratchet-update
 
 BINARY := wardex
 PKG    := ./...
@@ -37,11 +37,25 @@ golden:
 golden-update:
 	GOLDEN_UPDATE=1 go test -tags golden -count=1 ./test/golden/...
 
-# Measure coverage per package. coverage.json is the input to the ratchet in
-# P5; coverage.md is the human-readable table published by CI.
+# Measure coverage per package. coverage.json is the artefact consumed by the
+# ratchet; tools/baselines/coverage.json is the committed floor.
 coverage-table:
 	go test -coverprofile=coverage.out ./...
 	go run ./tools/coverage-report -profile coverage.out -out coverage.md -json coverage.json
+
+# Quality floors. Coverage only rises; unjustified #nosec annotations only
+# fall. Lint is the third floor and is enforced by golangci-lint itself. CI
+# reuses the profile from the test job instead of regenerating it here.
+ratchet:
+	go test -coverprofile=coverage.out ./...
+	go run ./tools/check-ratchet -coverage coverage.out
+	go run ./tools/check-ratchet -nosec
+	golangci-lint run $(PKG)
+
+ratchet-update:
+	go test -coverprofile=coverage.out ./...
+	go run ./tools/check-ratchet -coverage coverage.out -update
+	go run ./tools/check-ratchet -nosec -update
 
 security:
 	govulncheck $(PKG)
@@ -53,4 +67,4 @@ reproducible:
 	go run ./tools/verify-reproducible -n 2
 
 clean:
-	rm -rf bin/ coverage.out
+	rm -rf bin/ coverage.out coverage.md coverage.json
