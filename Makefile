@@ -66,6 +66,7 @@ baseline-check:
 	$(MAKE) boundaries
 	$(MAKE) golden
 	$(MAKE) ratchet
+	go run ./tools/check-doclinks
 	$(MAKE) specs
 
 security:
