@@ -44,6 +44,7 @@ until this consolidation moved it.
 | --- | --- |
 | [Technical view](architecture/TECHNICAL_VIEW.md) | How the system is put together |
 | [Business view](architecture/BUSINESS_VIEW.md) | Why it is put together that way |
+| [Architecture decision records](architecture/adr/README.md) | Why the order, layout, JSON policy, errors, floors, `/v3` path and language are what they are |
 | [Engineering blueprint](architecture/ENGINEERING_BLUEPRINT.md) | Build, test and release expectations |
 | [Crypto architecture](architecture/CRYPTO_ARCHITECTURE.md) | Trust chain, key envelopes, the 3CP protocol |
 | [Provenance enhancement](architecture/REC_PROVENANCE_ENHANCEMENT.md) | Anchoring and timestamping |
