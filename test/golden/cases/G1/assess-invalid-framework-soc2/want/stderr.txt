@@ -1,0 +1,17 @@
+[INFO] Loaded 2 controls from input files.
+Error: assess: unsupported framework "soc2": use one of cra, dora, eu_ai_act, gdpr, iso27001, nis2, nist_csf
+[HINT] Use --framework with one of: cra, dora, eu_ai_act, gdpr, iso27001, nis2, nist_csf
+Usage:
+  wardex assess [flags] <controls-file(s)>
+
+Flags:
+      --assets string      Path to assets definition file
+      --config string      Path to wardex-config.yaml (default "./wardex-config.yaml")
+      --framework string   Target framework name (default "iso27001")
+  -h, --help               help for assess
+      --out-file string    Output file destination (default "stdout")
+      --output string      Output format: markdown|json|csv|html (default "markdown")
+      --snapshot string    Path to previous report for delta analysis
+
+assess: unsupported framework "soc2": use one of cra, dora, eu_ai_act, gdpr, iso27001, nis2, nist_csf
+[HINT] Use --framework with one of: cra, dora, eu_ai_act, gdpr, iso27001, nis2, nist_csf

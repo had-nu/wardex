@@ -1,4 +1,4 @@
-.PHONY: all build test lint security specs reproducible clean
+.PHONY: all build test lint security specs reproducible clean golden golden-update
 
 BINARY := wardex
 PKG    := ./...
@@ -18,6 +18,15 @@ lint:
 # Verify the canonical structure, inventory and vocabulary of the specs.
 specs:
 	go run ./tools/check-specs
+
+# Run the black-box golden harness (flows G1 to G10).
+golden:
+	go test -tags golden ./test/golden/...
+
+# Rewrite want/ from the current binary. The change needs a Golden-Change
+# trailer naming the ADR or issue that justifies the new expectation.
+golden-update:
+	GOLDEN_UPDATE=1 go test -tags golden ./test/golden/...
 
 security:
 	govulncheck $(PKG)

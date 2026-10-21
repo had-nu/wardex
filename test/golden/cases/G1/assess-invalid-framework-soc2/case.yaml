@@ -1,0 +1,6 @@
+id: assess-invalid-framework-soc2
+flow: G1
+args: [assess, documented.yaml, implemented.yaml, --framework, soc2, --output, json]
+outputs: []
+normalise: [timestamps, tmpdir, version]
+known_defect: ''
