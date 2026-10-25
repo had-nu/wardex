@@ -104,10 +104,9 @@ func TestGolden(t *testing.T) {
 	for _, path := range discoverCases(t) {
 		spec := readCaseFile(t, path)
 		caseDir := filepath.Dir(path)
+		// Git cannot store an empty directory, so a case with no inputs has no
+		// in/ in a fresh clone. An absent directory means an empty input tree.
 		srcDir := filepath.Join(caseDir, "in")
-		if info, err := os.Stat(srcDir); err != nil || !info.IsDir() {
-			t.Fatalf("case %s has no in/ directory", spec.ID)
-		}
 		t.Run(spec.Flow+"/"+spec.ID, func(t *testing.T) {
 			assertCase(t, spec, srcDir, filepath.Join(caseDir, "want"), update)
 		})
@@ -367,6 +366,13 @@ func mustNormalise(t *testing.T, normaliser Normaliser, content string) string {
 
 // copyTree copies the regular files and directories of src into dst.
 func copyTree(src, dst string) error {
+	// An absent source is an empty input tree: git cannot store the empty in/
+	// directory that a case with no fixtures would otherwise need.
+	if _, err := os.Stat(src); errors.Is(err, fs.ErrNotExist) {
+		return os.MkdirAll(dst, 0o755)
+	} else if err != nil {
+		return err
+	}
 	return filepath.WalkDir(src, func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
