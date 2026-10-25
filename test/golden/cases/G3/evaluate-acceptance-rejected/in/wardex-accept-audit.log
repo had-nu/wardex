@@ -1,0 +1,1 @@
+{"ts":"2026-10-21T17:59:09.841838776Z","event":"acceptance.created","id":"acc-20261021-1792605549","cve_id":"CVE-2025-9001","actor":"security@example.com","config_hash":"sha256:0a32df3dda1f4c6504c2f817d284ddf05e7ac2693f52201249b5067605283e65","art14_deadline_early_warning":"0001-01-01T00:00:00Z","art14_deadline_notification":"0001-01-01T00:00:00Z"}

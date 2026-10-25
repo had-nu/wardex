@@ -1,0 +1,9 @@
+acceptances:
+    - id: acc-20261021-1792605549
+      cve: CVE-2025-9001
+      accepted_by: security@example.com
+      justification: Accepted for the duration of the migration window; compensating control WAF-01 is active.
+      created_at: 0001-01-01T00:00:00Z
+      expires_at: 2036-01-01T00:00:00Z
+      signature: sha256:991ba575d59383bd47f7096dde570a5afa88e50f4ab4f3c9eecae7344e89cd94
+      report_hash: sha256:ec9fc194c485fd316a2ce2ba25331c1c4618947eb22a96cd5ab81aac5e6f447b

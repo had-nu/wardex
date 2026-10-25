@@ -95,6 +95,11 @@ report.csv
 wardex-accept-audit.log
 wardex-gate-audit.log
 wardex-acceptances.yaml
+# Golden inputs. The rules above ignore the stores and logs the product writes
+# at run time; these are the snapshots the harness feeds back to the CLI.
+!test/golden/cases/**/in/wardex-trust.yaml
+!test/golden/cases/**/in/wardex-acceptances.yaml
+!test/golden/cases/**/in/wardex-accept-audit.log
 wardex-epss-enrichment.yaml
 wardex-snapshot.json
 wardex-helm-chart.zip
