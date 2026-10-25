@@ -398,7 +398,7 @@ func checkSpec(name string, lines []string, g glossary, known map[string]map[str
 		out = append(out, violation{File: display, Line: line, Rule: rule, Message: message})
 	}
 
-	if !template && !specNamePattern.MatchString(name) {
+	if !template && !specNamePattern.MatchString(filepath.Base(name)) {
 		add(0, "SPEC-NAME", "file name must match SPEC-M<n>-<id>.md or SPEC-X-<topic>.md")
 	}
 

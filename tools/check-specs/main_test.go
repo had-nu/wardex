@@ -165,6 +165,44 @@ func TestCheckPassesAValidSpec(t *testing.T) {
 	}
 }
 
+// TestCheckAcceptsASpecInASubdirectory guards the v3 layout: an inventory path
+// may carry a directory, and the name rule applies to the file name alone.
+func TestCheckAcceptsASpecInASubdirectory(t *testing.T) {
+	manifest := `version: 1
+language: en-GB
+specs:
+  - file: v3/SPEC-M0-baseline.md
+    id: M0
+    title: "Baseline"
+    status: active
+    owner: had-nu
+    base: "main @ abc"
+`
+	root := sandbox(t, manifest, testGlossary, validSpec)
+	flat := filepath.Join(root, "doc", "specs", "SPEC-M0-baseline.md")
+	if err := os.Remove(flat); err != nil {
+		t.Fatalf("remove flat spec: %v", err)
+	}
+	nested := filepath.Join(root, "doc", "specs", "v3")
+	if err := os.MkdirAll(nested, 0o750); err != nil {
+		t.Fatalf("mkdir v3: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(nested, "SPEC-M0-baseline.md"), []byte(validSpec), 0o600); err != nil {
+		t.Fatalf("write nested spec: %v", err)
+	}
+
+	rep, err := check(root, "doc/specs/specs.yaml", "doc/specs/glossary.yaml")
+	if err != nil {
+		t.Fatalf("check: %v", err)
+	}
+	if len(rep.Violations) != 0 {
+		t.Fatalf("violations = %v, want none", rep.Violations)
+	}
+	if len(rep.Unclassified) != 0 {
+		t.Fatalf("unclassified = %v, want none", rep.Unclassified)
+	}
+}
+
 func TestCheckFindsOneViolationPerRule(t *testing.T) {
 	cases := []struct {
 		name string
