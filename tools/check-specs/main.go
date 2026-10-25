@@ -230,6 +230,8 @@ func check(root, manifestPath, glossaryPath string) (report, error) {
 				}
 			}
 		case "active":
+			// #nosec G304 -- path is a manifest entry, checked to stay inside
+			// doc/specs above.
 			body, readErr := os.ReadFile(path)
 			if readErr != nil {
 				return rep, fmt.Errorf("read %s: %w", entry.File, readErr)
@@ -254,6 +256,7 @@ func check(root, manifestPath, glossaryPath string) (report, error) {
 	}
 
 	templatePath := filepath.Join(specsDir, "TEMPLATE_module.md")
+	// #nosec G304 -- the path is doc/specs plus a literal file name.
 	if body, readErr := os.ReadFile(templatePath); readErr == nil {
 		rep.Checked++
 		rep.Violations = append(rep.Violations, checkSpec("TEMPLATE_module.md", strings.Split(string(body), "\n"), gl, known, true)...)
@@ -298,6 +301,7 @@ func check(root, manifestPath, glossaryPath string) (report, error) {
 
 func readManifest(path string) (manifest, error) {
 	var m manifest
+	// #nosec G304 -- the manifest path is supplied on the command line.
 	body, err := os.ReadFile(path)
 	if err != nil {
 		return m, err
@@ -310,6 +314,7 @@ func readManifest(path string) (manifest, error) {
 
 func readGlossary(path string) (glossary, error) {
 	var g glossary
+	// #nosec G304 -- the glossary path is supplied on the command line.
 	body, err := os.ReadFile(path)
 	if err != nil {
 		return g, err

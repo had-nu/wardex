@@ -17,7 +17,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c  # v6.4.0
         with:
-          go-version: "1.27.2"
+          go-version: "1.27.3"
           cache: true
 
       - name: Download dependencies
@@ -85,7 +85,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c  # v6.4.0
         with:
-          go-version: "1.27.2"
+          go-version: "1.27.3"
           cache: true
 
       - name: Verify the release build is byte-for-byte reproducible
@@ -105,7 +105,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c  # v6.4.0
         with:
-          go-version: "1.27.2"
+          go-version: "1.27.3"
           cache: true
 
       - name: golangci-lint
@@ -127,7 +127,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c  # v6.4.0
         with:
-          go-version: "1.27.2"
+          go-version: "1.27.3"
           cache: true
 
       - name: Install govulncheck
@@ -142,10 +142,10 @@ jobs:
         run: govulncheck ./...
 
       - name: Install gosec
-        # v2.29.0, the newest release, cannot read the export data of Go 1.27.2:
-        # it skips SSA analysis for every package and still exits non-zero. The
-        # fix is on master and has no release yet, so pin the exact revision
-        # rather than a branch name. Revisit when a release catches up.
+        # v2.29.0, the newest release, cannot read the export data of the Go 1.27
+        # toolchain: it skips SSA analysis for every package and still exits
+        # non-zero. The fix is on master and has no release yet, so pin the exact
+        # revision rather than a branch name. Revisit when a release catches up.
         run: go install github.com/securego/gosec/v2/cmd/gosec@707f2271f66579a18e1da25794b1e8012247274b
 
       - name: Run gosec
@@ -166,7 +166,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c  # v6.4.0
         with:
-          go-version: "1.27.2"
+          go-version: "1.27.3"
 
       - name: Determine the range to inspect
         id: range
@@ -206,7 +206,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c  # v6.4.0
         with:
-          go-version: "1.27.2"
+          go-version: "1.27.3"
           cache: true
 
       - name: Run the golden harness
