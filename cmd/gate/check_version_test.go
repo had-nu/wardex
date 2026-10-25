@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	acceptaudit "github.com/had-nu/wardex/v2/pkg/accept/audit"
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/versionregistry"
+	acceptaudit "github.com/had-nu/wardex/v3/pkg/accept/audit"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/versionregistry"
 )
 
 func sealVersion(t *testing.T, logPath, version, policyRef string) {

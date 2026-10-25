@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
 )
 
 func TestResolveClassProfileDefaults(t *testing.T) {

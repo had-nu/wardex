@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
 )
 
 // annexATitles are the titles ISO/IEC 27002:2022 gives the 93 Annex A controls.

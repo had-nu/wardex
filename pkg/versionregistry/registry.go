@@ -16,7 +16,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/auditlog"
+	"github.com/had-nu/wardex/v3/pkg/auditlog"
 )
 
 // RegistrySchemaVersion is the schema version of the derived index file.

@@ -71,16 +71,18 @@ until this consolidation moved it.
 ## Specifications
 
 Ten historical specifications, archived as `legacy-pt` with English abstracts,
-plus the active M0 and M1 specs. Three of the historical specs were silently
-untracked until the 2026 consolidation, because an unanchored `specs/` rule in
-`.gitignore` matched `doc/specs/`; a fourth sat at the repository root behind an
-unanchored `SPEC-*.md` rule. The inventory is
+plus the active M0 and M1 specs and the M2 working draft. The v3 modularisation
+specs live in [`specs/v3/`](specs/v3/). Three of the historical specs were
+silently untracked until the 2026 consolidation, because an unanchored `specs/`
+rule in `.gitignore` matched `doc/specs/`; a fourth sat at the repository root
+behind an unanchored `SPEC-*.md` rule. The inventory is
 [`specs/specs.yaml`](specs/specs.yaml).
 
 | Document | Status | Scope |
 | --- | --- | --- |
-| [M0 baseline](specs/SPEC-M0-baseline.md) | active | Repository safety net, golden baseline and spec normalisation |
-| [M1 contracts and kit](specs/SPEC-M1-contracts-and-kit.md) | active | Shared types and primitives, output contract and error model |
+| [M0 baseline](specs/v3/SPEC-M0-baseline.md) | active | Repository safety net, golden baseline and spec normalisation |
+| [M1 contracts and kit](specs/v3/SPEC-M1-contracts-and-kit.md) | active | Shared types and primitives, output contract and error model |
+| [M2 assess](specs/v3/SPEC-M2-assess-pt.md) | draft-pt | Compliance assessment behind `pkg/assess`. Awaiting translation |
 | [Trust](specs/SPEC_wardex_trust_.md) | legacy-pt | Trust system, certificates, key envelopes |
 | [v1.9.1 schema cleanup](specs/SPEC_v1.9.1_schema_cleanup.md) | legacy-pt | Schema decisions |
 | [v1.9.2 incomplete behaviours](specs/SPEC_v1.9.2_incomplete_behaviours.md) | legacy-pt | What was left undone, and why |
@@ -92,9 +94,11 @@ unanchored `SPEC-*.md` rule. The inventory is
 | [v2.6.0 Nym patterns](specs/SPEC_wardex_v2.6.0_nym_patterns.md) | legacy-pt | Chain unification, key envelopes, gate classes |
 | [CBOR migration v2.3.0](specs/CBOR_MIGRATION_v2.3.0.md) | legacy-pt | Migration to canonical CBOR |
 
-The Portuguese working drafts of M0 and M1 are kept as `legacy-pt` for reference
-only and are not linked from this table; [`specs/specs.yaml`](specs/specs.yaml)
-records them.
+The Portuguese working drafts of M0 and M1 are kept as `legacy-pt` for
+reference only and are not linked from this table. The M2 draft is listed above
+as `draft-pt`; the inventory records it as `legacy-pt` until the active English
+spec exists, because [`specs/specs.yaml`](specs/specs.yaml) has only the
+`active` and `legacy-pt` statuses.
 
 ## Releases
 

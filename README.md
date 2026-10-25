@@ -176,10 +176,10 @@ wardex assess controls.yaml --framework eu_ai_act
 
 ```bash
 # Versão actual
-go install github.com/had-nu/wardex/v2@v2.6.1
+go install github.com/had-nu/wardex/v3@v3.0.0
 
 # Último tag publicado
-go install github.com/had-nu/wardex/v2@latest
+go install github.com/had-nu/wardex/v3@latest
 ```
 
 Requer Go ≥ 1.27. Confirma que `$(go env GOPATH)/bin` está no teu `$PATH`.
@@ -381,7 +381,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Wardex
-        run: go install github.com/had-nu/wardex/v2@v2.6.1
+        run: go install github.com/had-nu/wardex/v3@v3.0.0
       - name: Guard duplicate release
         run: wardex gate check-version --audit-log wardex-gate-audit.log --version "${GITHUB_REF_NAME#v}"
       - name: Evaluate risk gate
@@ -579,7 +579,7 @@ wardex evaluate --config config.wexstate --evidence vulns.yaml --strict
 ## SDK
 
 ```go
-import "github.com/had-nu/wardex/v2/pkg/sdk"
+import "github.com/had-nu/wardex/v3/pkg/sdk"
 
 controls, _ := sdk.LoadControls("./controls.yaml")
 result, _   := sdk.Analyze(controls, "iso27001")
@@ -591,8 +591,8 @@ Para o release gate:
 
 ```go
 import (
-    "github.com/had-nu/wardex/v2/pkg/model"
-    "github.com/had-nu/wardex/v2/pkg/releasegate"
+    "github.com/had-nu/wardex/v3/pkg/model"
+    "github.com/had-nu/wardex/v3/pkg/releasegate"
 )
 
 gate := releasegate.Gate{

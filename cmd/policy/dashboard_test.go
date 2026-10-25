@@ -3,7 +3,7 @@ package policy
 import (
 	"testing"
 
-	policyfiles "github.com/had-nu/wardex/v2/internal/policy"
+	policyfiles "github.com/had-nu/wardex/v3/internal/policy"
 )
 
 func testPolicyDomains() []*policyfiles.DomainFile {

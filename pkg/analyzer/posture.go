@@ -6,7 +6,7 @@ package analyzer
 import (
 	"sort"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // PostureReport provides high-level security posture intelligence metrics.

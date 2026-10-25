@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
-	"github.com/had-nu/wardex/v2/pkg/sdk"
+	"github.com/had-nu/wardex/v3/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/sdk"
 )
 
 func main() {

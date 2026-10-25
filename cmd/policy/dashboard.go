@@ -9,8 +9,8 @@ import (
 	"os"
 	"strings"
 
-	policyfiles "github.com/had-nu/wardex/v2/internal/policy"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	policyfiles "github.com/had-nu/wardex/v3/internal/policy"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 	"github.com/spf13/cobra"
 )
 

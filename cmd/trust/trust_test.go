@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	trustcmd "github.com/had-nu/wardex/v2/cmd/trust"
+	trustcmd "github.com/had-nu/wardex/v3/cmd/trust"
 )
 
 func TestTrustCmdHasSubcommands(t *testing.T) {

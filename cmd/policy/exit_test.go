@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
 	"github.com/spf13/cobra"
 )
 

@@ -1,4 +1,4 @@
-module github.com/had-nu/wardex/v2
+module github.com/had-nu/wardex/v3
 
 go 1.27.0
 

@@ -12,9 +12,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 const unscoredEvidence = `converted_by: "test-converter"

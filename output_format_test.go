@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/report"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/report"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 // TestMachineOutputValueMatchesUIPolicy guards against the banner classifier

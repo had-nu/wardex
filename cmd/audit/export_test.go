@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/cmd/audit"
+	"github.com/had-nu/wardex/v3/cmd/audit"
 )
 
 func TestExportJSONLCommand(t *testing.T) {

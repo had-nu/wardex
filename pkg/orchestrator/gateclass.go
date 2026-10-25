@@ -12,7 +12,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/had-nu/wardex/v2/config"
+	"github.com/had-nu/wardex/v3/config"
 )
 
 // examSeverity values, duplicated from config constants to avoid a config

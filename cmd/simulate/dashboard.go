@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 func buildSimulatorSession(outputPath string) ui.SessionView {

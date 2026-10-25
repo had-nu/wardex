@@ -8,9 +8,9 @@ import (
 	"os"
 	"time"
 
-	acceptaudit "github.com/had-nu/wardex/v2/pkg/accept/audit"
-	"github.com/had-nu/wardex/v2/pkg/exitcodes"
-	"github.com/had-nu/wardex/v2/pkg/versionregistry"
+	acceptaudit "github.com/had-nu/wardex/v3/pkg/accept/audit"
+	"github.com/had-nu/wardex/v3/pkg/exitcodes"
+	"github.com/had-nu/wardex/v3/pkg/versionregistry"
 	"github.com/spf13/cobra"
 )
 

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/internal/cpl"
+	"github.com/had-nu/wardex/v3/internal/cpl"
 )
 
 func TestVerifyLinkAllOK(t *testing.T) {

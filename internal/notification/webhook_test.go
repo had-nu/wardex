@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/v2/internal/notification"
+	"github.com/had-nu/wardex/v3/internal/notification"
 )
 
 func TestWebhookCalledOnDivergence(t *testing.T) {

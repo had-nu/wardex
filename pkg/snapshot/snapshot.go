@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // Save writes the current GapReport to the snapshot file.

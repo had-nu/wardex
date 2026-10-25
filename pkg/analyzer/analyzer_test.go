@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/analyzer"
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/analyzer"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 func TestAnalyzer_Covered(t *testing.T) {

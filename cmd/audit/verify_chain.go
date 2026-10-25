@@ -3,8 +3,8 @@ package audit
 import (
 	"fmt"
 
-	"github.com/had-nu/wardex/v2/internal/cpl"
-	"github.com/had-nu/wardex/v2/pkg/cli"
+	"github.com/had-nu/wardex/v3/internal/cpl"
+	"github.com/had-nu/wardex/v3/pkg/cli"
 	"github.com/spf13/cobra"
 )
 

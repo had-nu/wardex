@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/cmd/chain"
+	"github.com/had-nu/wardex/v3/cmd/chain"
 )
 
 func TestChainCmdHasSubcommands(t *testing.T) {

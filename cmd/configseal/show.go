@@ -6,10 +6,10 @@ package configseal
 import (
 	"fmt"
 
-	"github.com/had-nu/wardex/v2/config"
-	"github.com/had-nu/wardex/v2/internal/cpl"
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/config"
+	"github.com/had-nu/wardex/v3/internal/cpl"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 	"github.com/spf13/cobra"
 )
 

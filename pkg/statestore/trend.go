@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // FormatTrend formats the trend analysis for CLI output.

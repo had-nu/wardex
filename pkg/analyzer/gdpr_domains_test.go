@@ -6,10 +6,10 @@ package analyzer_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/analyzer"
-	"github.com/had-nu/wardex/v2/pkg/catalog"
-	"github.com/had-nu/wardex/v2/pkg/correlator"
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/analyzer"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/correlator"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // TestGDPRImplementedControlReachesCovered is the end-to-end test for M0-P0.2.

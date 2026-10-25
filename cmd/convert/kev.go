@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // KEVCatalogue represents the CISA Known Exploited Vulnerabilities catalogue.

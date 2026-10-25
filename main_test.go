@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/orchestrator"
+	"github.com/had-nu/wardex/v3/pkg/orchestrator"
 	"github.com/spf13/cobra"
 )
 

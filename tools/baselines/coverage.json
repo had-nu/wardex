@@ -2,230 +2,230 @@
   "version": 1,
   "global_floor": 40,
   "packages": {
-    "github.com/had-nu/wardex/v2": {
+    "github.com/had-nu/wardex/v3": {
       "floor": 61.8
     },
-    "github.com/had-nu/wardex/v2/cmd/aggregate": {
+    "github.com/had-nu/wardex/v3/cmd/aggregate": {
       "floor": 77.5
     },
-    "github.com/had-nu/wardex/v2/cmd/art14": {
+    "github.com/had-nu/wardex/v3/cmd/art14": {
       "floor": 67.5
     },
-    "github.com/had-nu/wardex/v2/cmd/assess": {
+    "github.com/had-nu/wardex/v3/cmd/assess": {
       "floor": 26.7
     },
-    "github.com/had-nu/wardex/v2/cmd/assets": {
+    "github.com/had-nu/wardex/v3/cmd/assets": {
       "floor": 58.9
     },
-    "github.com/had-nu/wardex/v2/cmd/audit": {
+    "github.com/had-nu/wardex/v3/cmd/audit": {
       "floor": 29.3
     },
-    "github.com/had-nu/wardex/v2/cmd/auth": {
+    "github.com/had-nu/wardex/v3/cmd/auth": {
       "floor": 22.1
     },
-    "github.com/had-nu/wardex/v2/cmd/chain": {
+    "github.com/had-nu/wardex/v3/cmd/chain": {
       "floor": 64.5
     },
-    "github.com/had-nu/wardex/v2/cmd/configseal": {
+    "github.com/had-nu/wardex/v3/cmd/configseal": {
       "floor": 21.2
     },
-    "github.com/had-nu/wardex/v2/cmd/contract": {
+    "github.com/had-nu/wardex/v3/cmd/contract": {
       "floor": 15.7
     },
-    "github.com/had-nu/wardex/v2/cmd/convert": {
+    "github.com/had-nu/wardex/v3/cmd/convert": {
       "floor": 27.2
     },
-    "github.com/had-nu/wardex/v2/cmd/evaluate": {
+    "github.com/had-nu/wardex/v3/cmd/evaluate": {
       "floor": 77.5
     },
-    "github.com/had-nu/wardex/v2/cmd/gate": {
+    "github.com/had-nu/wardex/v3/cmd/gate": {
       "floor": 85.1
     },
-    "github.com/had-nu/wardex/v2/cmd/hmac": {
+    "github.com/had-nu/wardex/v3/cmd/hmac": {
       "floor": 70.5
     },
-    "github.com/had-nu/wardex/v2/cmd/keygen": {
+    "github.com/had-nu/wardex/v3/cmd/keygen": {
       "floor": 68.5
     },
-    "github.com/had-nu/wardex/v2/cmd/policy": {
+    "github.com/had-nu/wardex/v3/cmd/policy": {
       "floor": 36.6
     },
-    "github.com/had-nu/wardex/v2/cmd/provenance": {
+    "github.com/had-nu/wardex/v3/cmd/provenance": {
       "floor": 55.1
     },
-    "github.com/had-nu/wardex/v2/cmd/simulate": {
+    "github.com/had-nu/wardex/v3/cmd/simulate": {
       "floor": 72.9
     },
-    "github.com/had-nu/wardex/v2/cmd/state": {
+    "github.com/had-nu/wardex/v3/cmd/state": {
       "floor": 20.6
     },
-    "github.com/had-nu/wardex/v2/cmd/trust": {
+    "github.com/had-nu/wardex/v3/cmd/trust": {
       "floor": 15.7
     },
-    "github.com/had-nu/wardex/v2/config": {
+    "github.com/had-nu/wardex/v3/config": {
       "floor": 64.3
     },
-    "github.com/had-nu/wardex/v2/examples/sdk": {
+    "github.com/had-nu/wardex/v3/examples/sdk": {
       "floor": 0
     },
-    "github.com/had-nu/wardex/v2/internal/cpl": {
+    "github.com/had-nu/wardex/v3/internal/cpl": {
       "floor": 71.1
     },
-    "github.com/had-nu/wardex/v2/internal/notification": {
+    "github.com/had-nu/wardex/v3/internal/notification": {
       "floor": 84.6
     },
-    "github.com/had-nu/wardex/v2/internal/policy": {
+    "github.com/had-nu/wardex/v3/internal/policy": {
       "floor": 77.3
     },
-    "github.com/had-nu/wardex/v2/pkg/accept": {
+    "github.com/had-nu/wardex/v3/pkg/accept": {
       "floor": 9
     },
-    "github.com/had-nu/wardex/v2/pkg/accept/audit": {
+    "github.com/had-nu/wardex/v3/pkg/accept/audit": {
       "floor": 28.9
     },
-    "github.com/had-nu/wardex/v2/pkg/accept/cli": {
+    "github.com/had-nu/wardex/v3/pkg/accept/cli": {
       "floor": 37.4
     },
-    "github.com/had-nu/wardex/v2/pkg/accept/forward": {
+    "github.com/had-nu/wardex/v3/pkg/accept/forward": {
       "floor": 58
     },
-    "github.com/had-nu/wardex/v2/pkg/accept/rules": {
+    "github.com/had-nu/wardex/v3/pkg/accept/rules": {
       "floor": 0
     },
-    "github.com/had-nu/wardex/v2/pkg/accept/store": {
+    "github.com/had-nu/wardex/v3/pkg/accept/store": {
       "floor": 82.4
     },
-    "github.com/had-nu/wardex/v2/pkg/accept/verify": {
+    "github.com/had-nu/wardex/v3/pkg/accept/verify": {
       "floor": 55.1
     },
-    "github.com/had-nu/wardex/v2/pkg/analyzer": {
+    "github.com/had-nu/wardex/v3/pkg/analyzer": {
       "floor": 85.6
     },
-    "github.com/had-nu/wardex/v2/pkg/art14": {
+    "github.com/had-nu/wardex/v3/pkg/art14": {
       "floor": 40.5
     },
-    "github.com/had-nu/wardex/v2/pkg/atomicwrite": {
+    "github.com/had-nu/wardex/v3/pkg/atomicwrite": {
       "floor": 58.4
     },
-    "github.com/had-nu/wardex/v2/pkg/attest": {
+    "github.com/had-nu/wardex/v3/pkg/attest": {
       "floor": 43
     },
-    "github.com/had-nu/wardex/v2/pkg/auditlog": {
+    "github.com/had-nu/wardex/v3/pkg/auditlog": {
       "floor": 84.7
     },
-    "github.com/had-nu/wardex/v2/pkg/catalog": {
+    "github.com/had-nu/wardex/v3/pkg/catalog": {
       "floor": 90.9
     },
-    "github.com/had-nu/wardex/v2/pkg/cli": {
+    "github.com/had-nu/wardex/v3/pkg/cli": {
       "floor": 65.9
     },
-    "github.com/had-nu/wardex/v2/pkg/correlator": {
+    "github.com/had-nu/wardex/v3/pkg/correlator": {
       "floor": 70.7
     },
-    "github.com/had-nu/wardex/v2/pkg/duration": {
+    "github.com/had-nu/wardex/v3/pkg/duration": {
       "floor": 100
     },
-    "github.com/had-nu/wardex/v2/pkg/enrich": {
+    "github.com/had-nu/wardex/v3/pkg/enrich": {
       "floor": 82.8
     },
-    "github.com/had-nu/wardex/v2/pkg/enrich/cli": {
+    "github.com/had-nu/wardex/v3/pkg/enrich/cli": {
       "floor": 34.3
     },
-    "github.com/had-nu/wardex/v2/pkg/epss": {
+    "github.com/had-nu/wardex/v3/pkg/epss": {
       "floor": 63.3
     },
-    "github.com/had-nu/wardex/v2/pkg/exitcodes": {
+    "github.com/had-nu/wardex/v3/pkg/exitcodes": {
       "floor": 0,
       "untested": true
     },
-    "github.com/had-nu/wardex/v2/pkg/gate": {
+    "github.com/had-nu/wardex/v3/pkg/gate": {
       "floor": 0
     },
-    "github.com/had-nu/wardex/v2/pkg/ingestion": {
+    "github.com/had-nu/wardex/v3/pkg/ingestion": {
       "floor": 70
     },
-    "github.com/had-nu/wardex/v2/pkg/keys": {
+    "github.com/had-nu/wardex/v3/pkg/keys": {
       "floor": 75.6
     },
-    "github.com/had-nu/wardex/v2/pkg/model": {
+    "github.com/had-nu/wardex/v3/pkg/model": {
       "floor": 0,
       "untested": true
     },
-    "github.com/had-nu/wardex/v2/pkg/orchestrator": {
+    "github.com/had-nu/wardex/v3/pkg/orchestrator": {
       "floor": 77.5
     },
-    "github.com/had-nu/wardex/v2/pkg/provenance": {
+    "github.com/had-nu/wardex/v3/pkg/provenance": {
       "floor": 59.7
     },
-    "github.com/had-nu/wardex/v2/pkg/releasegate": {
+    "github.com/had-nu/wardex/v3/pkg/releasegate": {
       "floor": 81.8
     },
-    "github.com/had-nu/wardex/v2/pkg/report": {
+    "github.com/had-nu/wardex/v3/pkg/report": {
       "floor": 65.8
     },
-    "github.com/had-nu/wardex/v2/pkg/sboms": {
+    "github.com/had-nu/wardex/v3/pkg/sboms": {
       "floor": 48.7
     },
-    "github.com/had-nu/wardex/v2/pkg/scorer": {
+    "github.com/had-nu/wardex/v3/pkg/scorer": {
       "floor": 76.8
     },
-    "github.com/had-nu/wardex/v2/pkg/sdk": {
+    "github.com/had-nu/wardex/v3/pkg/sdk": {
       "floor": 89.9
     },
-    "github.com/had-nu/wardex/v2/pkg/snapshot": {
+    "github.com/had-nu/wardex/v3/pkg/snapshot": {
       "floor": 84.6
     },
-    "github.com/had-nu/wardex/v2/pkg/statestore": {
+    "github.com/had-nu/wardex/v3/pkg/statestore": {
       "floor": 45.2
     },
-    "github.com/had-nu/wardex/v2/pkg/trust": {
+    "github.com/had-nu/wardex/v3/pkg/trust": {
       "floor": 70.9
     },
-    "github.com/had-nu/wardex/v2/pkg/ui": {
+    "github.com/had-nu/wardex/v3/pkg/ui": {
       "floor": 75.3
     },
-    "github.com/had-nu/wardex/v2/pkg/utils": {
+    "github.com/had-nu/wardex/v3/pkg/utils": {
       "floor": 0
     },
-    "github.com/had-nu/wardex/v2/pkg/versionregistry": {
+    "github.com/had-nu/wardex/v3/pkg/versionregistry": {
       "floor": 83.3
     },
-    "github.com/had-nu/wardex/v2/test": {
+    "github.com/had-nu/wardex/v3/test": {
       "floor": 0,
       "untested": true
     },
-    "github.com/had-nu/wardex/v2/test/golden": {
+    "github.com/had-nu/wardex/v3/test/golden": {
       "floor": 100
     },
-    "github.com/had-nu/wardex/v2/test/security": {
+    "github.com/had-nu/wardex/v3/test/security": {
       "floor": 0,
       "untested": true
     },
-    "github.com/had-nu/wardex/v2/tools/check-attribution": {
+    "github.com/had-nu/wardex/v3/tools/check-attribution": {
       "floor": 92
     },
-    "github.com/had-nu/wardex/v2/tools/check-boundaries": {
+    "github.com/had-nu/wardex/v3/tools/check-boundaries": {
       "floor": 69.3
     },
-    "github.com/had-nu/wardex/v2/tools/check-doclinks": {
+    "github.com/had-nu/wardex/v3/tools/check-doclinks": {
       "floor": 70.1
     },
-    "github.com/had-nu/wardex/v2/tools/check-golden": {
+    "github.com/had-nu/wardex/v3/tools/check-golden": {
       "floor": 30
     },
-    "github.com/had-nu/wardex/v2/tools/check-ratchet": {
+    "github.com/had-nu/wardex/v3/tools/check-ratchet": {
       "floor": 56.7
     },
-    "github.com/had-nu/wardex/v2/tools/check-specs": {
+    "github.com/had-nu/wardex/v3/tools/check-specs": {
       "floor": 80.5
     },
-    "github.com/had-nu/wardex/v2/tools/coverage-report": {
+    "github.com/had-nu/wardex/v3/tools/coverage-report": {
       "floor": 52.5
     },
-    "github.com/had-nu/wardex/v2/tools/gen-sbom": {
+    "github.com/had-nu/wardex/v3/tools/gen-sbom": {
       "floor": 0
     },
-    "github.com/had-nu/wardex/v2/tools/verify-reproducible": {
+    "github.com/had-nu/wardex/v3/tools/verify-reproducible": {
       "floor": 0
     }
   }

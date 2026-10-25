@@ -13,8 +13,8 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/had-nu/wardex/v2/pkg/cli"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/cli"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 	"gopkg.in/yaml.v3"
 )
 

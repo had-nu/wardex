@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
 )
 
 // csfCategories are the 22 Categories of NIST CSWP 29, CSF 2.0, with the names

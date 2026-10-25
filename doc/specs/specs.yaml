@@ -4,36 +4,44 @@ language: en-GB
 # Inventory of the specifications. The repository is the source of truth.
 # status: active | legacy-pt
 # legacy-pt specs keep their Portuguese text and require an English abstract.
+# File paths are relative to doc/specs. The v3 modularisation specs live in v3/.
 specs:
-  - file: SPEC-M0-baseline.md
+  - file: v3/SPEC-M0-baseline.md
     id: M0
     title: "Baseline: repository safety net and hygiene"
     status: active
     owner: had-nu
     base: "main @ a75500b"
 
-  - file: SPEC-M1-contracts-and-kit.md
+  - file: v3/SPEC-M1-contracts-and-kit.md
     id: M1
     title: "Contracts and kit: the shared base"
     status: active
     owner: had-nu
     base: "baseline/modular-0 (measurements at main @ a75500b)"
 
-  - file: "SPEC — Módulo 0 rede de segurança e higiene do repositório.md"
+  - file: "v3/SPEC — Módulo 0 rede de segurança e higiene do repositório.md"
     id: M0-pt
     title: "Portuguese working draft, superseded"
     status: legacy-pt
     owner: had-nu
-    superseded_by: SPEC-M0-baseline.md
+    superseded_by: v3/SPEC-M0-baseline.md
     abstract: "Portuguese working draft of the M0 baseline spec. Superseded by the UK English SPEC-M0-baseline.md; kept for reference only."
 
-  - file: "SPEC-M1 — Contracts e kit a base partilhada.md"
+  - file: "v3/SPEC-M1 — Contracts e kit a base partilhada.md"
     id: M1-pt
     title: "Portuguese working draft, superseded"
     status: legacy-pt
     owner: had-nu
-    superseded_by: SPEC-M1-contracts-and-kit.md
+    superseded_by: v3/SPEC-M1-contracts-and-kit.md
     abstract: "Portuguese working draft of the contracts-and-kit spec. Superseded by the UK English SPEC-M1-contracts-and-kit.md; kept for reference only."
+
+  - file: "v3/SPEC-M2-assess-pt.md"
+    id: M2-pt
+    title: "Portuguese working draft, not yet active"
+    status: legacy-pt
+    owner: had-nu
+    abstract: "Portuguese working draft of the M2 assess spec: isolates compliance assessment (ingestion, catalogues, correlation, gap analysis, scoring, snapshots and reports) behind pkg/assess. Awaiting translation and acceptance; it is not yet the active M2 spec."
 
   - file: CBOR_MIGRATION_v2.3.0.md
     id: v2.3.0

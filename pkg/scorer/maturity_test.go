@@ -6,7 +6,7 @@ package scorer
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // findingIn builds a covered finding in one domain with a known maturity.

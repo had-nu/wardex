@@ -6,8 +6,8 @@ package provenance
 import (
 	"testing"
 
-	prov "github.com/had-nu/wardex/v2/pkg/provenance"
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	prov "github.com/had-nu/wardex/v3/pkg/provenance"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 func TestBuildProvenanceVerifyDashboard(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
 )
 
 // aiactArticleTitles are the titles Regulation (EU) 2024/1689 gives its articles,

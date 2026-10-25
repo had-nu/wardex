@@ -3,7 +3,7 @@ package assets_test
 import (
 	"testing"
 
-	"github.com/had-nu/wardex/v2/cmd/assets"
+	"github.com/had-nu/wardex/v3/cmd/assets"
 )
 
 func TestInventoryCmdHasFlags(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/had-nu/wardex/v2/pkg/catalog"
+	"github.com/had-nu/wardex/v3/pkg/catalog"
 )
 
 // doraArticleTitles are the titles Regulation (EU) 2022/2554 gives its articles,

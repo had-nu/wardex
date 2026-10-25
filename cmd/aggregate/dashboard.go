@@ -8,7 +8,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/had-nu/wardex/v2/pkg/ui"
+	"github.com/had-nu/wardex/v3/pkg/ui"
 )
 
 func buildAggregateSession(args []string) ui.SessionView {

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/had-nu/wardex/v2/pkg/auditlog"
+	"github.com/had-nu/wardex/v3/pkg/auditlog"
 )
 
 // SegmentResult reports the verification outcome of a single chain segment

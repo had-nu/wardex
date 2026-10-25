@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // testDir creates a temporary directory within the workspace for testing.

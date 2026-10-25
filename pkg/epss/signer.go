@@ -12,7 +12,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/had-nu/wardex/v2/pkg/model"
+	"github.com/had-nu/wardex/v3/pkg/model"
 )
 
 // ErrTampered indicates the EPSS enrichment HMAC signature does not match,
